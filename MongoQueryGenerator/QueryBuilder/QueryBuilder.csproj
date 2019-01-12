@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="ER\Base.cs" />
     <Compile Include="ER\Entity.cs" />
+    <Compile Include="ER\Exceptions\ElementNotFoundException.cs" />
+    <Compile Include="ER\Model.cs" />
     <Compile Include="ER\Relationship.cs" />
     <Compile Include="Mongo\Collection.cs" />
     <Compile Include="Mongo\Document.cs" />
