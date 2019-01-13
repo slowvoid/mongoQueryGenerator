@@ -50,6 +50,9 @@
     <Compile Include="Map\ModelMapping.cs" />
     <Compile Include="Mongo\Collection.cs" />
     <Compile Include="Mongo\Document.cs" />
+    <Compile Include="Pipeline\Dataset.cs" />
+    <Compile Include="Pipeline\Operation.cs" />
+    <Compile Include="Pipeline\Pipeline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\Attribute.cs" />
     <Compile Include="Shared\DataType.cs" />
