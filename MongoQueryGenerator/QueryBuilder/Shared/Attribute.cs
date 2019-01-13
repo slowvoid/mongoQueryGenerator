@@ -41,33 +41,30 @@ namespace QueryBuilder.Shared
 
         #region Functions
         /// <summary>
-        /// Find an attribute by name
+        /// Returns if the given name belongs to a child attribute
         /// </summary>
         /// <param name="Name">Name to search for</param>
         /// <returns>Returns an attribute</returns>
-        public DataAttribute FindByName( string Name )
+        public bool HasAttribute( string Name )
         {
-            // First search at level 0
-            DataAttribute FoundAttribute = Children.Find( Attr => Attr.Name == Name );
+            // Search first for all children, then if not found lookup recursively
+            bool FoundAttribute = Children.Exists( Attr => Attr.Name == Name );
 
-            if ( FoundAttribute is DataAttribute )
+            if ( !FoundAttribute )
             {
-                return FoundAttribute;                 
-            }
-
-            // Search through each attribute children
-            foreach ( DataAttribute Attribute in Children )
-            {
-                FoundAttribute = Attribute.FindByName( Name );
-
-                if ( FoundAttribute is DataAttribute )
+                // Attribute not found, search through each child children
+                foreach ( DataAttribute Child in Children )
                 {
-                    return FoundAttribute;
+                    FoundAttribute = Child.HasAttribute( Name );
+
+                    if ( FoundAttribute )
+                    {
+                        break;
+                    }
                 }
             }
 
-            // If reaches this far, it means that the attribute wasn't found
-            throw new AttributeNotFoundException( string.Format( "Couldn't find attribute [{0}] as a child attribute of [{1}]", Name, this.Name ) );
+            return FoundAttribute;
         }
         #endregion
 
