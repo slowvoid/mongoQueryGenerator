@@ -1,28 +1,38 @@
-﻿using System;
+﻿using QueryBuilder.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QueryBuilder.Pipeline
+using QueryBuilder.Map;
+
+namespace QueryBuilder.Operation
 {
     /// <summary>
     /// Defines a query operation (JOIN, PROJECT, etc)
     /// </summary>
-    public abstract class Operation
+    public abstract class BaseOperation
     {
         #region Properties
         #endregion
 
         #region Methods
-        
+        /// <summary>
+        /// Run operation
+        /// </summary>
+        /// <returns></returns>
+        public virtual QueryCommand Run( ModelMapping Map )
+        {
+            return new QueryCommand();
+        }
         #endregion
 
         #region Constructors
         /// <summary>
         /// Initialize a new instance of Operation class
         /// </summary>
-        public Operation()
+        public BaseOperation()
         {
         }
         #endregion

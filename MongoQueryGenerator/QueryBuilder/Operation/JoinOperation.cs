@@ -5,13 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 using QueryBuilder.ER;
+using QueryBuilder.Map;
+using QueryBuilder.Query;
 
-namespace QueryBuilder.Pipeline
+namespace QueryBuilder.Operation
 {
     /// <summary>
     /// Represents a JOIN operation
     /// </summary>
-    public class JoinOperation : Operation
+    public class JoinOperation : BaseOperation
     {
         #region Properties
         /// <summary>
@@ -37,6 +39,10 @@ namespace QueryBuilder.Pipeline
         #endregion
 
         #region Methods
+        public override QueryCommand Run(ModelMapping Map)
+        {
+            return base.Run( Map );
+        }
         #endregion
 
         #region Constructors

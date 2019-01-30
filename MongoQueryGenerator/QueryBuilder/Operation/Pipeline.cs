@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QueryBuilder.Pipeline
+namespace QueryBuilder.Operation
 {
     /// <summary>
     /// Query generator execution pipeline
@@ -15,14 +15,14 @@ namespace QueryBuilder.Pipeline
         /// <summary>
         /// List of Operations to perform
         /// </summary>
-        public List<Operation> Operations { get; set; }
+        public List<BaseOperation> Operations { get; set; }
         #endregion
 
         #region Constructors
         /// <summary>
         /// Initialize a new instance of Pipeline class
         /// </summary>
-        public Pipeline( List<Operation> Operations )
+        public Pipeline( List<BaseOperation> Operations )
         {
             this.Operations = Operations;
         }
