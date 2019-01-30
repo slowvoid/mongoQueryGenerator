@@ -13,5 +13,18 @@ namespace QueryBuilder.Pipeline
     {
         #region Properties
         #endregion
+
+        #region Methods
+        
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Initialize a new instance of Operation class
+        /// </summary>
+        public Operation()
+        {
+        }
+        #endregion
     }
 }

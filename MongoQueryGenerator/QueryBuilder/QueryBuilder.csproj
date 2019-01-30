@@ -50,7 +50,7 @@
     <Compile Include="Map\ModelMapping.cs" />
     <Compile Include="Mongo\Collection.cs" />
     <Compile Include="Mongo\Document.cs" />
-    <Compile Include="Pipeline\Dataset.cs" />
+    <Compile Include="Pipeline\JoinOperation.cs" />
     <Compile Include="Pipeline\Operation.cs" />
     <Compile Include="Pipeline\Pipeline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

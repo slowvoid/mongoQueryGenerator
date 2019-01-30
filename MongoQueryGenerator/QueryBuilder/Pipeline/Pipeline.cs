@@ -13,9 +13,19 @@ namespace QueryBuilder.Pipeline
     {
         #region Properties
         /// <summary>
-        /// Available Datasets
+        /// List of Operations to perform
         /// </summary>
-        public List<Dataset> Datasets { get; set; }
+        public List<Operation> Operations { get; set; }
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Initialize a new instance of Pipeline class
+        /// </summary>
+        public Pipeline( List<Operation> Operations )
+        {
+            this.Operations = Operations;
+        }
         #endregion
     }
 }
