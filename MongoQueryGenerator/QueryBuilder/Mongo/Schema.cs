@@ -6,31 +6,31 @@ using System.Threading.Tasks;
 
 namespace QueryBuilder.Mongo
 {
-    /// <summary>
-    /// Represents a MongoDB collection
-    /// </summary>
-    public class Collection
+    public class MongoSchema
     {
         #region Properties
         /// <summary>
-        /// Collection name
+        /// Schema name
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// Document schema
+        /// Collections
         /// </summary>
-        public Document DocumentSchema { get; set; }
+        public List<Collection> Collections { get; set; }
         #endregion
+
+        
 
         #region Constructors
         /// <summary>
-        /// Initialize a new Collection instance
+        /// Initialize a new Instance of Schema
         /// </summary>
-        /// <param name="Name"></param>
-        public Collection( string Name )
+        /// <param name="Name">Schema name</param>
+        /// <param name="Collections">Attached collections</param>
+        public MongoSchema( string Name, List<Collection> Collections )
         {
             this.Name = Name;
-            DocumentSchema = new Document();
+            this.Collections = Collections;
         }
         #endregion
     }

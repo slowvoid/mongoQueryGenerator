@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using QueryBuilder.Shared;
+
 namespace QueryBuilder.ER
 {
     /// <summary>
@@ -11,5 +13,16 @@ namespace QueryBuilder.ER
     /// </summary>
     public class Entity : BaseERElement
     {
+        #region Constructors
+        /// <summary>
+        /// Initializes a new Entity instance
+        /// </summary>
+        /// <param name="Name">Entity Name</param>
+        public Entity( string Name )
+        {
+            this.Name = Name;
+            Attributes = new List<DataAttribute>();
+        }
+        #endregion
     }
 }

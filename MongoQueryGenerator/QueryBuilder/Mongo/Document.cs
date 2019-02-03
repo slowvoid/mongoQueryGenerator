@@ -23,5 +23,15 @@ namespace QueryBuilder.Mongo
         /// </summary>
         public List<DataAttribute> Attributes { get; set; }
         #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Initialize a new Document instance
+        /// </summary>
+        public Document()
+        {
+            Attributes = new List<DataAttribute>();
+        }
+        #endregion
     }
 }

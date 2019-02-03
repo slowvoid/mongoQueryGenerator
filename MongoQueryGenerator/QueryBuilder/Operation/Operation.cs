@@ -22,7 +22,7 @@ namespace QueryBuilder.Operation
         /// Run operation
         /// </summary>
         /// <returns></returns>
-        public virtual QueryCommand Run( ModelMapping Map )
+        public virtual QueryCommand Run()
         {
             return new QueryCommand();
         }

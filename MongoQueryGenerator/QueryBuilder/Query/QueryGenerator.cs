@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using QueryBuilder.Map;
 using QueryBuilder.Operation;
 
@@ -19,10 +20,24 @@ namespace QueryBuilder.Query
         /// Command pipeline
         /// </summary>
         public Pipeline Pipeline { get; set; }
+        #endregion
+
+        #region Methods
         /// <summary>
-        /// Mapping between ER and MongoDB
+        /// Run the query generator
         /// </summary>
-        public ModelMapping Map { get; set; }
+        /// <returns></returns>
+        public string Run()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach ( BaseOperation Op in Pipeline.Operations )
+            {
+                sb.Append( JsonConvert.SerializeObject( Op.Run() ) );
+            }
+
+            return sb.ToString();
+        }
         #endregion
 
         #region Constructors
@@ -30,11 +45,9 @@ namespace QueryBuilder.Query
         /// Initialize a new instance of QueryGenerator class
         /// </summary>
         /// <param name="Pipeline">Command pipeline</param>
-        /// <param name="Map">Model mapping</param>
-        public QueryGenerator( Pipeline Pipeline, ModelMapping Map )
+        public QueryGenerator( Pipeline Pipeline )
         {
             this.Pipeline = Pipeline;
-            this.Map = Map;
         }
         #endregion
     }

@@ -27,9 +27,9 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
-        public override QueryCommand Run( ModelMapping Map )
+        public override QueryCommand Run()
         {
-            return base.Run( Map );
+            return base.Run();
         }
         #endregion
 

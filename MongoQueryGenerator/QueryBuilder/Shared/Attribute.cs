@@ -37,6 +37,10 @@ namespace QueryBuilder.Shared
         /// Child attributes
         /// </summary>
         public List<DataAttribute> Children { get; set; }
+        /// <summary>
+        /// Gets/Sets wheter this attribute is also an identifier
+        /// </summary>
+        public bool Identifier { get; set; }
         #endregion
 
         #region Functions
@@ -76,16 +80,30 @@ namespace QueryBuilder.Shared
         public DataAttribute( string Name )
         {
             this.Name = Name;
+            Identifier = false;
             Children = new List<DataAttribute>();
         }
         /// <summary>
         /// Initializes a new DataAttribute instance
         /// </summary>
         /// <param name="Name">Attribute name</param>
-        /// <param name="Children">Child attributes</param>
-        public DataAttribute( string Name, List<DataAttribute> Children )
+        /// <param name="Identifier">Is this attribute an identifier</param>
+        public DataAttribute( string Name, bool Identifier )
         {
             this.Name = Name;
+            this.Identifier = Identifier;
+            Children = new List<DataAttribute>();
+        }
+        /// <summary>
+        /// Initializes a new DataAttribute instance
+        /// </summary>
+        /// <param name="Name">Attribute name</param>
+        /// <param name="Identifier">Is this attribute an identifier</param>
+        /// <param name="Children">Child attributes</param>
+        public DataAttribute( string Name, bool Identifier, List<DataAttribute> Children )
+        {
+            this.Name = Name;
+            this.Identifier = Identifier;
             this.Children = Children;
         }
         #endregion
