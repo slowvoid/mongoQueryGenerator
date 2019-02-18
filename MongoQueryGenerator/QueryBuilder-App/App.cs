@@ -51,8 +51,11 @@ namespace QueryBuilderApp
             JoinOperation JoinOp = new JoinOperation( (Entity)ErModel.FindByName( "Person" ), (Entity)ErModel.FindByName( "Car" ), (Relationship)ErModel.FindByName( "Drives" ), map );
             JoinOp.Relationship = (Relationship)ErModel.FindByName( "Drives" );
 
+            JoinOperation ReverseJoin = new JoinOperation( (Entity)ErModel.FindByName( "Car" ), (Entity)ErModel.FindByName( "Person" ), (Relationship)ErModel.FindByName( "Drives" ), map );
+
             List<BaseOperation> Operations = new List<BaseOperation> {
-                JoinOp
+                JoinOp,
+                ReverseJoin
             };
 
             Pipeline QueryPipeline = new Pipeline( Operations );

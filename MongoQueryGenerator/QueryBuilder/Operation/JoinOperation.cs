@@ -32,10 +32,7 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Private Data
-        /// <summary>
-        /// ER -> MongoDB map
-        /// </summary>
-        private ModelMapping ModelMap { get; set; }
+        
         #endregion
 
         #region Methods
@@ -69,12 +66,11 @@ namespace QueryBuilder.Operation
         /// <param name="TargetEntity">Target entity</param>
         /// <param name="Relationship">Join through this relationship</param>
         /// <param name="ModelMap">Map rules between ER and Mongo</param>
-        public JoinOperation( Entity SourceEntity, Entity TargetEntity, Relationship Relationship, ModelMapping ModelMap )
+        public JoinOperation( Entity SourceEntity, Entity TargetEntity, Relationship Relationship, ModelMapping ModelMap ) : base( ModelMap )
         {
             this.SourceEntity = SourceEntity;
             this.TargetEntity = TargetEntity;
             this.Relationship = Relationship;
-            this.ModelMap = ModelMap;
         }
         #endregion
     }

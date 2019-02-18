@@ -15,6 +15,10 @@ namespace QueryBuilder.Operation
     public abstract class BaseOperation
     {
         #region Properties
+        /// <summary>
+        /// ER -> MongoDB map
+        /// </summary>
+        protected ModelMapping ModelMap { get; set; }
         #endregion
 
         #region Methods
@@ -32,8 +36,9 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// Initialize a new instance of Operation class
         /// </summary>
-        public BaseOperation()
+        public BaseOperation( ModelMapping ModelMap )
         {
+            this.ModelMap = ModelMap;
         }
         #endregion
     }

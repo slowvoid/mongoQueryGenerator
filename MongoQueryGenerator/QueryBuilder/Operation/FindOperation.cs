@@ -38,7 +38,7 @@ namespace QueryBuilder.Operation
         /// Initialize a new FindOperation instance with no conditional filter
         /// </summary>
         /// <param name="TargetEntity">Entity to find</param>
-        public FindOperation( Entity TargetEntity )
+        public FindOperation( Entity TargetEntity, ModelMapping ModelMap ) : base( ModelMap )
         {
             this.TargetEntity = TargetEntity;
             Filters = new Dictionary<string, object>();
@@ -48,7 +48,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="TargetEntity">Entity to find</param>
         /// <param name="Filters">Conditional parameters</param>
-        public FindOperation( Entity TargetEntity, Dictionary<string, object> Filters )
+        public FindOperation( Entity TargetEntity, Dictionary<string, object> Filters, ModelMapping ModelMap ) : base( ModelMap )
         {
             this.TargetEntity = TargetEntity;
             this.Filters = Filters;
