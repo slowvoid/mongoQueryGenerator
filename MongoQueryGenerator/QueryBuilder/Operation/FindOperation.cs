@@ -27,9 +27,9 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
-        public override QueryCommand Run()
+        public override OperationResult Run( OperationResult LastResult )
         {
-            return base.Run();
+            return base.Run( LastResult );
         }
         #endregion
 

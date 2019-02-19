@@ -58,6 +58,7 @@
     <Compile Include="Operation\FindOperation.cs" />
     <Compile Include="Operation\JoinOperation.cs" />
     <Compile Include="Operation\Operation.cs" />
+    <Compile Include="Operation\OperationResult.cs" />
     <Compile Include="Operation\Pipeline.cs" />
     <Compile Include="Operation\SelectOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

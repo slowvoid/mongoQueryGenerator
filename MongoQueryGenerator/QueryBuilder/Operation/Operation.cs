@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using QueryBuilder.Map;
+using QueryBuilder.ER;
 
 namespace QueryBuilder.Operation
 {
@@ -26,9 +27,9 @@ namespace QueryBuilder.Operation
         /// Run operation
         /// </summary>
         /// <returns></returns>
-        public virtual QueryCommand Run()
+        public virtual OperationResult Run( OperationResult LastResult )
         {
-            return new QueryCommand();
+            return LastResult;
         }
         #endregion
 

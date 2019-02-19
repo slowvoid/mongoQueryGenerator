@@ -36,25 +36,29 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
-        public override QueryCommand Run()
+        public override OperationResult Run( OperationResult LastResult )
         {
             // Get Map rule
             MapRule SourceRule = ModelMap.Rules.Find( R => R.Source == SourceEntity );
             MapRule TargetRule = ModelMap.Rules.Find( R => R.Source == TargetEntity );
 
             // Start a Join Command
-            JoinCommand Command = new JoinCommand();
+            JoinCommand Command = new JoinCommand {
+                // Set target entity
+                From = TargetRule.Target.Name,
+                // Locate mapping for the source / target attributes
+                ForeignField = TargetRule.Rules.First( K => K.Key == Relationship.TargetAttribute.Name ).Value,
+                LocalField = SourceRule.Rules.First( K => K.Key == Relationship.SourceAttribute.Name ).Value,
 
-            // Set target entity
-            Command.From = TargetRule.Target.Name;
-            // Locate mapping for the source / target attributes
-            Command.ForeignField = TargetRule.Rules.First( K => K.Key == Relationship.TargetAttribute.Name ).Value;
-            Command.LocalField = SourceRule.Rules.First( K => K.Key == Relationship.SourceAttribute.Name ).Value;
+                // As field (For now use relationship name)
+                AsField = Relationship.Name
+            };
 
-            // As field (For now use relationship name)
-            Command.AsField = Relationship.Name;
+            // Increment result data
+            LastResult.Commands.Add( Command );
+            LastResult.PipelineResult.AddRange( new BaseERElement[] { SourceEntity, TargetEntity, Relationship } );
 
-            return Command;
+            return LastResult;
         }
         #endregion
 
