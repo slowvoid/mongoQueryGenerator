@@ -1,4 +1,5 @@
 ﻿using QueryBuilder.ER;
+using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Query;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// List of commands to be executed
         /// </summary>
-        public List<QueryCommand> Commands { get; set; }
+        public List<BaseOperator> Commands { get; set; }
         #endregion
 
         #region Constructor
@@ -30,7 +31,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="PipelineResult"></param>
         /// <param name="Commands"></param>
-        public OperationResult( List<BaseERElement> PipelineResult, List<QueryCommand> Commands )
+        public OperationResult( List<BaseERElement> PipelineResult, List<BaseOperator> Commands )
         {
             this.PipelineResult = PipelineResult;
             this.Commands = Commands;

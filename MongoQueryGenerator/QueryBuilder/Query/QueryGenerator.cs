@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using QueryBuilder.Map;
 using QueryBuilder.Operation;
 using QueryBuilder.ER;
+using QueryBuilder.Mongo.Aggregation.Operators;
 
 namespace QueryBuilder.Query
 {
@@ -31,22 +32,24 @@ namespace QueryBuilder.Query
         public string Run()
         {
             // Setup results
-            OperationResult Result = new OperationResult( new List<BaseERElement>(), new List<QueryCommand>() );
+            OperationResult Result = new OperationResult( new List<BaseERElement>(), new List<BaseOperator>() );
 
             foreach ( BaseOperation Op in Pipeline.Operations )
             {
                 Result = Op.Run( Result );
             }
 
-            // Generate mongodb commands
-            StringBuilder sb = new StringBuilder();
+            // Store command objects
+            List<string> AggregatePipeline = new List<string>();
 
-            foreach ( QueryCommand Command in Result.Commands )
+            foreach ( BaseOperator Command in Result.Commands )
             {
-                sb.Append( JsonConvert.SerializeObject( Command ) );
+                AggregatePipeline.Add( Command.ToJavaScript() );
             }
 
-            return sb.ToString();
+            // TODO: Update this section to generate collection and aggregate
+            // according to the query
+            return string.Format( "db.Person.aggregate([{0}]);", string.Join( ",", AggregatePipeline ) );
         }
         #endregion
 

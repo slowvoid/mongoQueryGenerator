@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using QueryBuilder.ER;
 using QueryBuilder.Map;
+using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Operation.Exceptions;
 using QueryBuilder.Query;
 
@@ -42,8 +43,8 @@ namespace QueryBuilder.Operation
             MapRule SourceRule = ModelMap.Rules.Find( R => R.Source == SourceEntity );
             MapRule TargetRule = ModelMap.Rules.Find( R => R.Source == TargetEntity );
 
-            // Start a Join Command
-            JoinCommand Command = new JoinCommand {
+            // Start a Lookup Operator
+            LookupOperator Op = new LookupOperator {
                 // Set target entity
                 From = TargetRule.Target.Name,
                 // Locate mapping for the source / target attributes
@@ -51,11 +52,21 @@ namespace QueryBuilder.Operation
                 LocalField = SourceRule.Rules.First( K => K.Key == Relationship.SourceAttribute.Name ).Value,
 
                 // As field (For now use relationship name)
-                AsField = Relationship.Name
+                As = Relationship.Name
             };
 
+            // Also ask the database to perform an unwind operation
+            // keeping data at the same depth
+            Unwind unwindOp = new Unwind {
+                Field = Op.As
+            };         
+
             // Increment result data
-            LastResult.Commands.Add( Command );
+            LastResult.Commands.AddRange(new List<BaseOperator> {
+                Op,
+                unwindOp
+            });
+
             LastResult.PipelineResult.AddRange( new BaseERElement[] { SourceEntity, TargetEntity, Relationship } );
 
             return LastResult;

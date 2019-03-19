@@ -34,6 +34,7 @@ namespace QueryBuilderApp
             CarRule.Rules.Add( "CarId", "_id" );
             CarRule.Rules.Add( "Model", "Model" );
             CarRule.Rules.Add( "Value", "Value" );
+            CarRule.Rules.Add( "OwnedBy", "OwnedBy" );
 
             // Build mapping rules
             List<MapRule> Rules = new List<MapRule>();
@@ -52,10 +53,10 @@ namespace QueryBuilderApp
             JoinOp.Relationship = (Relationship)ErModel.FindByName( "Drives" );
 
             JoinOperation ReverseJoin = new JoinOperation( (Entity)ErModel.FindByName( "Car" ), (Entity)ErModel.FindByName( "Person" ), (Relationship)ErModel.FindByName( "Drives" ), map );
+            JoinOperation Owns = new JoinOperation( (Entity)ErModel.FindByName( "Person" ), (Entity)ErModel.FindByName( "Car" ), (Relationship)ErModel.FindByName( "Owns" ), map );
 
             List<BaseOperation> Operations = new List<BaseOperation> {
-                JoinOp,
-                ReverseJoin
+                Owns
             };
 
             Pipeline QueryPipeline = new Pipeline( Operations );
@@ -80,13 +81,19 @@ namespace QueryBuilderApp
             Car.Attributes.Add( new DataAttribute( "CarId" ) );
             Car.Attributes.Add( new DataAttribute( "Model" ) );
             Car.Attributes.Add( new DataAttribute( "Value" ) );
+            Car.Attributes.Add( new DataAttribute( "OwnedBy" ) );
 
             Relationship Drives = new Relationship( "Drives" );
             Drives.Relates.AddRange( new Entity[] { Person, Car } );
             Drives.SourceAttribute = Person.Attributes.Find( A => A.Name == "CarId" );
             Drives.TargetAttribute = Car.Attributes.Find( A => A.Name == "CarId" );
 
-            ERElements.AddRange( new BaseERElement[] { Person, Car, Drives } );
+            Relationship Owns = new Relationship( "Owns" );
+            Owns.Relates.AddRange( new Entity[] { Person, Car } );
+            Owns.SourceAttribute = Person.Attributes.Find( A => A.Name == "PersonId" );
+            Owns.TargetAttribute = Car.Attributes.Find( A => A.Name == "OwnedBy" );
+
+            ERElements.AddRange( new BaseERElement[] { Person, Car, Drives, Owns } );
 
             return new Model( "PersonCarERModel", ERElements );
         }
@@ -105,6 +112,7 @@ namespace QueryBuilderApp
             Car.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
             Car.DocumentSchema.Attributes.Add( new DataAttribute( "Model" ) );
             Car.DocumentSchema.Attributes.Add( new DataAttribute( "Value" ) );
+            Car.DocumentSchema.Attributes.Add( new DataAttribute( "OwnedBy" ) );
 
             List<Collection> Collections = new List<Collection>();
             Collections.AddRange( new Collection[] { Person, Car } );
