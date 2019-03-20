@@ -81,6 +81,7 @@
     <Compile Include="Mongo\Expressions\BaseExpression.cs" />
     <Compile Include="Mongo\Expressions\MergeObjects.cs" />
     <Compile Include="Mongo\Schema.cs" />
+    <Compile Include="Operation\Exceptions\ImpossibleOperationException.cs" />
     <Compile Include="Operation\Exceptions\RuleNotFoundException.cs" />
     <Compile Include="Operation\FindOperation.cs" />
     <Compile Include="Operation\JoinOperation.cs" />

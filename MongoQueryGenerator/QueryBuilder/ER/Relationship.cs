@@ -8,6 +8,24 @@ using System.Threading.Tasks;
 namespace QueryBuilder.ER
 {
     /// <summary>
+    /// Available relationship cardinality
+    /// </summary>
+    public enum RelationshipCardinality
+    {
+        /// <summary>
+        /// One to One relationship
+        /// </summary>
+        OneToOne,
+        /// <summary>
+        /// One to Many relationship
+        /// </summary>
+        OneToMany,
+        /// <summary>
+        /// Many to Many relationship
+        /// </summary>
+        ManyToMany
+    }
+    /// <summary>
     /// Represents a relation ship
     /// </summary>
     public class Relationship : BaseERElement
@@ -25,6 +43,22 @@ namespace QueryBuilder.ER
         /// Destination attribute (Right side)
         /// </summary>
         public DataAttribute TargetAttribute { get; set; }
+        /// <summary>
+        /// Relationship cardinality
+        /// </summary>
+        public RelationshipCardinality Cardinality { get; set; }
+        /// <summary>
+        /// Reference to source attribute (entity)
+        /// Used when joining the relationship is mapped to a different collection
+        /// Used on Many to Many relationships
+        /// </summary>
+        public DataAttribute RefToSourceAttribute { get; set; }
+        /// <summary>
+        /// Reference to target attribute (entity)
+        /// Used when joining the relationship is mapped to a different collection
+        /// Used on Many to Many relationships
+        /// </summary>
+        public DataAttribute RefToTargetAttribute { get; set; }
         #endregion
 
         #region Constructors

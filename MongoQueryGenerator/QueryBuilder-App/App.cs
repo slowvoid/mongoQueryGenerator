@@ -36,9 +36,12 @@ namespace QueryBuilderApp
             CarRule.Rules.Add( "Value", "Value" );
             CarRule.Rules.Add( "OwnedBy", "OwnedBy" );
 
+            MapRule OwnsRule = new MapRule( ErModel.FindByName( "Owns" ), MSchema.Collections.Find( C => C.Name == "Car" ) );
+            OwnsRule.Rules.Add( "Whatever", "Whatever" );
+
             // Build mapping rules
             List<MapRule> Rules = new List<MapRule>();
-            Rules.AddRange( new MapRule[] { PersonRule, CarRule } );
+            Rules.AddRange( new MapRule[] { PersonRule, CarRule, OwnsRule } );
 
             ModelMapping map = new ModelMapping( "PersonCarMap", Rules );
 
@@ -92,6 +95,7 @@ namespace QueryBuilderApp
             Owns.Relates.AddRange( new Entity[] { Person, Car } );
             Owns.SourceAttribute = Person.Attributes.Find( A => A.Name == "PersonId" );
             Owns.TargetAttribute = Car.Attributes.Find( A => A.Name == "OwnedBy" );
+            Owns.Attributes.Add( new DataAttribute( "Whatever" ) );
 
             ERElements.AddRange( new BaseERElement[] { Person, Car, Drives, Owns } );
 
@@ -113,7 +117,11 @@ namespace QueryBuilderApp
             Car.DocumentSchema.Attributes.Add( new DataAttribute( "Model" ) );
             Car.DocumentSchema.Attributes.Add( new DataAttribute( "Value" ) );
             Car.DocumentSchema.Attributes.Add( new DataAttribute( "OwnedBy" ) );
+            Car.DocumentSchema.Attributes.Add( new DataAttribute( "Whatever" ) );
 
+            //Collection Owns = new Collection( "Owns" );
+            //Owns.DocumentSchema.Attributes.Add( new DataAttribute())
+            
             List<Collection> Collections = new List<Collection>();
             Collections.AddRange( new Collection[] { Person, Car } );
 
