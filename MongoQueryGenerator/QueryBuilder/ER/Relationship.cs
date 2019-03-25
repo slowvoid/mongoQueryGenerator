@@ -51,12 +51,16 @@ namespace QueryBuilder.ER
         /// Reference to source attribute (entity)
         /// Used when joining the relationship is mapped to a different collection
         /// Used on Many to Many relationships
+        /// 
+        /// This must match attribute name in the source entity
         /// </summary>
         public DataAttribute RefToSourceAttribute { get; set; }
         /// <summary>
         /// Reference to target attribute (entity)
         /// Used when joining the relationship is mapped to a different collection
         /// Used on Many to Many relationships
+        /// 
+        /// This must match attribute name in the target entity
         /// </summary>
         public DataAttribute RefToTargetAttribute { get; set; }
         #endregion

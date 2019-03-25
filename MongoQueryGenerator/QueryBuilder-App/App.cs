@@ -36,8 +36,11 @@ namespace QueryBuilderApp
             CarRule.Rules.Add( "Value", "Value" );
             CarRule.Rules.Add( "OwnedBy", "OwnedBy" );
 
-            MapRule OwnsRule = new MapRule( ErModel.FindByName( "Owns" ), MSchema.Collections.Find( C => C.Name == "Car" ) );
+            MapRule OwnsRule = new MapRule( ErModel.FindByName( "Owns" ), MSchema.Collections.Find( C => C.Name == "Owns" ) );
+            OwnsRule.Rules.Add( "OwnsId", "OwnsId" );
             OwnsRule.Rules.Add( "Whatever", "Whatever" );
+            OwnsRule.Rules.Add( "CarId", "CarId" );
+            OwnsRule.Rules.Add( "PersonId", "PersonId" );
 
             // Build mapping rules
             List<MapRule> Rules = new List<MapRule>();
@@ -94,8 +97,10 @@ namespace QueryBuilderApp
             Relationship Owns = new Relationship( "Owns" );
             Owns.Relates.AddRange( new Entity[] { Person, Car } );
             Owns.SourceAttribute = Person.Attributes.Find( A => A.Name == "PersonId" );
-            Owns.TargetAttribute = Car.Attributes.Find( A => A.Name == "OwnedBy" );
+            Owns.TargetAttribute = Car.Attributes.Find( A => A.Name == "CarId" );
             Owns.Attributes.Add( new DataAttribute( "Whatever" ) );
+            Owns.RefToSourceAttribute = new DataAttribute( "PersonId" );
+            Owns.RefToTargetAttribute = new DataAttribute( "CarId" );
 
             ERElements.AddRange( new BaseERElement[] { Person, Car, Drives, Owns } );
 
@@ -119,11 +124,14 @@ namespace QueryBuilderApp
             Car.DocumentSchema.Attributes.Add( new DataAttribute( "OwnedBy" ) );
             Car.DocumentSchema.Attributes.Add( new DataAttribute( "Whatever" ) );
 
-            //Collection Owns = new Collection( "Owns" );
-            //Owns.DocumentSchema.Attributes.Add( new DataAttribute())
+            Collection Owns = new Collection( "Owns" );
+            Owns.DocumentSchema.Attributes.Add( new DataAttribute( "OwnsId" ) );
+            Owns.DocumentSchema.Attributes.Add( new DataAttribute( "Whatever" ) );
+            Owns.DocumentSchema.Attributes.Add( new DataAttribute( "CarId" ) );
+            Owns.DocumentSchema.Attributes.Add( new DataAttribute( "PersonId" ) );
             
             List<Collection> Collections = new List<Collection>();
-            Collections.AddRange( new Collection[] { Person, Car } );
+            Collections.AddRange( new Collection[] { Person, Car, Owns } );
 
             return new MongoSchema( "PersonCarMongoSchema", Collections );
         }

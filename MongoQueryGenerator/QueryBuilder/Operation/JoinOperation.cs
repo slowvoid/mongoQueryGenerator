@@ -81,8 +81,8 @@ namespace QueryBuilder.Operation
                     // through the relationship collection
                     LookupOperator RelationshipLookup = new LookupOperator {
                         From = RelationshipRule.Target.Name,
-                        ForeignField = RelationshipRule.Rules.First( K => K.Key == Relationship.RefToSourceAttribute.Name ).Value,
-                        LocalField = RelationshipRule.Rules.First( K => K.Key == Relationship.SourceAttribute.Name ).Value,
+                        ForeignField = RelationshipRule.Rules.First( K => K.Key == Relationship.SourceAttribute.Name ).Value,
+                        LocalField = SourceRule.Rules.First( K => K.Key == Relationship.RefToSourceAttribute.Name ).Value,
                         As = Relationship.Name
                     };
 
@@ -116,6 +116,8 @@ namespace QueryBuilder.Operation
                     ReplaceRoot ReplaceData = new ReplaceRoot {
                         NewRoot = MergeData.ToJavaScript()
                     };
+
+                    // TODO: Add Project stage to get rid of joined data that was already merged into the main document
 
                     // Add to list of operations
                     OperationsToRun.AddRange( new List<BaseOperator> {
