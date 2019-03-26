@@ -74,6 +74,7 @@
     <Compile Include="Mongo\Aggregation\Aggregate.cs" />
     <Compile Include="Mongo\Aggregation\Operators\BaseOperator.cs" />
     <Compile Include="Mongo\Aggregation\Operators\Lookup.cs" />
+    <Compile Include="Mongo\Aggregation\Operators\Project.cs" />
     <Compile Include="Mongo\Aggregation\Operators\ReplaceRoot.cs" />
     <Compile Include="Mongo\Aggregation\Operators\Unwind.cs" />
     <Compile Include="Mongo\Collection.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Operation\Operation.cs" />
     <Compile Include="Operation\OperationResult.cs" />
     <Compile Include="Operation\Pipeline.cs" />
+    <Compile Include="Operation\ProjectOperation.cs" />
     <Compile Include="Operation\SelectOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\FindCommand.cs" />

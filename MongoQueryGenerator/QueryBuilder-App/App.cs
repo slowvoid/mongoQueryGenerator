@@ -60,9 +60,16 @@ namespace QueryBuilderApp
 
             JoinOperation ReverseJoin = new JoinOperation( (Entity)ErModel.FindByName( "Car" ), (Entity)ErModel.FindByName( "Person" ), (Relationship)ErModel.FindByName( "Drives" ), map );
             JoinOperation Owns = new JoinOperation( (Entity)ErModel.FindByName( "Person" ), (Entity)ErModel.FindByName( "Car" ), (Relationship)ErModel.FindByName( "Owns" ), map );
+            Dictionary<string, bool> ProjectAttributes = new Dictionary<string, bool>();
+            ProjectAttributes.Add( "Person.Name", true );
+            ProjectAttributes.Add( "Person.PersonId", false );
+            ProjectAttributes.Add( "Car.Model", true );
+
+            ProjectOperation ProjectOp = new ProjectOperation( ProjectAttributes, map );
 
             List<BaseOperation> Operations = new List<BaseOperation> {
-                Owns
+                Owns,
+                ProjectOp
             };
 
             Pipeline QueryPipeline = new Pipeline( Operations );
