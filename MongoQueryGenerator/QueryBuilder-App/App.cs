@@ -64,12 +64,13 @@ namespace QueryBuilderApp
             ProjectAttributes.Add( "Person.Name", true );
             ProjectAttributes.Add( "Person.PersonId", false );
             ProjectAttributes.Add( "Car.Model", true );
+            ProjectAttributes.Add( "Owns.Whatever", true );
 
             ProjectOperation ProjectOp = new ProjectOperation( ProjectAttributes, map );
 
             List<BaseOperation> Operations = new List<BaseOperation> {
                 Owns,
-                ProjectOp
+                //ProjectOp
             };
 
             Pipeline QueryPipeline = new Pipeline( Operations );

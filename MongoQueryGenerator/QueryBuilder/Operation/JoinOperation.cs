@@ -88,9 +88,9 @@ namespace QueryBuilder.Operation
 
                     // Now we've created a new attribute with the relationship data (all ocurrences)
                     // We should create a new document for each ocurrence and bring it to the same level as the other attributes
-                    Unwind UnwindRelationship = new Unwind {
-                        Field = RelationshipLookup.As
-                    };
+                    //Unwind UnwindRelationship = new Unwind {
+                    //    Field = RelationshipLookup.As
+                    //};
 
                     // Now join target entity
                     LookupOperator TargetLookup = new LookupOperator {
@@ -101,9 +101,9 @@ namespace QueryBuilder.Operation
                     };
 
                     // Unwind target entity data
-                    Unwind UnwindTarget = new Unwind {
-                        Field = TargetLookup.As
-                    };
+                    //Unwind UnwindTarget = new Unwind {
+                    //    Field = TargetLookup.As
+                    //};
 
                     // Bring the relationship data to the same level
                     MergeObjects MergeData = new MergeObjects();
@@ -122,9 +122,9 @@ namespace QueryBuilder.Operation
                     // Add to list of operations
                     OperationsToRun.AddRange( new List<BaseOperator> {
                         RelationshipLookup,
-                        UnwindRelationship,
+                        //UnwindRelationship,
                         TargetLookup,
-                        UnwindTarget,
+                        //UnwindTarget,
                         ReplaceData
                     } );
                 }
@@ -143,27 +143,21 @@ namespace QueryBuilder.Operation
                         As = Relationship.Name
                     };
 
-                    // Also ask the database to perform an unwind operation
-                    Unwind unwindOp = new Unwind {
-                        Field = Op.As
-                    };
+                    Dictionary<string, string> FieldsToAdd = new Dictionary<string, string>();
+                    FieldsToAdd.Add( SourceRule.Target.Name, "$$ROOT" );
+                    FieldsToAdd.Add( string.Format( "{0}.{1}", Relationship.Name, TargetRule.Target.Name ), string.Format( "${0}", Relationship.Name ) );
 
-                    // Bring data to the same level
-                    MergeObjects MergeData = new MergeObjects();
-                    MergeData.Objects.AddRange( new List<string> {
-                        string.Format( "${0}", Op.As ),
-                        "$$ROOT"
-                    } );
+                    AddFields AddFieldsOperations = new AddFields( FieldsToAdd );
 
-                    ReplaceRoot ReplaceData = new ReplaceRoot {
-                        NewRoot = MergeData.ToJavaScript()
-                    };
+                    Dictionary<string, bool> HideAttributes = new Dictionary<string, bool>();
+                    HideAttributes.Add( string.Format( "{0}.{1}", SourceEntity.Name, Relationship.Name ), false );
+
+                    ProjectOperation HideAttributesOp = new ProjectOperation( HideAttributes, ModelMap );
 
                     // Add operations to list
                     OperationsToRun.AddRange( new List<BaseOperator> {
                         Op,
-                        unwindOp,
-                        ReplaceData
+                        AddFieldsOperations
                     } );
                 }
             }
