@@ -98,17 +98,20 @@ namespace QueryBuilderApp
             Car.Attributes.Add( new DataAttribute( "OwnedBy" ) );
 
             Relationship Drives = new Relationship( "Drives" );
-            Drives.Relates.AddRange( new Entity[] { Person, Car } );
-            Drives.SourceAttribute = Person.Attributes.Find( A => A.Name == "CarId" );
-            Drives.TargetAttribute = Car.Attributes.Find( A => A.Name == "CarId" );
+            Drives.Relations.Add(new RelationshipConnection(Person,
+                                                            Person.Attributes.Find(A => A.Name == "CarId"),
+                                                            Car,
+                                                            Car.Attributes.Find(A => A.Name == "CarId"),
+                                                            RelationshipCardinality.OneToOne));
 
             Relationship Owns = new Relationship( "Owns" );
-            Owns.Relates.AddRange( new Entity[] { Person, Car } );
-            Owns.SourceAttribute = Person.Attributes.Find( A => A.Name == "PersonId" );
-            Owns.TargetAttribute = Car.Attributes.Find( A => A.Name == "CarId" );
-            Owns.Attributes.Add( new DataAttribute( "Whatever" ) );
-            Owns.RefToSourceAttribute = new DataAttribute( "PersonId" );
-            Owns.RefToTargetAttribute = new DataAttribute( "CarId" );
+            Owns.Relations.Add(new RelationshipConnection(Person,
+                                                          Person.Attributes.Find(A => A.Name == "PersonId"),
+                                                          Owns.Attributes.Find(A => A.Name == "PersonId"),
+                                                          Car,
+                                                          Car.Attributes.Find(A => A.Name == "CarId"),
+                                                          Owns.Attributes.Find(A => A.Name == "CarId"),
+                                                          RelationshipCardinality.ManyToMany));
 
             ERElements.AddRange( new BaseERElement[] { Person, Car, Drives, Owns } );
 

@@ -32,37 +32,32 @@ namespace QueryBuilder.ER
     {
         #region Properties
         /// <summary>
-        /// Entities relate through this relationship
+        /// List of entities and how they are related through this relationship
         /// </summary>
-        public List<Entity> Relates { get; set; }
+        public List<RelationshipConnection> Relations { get; set; }
+        #endregion
+
+        #region Methods
         /// <summary>
-        /// Origin attribute (Left side)
+        /// Checks if the source and target entities are related through this relationship
         /// </summary>
-        public DataAttribute SourceAttribute { get; set; }
+        /// <param name="Source">Source Entity</param>
+        /// <param name="Target">Target Entity</param>
+        /// <returns></returns>
+        public bool HasRelation( Entity Source, Entity Target )
+        {
+            return Relations.Exists(R => R.SourceEntity == Source && R.TargetEntity == Target);
+        }
         /// <summary>
-        /// Destination attribute (Right side)
+        /// Returns the relation item that describes the connection between Source and Target entities
         /// </summary>
-        public DataAttribute TargetAttribute { get; set; }
-        /// <summary>
-        /// Relationship cardinality
-        /// </summary>
-        public RelationshipCardinality Cardinality { get; set; }
-        /// <summary>
-        /// Reference to source attribute (entity)
-        /// Used when joining the relationship is mapped to a different collection
-        /// Used on Many to Many relationships
-        /// 
-        /// This must match attribute name in the source entity
-        /// </summary>
-        public DataAttribute RefToSourceAttribute { get; set; }
-        /// <summary>
-        /// Reference to target attribute (entity)
-        /// Used when joining the relationship is mapped to a different collection
-        /// Used on Many to Many relationships
-        /// 
-        /// This must match attribute name in the target entity
-        /// </summary>
-        public DataAttribute RefToTargetAttribute { get; set; }
+        /// <param name="Source">Source Entity</param>
+        /// <param name="Target">Target Entity</param>
+        /// <returns></returns>
+        public RelationshipConnection GetRelation( Entity Source, Entity Target )
+        {
+            return Relations.Find(R => R.SourceEntity == Source && R.TargetEntity == Target);
+        }
         #endregion
 
         #region Constructors
@@ -73,8 +68,8 @@ namespace QueryBuilder.ER
         public Relationship( string Name )
         {
             this.Name = Name;
-            Relates = new List<Entity>();
             Attributes = new List<DataAttribute>();
+            Relations = new List<RelationshipConnection>();
         }
         #endregion
     }

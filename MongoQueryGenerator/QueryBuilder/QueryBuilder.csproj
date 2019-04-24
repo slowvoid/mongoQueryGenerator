@@ -99,6 +99,7 @@
     <Compile Include="Query\QueryCommand.cs" />
     <Compile Include="Query\QueryGenerator.cs" />
     <Compile Include="Shared\Attribute.cs" />
+    <Compile Include="ER\RelationshipConnection.cs" />
     <Compile Include="Shared\DataType.cs" />
     <Compile Include="Shared\Exceptions\AttributeNotFoundException.cs" />
   </ItemGroup>
