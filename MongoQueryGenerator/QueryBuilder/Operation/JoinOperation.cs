@@ -27,7 +27,7 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// Relationship endpoint
         /// </summary>
-        public Entity TargetEntity { get; set; }
+        public List<Entity> TargetEntities { get; set; }
         /// <summary>
         /// Relationship connecting both entities
         /// </summary>
@@ -41,6 +41,10 @@ namespace QueryBuilder.Operation
         #region Methods
         public override OperationResult Run( OperationResult LastResult )
         {
+            // Retrieve mapping rules for Source Entity and Relationship
+            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.Name );
+            MapRule RelationshipRule = ModelMap.Rules.First( Rule => Rule.Source.Name == Relationship.Name );
+
             return LastResult;
         }
         #endregion
@@ -53,10 +57,10 @@ namespace QueryBuilder.Operation
         /// <param name="TargetEntity">Target entity</param>
         /// <param name="Relationship">Join through this relationship</param>
         /// <param name="ModelMap">Map rules between ER and Mongo</param>
-        public JoinOperation( Entity SourceEntity, Entity TargetEntity, Relationship Relationship, ModelMapping ModelMap ) : base( ModelMap )
+        public JoinOperation( Entity SourceEntity, Relationship Relationship, List<Entity> TargetEntities, ModelMapping ModelMap ) : base( ModelMap )
         {
             this.SourceEntity = SourceEntity;
-            this.TargetEntity = TargetEntity;
+            this.TargetEntities = TargetEntities;
             this.Relationship = Relationship;
         }
         #endregion

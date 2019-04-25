@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ER\Base.cs" />
+    <Compile Include="ER\ComputedEntity.cs" />
     <Compile Include="ER\Entity.cs" />
     <Compile Include="ER\Exceptions\ElementNotFoundException.cs" />
     <Compile Include="ER\Model.cs" />

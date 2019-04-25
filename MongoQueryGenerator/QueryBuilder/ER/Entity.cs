@@ -15,6 +15,13 @@ namespace QueryBuilder.ER
     {
         #region Constructors
         /// <summary>
+        /// Initialize a new Entity instance
+        /// </summary>
+        public Entity()
+        {
+            Attributes = new List<DataAttribute>();
+        }
+        /// <summary>
         /// Initializes a new Entity instance
         /// </summary>
         /// <param name="Name">Entity Name</param>
