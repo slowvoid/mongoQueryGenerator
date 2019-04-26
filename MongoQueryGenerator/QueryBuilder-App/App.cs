@@ -55,22 +55,24 @@ namespace QueryBuilderApp
             // FROM Person RJOIN (Car Drives)
 
             // Only a JOIN operation is required
-            JoinOperation JoinOp = new JoinOperation( (Entity)ErModel.FindByName( "Person" ), (Entity)ErModel.FindByName( "Car" ), (Relationship)ErModel.FindByName( "Drives" ), map );
-            JoinOp.Relationship = (Relationship)ErModel.FindByName( "Drives" );
+            JoinOperation JoinDrives = new JoinOperation( (Entity)ErModel.FindByName( "Person" ), (Relationship)ErModel.FindByName( "Drives" ), new List<Entity> { (Entity)ErModel.FindByName( "Car" ) }, map );
+            JoinOperation JoinOwns = new JoinOperation( (Entity)ErModel.FindByName( "Person" ), (Relationship)ErModel.FindByName( "Owns" ), new List<Entity> { (Entity)ErModel.FindByName( "Car" ) }, map );
+            //JoinOperation JoinOp = new JoinOperation( (Entity)ErModel.FindByName( "Person" ), (Entity)ErModel.FindByName( "Car" ), (Relationship)ErModel.FindByName( "Drives" ), map );
+            //JoinOp.Relationship = (Relationship)ErModel.FindByName( "Drives" );
 
-            JoinOperation ReverseJoin = new JoinOperation( (Entity)ErModel.FindByName( "Car" ), (Entity)ErModel.FindByName( "Person" ), (Relationship)ErModel.FindByName( "Drives" ), map );
-            JoinOperation Owns = new JoinOperation( (Entity)ErModel.FindByName( "Person" ), (Entity)ErModel.FindByName( "Car" ), (Relationship)ErModel.FindByName( "Owns" ), map );
-            Dictionary<string, bool> ProjectAttributes = new Dictionary<string, bool>();
-            ProjectAttributes.Add( "Person.Name", true );
-            ProjectAttributes.Add( "Person.PersonId", false );
-            ProjectAttributes.Add( "Car.Model", true );
-            ProjectAttributes.Add( "Owns.Whatever", true );
 
-            ProjectOperation ProjectOp = new ProjectOperation( ProjectAttributes, map );
+            //JoinOperation ReverseJoin = new JoinOperation( (Entity)ErModel.FindByName( "Car" ), (Entity)ErModel.FindByName( "Person" ), (Relationship)ErModel.FindByName( "Drives" ), map );
+            //JoinOperation Owns = new JoinOperation( (Entity)ErModel.FindByName( "Person" ), (Entity)ErModel.FindByName( "Car" ), (Relationship)ErModel.FindByName( "Owns" ), map );
+            //Dictionary<string, bool> ProjectAttributes = new Dictionary<string, bool>();
+            //ProjectAttributes.Add( "Person.Name", true );
+            //ProjectAttributes.Add( "Person.PersonId", false );
+            //ProjectAttributes.Add( "Car.Model", true );
+            //ProjectAttributes.Add( "Owns.Whatever", true );
+
+            //ProjectOperation ProjectOp = new ProjectOperation( ProjectAttributes, map );
 
             List<BaseOperation> Operations = new List<BaseOperation> {
-                Owns,
-                //ProjectOp
+                JoinDrives
             };
 
             Pipeline QueryPipeline = new Pipeline( Operations );

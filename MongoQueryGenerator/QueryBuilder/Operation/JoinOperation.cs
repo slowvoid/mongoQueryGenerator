@@ -43,7 +43,64 @@ namespace QueryBuilder.Operation
         {
             // Retrieve mapping rules for Source Entity and Relationship
             MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.Name );
-            MapRule RelationshipRule = ModelMap.Rules.First( Rule => Rule.Source.Name == Relationship.Name );
+            MapRule RelationshipRule = ModelMap.Rules.FirstOrDefault( Rule => Rule.Source.Name == Relationship.Name );
+
+            // Check if the relationship has attributes
+            bool RelationshipHasAttributes = Relationship.Attributes.Count > 0;
+
+            List<BaseOperator> OperationsToExecute = new List<BaseOperator>();
+
+            // Iterate through target entities
+            foreach ( Entity TargetEntity in TargetEntities )
+            {
+                // Check if the target entity is a computed entity
+                if ( TargetEntity is ComputedEntity )
+                {
+                    // TODO:
+                }
+                else
+                {
+                    // Check if Target Entity is reachable through the relationship
+                    if ( !Relationship.HasRelation( SourceEntity, TargetEntity ) )
+                    {
+                        throw new ImpossibleOperationException( $"Entity {TargetEntity.Name} is not reachable through {Relationship.Name}" );
+                    }
+                    // Retrieve mapping rules for target entity
+                    MapRule TargetRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetEntity.Name );
+
+                    // Get relationship data
+                    RelationshipConnection RelationshipData = Relationship.GetRelation( SourceEntity, TargetEntity );
+
+                    // Check if the Relationship has attributes and if it is mapped to either source or target entity
+                    bool RelationshipSharesTarget = true;
+                    if ( RelationshipRule != null )
+                    {
+                        RelationshipSharesTarget = ( new Collection[] { SourceRule.Target, TargetRule.Target } ).Contains( RelationshipRule.Target );
+                    }
+
+                    if ( RelationshipHasAttributes || !RelationshipSharesTarget )
+                    {
+                        // This requires a custom lookup pipeline
+                    }
+                    else
+                    {
+                        // Either the relationship has no attributes or they're shared with source or target entity
+                        // It means a simple lookup can do the trick
+                        LookupOperator LookupOp = new LookupOperator
+                        {
+                            From = TargetRule.Target.Name,
+                            ForeignField = TargetRule.Rules.First( R => R.Key == RelationshipData.TargetAttribute.Name ).Value,
+                            LocalField = SourceRule.Rules.First( R => R.Key == RelationshipData.SourceAttribute.Name ).Value,
+                            As = $"data_{Relationship.Name}"
+                        };
+
+                        OperationsToExecute.Add( LookupOp );
+                    }
+                }
+            }
+
+            // Assign operation list
+            LastResult.Commands.AddRange( OperationsToExecute );
 
             return LastResult;
         }
@@ -54,8 +111,8 @@ namespace QueryBuilder.Operation
         /// Initialize a new instance of Join Operation class
         /// </summary>
         /// <param name="SourceEntity">Source entity</param>
-        /// <param name="TargetEntity">Target entity</param>
         /// <param name="Relationship">Join through this relationship</param>
+        /// <param name="TargetEntities">Target entities</param>
         /// <param name="ModelMap">Map rules between ER and Mongo</param>
         public JoinOperation( Entity SourceEntity, Relationship Relationship, List<Entity> TargetEntities, ModelMapping ModelMap ) : base( ModelMap )
         {
