@@ -11,6 +11,7 @@ using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Mongo.Expressions;
 using QueryBuilder.Operation.Exceptions;
 using QueryBuilder.Query;
+using QueryBuilder.Shared;
 
 namespace QueryBuilder.Operation
 {
@@ -84,17 +85,37 @@ namespace QueryBuilder.Operation
                     }
                     else
                     {
-                        // Either the relationship has no attributes or they're shared with source or target entity
-                        // It means a simple lookup can do the trick
-                        LookupOperator LookupOp = new LookupOperator
+                        // Check if Source and Target relationships are mapped to the same MongoDB collection
+                        if ( SourceRule.Target.Name == TargetRule.Target.Name )
                         {
-                            From = TargetRule.Target.Name,
-                            ForeignField = TargetRule.Rules.First( R => R.Key == RelationshipData.TargetAttribute.Name ).Value,
-                            LocalField = SourceRule.Rules.First( R => R.Key == RelationshipData.SourceAttribute.Name ).Value,
-                            As = $"data_{Relationship.Name}"
-                        };
+                            // In this case we just have to setup the output to match the algebra
+                            Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
+                            Dictionary<string, Boolean> TargetFieldsToRemove = new Dictionary<string, bool>();
+                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                            {
+                                AddTargetAttributes.Add( $"data_{Relationship.Name}.{Attribute.Name}", $"${TargetRule.Rules.First(A => A.Key == Attribute.Name).Value}" );
+                                TargetFieldsToRemove.Add( TargetRule.Rules.First( A => A.Key == Attribute.Name ).Value, false );
+                            }
 
-                        OperationsToExecute.Add( LookupOp );
+                            AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
+                            Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
+
+                            OperationsToExecute.AddRange( new BaseOperator[] { AddFieldsOp, RemoveFieldsOp } );
+                        }
+                        else
+                        {
+                            // Either the relationship has no attributes or they're shared with source or target entity
+                            // It means a simple lookup can do the trick
+                            LookupOperator LookupOp = new LookupOperator
+                            {
+                                From = TargetRule.Target.Name,
+                                ForeignField = TargetRule.Rules.First( R => R.Key == RelationshipData.TargetAttribute.Name ).Value,
+                                LocalField = SourceRule.Rules.First( R => R.Key == RelationshipData.SourceAttribute.Name ).Value,
+                                As = $"data_{Relationship.Name}"
+                            };
+
+                            OperationsToExecute.Add( LookupOp );
+                        }
                     }
                 }
             }
