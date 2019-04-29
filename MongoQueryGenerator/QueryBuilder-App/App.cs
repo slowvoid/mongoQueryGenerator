@@ -31,7 +31,7 @@ namespace QueryBuilderApp
 
             // Map Car Entity to Car Collection
             MapRule CarRule = new MapRule( ErModel.FindByName( "Car" ), MSchema.Collections.Find( C => C.Name == "Person" ) );
-            CarRule.Rules.Add( "CarId", "CarId" );
+            //CarRule.Rules.Add( "CarId", "CarId" );
             CarRule.Rules.Add( "Model", "Model" );
             CarRule.Rules.Add( "Value", "Value" );
             CarRule.Rules.Add( "OwnedBy", "OwnedBy" );

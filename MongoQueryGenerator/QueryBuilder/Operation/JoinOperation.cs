@@ -93,8 +93,12 @@ namespace QueryBuilder.Operation
                             Dictionary<string, Boolean> TargetFieldsToRemove = new Dictionary<string, bool>();
                             foreach ( DataAttribute Attribute in TargetEntity.Attributes )
                             {
-                                AddTargetAttributes.Add( $"data_{Relationship.Name}.{Attribute.Name}", $"${TargetRule.Rules.First(A => A.Key == Attribute.Name).Value}" );
-                                TargetFieldsToRemove.Add( TargetRule.Rules.First( A => A.Key == Attribute.Name ).Value, false );
+                                string AttributeMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
+                                if ( AttributeMappedTo != null )
+                                {
+                                    AddTargetAttributes.Add( $"data_{Relationship.Name}.{Attribute.Name}", $"${AttributeMappedTo}" );
+                                    TargetFieldsToRemove.Add( AttributeMappedTo, false );
+                                }
                             }
 
                             AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
