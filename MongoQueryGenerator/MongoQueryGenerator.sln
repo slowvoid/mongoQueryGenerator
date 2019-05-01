@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryBuilder", "QueryBuilder\QueryBuilder.csproj", "{2BA1A345-4D25-4997-953E-E6F0D5B0D0B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryBuilder-App", "QueryBuilder-App\QueryBuilder-App.csproj", "{E4B9B259-845A-43F7-8248-1D82463E0D5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryBuilder-MapGenerator", "QueryBuilder-MapGenerator\QueryBuilder-MapGenerator.csproj", "{E1B60440-88B1-474A-844D-6145ED7532E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{E4B9B259-845A-43F7-8248-1D82463E0D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4B9B259-845A-43F7-8248-1D82463E0D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4B9B259-845A-43F7-8248-1D82463E0D5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1B60440-88B1-474A-844D-6145ED7532E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1B60440-88B1-474A-844D-6145ED7532E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1B60440-88B1-474A-844D-6145ED7532E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1B60440-88B1-474A-844D-6145ED7532E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

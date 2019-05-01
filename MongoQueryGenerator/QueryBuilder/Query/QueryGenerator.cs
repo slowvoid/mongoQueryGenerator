@@ -22,6 +22,10 @@ namespace QueryBuilder.Query
         /// Command pipeline
         /// </summary>
         public Pipeline Pipeline { get; set; }
+        /// <summary>
+        /// Collection used a start point
+        /// </summary>
+        public string CollectionName { get; set; }
         #endregion
 
         #region Methods
@@ -49,7 +53,7 @@ namespace QueryBuilder.Query
 
             // TODO: Update this section to generate collection and aggregate
             // according to the query
-            return string.Format( "db.Person.aggregate([{0}]);", string.Join( ",", AggregatePipeline ) );
+            return string.Format( "db.{0}.aggregate([{1}]);", CollectionName, string.Join( ",", AggregatePipeline ) );
         }
         #endregion
 

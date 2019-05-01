@@ -90,21 +90,53 @@ namespace QueryBuilder.Operation
                         {
                             // In this case we just have to setup the output to match the algebra
                             Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
-                            Dictionary<string, Boolean> TargetFieldsToRemove = new Dictionary<string, bool>();
-                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                            Dictionary<string, bool> TargetFieldsToRemove = new Dictionary<string, bool>();
+                            // If the relationship is a One-To-One, we have to add the target entity
+                            // attributes in the data_RelName attribute
+                            if ( RelationshipData.Cardinality == RelationshipCardinality.OneToOne )
+                            {                              
+                                foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                                {   
+                                    string AttributeMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
+
+                                    if ( AttributeMappedTo != null )
+                                    {
+                                        AddTargetAttributes.Add( $"data_{Relationship.Name}.{Attribute.Name}", $"${AttributeMappedTo}" );
+                                        TargetFieldsToRemove.Add( AttributeMappedTo, false );
+                                    }                                
+                                }
+
+                                AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
+                                Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
+
+                                OperationsToExecute.AddRange( new BaseOperator[] { AddFieldsOp, RemoveFieldsOp } );
+                            }
+                            else
                             {
-                                string AttributeMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
-                                if ( AttributeMappedTo != null )
+                                // For a One-To-Many relationship, we need to move the attribute that holds
+                                // the data under data_RelName attribute
+
+                                // Fetch the root name from the first attribute
+                                DataAttribute Ref = TargetEntity.Attributes.First();
+                                string RefMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Ref.Name ).Value;
+
+                                if ( RefMappedTo != null )
                                 {
-                                    AddTargetAttributes.Add( $"data_{Relationship.Name}.{Attribute.Name}", $"${AttributeMappedTo}" );
-                                    TargetFieldsToRemove.Add( AttributeMappedTo, false );
+                                    string[] AttributeHierarchy = RefMappedTo.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+                                    string AttributeRoot = AttributeHierarchy.Length > 0 ? AttributeHierarchy.First() : null;
+
+                                    if ( !string.IsNullOrWhiteSpace(AttributeRoot))
+                                    {
+                                        AddTargetAttributes.Add( $"data_{Relationship.Name}", $"${AttributeRoot}" );
+                                        TargetFieldsToRemove.Add( AttributeRoot, false );
+
+                                        AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
+                                        Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
+
+                                        OperationsToExecute.AddRange( new BaseOperator[] { AddFieldsOp, RemoveFieldsOp } );
+                                    }
                                 }
                             }
-
-                            AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
-                            Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
-
-                            OperationsToExecute.AddRange( new BaseOperator[] { AddFieldsOp, RemoveFieldsOp } );
                         }
                         else
                         {
