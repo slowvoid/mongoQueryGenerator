@@ -82,6 +82,7 @@ namespace QueryBuilder.Operation
                     if ( RelationshipHasAttributes || !RelationshipSharesTarget )
                     {
                         // This requires a custom lookup pipeline
+                        
                     }
                     else
                     {

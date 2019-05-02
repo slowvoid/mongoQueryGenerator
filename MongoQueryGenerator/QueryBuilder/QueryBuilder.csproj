@@ -76,12 +76,15 @@
     <Compile Include="Mongo\Aggregation\Operators\AddFields.cs" />
     <Compile Include="Mongo\Aggregation\Operators\BaseOperator.cs" />
     <Compile Include="Mongo\Aggregation\Operators\Lookup.cs" />
+    <Compile Include="Mongo\Aggregation\Operators\Match.cs" />
     <Compile Include="Mongo\Aggregation\Operators\Project.cs" />
     <Compile Include="Mongo\Aggregation\Operators\ReplaceRoot.cs" />
     <Compile Include="Mongo\Aggregation\Operators\Unwind.cs" />
     <Compile Include="Mongo\Collection.cs" />
     <Compile Include="Mongo\Document.cs" />
     <Compile Include="Mongo\Expressions\BaseExpression.cs" />
+    <Compile Include="Mongo\Expressions\EqExpr.cs" />
+    <Compile Include="Mongo\Expressions\Expr.cs" />
     <Compile Include="Mongo\Expressions\MergeObjects.cs" />
     <Compile Include="Mongo\Schema.cs" />
     <Compile Include="Operation\AddFieldsOperation.cs" />

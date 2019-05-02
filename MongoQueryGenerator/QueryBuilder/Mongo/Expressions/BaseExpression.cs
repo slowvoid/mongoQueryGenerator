@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,11 @@ namespace QueryBuilder.Mongo.Expressions
         /// </summary>
         /// <returns></returns>
         public abstract string ToJavaScript();
+        /// <summary>
+        /// Generates a BsonElement based on this instance data
+        /// </summary>
+        /// <returns></returns>
+        public abstract BsonElement ToBsonElement();
         #endregion
     }
 }

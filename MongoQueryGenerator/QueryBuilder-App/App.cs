@@ -26,24 +26,32 @@ namespace QueryBuilderApp
             MapRule PersonRule = new MapRule( ErModel.FindByName( "Person" ), MSchema.Collections.Find( C => C.Name == "Person" ) );
             PersonRule.Rules.Add( "personId", "_id" );
             PersonRule.Rules.Add( "name", "name" );
-            PersonRule.Rules.Add( "age", "age" );
+            PersonRule.Rules.Add( "salary", "salary" );
 
             // Map Car Entity to Car Collection
             MapRule CarRule = new MapRule( ErModel.FindByName( "Car" ), MSchema.Collections.Find( C => C.Name == "Car" ) );
-            CarRule.Rules.Add( "model", "model" );
-            CarRule.Rules.Add( "year", "year" );
-            CarRule.Rules.Add( "ownerId", "ownerId" );
+            CarRule.Rules.Add( "carId", "_id" );
+            CarRule.Rules.Add( "name", "name" );
+
+            MapRule InsuranceRule = new MapRule( ErModel.FindByName( "Insurance" ), MSchema.Collections.Find( C => C.Name == "Insurance" ) );
+            InsuranceRule.Rules.Add( "insuranceId", "_id" );
+            InsuranceRule.Rules.Add( "idCompany", "idCompany" );
+            InsuranceRule.Rules.Add( "idPerson", "idPerson" );
+            InsuranceRule.Rules.Add( "idCar", "idCar" );
 
             // Build mapping rules
             List<MapRule> Rules = new List<MapRule>();
-            Rules.AddRange( new MapRule[] { PersonRule, CarRule } );
+            Rules.AddRange( new MapRule[] { PersonRule, CarRule, InsuranceRule } );
 
-            ModelMapping map = new ModelMapping( "PersonCarMap", Rules );
+            ModelMapping map = new ModelMapping( "PersonInsCar", Rules );
 
             // Everything ready, we'll need a query parser to generate pipeline from a query string
             // but ww'll skip it now (query parser not available)
 
-            JoinOperation JoinOP = new JoinOperation( (Entity)ErModel.FindByName( "Person" ), (Relationship)ErModel.FindByName( "Drives" ), new List<Entity> { (Entity)ErModel.FindByName( "Car" ) }, map );
+            JoinOperation JoinOP = new JoinOperation( (Entity)ErModel.FindByName( "Person" ),
+                                                     (Relationship)ErModel.FindByName( "Insurance" ),
+                                                     new List<Entity> { (Entity)ErModel.FindByName( "Car" ) },
+                                                     map );
 
             List<BaseOperation> Operations = new List<BaseOperation> {
                 JoinOP
@@ -64,22 +72,29 @@ namespace QueryBuilderApp
             Entity Person = new Entity( "Person" );
             Person.Attributes.Add( new DataAttribute( "personId" ) );
             Person.Attributes.Add( new DataAttribute( "name" ) );
-            Person.Attributes.Add( new DataAttribute( "age" ) );
+            Person.Attributes.Add( new DataAttribute( "salary" ) );
 
             Entity Car = new Entity( "Car" );
-            Car.Attributes.Add( new DataAttribute( "model" ) );
-            Car.Attributes.Add( new DataAttribute( "year" ) );
-            Car.Attributes.Add( new DataAttribute( "ownerId" ) );
+            Car.Attributes.Add( new DataAttribute( "carId" ) );
+            Car.Attributes.Add( new DataAttribute( "name" ) );
 
-            Relationship Drives = new Relationship( "Drives" );
-            RelationshipConnection PersonDrivesCar = new RelationshipConnection( Person,
-                                                                                Person.Attributes.Find( A => A.Name == "personId" ),
-                                                                                Car,
-                                                                                Car.Attributes.Find( A => A.Name == "ownerId" ),
-                                                                                RelationshipCardinality.OneToMany );
-            Drives.Relations.Add( PersonDrivesCar );
+            Relationship Insurance = new Relationship( "Insurance" );
+            Insurance.Attributes.Add( new DataAttribute( "insuranceId" ) );
+            Insurance.Attributes.Add( new DataAttribute( "idCompany" ) );
+            Insurance.Attributes.Add( new DataAttribute( "idPerson" ) );
+            Insurance.Attributes.Add( new DataAttribute( "idCar" ) );
 
-            Model ERModel = new Model( "PersonDrivesCarModel", new List<BaseERElement> { Person, Car, Drives } );
+            RelationshipConnection PersonCarConn = new RelationshipConnection( Person,
+                                                                              Person.Attributes.Find( A => A.Name == "personId" ),
+                                                                              Insurance.Attributes.Find( A => A.Name == "idPerson" ),
+                                                                              Car,
+                                                                              Car.Attributes.Find( A => A.Name == "carId" ),
+                                                                              Insurance.Attributes.Find( A => A.Name == "idCar" ),
+                                                                              RelationshipCardinality.ManyToMany );
+
+            Insurance.Relations.Add( PersonCarConn );
+
+            Model ERModel = new Model( "PersonInsCar", new List<BaseERElement> { Person, Car, Insurance } );
             return ERModel;
         }
 
@@ -88,14 +103,19 @@ namespace QueryBuilderApp
             Collection Person = new Collection( "Person" );
             Person.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
             Person.DocumentSchema.Attributes.Add( new DataAttribute( "name" ) );
-            Person.DocumentSchema.Attributes.Add( new DataAttribute( "age" ) );
+            Person.DocumentSchema.Attributes.Add( new DataAttribute( "salary" ) );
 
             Collection Car = new Collection( "Car" );
-            Car.DocumentSchema.Attributes.Add( new DataAttribute( "model" ) );
-            Car.DocumentSchema.Attributes.Add( new DataAttribute( "year" ) );
-            Car.DocumentSchema.Attributes.Add( new DataAttribute( "ownerId" ) );
+            Car.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
+            Car.DocumentSchema.Attributes.Add( new DataAttribute( "name" ) );
 
-            MongoSchema Schema = new MongoSchema( "PersonDrivesCarSchema", new List<Collection> { Person, Car } );
+            Collection Insurance = new Collection( "Insurance" );
+            Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
+            Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "idCompany" ) );
+            Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "idPerson" ) );
+            Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "idCar" ) );
+
+            MongoSchema Schema = new MongoSchema( "PersonInsuranceCar", new List<Collection> { Person, Car, Insurance } );
             return Schema;
         }
     }
