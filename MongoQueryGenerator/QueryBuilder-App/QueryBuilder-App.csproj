@@ -36,6 +36,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="MongoDB.Bson, Version=2.8.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>

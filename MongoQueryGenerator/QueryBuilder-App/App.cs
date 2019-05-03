@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using QueryBuilder.ER;
 using QueryBuilder.Map;
 using QueryBuilder.Mongo;
+using QueryBuilder.Mongo.Expressions;
 using QueryBuilder.Operation;
 using QueryBuilder.Query;
 using QueryBuilder.Shared;

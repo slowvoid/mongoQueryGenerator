@@ -1,4 +1,6 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +16,10 @@ namespace QueryBuilder.Mongo.Expressions
     {
         #region Properties
         /// <summary>
-        /// Field or value source to compare
+        /// Values to be matched
         /// </summary>
-        public string Field { get; set; }
-        /// <summary>
-        /// Value to match
-        /// </summary>
-        public object Value { get; set; }
+        [BsonElement("$eq")]
+        public List<object> Values { get; set; }
         #endregion
 
         #region Override
@@ -30,20 +29,7 @@ namespace QueryBuilder.Mongo.Expressions
         /// <returns></returns>
         public override string ToJavaScript()
         {
-            BsonDocument EqDoc = new BsonDocument( new List<BsonElement>
-            {
-                new BsonElement("$eq", $"[${Field}, {Value}]")
-            } );
-
-            return EqDoc.ToString();
-        }
-        /// <summary>
-        /// Generates a BsonElement based on this instance data
-        /// </summary>
-        /// <returns></returns>
-        public override BsonElement ToBsonElement()
-        {
-            return new BsonElement( "$eq", $"[${Field}, {Value}]" );
+            return this.ToJson();
         }
         #endregion
 
@@ -55,8 +41,8 @@ namespace QueryBuilder.Mongo.Expressions
         /// <param name="Value">Value</param>
         public EqExpr(string Field, object Value)
         {
-            this.Field = Field;
-            this.Value = Value;
+            Values = new List<object>();
+            Values.AddRange( new object[] { Field, Value } );
         }
         #endregion
     }

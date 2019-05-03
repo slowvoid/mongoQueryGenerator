@@ -18,11 +18,6 @@ namespace QueryBuilder.Mongo.Expressions
         /// </summary>
         /// <returns></returns>
         public abstract string ToJavaScript();
-        /// <summary>
-        /// Generates a BsonElement based on this instance data
-        /// </summary>
-        /// <returns></returns>
-        public abstract BsonElement ToBsonElement();
         #endregion
     }
 }

@@ -1,4 +1,6 @@
-﻿using QueryBuilder.Mongo.Expressions;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using QueryBuilder.Mongo.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +18,15 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Expression to execute
         /// </summary>
+        [BsonIgnore]
         public BaseExpression Expression { get; set; }
         /// <summary>
         /// Fields to match against
         /// </summary>
+        [BsonIgnore]
         public Dictionary<string, object> FieldsToMatch { get; set; }
+        [BsonElement("$match")]
+        private string JsonExpression { get; set; }
         #endregion
 
         #region Overrides
@@ -30,7 +36,16 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <returns></returns>
         public override string ToJavaScript()
         {
-            throw new NotImplementedException();
+            if ( Expression != null )
+            {
+                JsonExpression = Expression.ToJavaScript();
+            }
+            else
+            {
+                JsonExpression = FieldsToMatch.ToJson();
+            }
+
+            return JsonExpression;
         }
         #endregion
 
@@ -40,6 +55,23 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// </summary>
         public Match()
         {
+            FieldsToMatch = new Dictionary<string, object>();
+        }
+        /// <summary>
+        /// Initialize a new instance of Match
+        /// </summary>
+        /// <param name="FieldsToMatch">Fields to match against</param>
+        public Match( Dictionary<string, object> FieldsToMatch )
+        {
+            this.FieldsToMatch = FieldsToMatch;
+        }
+        /// <summary>
+        /// Initialize a new instance of Match
+        /// </summary>
+        /// <param name="Expression">Expression to be evalueted</param>
+        public Match( BaseExpression Expression )
+        {
+            this.Expression = Expression;
             FieldsToMatch = new Dictionary<string, object>();
         }
         #endregion

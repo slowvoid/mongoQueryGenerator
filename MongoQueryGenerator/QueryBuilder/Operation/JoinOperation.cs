@@ -82,7 +82,28 @@ namespace QueryBuilder.Operation
                     if ( RelationshipHasAttributes || !RelationshipSharesTarget )
                     {
                         // This requires a custom lookup pipeline
-                        
+                        // When using a custom pipeline, the first thing to do is
+                        // limit the amount of records return by matching it with the
+                        // source entity
+
+                        // Build variable for pipeline
+                        string MatchThisVar = $"{SourceEntity.Name}_id";
+                        string MatchThisValue = $"${SourceRule.Rules.First( R => R.Key == RelationshipData.SourceAttribute.Name ).Value}";
+
+                        Dictionary<string, string> RelationshipLookupLet = new Dictionary<string, string>();
+                        RelationshipLookupLet.Add( MatchThisVar, MatchThisValue );
+
+                        List<BaseOperator> LookupPipeline = new List<BaseOperator>();
+
+                        string LookupMatchField = $"${RelationshipRule.Rules.First( R => R.Key == RelationshipData.RefSourceAtrribute.Name ).Value}";
+                        string LookupMatchValue = $"$${MatchThisVar}";
+
+                        Match MatchOp = new Match
+                        {
+                            Expression = new Expr( new EqExpr( LookupMatchField, LookupMatchValue ) )
+                        };
+
+                        OperationsToExecute.Add( MatchOp );
                     }
                     else
                     {
