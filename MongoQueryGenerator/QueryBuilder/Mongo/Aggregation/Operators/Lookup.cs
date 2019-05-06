@@ -68,7 +68,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
                 Let = null;
             }
 
-            return this.ToBsonDocument().ToString();
+            return new BsonDocument( new List<BsonElement> { new BsonElement( "$lookup", this.ToBsonDocument() ) } ).ToString();
         }
         #endregion
 

@@ -51,8 +51,114 @@ namespace QueryBuilder.Operation
 
             List<BaseOperator> OperationsToExecute = new List<BaseOperator>();
 
+            string joinedAttributeName = $"data_{Relationship.Name}";
+
+            if ( Relationship.Cardinality == RelationshipCardinality.OneToOne )
+            {
+                // Go through all target entities
+                foreach ( Entity TargetEntity in TargetEntities )
+                {
+                    if ( TargetEntity is ComputedEntity )
+                    {
+                        // TODO
+                    }
+                    else
+                    {
+                        // Check if the target entity is really related to the source entity
+                        if ( !Relationship.HasRelation( SourceEntity, TargetEntity ) )
+                        {
+                            throw new ImpossibleOperationException( $"Entity {TargetEntity.Name} is not reachable through {Relationship.Name}" );
+                        }
+
+                        // Check if the target entity shares the same mapping as the source
+                        // Retrieve mapping rules for target entity
+                        MapRule TargetRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetEntity.Name );
+
+                        // Get relationship data
+                        RelationshipConnection RelationshipData = Relationship.GetRelation( SourceEntity, TargetEntity );
+
+                        bool SharesMapping = SourceRule.Target.Name == TargetRule.Target.Name;
+
+                        if ( SharesMapping )
+                        {
+                            // This means that target entity is embbeded in source entity
+                            // So we have to add the fields to the relationship attribute
+                            // In this case we just have to setup the output to match the algebra
+                            Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
+                            Dictionary<string, bool> TargetFieldsToRemove = new Dictionary<string, bool>();
+                            // attributes in the data_RelName attribute
+                            
+                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                            {
+                                string AttributeMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
+
+                                if ( AttributeMappedTo != null )
+                                {
+                                    AddTargetAttributes.Add( $"{joinedAttributeName}.{Attribute.Name}", $"${AttributeMappedTo}" );
+                                    TargetFieldsToRemove.Add( AttributeMappedTo, false );
+                                }
+                            }
+
+                            AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
+                            Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
+
+                            OperationsToExecute.AddRange( new BaseOperator[] { AddFieldsOp, RemoveFieldsOp } );
+                        }
+                        else
+                        {
+                            string TargetLookupAttribute = $"data_{TargetEntity.Name}";
+
+                            // Lookup entity
+                            LookupOperator LookupTarget = new LookupOperator
+                            {
+                                From = TargetRule.Target.Name,
+                                ForeignField = TargetRule.Rules.First( R => R.Key == RelationshipData.TargetAttribute.Name ).Value,
+                                LocalField = SourceRule.Rules.First( R => R.Key == RelationshipData.SourceAttribute.Name ).Value,
+                                As = TargetLookupAttribute
+                            };
+
+                            // Add fields and hide source object
+                            Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
+                            Dictionary<string, bool> TargetFieldsToRemove = new Dictionary<string, bool>();
+                            // attributes in the data_RelName attribute
+
+                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                            {
+                                string AttributeMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
+
+                                if ( AttributeMappedTo != null )
+                                {
+                                    AddTargetAttributes.Add( $"{joinedAttributeName}.{TargetEntity.Name}_{Attribute.Name}", $"${TargetLookupAttribute}.{AttributeMappedTo}" );
+                                }
+                            }
+
+                            // Unwind joined data
+                            Unwind UnwindOp = new Unwind( TargetLookupAttribute );
+
+                            // Only one field to hide
+                            TargetFieldsToRemove.Add( TargetLookupAttribute, false );
+
+                            AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
+                            Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
+
+                            OperationsToExecute.AddRange( new BaseOperator[] { LookupTarget, UnwindOp, AddFieldsOp, RemoveFieldsOp } );
+                        }
+                    }
+                }
+            }
+            else if ( Relationship.Cardinality == RelationshipCardinality.OneToMany )
+            {
+
+            }
+            else if ( Relationship.Cardinality == RelationshipCardinality.ManyToMany )
+            {
+
+            }
+
+
             // Iterate through target entities
-            foreach ( Entity TargetEntity in TargetEntities )
+            // BACKUP
+            /*foreach ( Entity TargetEntity in TargetEntities )
             {
                 // Check if the target entity is a computed entity
                 if ( TargetEntity is ComputedEntity )
@@ -101,9 +207,43 @@ namespace QueryBuilder.Operation
                         Match MatchOp = new Match
                         {
                             Expression = new Expr( new EqExpr( LookupMatchField, LookupMatchValue ) )
+                        };                        
+
+                        // Create lookup operation for target entity
+                        LookupOperator LookupTarget = new LookupOperator
+                        {
+                            From = TargetRule.Target.Name,
+                            ForeignField = TargetRule.Rules.First( R => R.Key == RelationshipData.TargetAttribute.Name ).Value,
+                            LocalField = RelationshipRule.Rules.First( R => R.Key == RelationshipData.RefTargetAttribute.Name ).Value,
+                            As = $"data_{Relationship.Name}"
                         };
 
-                        OperationsToExecute.Add( MatchOp );
+                        // Unwind joined data
+                        Unwind UnwindTarget = new Unwind
+                        {
+                            Field = $"$data_{Relationship.Name}"
+                        };
+
+                        // Bring joined entity one level above
+                        Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
+                        Dictionary<string, bool> TargetFieldsToRemove = new Dictionary<string, bool>();
+
+                        foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                        {
+                            string AttributeMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
+
+                            if ( AttributeMappedTo != null )
+                            {
+                                AddTargetAttributes.Add( $"data_{Relationship.Name}.{Attribute.Name}", $"${AttributeMappedTo}" );
+                                TargetFieldsToRemove.Add( AttributeMappedTo, false );
+                            }
+                        }
+
+                        AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
+                        Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
+
+                        // Pipeline ready, setup lookup for relationship
+
                     }
                     else
                     {
@@ -177,7 +317,7 @@ namespace QueryBuilder.Operation
                     }
                 }
             }
-
+            */
             // Assign operation list
             LastResult.Commands.AddRange( OperationsToExecute );
 

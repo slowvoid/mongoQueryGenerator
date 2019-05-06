@@ -35,6 +35,10 @@ namespace QueryBuilder.ER
         /// List of entities and how they are related through this relationship
         /// </summary>
         public List<RelationshipConnection> Relations { get; set; }
+        /// <summary>
+        /// Relationship cardinality
+        /// </summary>
+        public RelationshipCardinality Cardinality { get; set; }
         #endregion
 
         #region Methods
@@ -65,11 +69,12 @@ namespace QueryBuilder.ER
         /// Initialize a new Relationship instance
         /// </summary>
         /// <param name="Name">Relationship name</param>
-        public Relationship( string Name )
+        public Relationship( string Name, RelationshipCardinality Cardinality )
         {
             this.Name = Name;
             Attributes = new List<DataAttribute>();
             Relations = new List<RelationshipConnection>();
+            this.Cardinality = Cardinality;
         }
         #endregion
     }

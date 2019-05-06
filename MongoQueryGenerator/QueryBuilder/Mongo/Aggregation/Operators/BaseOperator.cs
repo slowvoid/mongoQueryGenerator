@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Operator name
         /// </summary>
+        [BsonIgnore]
         public string Name { get; set; }
         #endregion
 
