@@ -81,23 +81,40 @@ namespace QueryBuilder.Operation
 
                         if ( SharesMapping )
                         {
+
                             // This means that target entity is embbeded in source entity
                             // So we have to add the fields to the relationship attribute
                             // In this case we just have to setup the output to match the algebra
                             Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
                             Dictionary<string, bool> TargetFieldsToRemove = new Dictionary<string, bool>();
                             // attributes in the data_RelName attribute
-                            
+
+                            // Check if it is possible to find the root attribute for the embbebed collection
+                            bool FoundRootAttribute = false;
+                            string RootAttributeMap = TargetRule.Rules.FirstOrDefault().Value;
+                            if ( RootAttributeMap != null )
+                            {
+                                string[] AttributeHierarchy = RootAttributeMap.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+                                if ( AttributeHierarchy.Length > 0 )
+                                {
+                                    TargetFieldsToRemove.Add( AttributeHierarchy.First(), false );
+                                    FoundRootAttribute = true;
+                                }
+                            }
+
                             foreach ( DataAttribute Attribute in TargetEntity.Attributes )
                             {
                                 string AttributeMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
 
                                 if ( AttributeMappedTo != null )
                                 {
-                                    AddTargetAttributes.Add( $"{joinedAttributeName}.{Attribute.Name}", $"${AttributeMappedTo}" );
-                                    TargetFieldsToRemove.Add( AttributeMappedTo, false );
+                                    AddTargetAttributes.Add( $"{joinedAttributeName}.{TargetEntity.Name}_{Attribute.Name}", $"${AttributeMappedTo}" );
+                                    if ( !FoundRootAttribute )
+                                    {
+                                        TargetFieldsToRemove.Add( AttributeMappedTo, false );
+                                    }
                                 }
-                            }
+                            }                            
 
                             AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
                             Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
