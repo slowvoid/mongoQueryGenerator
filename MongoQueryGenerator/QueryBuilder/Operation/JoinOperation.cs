@@ -165,162 +165,101 @@ namespace QueryBuilder.Operation
             }
             else if ( Relationship.Cardinality == RelationshipCardinality.OneToMany )
             {
-
-            }
-            else if ( Relationship.Cardinality == RelationshipCardinality.ManyToMany )
-            {
-
-            }
-
-
-            // Iterate through target entities
-            // BACKUP
-            /*foreach ( Entity TargetEntity in TargetEntities )
-            {
-                // Check if the target entity is a computed entity
-                if ( TargetEntity is ComputedEntity )
+                // Go through all target entities
+                foreach ( Entity TargetEntity in TargetEntities )
                 {
-                    // TODO:
-                }
-                else
-                {
-                    // Check if Target Entity is reachable through the relationship
-                    if ( !Relationship.HasRelation( SourceEntity, TargetEntity ) )
+                    if ( TargetEntity is ComputedEntity )
                     {
-                        throw new ImpossibleOperationException( $"Entity {TargetEntity.Name} is not reachable through {Relationship.Name}" );
-                    }
-                    // Retrieve mapping rules for target entity
-                    MapRule TargetRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetEntity.Name );
-
-                    // Get relationship data
-                    RelationshipConnection RelationshipData = Relationship.GetRelation( SourceEntity, TargetEntity );
-
-                    // Check if the Relationship has attributes and if it is mapped to either source or target entity
-                    bool RelationshipSharesTarget = true;
-                    if ( RelationshipRule != null )
-                    {
-                        RelationshipSharesTarget = ( new Collection[] { SourceRule.Target, TargetRule.Target } ).Contains( RelationshipRule.Target );
-                    }
-
-                    if ( RelationshipHasAttributes || !RelationshipSharesTarget )
-                    {
-                        // This requires a custom lookup pipeline
-                        // When using a custom pipeline, the first thing to do is
-                        // limit the amount of records return by matching it with the
-                        // source entity
-
-                        // Build variable for pipeline
-                        string MatchThisVar = $"{SourceEntity.Name}_id";
-                        string MatchThisValue = $"${SourceRule.Rules.First( R => R.Key == RelationshipData.SourceAttribute.Name ).Value}";
-
-                        Dictionary<string, string> RelationshipLookupLet = new Dictionary<string, string>();
-                        RelationshipLookupLet.Add( MatchThisVar, MatchThisValue );
-
-                        List<BaseOperator> LookupPipeline = new List<BaseOperator>();
-
-                        string LookupMatchField = $"${RelationshipRule.Rules.First( R => R.Key == RelationshipData.RefSourceAtrribute.Name ).Value}";
-                        string LookupMatchValue = $"$${MatchThisVar}";
-
-                        Match MatchOp = new Match
-                        {
-                            Expression = new Expr( new EqExpr( LookupMatchField, LookupMatchValue ) )
-                        };                        
-
-                        // Create lookup operation for target entity
-                        LookupOperator LookupTarget = new LookupOperator
-                        {
-                            From = TargetRule.Target.Name,
-                            ForeignField = TargetRule.Rules.First( R => R.Key == RelationshipData.TargetAttribute.Name ).Value,
-                            LocalField = RelationshipRule.Rules.First( R => R.Key == RelationshipData.RefTargetAttribute.Name ).Value,
-                            As = $"data_{Relationship.Name}"
-                        };
-
-                        // Unwind joined data
-                        Unwind UnwindTarget = new Unwind
-                        {
-                            Field = $"$data_{Relationship.Name}"
-                        };
-
-                        // Bring joined entity one level above
-                        Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
-                        Dictionary<string, bool> TargetFieldsToRemove = new Dictionary<string, bool>();
-
-                        foreach ( DataAttribute Attribute in TargetEntity.Attributes )
-                        {
-                            string AttributeMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
-
-                            if ( AttributeMappedTo != null )
-                            {
-                                AddTargetAttributes.Add( $"data_{Relationship.Name}.{Attribute.Name}", $"${AttributeMappedTo}" );
-                                TargetFieldsToRemove.Add( AttributeMappedTo, false );
-                            }
-                        }
-
-                        AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
-                        Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
-
-                        // Pipeline ready, setup lookup for relationship
-
+                        // Computed entities require better handling
                     }
                     else
                     {
-                        // Check if Source and Target relationships are mapped to the same MongoDB collection
+                        // Retrieve mapping rule for target
+                        MapRule TargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == TargetEntity.Name );
+                        if ( TargetRule == null )
+                        {
+                            throw new ImpossibleOperationException( $"Entity {TargetEntity.Name} has no valid mapping." );
+                        }
+
+                        if ( !Relationship.HasRelation( SourceEntity, TargetEntity ) )
+                        {
+                            throw new ImpossibleOperationException( $"Entities {SourceEntity.Name} and {TargetEntity.Name} are not related through {Relationship.Name}" );
+                        }
+
+                        RelationshipConnection RelationshipData = Relationship.GetRelation( SourceEntity, TargetEntity );
+
+                        // Are source and target mapped to the same collection
                         if ( SourceRule.Target.Name == TargetRule.Target.Name )
                         {
-                            // In this case we just have to setup the output to match the algebra
+                            /* Target entity is embbebed in the source entity
+                               This also means that the relationship attributes (if any)
+                               are mapped to the same collection.
+
+                               We just need to move them to a more appropriate place
+                            */
+
                             Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
                             Dictionary<string, bool> TargetFieldsToRemove = new Dictionary<string, bool>();
-                            // If the relationship is a One-To-One, we have to add the target entity
-                            // attributes in the data_RelName attribute
-                            if ( RelationshipData.Cardinality == RelationshipCardinality.OneToOne )
-                            {                              
-                                foreach ( DataAttribute Attribute in TargetEntity.Attributes )
-                                {   
-                                    string AttributeMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
+                            
+                            // Move relationship attributes first
+                            foreach ( DataAttribute Attribute in Relationship.Attributes )
+                            {
+                                // Retrieve attribute mapping
+                                string AttributeMappedTo = RelationshipRule.Rules.FirstOrDefault( R => R.Key == Attribute.Name ).Value;
 
-                                    if ( AttributeMappedTo != null )
+                                // Check if the attribute is mapped to a complex attribute (like an embbebed document)
+                                if ( AttributeMappedTo.Contains( "." ) )
+                                {
+                                    string[] AttributeHierarchy = AttributeMappedTo.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+                                    string Root = AttributeHierarchy[ 0 ];
+
+                                    // Add to remove list
+                                    if ( !TargetFieldsToRemove.ContainsKey( Root ) )
                                     {
-                                        AddTargetAttributes.Add( $"data_{Relationship.Name}.{Attribute.Name}", $"${AttributeMappedTo}" );
-                                        TargetFieldsToRemove.Add( AttributeMappedTo, false );
-                                    }                                
+                                        TargetFieldsToRemove.Add( Root, false );
+                                    }
                                 }
 
-                                AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
-                                Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
-
-                                OperationsToExecute.AddRange( new BaseOperator[] { AddFieldsOp, RemoveFieldsOp } );
-                            }
-                            else
-                            {
-                                // For a One-To-Many relationship, we need to move the attribute that holds
-                                // the data under data_RelName attribute
-
-                                // Fetch the root name from the first attribute
-                                DataAttribute Ref = TargetEntity.Attributes.First();
-                                string RefMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Ref.Name ).Value;
-
-                                if ( RefMappedTo != null )
+                                // If not found, skip the attribute
+                                if ( string.IsNullOrWhiteSpace( AttributeMappedTo ) )
                                 {
-                                    string[] AttributeHierarchy = RefMappedTo.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
-                                    string AttributeRoot = AttributeHierarchy.Length > 0 ? AttributeHierarchy.First() : null;
+                                    continue;
+                                }
 
-                                    if ( !string.IsNullOrWhiteSpace(AttributeRoot))
+                                AddTargetAttributes.Add( $"data_{Relationship.Name}.{Relationship.Name}_{Attribute.Name}", $"${AttributeMappedTo}" );
+                            }
+
+                            // For a One-To-Many relationship, we need to move the attribute that holds
+                            // the data under data_RelName attribute
+                            // Fetch the root name from the first attribute
+                            DataAttribute Ref = TargetEntity.Attributes.First();
+                            string RefMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Ref.Name ).Value;
+                            if ( RefMappedTo != null )
+                            {
+                                string[] AttributeHierarchy = RefMappedTo.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+                                string AttributeRoot = AttributeHierarchy.Length > 0 ? AttributeHierarchy.First() : null;
+                                if ( !string.IsNullOrWhiteSpace( AttributeRoot ) )
+                                {
+                                    AddTargetAttributes.Add( $"data_{Relationship.Name}", $"${AttributeRoot}" );
+                                    if ( !TargetFieldsToRemove.ContainsKey( AttributeRoot ) )
                                     {
-                                        AddTargetAttributes.Add( $"data_{Relationship.Name}", $"${AttributeRoot}" );
                                         TargetFieldsToRemove.Add( AttributeRoot, false );
-
-                                        AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
-                                        Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
-
-                                        OperationsToExecute.AddRange( new BaseOperator[] { AddFieldsOp, RemoveFieldsOp } );
                                     }
                                 }
                             }
+
+                            // Create Operations
+                            AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
+                            Project ProjectOp = new Project( TargetFieldsToRemove );
+
+                            OperationsToExecute.AddRange( new BaseOperator[] { AddFieldsOp, ProjectOp } );
                         }
                         else
                         {
-                            // Either the relationship has no attributes or they're shared with source or target entity
-                            // It means a simple lookup can do the trick
+                            /* In this case, the target entity is mapped to its own collection
+                             * Which also means that if the relationship has attributes
+                             * it must have been mapped to target collection
+                             */
                             LookupOperator LookupOp = new LookupOperator
                             {
                                 From = TargetRule.Target.Name,
@@ -334,7 +273,11 @@ namespace QueryBuilder.Operation
                     }
                 }
             }
-            */
+            else if ( Relationship.Cardinality == RelationshipCardinality.ManyToMany )
+            {
+
+            }
+
             // Assign operation list
             LastResult.Commands.AddRange( OperationsToExecute );
 
