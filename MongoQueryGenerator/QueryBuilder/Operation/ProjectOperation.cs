@@ -1,5 +1,6 @@
 ﻿using QueryBuilder.Map;
 using QueryBuilder.Mongo.Aggregation.Operators;
+using QueryBuilder.Mongo.Expressions;
 using QueryBuilder.Operation.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// Attributes involved in this operation and their visibility status
         /// </summary>
-        public Dictionary<string, bool> Attributes { get; set; }
+        public Dictionary<string, ProjectExpression> Attributes { get; set; }
         #endregion
 
         #region Methods
@@ -31,7 +32,7 @@ namespace QueryBuilder.Operation
         {
             // For projection it is mandatory to use qualified name (Entity.Attribute)
             // Support for aliases might be done later
-            Dictionary<string, bool> AttributesToProject = new Dictionary<string, bool>();
+            Dictionary<string, ProjectExpression> AttributesToProject = new Dictionary<string, ProjectExpression>();
 
             // Locate each attribute mapping
             foreach ( string AttributeQualifiedName in Attributes.Keys )
@@ -78,7 +79,7 @@ namespace QueryBuilder.Operation
         /// Initialize a new instance of ProjectOperation class
         /// </summary>
         /// <param name="Map"></param>
-        public ProjectOperation( Dictionary<string, bool> Attributes, ModelMapping Map ) : base(Map)
+        public ProjectOperation( Dictionary<string, ProjectExpression> Attributes, ModelMapping Map ) : base(Map)
         {
             this.Attributes = Attributes;
         }

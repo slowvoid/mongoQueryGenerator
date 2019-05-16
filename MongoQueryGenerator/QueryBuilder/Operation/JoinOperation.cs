@@ -86,7 +86,7 @@ namespace QueryBuilder.Operation
                             // So we have to add the fields to the relationship attribute
                             // In this case we just have to setup the output to match the algebra
                             Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
-                            Dictionary<string, bool> TargetFieldsToRemove = new Dictionary<string, bool>();
+                            Dictionary<string, ProjectExpression> TargetFieldsToRemove = new Dictionary<string, ProjectExpression>();
                             // attributes in the data_RelName attribute
 
                             // Check if it is possible to find the root attribute for the embbebed collection
@@ -97,7 +97,7 @@ namespace QueryBuilder.Operation
                                 string[] AttributeHierarchy = RootAttributeMap.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
                                 if ( AttributeHierarchy.Length > 0 )
                                 {
-                                    TargetFieldsToRemove.Add( AttributeHierarchy.First(), false );
+                                    TargetFieldsToRemove.Add( AttributeHierarchy.First(), new BooleanExpr( false ) );
                                     FoundRootAttribute = true;
                                 }
                             }
@@ -111,7 +111,7 @@ namespace QueryBuilder.Operation
                                     AddTargetAttributes.Add( $"{joinedAttributeName}.{TargetEntity.Name}_{Attribute.Name}", $"${AttributeMappedTo}" );
                                     if ( !FoundRootAttribute )
                                     {
-                                        TargetFieldsToRemove.Add( AttributeMappedTo, false );
+                                        TargetFieldsToRemove.Add( AttributeMappedTo, new BooleanExpr( false ) );
                                     }
                                 }
                             }                            
@@ -136,7 +136,7 @@ namespace QueryBuilder.Operation
 
                             // Add fields and hide source object
                             Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
-                            Dictionary<string, bool> TargetFieldsToRemove = new Dictionary<string, bool>();
+                            Dictionary<string, ProjectExpression> TargetFieldsToRemove = new Dictionary<string, ProjectExpression>();
                             // attributes in the data_RelName attribute
 
                             foreach ( DataAttribute Attribute in TargetEntity.Attributes )
@@ -153,7 +153,7 @@ namespace QueryBuilder.Operation
                             Unwind UnwindOp = new Unwind( TargetLookupAttribute );
 
                             // Only one field to hide
-                            TargetFieldsToRemove.Add( TargetLookupAttribute, false );
+                            TargetFieldsToRemove.Add( TargetLookupAttribute, new BooleanExpr( false ) );
 
                             AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
                             Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
@@ -199,7 +199,7 @@ namespace QueryBuilder.Operation
                             */
 
                             Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
-                            Dictionary<string, bool> TargetFieldsToRemove = new Dictionary<string, bool>();
+                            Dictionary<string, ProjectExpression> TargetFieldsToRemove = new Dictionary<string, ProjectExpression>();
                             
                             // Move relationship attributes first
                             foreach ( DataAttribute Attribute in Relationship.Attributes )
@@ -216,7 +216,7 @@ namespace QueryBuilder.Operation
                                     // Add to remove list
                                     if ( !TargetFieldsToRemove.ContainsKey( Root ) )
                                     {
-                                        TargetFieldsToRemove.Add( Root, false );
+                                        TargetFieldsToRemove.Add( Root, new BooleanExpr( false ) );
                                     }
                                 }
 
@@ -229,30 +229,43 @@ namespace QueryBuilder.Operation
                                 AddTargetAttributes.Add( $"data_{Relationship.Name}.{Relationship.Name}_{Attribute.Name}", $"${AttributeMappedTo}" );
                             }
 
-                            // For a One-To-Many relationship, we need to move the attribute that holds
-                            // the data under data_RelName attribute
-                            // Fetch the root name from the first attribute
-                            DataAttribute Ref = TargetEntity.Attributes.First();
-                            string RefMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Ref.Name ).Value;
-                            if ( RefMappedTo != null )
+                            // For an One-To-Many relationship, we need to map the array containing
+                            // the joined entity and rename it to match the algebra
+                            Dictionary<string, string> AttributeMapRules = new Dictionary<string, string>();
+                            // Retrieve the name of the attribute that holds the embbebed document
+                            string AttributePath = TargetRule.Rules.First( R => R.Key == TargetEntity.Attributes.First().Name ).Value;
+                            string[] AttributeMap = AttributePath.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+                            string AttributeRoot = AttributeMap.First();
+
+                            string AttributeMapNameRef = $"{ Relationship.Name.ToLower() }_{ TargetEntity.Name}";
+
+                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
                             {
-                                string[] AttributeHierarchy = RefMappedTo.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
-                                string AttributeRoot = AttributeHierarchy.Length > 0 ? AttributeHierarchy.First() : null;
-                                if ( !string.IsNullOrWhiteSpace( AttributeRoot ) )
-                                {
-                                    AddTargetAttributes.Add( $"data_{Relationship.Name}", $"${AttributeRoot}" );
-                                    if ( !TargetFieldsToRemove.ContainsKey( AttributeRoot ) )
-                                    {
-                                        TargetFieldsToRemove.Add( AttributeRoot, false );
-                                    }
-                                }
+                                string AttrMappedTo = TargetRule.Rules.First( R => R.Key == Attribute.Name ).Value;
+                                string[] AttrMap = AttrMappedTo.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+                                string AttrName = AttrMap[ 1 ];
+
+                                AttributeMapRules.Add( $"{TargetEntity.Name}_{Attribute.Name}", $"$${AttributeMapNameRef}.{AttrName}" );
                             }
 
-                            // Create Operations
-                            AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
-                            Project ProjectOp = new Project( TargetFieldsToRemove );
+                            MapExpr ProjectMap = new MapExpr( $"${AttributeRoot}", AttributeMapNameRef, AttributeMapRules );
 
-                            OperationsToExecute.AddRange( new BaseOperator[] { AddFieldsOp, ProjectOp } );
+                            Dictionary<string, ProjectExpression> ProjectFields = new Dictionary<string, ProjectExpression>();
+                            ProjectFields.Add( $"data_{Relationship.Name}", ProjectMap );
+                            
+                            // As we're executing a project operation to add a new field, we need to also
+                            // set the source entity attributes as visible
+                            foreach ( DataAttribute Attribute in SourceEntity.Attributes )
+                            {
+                                string SourceAttrMappedTo = SourceRule.Rules.First( R => R.Key == Attribute.Name ).Value;
+                                ProjectFields.Add( SourceAttrMappedTo, new BooleanExpr( true ) );
+                            }
+
+
+                            Project ProjectOp = new Project( ProjectFields );
+
+
+                            OperationsToExecute.AddRange( new BaseOperator[] { ProjectOp } );
                         }
                         else
                         {

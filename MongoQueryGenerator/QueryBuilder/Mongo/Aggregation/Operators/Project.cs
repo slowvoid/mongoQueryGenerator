@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using QueryBuilder.Mongo.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Attributes and their respective visibility status
         /// </summary>
-        public Dictionary<string, bool> Attributes { get; set; }
+        public Dictionary<string, ProjectExpression> Attributes { get; set; }
         #endregion
 
         #region Methods
@@ -26,7 +27,14 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <returns></returns>
         public override string ToJavaScript()
         {
-            BsonDocument ProjectAttr = new BsonDocument( Attributes );
+            List<BsonElement> ProjectAttributes = new List<BsonElement>();
+
+            foreach ( KeyValuePair<string, ProjectExpression> Attribute in Attributes )
+            {
+                ProjectAttributes.Add( new BsonElement( Attribute.Key, Attribute.Value.ToJavaScript() ) );
+            }
+
+            BsonDocument ProjectAttr = new BsonDocument( ProjectAttributes );
             BsonDocument ProjectDoc = new BsonDocument( new BsonElement( "$project", ProjectAttr ) );
 
             return ProjectDoc.ToString();
@@ -37,7 +45,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Initialize a new instance of Project class
         /// </summary>
-        public Project( Dictionary<string, bool> Attributes )
+        public Project( Dictionary<string, ProjectExpression> Attributes )
         {
             this.Attributes = Attributes;
         }
