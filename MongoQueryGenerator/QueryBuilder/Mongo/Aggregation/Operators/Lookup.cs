@@ -57,18 +57,40 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <returns></returns>
         public override string ToJavaScript()
         {
+            BsonElement FromElement = new BsonElement( "from", From );
+            BsonElement AsElement = new BsonElement( "as", As );
+
             if ( Pipeline.Count > 0 )
             {
                 ForeignField = null;
                 LocalField = null;
+
+                List<string> PipelineOperations = new List<string>();
+                foreach ( BaseOperator PipelineOp in Pipeline )
+                {
+                    PipelineOperations.Add( PipelineOp.ToJavaScript() );
+                }
+
+
+                BsonElement LetElement = new BsonElement( "let", new BsonDocument( Let ) );
+                BsonElement PipelineElement = new BsonElement( "pipeline", $"[{string.Join( ",", PipelineOperations )}]" );
+
+                List<BsonElement> Elements = new List<BsonElement> { FromElement, AsElement, LetElement, PipelineElement };
+
+                return new BsonDocument( new BsonElement( "$lookup", new BsonDocument( Elements ) ) ).ToString();
             }
             else
             {
                 Pipeline = null;
                 Let = null;
-            }
 
-            return new BsonDocument( new List<BsonElement> { new BsonElement( "$lookup", this.ToBsonDocument() ) } ).ToString();
+                BsonElement ForeignElement = new BsonElement( "foreignField", ForeignField );
+                BsonElement LocalElement = new BsonElement( "localField", LocalField );
+
+                List<BsonElement> Elements = new List<BsonElement> { FromElement, AsElement, ForeignElement, LocalElement };
+
+                return new BsonDocument( new BsonElement( "$lookup", new BsonDocument( Elements ) ) ).ToString();
+            }
         }
         #endregion
 

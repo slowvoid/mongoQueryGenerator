@@ -45,7 +45,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
                 JsonExpression = FieldsToMatch.ToJson();
             }
 
-            return JsonExpression;
+            return this.ToJson();
         }
         #endregion
 

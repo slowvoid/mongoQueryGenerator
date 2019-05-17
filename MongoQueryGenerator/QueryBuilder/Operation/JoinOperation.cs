@@ -288,7 +288,64 @@ namespace QueryBuilder.Operation
             }
             else if ( Relationship.Cardinality == RelationshipCardinality.ManyToMany )
             {
+                // On Many to Many relationships we need to run custom pipelines to join entities
+                // and multiple entities must be in the same pipeline as the relationship
+                List<BaseOperator> CustomPipeline = new List<BaseOperator>();
 
+                // The first operation for each relationship is to match the relationship document to the source entity
+                Dictionary<string, string> PipelineVariables = new Dictionary<string, string>();
+                RelationshipConnection SourceConnection = Relationship.Relations.First();
+                string SourceRef = SourceRule.Rules.First( R => R.Key == SourceConnection.SourceAttribute.Name ).Value;
+                string SourceVar = $"Source_{SourceConnection.SourceAttribute.Name}";
+
+                PipelineVariables.Add( SourceVar, SourceRef );
+
+                string RelationshipSourceRef = RelationshipRule.Rules.First( R => R.Key == SourceConnection.RefSourceAtrribute.Name ).Value;
+                EqExpr MatchSourceEq = new EqExpr( $"${RelationshipSourceRef}", $"$${SourceVar}" );
+
+                Match MatchSourceOp = new Match( new Expr( MatchSourceEq ) );
+
+                CustomPipeline.Add( MatchSourceOp );
+
+                foreach ( Entity TargetEntity in TargetEntities )
+                {
+                    if ( TargetEntity is ComputedEntity )
+                    {
+                    }
+                    else
+                    {
+                        // Get Target rule
+                        MapRule TargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == TargetEntity.Name );
+                        if ( TargetRule == null )
+                        {
+                            throw new ImpossibleOperationException( $"Entity {TargetEntity.Name} has no valid mapping." );
+                        }
+
+                        if ( !Relationship.HasRelation( SourceEntity, TargetEntity ) )
+                        {
+                            throw new ImpossibleOperationException( $"Entities {SourceEntity.Name} and {TargetEntity.Name} are not related through {Relationship.Name}" );
+                        }
+
+                        RelationshipConnection RelationshipData = Relationship.GetRelation( SourceEntity, TargetEntity );
+
+                        // Many to many relationships so far we're only considering that entities are mapped to distinct collections
+                        // and the relationship linking them has it's own collection
+
+                        // Build the operations for the custom pipeline
+                        
+                    }
+                }
+
+                // Add Lookup for relationship
+                LookupOperator RelationshipLookup = new LookupOperator
+                {
+                    From = RelationshipRule.Target.Name,
+                    Let = PipelineVariables,
+                    Pipeline = CustomPipeline,
+                    As = $"data_{Relationship.Name}"
+                };
+
+                OperationsToExecute.Add( RelationshipLookup );
             }
 
             // Assign operation list
