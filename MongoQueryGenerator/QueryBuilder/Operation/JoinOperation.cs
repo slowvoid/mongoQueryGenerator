@@ -307,6 +307,17 @@ namespace QueryBuilder.Operation
 
                 CustomPipeline.Add( MatchSourceOp );
 
+                // Add Lookup for relationship
+                LookupOperator RelationshipLookup = new LookupOperator
+                {
+                    From = RelationshipRule.Target.Name,
+                    Let = PipelineVariables,
+                    Pipeline = CustomPipeline,
+                    As = $"data_{Relationship.Name}"
+                };
+
+                OperationsToExecute.Add( RelationshipLookup );
+
                 foreach ( Entity TargetEntity in TargetEntities )
                 {
                     if ( TargetEntity is ComputedEntity )
@@ -332,20 +343,44 @@ namespace QueryBuilder.Operation
                         // and the relationship linking them has it's own collection
 
                         // Build the operations for the custom pipeline
-                        
+
+                        // Foreach target entity, we must do a lookup, unwind, addfields and project operations
+                        // Lookup target
+                        string TargetLookupAs = $"data_{TargetEntity.Name}"; 
+
+                        LookupOperator LookupTargetOp = new LookupOperator
+                        {
+                            From = TargetRule.Target.Name,
+                            ForeignField = TargetRule.Rules.First( R => R.Key == RelationshipData.TargetAttribute.Name ).Value,
+                            LocalField = RelationshipRule.Rules.First( R => R.Key == RelationshipData.RefTargetAttribute.Name ).Value,
+                            As = TargetLookupAs
+                        };
+
+                        // Unwind
+                        Unwind UnwindTarget = new Unwind( TargetLookupAs );
+
+
+                        // Add fields
+                        Dictionary<string, string> FieldsToAdd = new Dictionary<string, string>();
+
+                        foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                        {
+                            string AttributeMappedTo = TargetRule.Rules.First( R => R.Key == Attribute.Name ).Value;
+                            FieldsToAdd.Add( $"{TargetEntity.Name}_{Attribute.Name}", $"${TargetLookupAs}.{AttributeMappedTo}" );
+                        }
+
+                        AddFields AddFieldsOp = new AddFields( FieldsToAdd );
+
+                        // Project - remove joined data extra data
+                        Dictionary<string, ProjectExpression> ProjectExpressions = new Dictionary<string, ProjectExpression>
+                        {
+                            { TargetLookupAs, new BooleanExpr( false ) }
+                        };
+                        Project ProjectOp = new Project( ProjectExpressions );
+
+                        CustomPipeline.AddRange( new BaseOperator[] { LookupTargetOp, UnwindTarget, AddFieldsOp, ProjectOp } );
                     }
-                }
-
-                // Add Lookup for relationship
-                LookupOperator RelationshipLookup = new LookupOperator
-                {
-                    From = RelationshipRule.Target.Name,
-                    Let = PipelineVariables,
-                    Pipeline = CustomPipeline,
-                    As = $"data_{Relationship.Name}"
-                };
-
-                OperationsToExecute.Add( RelationshipLookup );
+                }                
             }
 
             // Assign operation list

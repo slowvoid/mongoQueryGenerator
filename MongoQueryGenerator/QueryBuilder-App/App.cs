@@ -55,7 +55,7 @@ namespace QueryBuilderApp
             //(Entity)ErModel.FindByName( "LifeInsurance" )
             JoinOperation JoinOP = new JoinOperation( (Entity)ErModel.FindByName( "Person" ),
                                                      (Relationship)ErModel.FindByName( "Insurance" ),
-                                                     new List<Entity> { (Entity)ErModel.FindByName( "Car" ) },
+                                                     new List<Entity> { (Entity)ErModel.FindByName( "Car" ), (Entity)ErModel.FindByName("InsCompany") },
                                                      map );
 
             List<BaseOperation> Operations = new List<BaseOperation> {
@@ -66,7 +66,7 @@ namespace QueryBuilderApp
 
             QueryGenerator QueryGen = new QueryGenerator( QueryPipeline )
             {
-                CollectionName = "PersonDrivesCar"
+                CollectionName = "Person"
             };
 
             Console.WriteLine( string.Format( "Query output: {0}", QueryGen.Run() ) );
