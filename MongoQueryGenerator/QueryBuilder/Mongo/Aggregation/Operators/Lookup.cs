@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,6 +92,11 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
 
                 return new BsonDocument( new BsonElement( "$lookup", new BsonDocument( Elements ) ) ).ToString();
             }
+        }
+
+        public override JSCode ToJSCode()
+        {
+            throw new NotImplementedException();
         }
         #endregion
 

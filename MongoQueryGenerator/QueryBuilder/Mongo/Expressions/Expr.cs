@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,20 @@ namespace QueryBuilder.Mongo.Expressions
         {
             JsonExpression = Expression.ToJavaScript();
 
-            return this.ToJson();
+            return this.ToBsonDocument().ToString();
+        }
+        /// <summary>
+        /// Generates a Javascript code object representing this instance
+        /// </summary>
+        /// <returns></returns>
+        public override JSCode ToJSCode()
+        {
+            Dictionary<string, object> ExprAttributes = new Dictionary<string, object>();
+            ExprAttributes.Add( "$expr", Expression.ToJSCode() );
+
+            JSObject ExprObj = new JSObject( ExprAttributes );
+
+            return ExprObj;
         }
         #endregion
 

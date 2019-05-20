@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,18 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
             } );
 
             return Unwind.ToString();
+        }
+        /// <summary>
+        /// Generates a Javascript code object representing this instance
+        /// </summary>
+        /// <returns></returns>
+        public override JSCode ToJSCode()
+        {
+            Dictionary<string, object> UnwindAttrs = new Dictionary<string, object>();
+            UnwindAttrs.Add( "path", Field );
+            UnwindAttrs.Add( "preserveNullAndEmptyArrays", PreserveNullOrEmpty );
+
+            return new JSObject( "$unwind", UnwindAttrs );
         }
         #endregion
 

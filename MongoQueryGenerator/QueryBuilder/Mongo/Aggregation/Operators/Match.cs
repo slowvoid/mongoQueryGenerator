@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using QueryBuilder.Javascript;
 using QueryBuilder.Mongo.Expressions;
 using System;
 using System.Collections.Generic;
@@ -36,16 +37,26 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <returns></returns>
         public override string ToJavaScript()
         {
+            return ToJSCode().ToString();
+        }
+        /// <summary>
+        /// Generates a Javascript code object representing this instance
+        /// </summary>
+        /// <returns></returns>
+        public override JSCode ToJSCode()
+        {
+            Dictionary<string, object> MatchAttrs = new Dictionary<string, object>();
+
             if ( Expression != null )
             {
-                JsonExpression = Expression.ToJavaScript();
+                MatchAttrs.Add( "$match", Expression.ToJSCode() );
             }
             else
             {
-                JsonExpression = FieldsToMatch.ToJson();
+                MatchAttrs.Add( "$match", new JSObject( FieldsToMatch ).ToString() );
             }
 
-            return this.ToJson();
+            return new JSObject( MatchAttrs );
         }
         #endregion
 

@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,11 @@ namespace QueryBuilder.Mongo.Expressions
         /// </summary>
         /// <returns></returns>
         public abstract string ToJavaScript();
+        /// <summary>
+        /// Generates a Javascript code representing this expression
+        /// </summary>
+        /// <returns></returns>
+        public abstract JSCode ToJSCode();
         #endregion
     }
 }

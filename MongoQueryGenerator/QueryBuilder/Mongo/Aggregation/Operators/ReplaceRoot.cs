@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,11 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
             });
 
             return Doc.ToString();
+        }
+
+        public override JSCode ToJSCode()
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

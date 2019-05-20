@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using QueryBuilder.Javascript;
 using QueryBuilder.Mongo.Expressions;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,11 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
             BsonDocument ProjectDoc = new BsonDocument( new BsonElement( "$project", ProjectAttr ) );
 
             return ProjectDoc.ToString();
+        }
+
+        public override JSCode ToJSCode()
+        {
+            throw new NotImplementedException();
         }
         #endregion
 

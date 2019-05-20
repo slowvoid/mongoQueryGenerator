@@ -296,9 +296,9 @@ namespace QueryBuilder.Operation
                 Dictionary<string, string> PipelineVariables = new Dictionary<string, string>();
                 RelationshipConnection SourceConnection = Relationship.Relations.First();
                 string SourceRef = SourceRule.Rules.First( R => R.Key == SourceConnection.SourceAttribute.Name ).Value;
-                string SourceVar = $"Source_{SourceConnection.SourceAttribute.Name}";
+                string SourceVar = $"source_{SourceConnection.SourceAttribute.Name}";
 
-                PipelineVariables.Add( SourceVar, SourceRef );
+                PipelineVariables.Add( SourceVar, $"${SourceRef}" );
 
                 string RelationshipSourceRef = RelationshipRule.Rules.First( R => R.Key == SourceConnection.RefSourceAtrribute.Name ).Value;
                 EqExpr MatchSourceEq = new EqExpr( $"${RelationshipSourceRef}", $"$${SourceVar}" );

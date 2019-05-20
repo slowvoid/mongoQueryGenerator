@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,17 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
             BsonDocument AddFieldDoc = new BsonDocument( new BsonElement( "$addFields", AttributesDoc ) );
 
             return AddFieldDoc.ToString();
+        }
+        /// <summary>
+        /// Generates a Javascript code object representing this instance
+        /// </summary>
+        /// <returns></returns>
+        public override JSCode ToJSCode()
+        {
+            Dictionary<string, object> AddFieldsAttrs = new Dictionary<string, object>();
+            AddFieldsAttrs.Add( "$addFields", new JSObject( Attributes.ToDictionary( I => I.Key, I => (object)I.Value ) ) );
+
+            return new JSObject( AddFieldsAttrs );
         }
         #endregion
 

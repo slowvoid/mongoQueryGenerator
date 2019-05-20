@@ -1,6 +1,8 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +31,20 @@ namespace QueryBuilder.Mongo.Expressions
         /// <returns></returns>
         public override string ToJavaScript()
         {
-            return this.ToJson();
+            JSArray ValueArray = new JSArray( Values );
+
+            return string.Format( @"{{$eq: {0}}}", ValueArray.ToString() );
+        }
+        /// <summary>
+        /// Generates a Javascript code object representing this instance
+        /// </summary>
+        /// <returns></returns>
+        public override JSCode ToJSCode()
+        {
+            Dictionary<string, object> EqExprAttr = new Dictionary<string, object>();
+            EqExprAttr.Add( "$eq", new JSArray( Values ) );
+
+            return new JSObject( EqExprAttr );
         }
         #endregion
 
