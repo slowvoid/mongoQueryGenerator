@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using QueryBuilder.Javascript;
+﻿using QueryBuilder.Javascript;
 using QueryBuilder.Mongo.Expressions;
 using System;
 using System.Collections.Generic;
@@ -28,22 +27,15 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <returns></returns>
         public override string ToJavaScript()
         {
-            List<BsonElement> ProjectAttributes = new List<BsonElement>();
-
-            foreach ( KeyValuePair<string, ProjectExpression> Attribute in Attributes )
-            {
-                ProjectAttributes.Add( new BsonElement( Attribute.Key, Attribute.Value.ToJavaScript() ) );
-            }
-
-            BsonDocument ProjectAttr = new BsonDocument( ProjectAttributes );
-            BsonDocument ProjectDoc = new BsonDocument( new BsonElement( "$project", ProjectAttr ) );
-
-            return ProjectDoc.ToString();
+            return ToJSCode().ToString();
         }
-
+        /// <summary> 
+        /// Generates a Javascript code object representing this instance
+        /// </summary>
+        /// <returns></returns>
         public override JSCode ToJSCode()
         {
-            throw new NotImplementedException();
+            return new JSObject( "$project", Attributes.ToDictionary( I => I.Key, I => (object)I.Value.ToJSCode() ) );
         }
         #endregion
 

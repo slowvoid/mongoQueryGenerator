@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using QueryBuilder.Javascript;
+﻿using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +16,7 @@ namespace QueryBuilder.Mongo.Expressions
         /// <summary>
         /// Expression to be interpreted
         /// </summary>
-        [BsonIgnore]
         public BaseExpression Expression { get; set; }
-        [BsonElement("$expr")]
-        private string JsonExpression { get; set; }
         #endregion
 
         #region Override
@@ -31,9 +26,7 @@ namespace QueryBuilder.Mongo.Expressions
         /// <returns></returns>
         public override string ToJavaScript()
         {
-            JsonExpression = Expression.ToJavaScript();
-
-            return this.ToBsonDocument().ToString();
+            return ToJSCode().ToString();
         }
         /// <summary>
         /// Generates a Javascript code object representing this instance

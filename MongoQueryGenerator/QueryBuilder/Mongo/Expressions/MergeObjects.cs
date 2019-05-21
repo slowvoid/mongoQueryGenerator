@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using QueryBuilder.Javascript;
+﻿using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,16 +26,15 @@ namespace QueryBuilder.Mongo.Expressions
         /// <returns></returns>
         public override string ToJavaScript()
         {
-            BsonDocument Doc = new BsonDocument( new List<BsonElement> {
-                new BsonElement("$mergeObjects", string.Format("[{0}]", string.Join(",", Objects)))
-            } );
-
-            return Doc.ToString();
+            return ToJSCode().ToString();
         }
 
         public override JSCode ToJSCode()
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> MergeObj = new Dictionary<string, object>();
+            MergeObj.Add( "$mergeObjects", new JSArray( Objects.ToList<object>() ) );
+
+            return new JSObject( MergeObj );
         }
         #endregion
 

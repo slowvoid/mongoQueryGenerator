@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using QueryBuilder.Javascript;
 
 namespace QueryBuilder.Mongo.Expressions
 {
@@ -17,28 +16,31 @@ namespace QueryBuilder.Mongo.Expressions
         /// <summary>
         /// Input field
         /// </summary>
-        [BsonElement("input")]
+
         public string Input { get; set; }
         /// <summary>
         /// Alias to access each memeber of the array
         /// </summary>
-        [BsonElement("as")]
         public string As { get; set; } 
         /// <summary>
         /// Attribute map
         /// </summary>
-        [BsonElement("in")]
         public Dictionary<string, string> In { get; set; }
         #endregion
 
         #region Methods
         /// <summary>
-        /// Returns a JavaScript compatible representation
+        /// Generates a Javascript code object representing this instance
         /// </summary>
         /// <returns></returns>
-        public override BsonValue ToJavaScript()
+        public override JSCode ToJSCode()
         {
-            return new BsonDocument( new BsonElement( "$map", this.ToBsonDocument() ) );
+            Dictionary<string, object> Attrs = new Dictionary<string, object>();
+            Attrs.Add( "input", Input );
+            Attrs.Add( "as", As );
+            Attrs.Add( "in", new JSObject( In.ToDictionary( I => I.Key, I => (object)I.Value ) ) );
+
+            return new JSObject( "$map", Attrs );
         }
         #endregion
 

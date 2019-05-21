@@ -71,6 +71,7 @@
     <Compile Include="ER\Model.cs" />
     <Compile Include="ER\Relationship.cs" />
     <Compile Include="Javascript\JSArray.cs" />
+    <Compile Include="Javascript\JSBoolean.cs" />
     <Compile Include="Javascript\JSCode.cs" />
     <Compile Include="Javascript\JSObject.cs" />
     <Compile Include="Map\MapRule.cs" />

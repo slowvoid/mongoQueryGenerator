@@ -1,42 +1,40 @@
-﻿using MongoDB.Bson;
-using QueryBuilder.Javascript;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QueryBuilder.Mongo.Expressions
+namespace QueryBuilder.Javascript
 {
     /// <summary>
-    /// Expression that represents a boolean value
+    /// Represents a boolean in javascript
     /// </summary>
-    public class BooleanExpr : ProjectExpression
+    public class JSBoolean : JSCode
     {
         #region Properties
         /// <summary>
-        /// Value
+        /// The value
         /// </summary>
         public bool Value { get; set; }
         #endregion
 
         #region Methods
         /// <summary>
-        /// Generates a Javascript code object representing this instance
+        /// Return a string representing this value
         /// </summary>
         /// <returns></returns>
-        public override JSCode ToJSCode()
+        public override string ToString()
         {
-            return new JSBoolean( Value );
+            return Value ? "true" : "false";
         }
         #endregion
 
         #region Constructors
         /// <summary>
-        /// Initialize a new instance of BooleanExpr
+        /// Initialize a new JSBoolean instance
         /// </summary>
         /// <param name="Value"></param>
-        public BooleanExpr( bool Value )
+        public JSBoolean( bool Value )
         {
             this.Value = Value;
         }

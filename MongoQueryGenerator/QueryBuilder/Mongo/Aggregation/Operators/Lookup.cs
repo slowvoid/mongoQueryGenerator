@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using QueryBuilder.Javascript;
+﻿using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,36 +16,26 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Collection to lookup
         /// </summary>
-        [BsonElement("from")]
         public string From { get; set; }
         /// <summary>
         /// Local field that contains a reference to the 'From' collection
         /// </summary>
-        [BsonElement("localField")]
-        [BsonIgnoreIfNull]
         public string LocalField { get; set; }
         /// <summary>
         /// Field in the <see cref="From"/> collection to match the value of <see cref="LocalField"/>
         /// </summary>
-        [BsonElement("foreignField")]
-        [BsonIgnoreIfNull]
         public string ForeignField { get; set; }
         /// <summary>
         /// Alias of the joined data
         /// </summary>
-        [BsonElement("as")]
         public string As { get; set; }
         /// <summary>
         /// Pipeline to be executed on the <see cref="From"/> collection
         /// </summary>
-        [BsonElement("pipeline")]
-        [BsonIgnoreIfNull]
         public List<BaseOperator> Pipeline { get; set; }
         /// <summary>
         /// Variables to be accesible in the pipeline
         /// </summary>
-        [BsonElement("let")]
-        [BsonIgnoreIfNull]
         public Dictionary<string, string> Let { get; set; }
         #endregion
 
@@ -58,45 +46,33 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <returns></returns>
         public override string ToJavaScript()
         {
-            BsonElement FromElement = new BsonElement( "from", From );
-            BsonElement AsElement = new BsonElement( "as", As );
-
-            if ( Pipeline.Count > 0 )
-            {
-                ForeignField = null;
-                LocalField = null;
-
-                List<string> PipelineOperations = new List<string>();
-                foreach ( BaseOperator PipelineOp in Pipeline )
-                {
-                    PipelineOperations.Add( PipelineOp.ToJavaScript() );
-                }
-
-
-                BsonElement LetElement = new BsonElement( "let", new BsonDocument( Let ) );
-                BsonElement PipelineElement = new BsonElement( "pipeline", $"[{string.Join( ",", PipelineOperations )}]" );
-
-                List<BsonElement> Elements = new List<BsonElement> { FromElement, AsElement, LetElement, PipelineElement };
-
-                return new BsonDocument( new BsonElement( "$lookup", new BsonDocument( Elements ) ) ).ToString();
-            }
-            else
-            {
-                Pipeline = null;
-                Let = null;
-
-                BsonElement ForeignElement = new BsonElement( "foreignField", ForeignField );
-                BsonElement LocalElement = new BsonElement( "localField", LocalField );
-
-                List<BsonElement> Elements = new List<BsonElement> { FromElement, AsElement, ForeignElement, LocalElement };
-
-                return new BsonDocument( new BsonElement( "$lookup", new BsonDocument( Elements ) ) ).ToString();
-            }
+            return ToJSCode().ToString();
         }
 
         public override JSCode ToJSCode()
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> Attrs = new Dictionary<string, object>();
+
+            Attrs.Add( "from", From );
+            Attrs.Add( "as", As );
+
+            if ( Pipeline.Count > 0 )
+            {
+                Attrs.Add( "let", new JSObject( Let.ToDictionary( I => I.Key, I => (object)I.Value ) ) );
+                List<object> PipelineJS = new List<object>();
+                foreach ( BaseOperator Op in Pipeline )
+                {
+                    PipelineJS.Add( Op.ToJSCode() );
+                }
+                Attrs.Add( "pipeline", new JSArray( PipelineJS ) );
+            }
+            else
+            {
+                Attrs.Add( "foreignField", ForeignField );
+                Attrs.Add( "localField", LocalField );
+            }
+
+            return new JSObject( "$lookup", Attrs );
         }
         #endregion
 

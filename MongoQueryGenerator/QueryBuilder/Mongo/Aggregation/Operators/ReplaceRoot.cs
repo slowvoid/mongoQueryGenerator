@@ -27,18 +27,18 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <returns></returns>
         public override string ToJavaScript()
         {
-            BsonDocument Doc = new BsonDocument( new List<BsonElement> {
-                new BsonElement("$replaceRoot", new BsonDocument( new List<BsonElement> {
-                    new BsonElement("newRoot", NewRoot)
-                }))
-            });
-
-            return Doc.ToString();
+            return ToJSCode().ToString();
         }
-
+        /// <summary>
+        /// Generates a javascript representation of this instance
+        /// </summary>
+        /// <returns></returns>
         public override JSCode ToJSCode()
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> Attrs = new Dictionary<string, object>();
+            Attrs.Add( "newRoot", NewRoot );
+
+            return new JSObject( "$replaceRoot", Attrs );
         }
         #endregion
     }

@@ -39,6 +39,10 @@ namespace QueryBuilder.Javascript
                     // Add raw value
                     ItemsAsString.Add( string.Format( "{0}", (bool)Item ? "true" : "false" ) );
                 }
+                else if ( Item is JSCode )
+                {
+                    ItemsAsString.Add( Item.ToString() );
+                }
                 else
                 {
                     ItemsAsString.Add( (string)Item );

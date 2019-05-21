@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using QueryBuilder.Javascript;
+﻿using QueryBuilder.Javascript;
 using QueryBuilder.Mongo.Expressions;
 using System;
 using System.Collections.Generic;
@@ -19,15 +17,11 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Expression to execute
         /// </summary>
-        [BsonIgnore]
         public BaseExpression Expression { get; set; }
         /// <summary>
         /// Fields to match against
         /// </summary>
-        [BsonIgnore]
         public Dictionary<string, object> FieldsToMatch { get; set; }
-        [BsonElement("$match")]
-        private string JsonExpression { get; set; }
         #endregion
 
         #region Overrides

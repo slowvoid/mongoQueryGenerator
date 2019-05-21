@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using QueryBuilder.Javascript;
+﻿using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +27,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <returns></returns>
         public override string ToJavaScript()
         {
-            BsonDocument AttributesDoc = new BsonDocument( Attributes );
-            BsonDocument AddFieldDoc = new BsonDocument( new BsonElement( "$addFields", AttributesDoc ) );
-
-            return AddFieldDoc.ToString();
+            return ToJSCode().ToString();
         }
         /// <summary>
         /// Generates a Javascript code object representing this instance

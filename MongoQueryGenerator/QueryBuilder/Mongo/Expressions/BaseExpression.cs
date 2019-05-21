@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using QueryBuilder.Javascript;
+﻿using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;

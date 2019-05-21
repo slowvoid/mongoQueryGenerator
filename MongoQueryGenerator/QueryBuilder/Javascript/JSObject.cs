@@ -37,7 +37,7 @@ namespace QueryBuilder.Javascript
                 {
                     KeyPairs.Add( $"{Item.Key}: {( ( (bool)Item.Value ) ? "true" : "false" )}" );
                 }
-                else if ( Item.Value is JSArray )
+                else if ( Item.Value is JSCode )
                 {
                     KeyPairs.Add( $"{Item.Key}: {Item.Value.ToString()}" );
                 }
@@ -74,8 +74,10 @@ namespace QueryBuilder.Javascript
         /// <param name="KeyValuePairs"></param>
         public JSObject( string Key, Dictionary<string, object> KeyValuePairs )
         {
+            JSObject ObjValues = new JSObject( KeyValuePairs );
+
             Dictionary<string, object> Attrs = new Dictionary<string, object>();
-            Attrs.Add( Key, KeyValuePairs );
+            Attrs.Add( Key, ObjValues );
 
             this.KeyValuePairs = Attrs;
         }

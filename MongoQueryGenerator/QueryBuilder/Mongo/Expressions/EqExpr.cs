@@ -1,8 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using QueryBuilder.Javascript;
+﻿using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +16,6 @@ namespace QueryBuilder.Mongo.Expressions
         /// <summary>
         /// Values to be matched
         /// </summary>
-        [BsonElement("$eq")]
         public List<object> Values { get; set; }
         #endregion
 
@@ -31,9 +26,7 @@ namespace QueryBuilder.Mongo.Expressions
         /// <returns></returns>
         public override string ToJavaScript()
         {
-            JSArray ValueArray = new JSArray( Values );
-
-            return string.Format( @"{{$eq: {0}}}", ValueArray.ToString() );
+            return ToJSCode().ToString();
         }
         /// <summary>
         /// Generates a Javascript code object representing this instance

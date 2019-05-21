@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using QueryBuilder.Javascript;
+﻿using QueryBuilder.Javascript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,24 +16,17 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Path to field that should be unwinded
         /// </summary>
-        [BsonElement("path")]
         public string Field { get; set; }
         /// <summary>
         /// Sets wheter empty results should be preserved
         /// </summary>
-        [BsonElement( "preserveNullAndEmptyArrays" )]
-        [BsonDefaultValue(true)]
         public bool PreserveNullOrEmpty { get; set; }
         #endregion
 
         #region Methods
         public override string ToJavaScript()
         {
-            BsonDocument Unwind = new BsonDocument( new List<BsonElement> {
-                new BsonElement("$unwind", this.ToBsonDocument())
-            } );
-
-            return Unwind.ToString();
+            return ToJSCode().ToString();
         }
         /// <summary>
         /// Generates a Javascript code object representing this instance
