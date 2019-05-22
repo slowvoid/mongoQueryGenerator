@@ -29,6 +29,18 @@ namespace QueryBuilder.Map
         public Dictionary<string, string> Rules { get; set; }
         #endregion
 
+        #region Methods
+        /// <summary>
+        /// Add a new rule
+        /// </summary>
+        /// <param name="Source">Source value</param>
+        /// <param name="Target">Target value</param>
+        public void AddRule( string Source, string Target )
+        {
+            Rules.Add( Source, Target );
+        }
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Initialize a new MapRule instance

@@ -108,7 +108,7 @@ namespace QueryBuilder.Operation
 
                                 if ( AttributeMappedTo != null )
                                 {
-                                    AddTargetAttributes.Add( $"{joinedAttributeName}.{TargetEntity.Name}_{Attribute.Name}", $"${AttributeMappedTo}" );
+                                    AddTargetAttributes.Add( $"'{joinedAttributeName}.{TargetEntity.Name}_{Attribute.Name}'", $"${AttributeMappedTo}" );
                                     if ( !FoundRootAttribute )
                                     {
                                         TargetFieldsToRemove.Add( AttributeMappedTo, new BooleanExpr( false ) );
@@ -145,7 +145,7 @@ namespace QueryBuilder.Operation
 
                                 if ( AttributeMappedTo != null )
                                 {
-                                    AddTargetAttributes.Add( $"{joinedAttributeName}.{TargetEntity.Name}_{Attribute.Name}", $"${TargetLookupAttribute}.{AttributeMappedTo}" );
+                                    AddTargetAttributes.Add( $"'{joinedAttributeName}.{TargetEntity.Name}_{Attribute.Name}'", $"${TargetLookupAttribute}.{AttributeMappedTo}" );
                                 }
                             }
 

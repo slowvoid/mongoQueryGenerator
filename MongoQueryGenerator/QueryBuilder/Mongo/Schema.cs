@@ -19,7 +19,17 @@ namespace QueryBuilder.Mongo
         public List<Collection> Collections { get; set; }
         #endregion
 
-        
+        #region Methods
+        /// <summary>
+        /// Find a collection by name
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <returns></returns>
+        public Collection FindByName( string Name )
+        {
+            return Collections.Find( C => C.Name == Name );
+        }
+        #endregion
 
         #region Constructors
         /// <summary>
