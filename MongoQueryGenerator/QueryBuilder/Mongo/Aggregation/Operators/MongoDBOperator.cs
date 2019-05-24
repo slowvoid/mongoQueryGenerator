@@ -10,7 +10,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Base aggregate operator
     /// </summary>
-    public abstract class BaseOperator
+    public abstract class MongoDBOperator
     {
         #region Properties
         /// <summary>

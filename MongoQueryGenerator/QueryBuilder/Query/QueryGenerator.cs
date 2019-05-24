@@ -36,7 +36,7 @@ namespace QueryBuilder.Query
         public string Run()
         {
             // Setup results
-            AlgebraOperatorResult Result = new AlgebraOperatorResult( new List<BaseERElement>(), new List<BaseOperator>() );
+            AlgebraOperatorResult Result = new AlgebraOperatorResult( new List<BaseERElement>(), new List<MongoDBOperator>() );
 
             foreach ( AlgebraOperator Op in Pipeline.Operations )
             {
@@ -46,7 +46,7 @@ namespace QueryBuilder.Query
             // Store command objects
             List<string> AggregatePipeline = new List<string>();
 
-            foreach ( BaseOperator Command in Result.Commands )
+            foreach ( MongoDBOperator Command in Result.Commands )
             {
                 AggregatePipeline.Add( Command.ToJavaScript() );
             }

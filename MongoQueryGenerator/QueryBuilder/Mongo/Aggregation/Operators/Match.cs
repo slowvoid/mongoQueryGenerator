@@ -11,7 +11,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Represents the Match aggregation stage
     /// </summary>
-    public class Match : BaseOperator
+    public class Match : MongoDBOperator
     {
         #region Properties
         /// <summary>

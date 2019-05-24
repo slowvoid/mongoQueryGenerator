@@ -10,7 +10,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Represents the $unwind operator
     /// </summary>
-    public class Unwind : BaseOperator
+    public class Unwind : MongoDBOperator
     {
         #region Properties
         /// <summary>

@@ -49,7 +49,7 @@ namespace QueryBuilder.Operation
             // Check if the relationship has attributes
             bool RelationshipHasAttributes = Relationship.Attributes.Count > 0;
 
-            List<BaseOperator> OperationsToExecute = new List<BaseOperator>();
+            List<MongoDBOperator> OperationsToExecute = new List<MongoDBOperator>();
 
             string joinedAttributeName = $"data_{Relationship.Name}";
 
@@ -119,7 +119,7 @@ namespace QueryBuilder.Operation
                             AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
                             Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
 
-                            OperationsToExecute.AddRange( new BaseOperator[] { AddFieldsOp, RemoveFieldsOp } );
+                            OperationsToExecute.AddRange( new MongoDBOperator[] { AddFieldsOp, RemoveFieldsOp } );
                         }
                         else
                         {
@@ -158,7 +158,7 @@ namespace QueryBuilder.Operation
                             AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
                             Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
 
-                            OperationsToExecute.AddRange( new BaseOperator[] { LookupTarget, UnwindOp, AddFieldsOp, RemoveFieldsOp } );
+                            OperationsToExecute.AddRange( new MongoDBOperator[] { LookupTarget, UnwindOp, AddFieldsOp, RemoveFieldsOp } );
                         }
                     }
                 }
@@ -265,7 +265,7 @@ namespace QueryBuilder.Operation
                             Project ProjectOp = new Project( ProjectFields );
 
 
-                            OperationsToExecute.AddRange( new BaseOperator[] { ProjectOp } );
+                            OperationsToExecute.AddRange( new MongoDBOperator[] { ProjectOp } );
                         }
                         else
                         {
@@ -290,7 +290,7 @@ namespace QueryBuilder.Operation
             {
                 // On Many to Many relationships we need to run custom pipelines to join entities
                 // and multiple entities must be in the same pipeline as the relationship
-                List<BaseOperator> CustomPipeline = new List<BaseOperator>();
+                List<MongoDBOperator> CustomPipeline = new List<MongoDBOperator>();
 
                 // The first operation for each relationship is to match the relationship document to the source entity
                 Dictionary<string, string> PipelineVariables = new Dictionary<string, string>();
@@ -378,7 +378,7 @@ namespace QueryBuilder.Operation
                         };
                         Project ProjectOp = new Project( ProjectExpressions );
 
-                        CustomPipeline.AddRange( new BaseOperator[] { LookupTargetOp, UnwindTarget, AddFieldsOp, ProjectOp } );
+                        CustomPipeline.AddRange( new MongoDBOperator[] { LookupTargetOp, UnwindTarget, AddFieldsOp, ProjectOp } );
                     }
                 }                
             }

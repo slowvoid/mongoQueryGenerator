@@ -10,7 +10,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Represents the $addFields aggregation stage
     /// </summary>
-    public class AddFields : BaseOperator
+    public class AddFields : MongoDBOperator
     {
         #region Properties
         /// <summary>

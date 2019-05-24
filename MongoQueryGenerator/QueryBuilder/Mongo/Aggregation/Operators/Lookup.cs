@@ -10,7 +10,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Represents the Lookup Operator
     /// </summary>
-    public class LookupOperator : BaseOperator
+    public class LookupOperator : MongoDBOperator
     {
         #region Properties
         /// <summary>
@@ -32,7 +32,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Pipeline to be executed on the <see cref="From"/> collection
         /// </summary>
-        public List<BaseOperator> Pipeline { get; set; }
+        public List<MongoDBOperator> Pipeline { get; set; }
         /// <summary>
         /// Variables to be accesible in the pipeline
         /// </summary>
@@ -60,7 +60,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
             {
                 Attrs.Add( "let", new JSObject( Let.ToDictionary( I => I.Key, I => (object)I.Value ) ) );
                 List<object> PipelineJS = new List<object>();
-                foreach ( BaseOperator Op in Pipeline )
+                foreach ( MongoDBOperator Op in Pipeline )
                 {
                     PipelineJS.Add( Op.ToJSCode() );
                 }
@@ -82,7 +82,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// </summary>
         public LookupOperator()
         {
-            Pipeline = new List<BaseOperator>();
+            Pipeline = new List<MongoDBOperator>();
             Let = new Dictionary<string, string>();
         }
         #endregion

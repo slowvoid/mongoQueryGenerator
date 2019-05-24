@@ -11,7 +11,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Represents the $project aggregation stage
     /// </summary>
-    public class Project : BaseOperator
+    public class Project : MongoDBOperator
     {
         #region Properties
         /// <summary>

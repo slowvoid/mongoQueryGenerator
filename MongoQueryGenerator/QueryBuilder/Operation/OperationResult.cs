@@ -22,7 +22,7 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// List of commands to be executed
         /// </summary>
-        public List<BaseOperator> Commands { get; set; }
+        public List<MongoDBOperator> Commands { get; set; }
         #endregion
 
         #region Constructor
@@ -31,7 +31,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="PipelineResult"></param>
         /// <param name="Commands"></param>
-        public AlgebraOperatorResult( List<BaseERElement> PipelineResult, List<BaseOperator> Commands )
+        public AlgebraOperatorResult( List<BaseERElement> PipelineResult, List<MongoDBOperator> Commands )
         {
             this.PipelineResult = PipelineResult;
             this.Commands = Commands;

@@ -78,7 +78,7 @@
     <Compile Include="Map\ModelMapping.cs" />
     <Compile Include="Mongo\Aggregation\Aggregate.cs" />
     <Compile Include="Mongo\Aggregation\Operators\AddFields.cs" />
-    <Compile Include="Mongo\Aggregation\Operators\BaseOperator.cs" />
+    <Compile Include="Mongo\Aggregation\Operators\MongoDBOperator.cs" />
     <Compile Include="Mongo\Aggregation\Operators\Lookup.cs" />
     <Compile Include="Mongo\Aggregation\Operators\Match.cs" />
     <Compile Include="Mongo\Aggregation\Operators\Project.cs" />

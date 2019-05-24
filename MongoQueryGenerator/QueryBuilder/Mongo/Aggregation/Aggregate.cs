@@ -20,7 +20,7 @@ namespace QueryBuilder.Mongo.Aggregation
         /// <summary>
         /// List of operations to  be execute in this aggregation
         /// </summary>
-        public List<BaseOperator> Operators { get; set; }
+        public List<MongoDBOperator> Operators { get; set; }
         #endregion
 
     }

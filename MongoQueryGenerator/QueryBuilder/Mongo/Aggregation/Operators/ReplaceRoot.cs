@@ -11,7 +11,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Represents the $replaceRoot operator
     /// </summary>
-    public class ReplaceRoot : BaseOperator
+    public class ReplaceRoot : MongoDBOperator
     {
         #region Properties
         /// <summary>
