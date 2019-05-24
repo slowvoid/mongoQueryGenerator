@@ -36,11 +36,11 @@ namespace QueryBuilder.Query
         public string Run()
         {
             // Setup results
-            OperationResult Result = new OperationResult( new List<BaseERElement>(), new List<BaseOperator>() );
+            AlgebraOperatorResult Result = new AlgebraOperatorResult( new List<BaseERElement>(), new List<BaseOperator>() );
 
-            foreach ( BaseOperation Op in Pipeline.Operations )
+            foreach ( AlgebraOperator Op in Pipeline.Operations )
             {
-                Result = Op.Run( Result );
+                Op.Run( ref Result );
             }
 
             // Store command objects

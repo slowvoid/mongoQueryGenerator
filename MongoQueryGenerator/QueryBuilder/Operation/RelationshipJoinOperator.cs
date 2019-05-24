@@ -18,7 +18,7 @@ namespace QueryBuilder.Operation
     /// <summary>
     /// Represents a JOIN operation
     /// </summary>
-    public class JoinOperation : BaseOperation
+    public class RelationshipJoinOperator : AlgebraOperator
     {
         #region Properties
         /// <summary>
@@ -40,7 +40,7 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
-        public override OperationResult Run( OperationResult LastResult )
+        public override void Run( ref AlgebraOperatorResult LastResult )
         {
             // Retrieve mapping rules for Source Entity and Relationship
             MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.Name );
@@ -385,8 +385,6 @@ namespace QueryBuilder.Operation
 
             // Assign operation list
             LastResult.Commands.AddRange( OperationsToExecute );
-
-            return LastResult;
         }
         #endregion
 
@@ -398,7 +396,7 @@ namespace QueryBuilder.Operation
         /// <param name="Relationship">Join through this relationship</param>
         /// <param name="TargetEntities">Target entities</param>
         /// <param name="ModelMap">Map rules between ER and Mongo</param>
-        public JoinOperation( Entity SourceEntity, Relationship Relationship, List<Entity> TargetEntities, ModelMapping ModelMap ) : base( ModelMap )
+        public RelationshipJoinOperator( Entity SourceEntity, Relationship Relationship, List<Entity> TargetEntities, ModelMapping ModelMap ) : base( ModelMap )
         {
             this.SourceEntity = SourceEntity;
             this.TargetEntities = TargetEntities;

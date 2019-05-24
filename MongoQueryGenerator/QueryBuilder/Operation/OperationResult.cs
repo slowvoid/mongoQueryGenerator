@@ -12,7 +12,7 @@ namespace QueryBuilder.Operation
     /// <summary>
     /// Defines the result of an operation
     /// </summary>
-    public class OperationResult
+    public class AlgebraOperatorResult
     {
         #region Properties
         /// <summary>
@@ -31,7 +31,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="PipelineResult"></param>
         /// <param name="Commands"></param>
-        public OperationResult( List<BaseERElement> PipelineResult, List<BaseOperator> Commands )
+        public AlgebraOperatorResult( List<BaseERElement> PipelineResult, List<BaseOperator> Commands )
         {
             this.PipelineResult = PipelineResult;
             this.Commands = Commands;

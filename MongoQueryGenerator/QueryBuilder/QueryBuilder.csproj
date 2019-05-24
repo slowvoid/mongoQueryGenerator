@@ -98,8 +98,8 @@
     <Compile Include="Operation\Exceptions\ImpossibleOperationException.cs" />
     <Compile Include="Operation\Exceptions\RuleNotFoundException.cs" />
     <Compile Include="Operation\FindOperation.cs" />
-    <Compile Include="Operation\JoinOperation.cs" />
-    <Compile Include="Operation\Operation.cs" />
+    <Compile Include="Operation\RelationshipJoinOperator.cs" />
+    <Compile Include="Operation\AlgebraOperator.cs" />
     <Compile Include="Operation\OperationResult.cs" />
     <Compile Include="Operation\Pipeline.cs" />
     <Compile Include="Operation\ProjectOperation.cs" />

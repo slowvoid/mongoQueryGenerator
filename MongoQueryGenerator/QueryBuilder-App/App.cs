@@ -53,12 +53,12 @@ namespace QueryBuilderApp
             // Everything ready, we'll need a query parser to generate pipeline from a query string
             // but we'll skip it now (query parser not available)
             //(Entity)ErModel.FindByName( "LifeInsurance" )
-            JoinOperation JoinOP = new JoinOperation( (Entity)ErModel.FindByName( "Person" ),
+            RelationshipJoinOperator JoinOP = new RelationshipJoinOperator( (Entity)ErModel.FindByName( "Person" ),
                                                      (Relationship)ErModel.FindByName( "Insurance" ),
                                                      new List<Entity> { (Entity)ErModel.FindByName( "Car" ), (Entity)ErModel.FindByName("InsCompany") },
                                                      map );
 
-            List<BaseOperation> Operations = new List<BaseOperation> {
+            List<AlgebraOperator> Operations = new List<AlgebraOperator> {
                 JoinOP
             };
 

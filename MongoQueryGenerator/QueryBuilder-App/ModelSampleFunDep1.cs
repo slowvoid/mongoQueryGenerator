@@ -25,12 +25,13 @@ namespace QueryBuilderApp
             departamento.AddAttribute( "id" );
             departamento.AddAttribute( "numero_dep" );
             departamento.AddAttribute( "nome_departamento" );
+            departamento.AddAttribute( "numero_funcionario" );
 
             Relationship gerencia = new Relationship( "Gerencia", RelationshipCardinality.OneToOne );
             gerencia.AddAttribute( "data_inicio" );
 
             RelationshipConnection conn = new RelationshipConnection( funcionario, funcionario.GetAttribute( "id" ),
-                departamento, departamento.GetAttribute( "id" ), RelationshipCardinality.OneToOne );
+                departamento, departamento.GetAttribute( "numero_funcionario" ), RelationshipCardinality.OneToOne );
             gerencia.Relations.Add( conn );
 
             Model ermodel = new Model( "dep", new List<BaseERElement> { funcionario, departamento, gerencia } );
@@ -50,6 +51,7 @@ namespace QueryBuilderApp
             docTypeDepartamento.DocumentSchema.AddAttribute( "_id" );
             docTypeDepartamento.DocumentSchema.AddAttribute( "fNumero_dep" );
             docTypeDepartamento.DocumentSchema.AddAttribute( "fNome_departamento" );
+            docTypeDepartamento.DocumentSchema.AddAttribute( "fNumero_funcionario" );
 
             Collection docTypeGerencia = new Collection( "DocTypeGerencia" );
             docTypeGerencia.DocumentSchema.AddAttribute( "data_inicio" );
@@ -71,6 +73,7 @@ namespace QueryBuilderApp
             departamentoRule.AddRule( "id", "_id" );
             departamentoRule.AddRule( "numero_dep", "fNumero_dep" );
             departamentoRule.AddRule( "nome_departamento", "fNome_departamento" );
+            departamentoRule.AddRule( "numero_funcionario", "fNumero_funcionario" );
 
             MapRule gerenciaRule = new MapRule( Ermodel.FindByName( "Gerencia" ), Schema.FindByName( "DocTypeGerencia" ) );
             gerenciaRule.AddRule( "data_inicio", "data_inicio" );
@@ -84,10 +87,10 @@ namespace QueryBuilderApp
             MongoSchema schema = CreateSchema();
             ModelMapping map = CreateMap( ermodel, schema );
 
-            JoinOperation join = new JoinOperation( (Entity)ermodel.FindByName( "Funcionario" ), (Relationship)ermodel.FindByName( "Gerencia" ),
+            RelationshipJoinOperator join = new RelationshipJoinOperator( (Entity)ermodel.FindByName( "Funcionario" ), (Relationship)ermodel.FindByName( "Gerencia" ),
                 new List<Entity> { (Entity)ermodel.FindByName( "Departamento" ) }, map );
 
-            List<BaseOperation> Operations = new List<BaseOperation>();
+            List<AlgebraOperator> Operations = new List<AlgebraOperator>();
             Operations.Add( join );
 
             Pipeline pipeline = new Pipeline( Operations );

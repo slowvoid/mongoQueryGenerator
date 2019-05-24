@@ -15,14 +15,14 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// List of Operations to perform
         /// </summary>
-        public List<BaseOperation> Operations { get; set; }
+        public List<AlgebraOperator> Operations { get; set; }
         #endregion
 
         #region Constructors
         /// <summary>
         /// Initialize a new instance of Pipeline class
         /// </summary>
-        public Pipeline( List<BaseOperation> Operations )
+        public Pipeline( List<AlgebraOperator> Operations )
         {
             this.Operations = Operations;
         }

@@ -12,7 +12,7 @@ namespace QueryBuilder.Operation
     /// <summary>
     /// Defines a find operation
     /// </summary>
-    public class FindOperation : BaseOperation
+    public class FindOperation : AlgebraOperator
     {
         #region Properties
         /// <summary>
@@ -27,9 +27,9 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
-        public override OperationResult Run( OperationResult LastResult )
+        public override void Run( ref AlgebraOperatorResult LastResult )
         {
-            return base.Run( LastResult );
+            base.Run( ref LastResult );
         }
         #endregion
 

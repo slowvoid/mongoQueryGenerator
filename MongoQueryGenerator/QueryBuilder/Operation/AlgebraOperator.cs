@@ -13,7 +13,7 @@ namespace QueryBuilder.Operation
     /// <summary>
     /// Defines a query operation (JOIN, PROJECT, etc)
     /// </summary>
-    public abstract class BaseOperation
+    public abstract class AlgebraOperator
     {
         #region Properties
         /// <summary>
@@ -27,9 +27,8 @@ namespace QueryBuilder.Operation
         /// Run operation
         /// </summary>
         /// <returns></returns>
-        public virtual OperationResult Run( OperationResult LastResult )
+        public virtual void Run( ref AlgebraOperatorResult LastResult )
         {
-            return LastResult;
         }
         #endregion
 
@@ -37,7 +36,7 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// Initialize a new instance of Operation class
         /// </summary>
-        public BaseOperation( ModelMapping ModelMap )
+        public AlgebraOperator( ModelMapping ModelMap )
         {
             this.ModelMap = ModelMap;
         }
