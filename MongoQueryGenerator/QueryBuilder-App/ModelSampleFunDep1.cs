@@ -1,10 +1,13 @@
-﻿using QueryBuilder.ER;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
+using QueryBuilder.ER;
 using QueryBuilder.Map;
 using QueryBuilder.Mongo;
 using QueryBuilder.Operation;
 using QueryBuilder.Query;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -100,7 +103,23 @@ namespace QueryBuilderApp
                 CollectionName = "DocTypeFuncionario"
             };
 
-            Console.WriteLine( $"Query output: {query.Run()}" );
+            string queryString = query.Run();
+
+            Console.WriteLine( $"Query output: {queryString}" );
+
+            // Run mongo query
+            MongoClient mongoClient = new MongoClient( "mongodb://localhost:27017" );
+            IMongoDatabase db = mongoClient.GetDatabase( "pesquisaMestradoTestes" );
+            BsonDocument queryDoc = new BsonDocument()
+            {
+                { "eval", queryString }
+            };
+
+            BsonDocumentCommand<BsonDocument> command = new BsonDocumentCommand<BsonDocument>( queryDoc );
+            BsonDocument res = db.RunCommand( command );
+
+            Console.WriteLine( "Response: {0}", res.GetElement( "retval" ).Value.ToBsonDocument().GetElement("_batch").Value.ToJson() );
+
             Console.Read();
         }
     }

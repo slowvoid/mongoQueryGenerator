@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using QueryBuilder.ER;
 using QueryBuilder.Map;
 using QueryBuilder.Mongo;
@@ -68,8 +70,8 @@ namespace QueryBuilderApp
             {
                 CollectionName = "Person"
             };
-
-            Console.WriteLine( string.Format( "Query output: {0}", QueryGen.Run() ) );
+            string queryString = QueryGen.Run();
+            Console.WriteLine( string.Format( "Query output: {0}", queryString ) );
 
             Console.Read();
         }
