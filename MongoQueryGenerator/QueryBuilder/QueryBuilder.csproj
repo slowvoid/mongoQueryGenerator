@@ -109,6 +109,7 @@
     <Compile Include="Query\JoinCommand.cs" />
     <Compile Include="Query\QueryCommand.cs" />
     <Compile Include="Query\QueryGenerator.cs" />
+    <Compile Include="Query\QueryRunner.cs" />
     <Compile Include="Shared\Attribute.cs" />
     <Compile Include="ER\RelationshipConnection.cs" />
     <Compile Include="Shared\DataType.cs" />

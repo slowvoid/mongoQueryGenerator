@@ -108,17 +108,10 @@ namespace QueryBuilderApp
             Console.WriteLine( $"Query output: {queryString}" );
 
             // Run mongo query
-            MongoClient mongoClient = new MongoClient( "mongodb://localhost:27017" );
-            IMongoDatabase db = mongoClient.GetDatabase( "pesquisaMestradoTestes" );
-            BsonDocument queryDoc = new BsonDocument()
-            {
-                { "eval", queryString }
-            };
+            QueryRunner queryRunner = new QueryRunner( "mongodb://localhost:27017", "pesquisaMestradoTestes" );
+            string res = queryRunner.GetJSON( queryString );
 
-            BsonDocumentCommand<BsonDocument> command = new BsonDocumentCommand<BsonDocument>( queryDoc );
-            BsonDocument res = db.RunCommand( command );
-
-            Console.WriteLine( "Response: {0}", res.GetElement( "retval" ).Value.ToBsonDocument().GetElement("_batch").Value.ToJson() );
+            Console.WriteLine( "Query result: {0}", res );
 
             Console.Read();
         }
