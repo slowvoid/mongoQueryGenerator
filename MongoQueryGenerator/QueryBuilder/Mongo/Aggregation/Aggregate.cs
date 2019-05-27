@@ -16,7 +16,7 @@ namespace QueryBuilder.Mongo.Aggregation
         /// <summary>
         /// Collection serving as start point for the aggregation
         /// </summary>
-        public Collection Collection { get; set; }
+        public MongoDBCollection Collection { get; set; }
         /// <summary>
         /// List of operations to  be execute in this aggregation
         /// </summary>

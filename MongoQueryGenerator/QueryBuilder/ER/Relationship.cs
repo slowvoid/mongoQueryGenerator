@@ -62,6 +62,14 @@ namespace QueryBuilder.ER
         {
             return Relations.Find(R => R.SourceEntity == Source && R.TargetEntity == Target);
         }
+        /// <summary>
+        /// Add relation
+        /// </summary>
+        /// <param name="Relation"></param>
+        public void AddRelation( RelationshipConnection Relation )
+        {
+            Relations.Add( Relation );
+        }
         #endregion
 
         #region Constructors

@@ -42,7 +42,6 @@ namespace QueryBuilder.ER
         /// <summary>
         /// Relationship Cardinality
         /// </summary>
-        public RelationshipCardinality Cardinality { get; set; }
         #endregion
 
         #region Contructores
@@ -56,14 +55,12 @@ namespace QueryBuilder.ER
         public RelationshipConnection(Entity SourceEntity,
                                       DataAttribute SourceAttribute,
                                       Entity TargetEntity,
-                                      DataAttribute TargetAttribute,
-                                      RelationshipCardinality Cardinality)
+                                      DataAttribute TargetAttribute)
         {
             this.SourceEntity = SourceEntity;
             this.SourceAttribute = SourceAttribute;
             this.TargetEntity = TargetEntity;
             this.TargetAttribute = TargetAttribute;
-            this.Cardinality = Cardinality;
         }
         /// <summary>
         /// Initialize a new RelationshipConnection instance
@@ -79,8 +76,7 @@ namespace QueryBuilder.ER
                                       DataAttribute RefSourceAtrribute,
                                       Entity TargetEntity,
                                       DataAttribute TargetAttribute,
-                                      DataAttribute RefTargetAttribute,
-                                      RelationshipCardinality Cardinality)
+                                      DataAttribute RefTargetAttribute)
         {
             this.SourceEntity = SourceEntity;
             this.SourceAttribute = SourceAttribute;
@@ -88,7 +84,6 @@ namespace QueryBuilder.ER
             this.TargetEntity = TargetEntity;
             this.TargetAttribute = TargetAttribute;
             this.RefTargetAttribute = RefTargetAttribute;
-            this.Cardinality = Cardinality;
         }
         #endregion
     }

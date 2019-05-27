@@ -9,7 +9,7 @@ namespace QueryBuilder.Mongo
     /// <summary>
     /// Represents a MongoDB collection
     /// </summary>
-    public class Collection
+    public class MongoDBCollection
     {
         #region Properties
         /// <summary>
@@ -27,7 +27,7 @@ namespace QueryBuilder.Mongo
         /// Initialize a new Collection instance
         /// </summary>
         /// <param name="Name"></param>
-        public Collection( string Name )
+        public MongoDBCollection( string Name )
         {
             this.Name = Name;
             DocumentSchema = new Document();

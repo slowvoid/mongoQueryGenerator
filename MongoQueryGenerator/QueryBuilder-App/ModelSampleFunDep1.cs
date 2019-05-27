@@ -16,7 +16,7 @@ namespace QueryBuilderApp
 {
     public static class ModelSampleFunDep1
     {
-        public static Model CreateERModel()
+        public static ERModel CreateERModel()
         {
             Entity funcionario = new Entity( "Funcionario" );
             funcionario.AddAttribute( "id" );
@@ -34,37 +34,37 @@ namespace QueryBuilderApp
             gerencia.AddAttribute( "data_inicio" );
 
             RelationshipConnection conn = new RelationshipConnection( funcionario, funcionario.GetAttribute( "id" ),
-                departamento, departamento.GetAttribute( "numero_funcionario" ), RelationshipCardinality.OneToOne );
+                departamento, departamento.GetAttribute( "numero_funcionario" ));
             gerencia.Relations.Add( conn );
 
-            Model ermodel = new Model( "dep", new List<BaseERElement> { funcionario, departamento, gerencia } );
+            ERModel ermodel = new ERModel( "dep", new List<BaseERElement> { funcionario, departamento, gerencia } );
 
             return ermodel;
         }
 
         public static MongoSchema CreateSchema()
         {
-            Collection docTypeFuncionario = new Collection( "DocTypeFuncionario" );
+            MongoDBCollection docTypeFuncionario = new MongoDBCollection( "DocTypeFuncionario" );
             docTypeFuncionario.DocumentSchema.AddAttribute( "_id" );
             docTypeFuncionario.DocumentSchema.AddAttribute( "fCpf" );
             docTypeFuncionario.DocumentSchema.AddAttribute( "fNome_funcionario" );
             docTypeFuncionario.DocumentSchema.AddAttribute( "fSexo" );
 
-            Collection docTypeDepartamento = new Collection( "DocTypeDepartamento" );
+            MongoDBCollection docTypeDepartamento = new MongoDBCollection( "DocTypeDepartamento" );
             docTypeDepartamento.DocumentSchema.AddAttribute( "_id" );
             docTypeDepartamento.DocumentSchema.AddAttribute( "fNumero_dep" );
             docTypeDepartamento.DocumentSchema.AddAttribute( "fNome_departamento" );
             docTypeDepartamento.DocumentSchema.AddAttribute( "fNumero_funcionario" );
 
-            Collection docTypeGerencia = new Collection( "DocTypeGerencia" );
+            MongoDBCollection docTypeGerencia = new MongoDBCollection( "DocTypeGerencia" );
             docTypeGerencia.DocumentSchema.AddAttribute( "data_inicio" );
 
-            MongoSchema schema = new MongoSchema( "dep", new List<Collection> { docTypeFuncionario, docTypeDepartamento, docTypeGerencia } );
+            MongoSchema schema = new MongoSchema( "dep", new List<MongoDBCollection> { docTypeFuncionario, docTypeDepartamento, docTypeGerencia } );
 
             return schema;
         }
 
-        public static ModelMapping CreateMap(Model Ermodel, MongoSchema Schema)
+        public static ModelMapping CreateMap(ERModel Ermodel, MongoSchema Schema)
         {
             MapRule funcionarioRule = new MapRule( Ermodel.FindByName( "Funcionario" ), Schema.FindByName( "DocTypeFuncionario" ) );
             funcionarioRule.AddRule( "id", "_id" );
@@ -86,7 +86,7 @@ namespace QueryBuilderApp
 
         public static void Main()
         {
-            Model ermodel = CreateERModel();
+            ERModel ermodel = CreateERModel();
             MongoSchema schema = CreateSchema();
             ModelMapping map = CreateMap( ermodel, schema );
 

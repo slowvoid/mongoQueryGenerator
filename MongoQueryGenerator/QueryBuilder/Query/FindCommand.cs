@@ -17,7 +17,7 @@ namespace QueryBuilder.Query
         /// <summary>
         /// Target collection
         /// </summary>
-        public Collection TargetCollection { get; set; }
+        public MongoDBCollection TargetCollection { get; set; }
         /// <summary>
         /// Filters
         /// </summary>
@@ -48,7 +48,7 @@ namespace QueryBuilder.Query
         /// </summary>
         /// <param name="TargetCollection">Target collection</param>
         /// <param name="Filters">Filters</param>
-        public FindCommand( Collection TargetCollection, Dictionary<string, object> Filters )
+        public FindCommand( MongoDBCollection TargetCollection, Dictionary<string, object> Filters )
         {
             this.TargetCollection = TargetCollection;
             this.Filters = Filters;

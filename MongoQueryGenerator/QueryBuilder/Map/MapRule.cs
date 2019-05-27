@@ -22,7 +22,7 @@ namespace QueryBuilder.Map
         /// <summary>
         /// Target MongoDB collection
         /// </summary>
-        public Collection Target { get; set; }
+        public MongoDBCollection Target { get; set; }
         /// <summary>
         /// Mapping rules
         /// </summary>
@@ -47,7 +47,7 @@ namespace QueryBuilder.Map
         /// </summary>
         /// <param name="Source"></param>
         /// <param name="Target"></param>
-        public MapRule( BaseERElement Source, Collection Target )
+        public MapRule( BaseERElement Source, MongoDBCollection Target )
         {
             this.Source = Source;
             this.Target = Target;
@@ -60,7 +60,7 @@ namespace QueryBuilder.Map
         /// <param name="Source"></param>
         /// <param name="Target"></param>
         /// <param name="Rules"></param>
-        public MapRule( BaseERElement Source, Collection Target, Dictionary<string, string> Rules )
+        public MapRule( BaseERElement Source, MongoDBCollection Target, Dictionary<string, string> Rules )
         {
             this.Source = Source;
             this.Target = Target;

@@ -1,0 +1,13 @@
+{
+  "name": "query-builder-dbseeder",
+  "version": "0.0.0",
+  "description": "QueryBuilder-DBSeeder",
+  "main": "app.js",
+  "author": {
+    "name": ""
+  },
+  "dependencies": {
+    "faker": "^4.1.0",
+    "mongoose": "^5.5.11"
+  }
+}

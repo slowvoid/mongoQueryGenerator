@@ -11,7 +11,7 @@ namespace QueryBuilder.ER
     /// <summary>
     /// Represents a ER Model
     /// </summary>
-    public class Model
+    public class ERModel
     {
         #region Properties
         /// <summary>
@@ -51,7 +51,7 @@ namespace QueryBuilder.ER
         /// </summary>
         /// <param name="Name">Model name</param>
         /// <param name="Element">Elements associated to this model</param>
-        public Model( string Name, List<BaseERElement> Elements )
+        public ERModel( string Name, List<BaseERElement> Elements )
         {
             this.Name = Name;
             this.Elements = Elements;

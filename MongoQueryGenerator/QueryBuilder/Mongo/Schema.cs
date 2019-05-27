@@ -16,7 +16,7 @@ namespace QueryBuilder.Mongo
         /// <summary>
         /// Collections
         /// </summary>
-        public List<Collection> Collections { get; set; }
+        public List<MongoDBCollection> Collections { get; set; }
         #endregion
 
         #region Methods
@@ -25,7 +25,7 @@ namespace QueryBuilder.Mongo
         /// </summary>
         /// <param name="Name"></param>
         /// <returns></returns>
-        public Collection FindByName( string Name )
+        public MongoDBCollection FindByName( string Name )
         {
             return Collections.Find( C => C.Name == Name );
         }
@@ -37,7 +37,7 @@ namespace QueryBuilder.Mongo
         /// </summary>
         /// <param name="Name">Schema name</param>
         /// <param name="Collections">Attached collections</param>
-        public MongoSchema( string Name, List<Collection> Collections )
+        public MongoSchema( string Name, List<MongoDBCollection> Collections )
         {
             this.Name = Name;
             this.Collections = Collections;

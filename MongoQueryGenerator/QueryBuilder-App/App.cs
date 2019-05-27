@@ -19,7 +19,7 @@ namespace QueryBuilderApp
             Console.WriteLine( "Preparing data to run" );
 
 
-            Model ErModel = CreateERModel();
+            ERModel ErModel = CreateERModel();
             MongoSchema MSchema = CreateMongoSchema();
 
             // ER Model and MongoDB Schema ready, time to create the mapping
@@ -76,7 +76,7 @@ namespace QueryBuilderApp
             Console.Read();
         }
 
-        public static Model CreateERModel()
+        public static ERModel CreateERModel()
         {
             Entity Person = new Entity( "Person" );
             Person.Attributes.Add( new DataAttribute( "personId" ) );
@@ -103,8 +103,7 @@ namespace QueryBuilderApp
                 Insurance.Attributes.Find( A => A.Name == "idPerson" ),
                 Car,
                 Car.Attributes.Find( A => A.Name == "carId" ),
-                Insurance.Attributes.Find( A => A.Name == "idCar" ),
-                RelationshipCardinality.ManyToMany
+                Insurance.Attributes.Find( A => A.Name == "idCar" )
             );
 
             RelationshipConnection PersonInsCompany = new RelationshipConnection(
@@ -113,38 +112,37 @@ namespace QueryBuilderApp
                 Insurance.Attributes.Find( A => A.Name == "idPerson" ),
                 InsCompany,
                 InsCompany.Attributes.Find( A => A.Name == "companyId" ),
-                Insurance.Attributes.Find( A => A.Name == "idCompany" ),
-                RelationshipCardinality.ManyToMany
+                Insurance.Attributes.Find( A => A.Name == "idCompany" )
             );
 
             Insurance.Relations.AddRange( new RelationshipConnection[] { PersonCar, PersonInsCompany } );
 
-            Model ERModel = new Model( "PersonCarModel", new List<BaseERElement> { Person, Car, Insurance, InsCompany } );
+            ERModel ERModel = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, Insurance, InsCompany } );
             return ERModel;
         }
 
         public static MongoSchema CreateMongoSchema()
         {
-            Collection Person = new Collection( "Person" );
+            MongoDBCollection Person = new MongoDBCollection( "Person" );
             Person.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
             Person.DocumentSchema.Attributes.Add( new DataAttribute( "name" ) );
             Person.DocumentSchema.Attributes.Add( new DataAttribute( "salary" ) );
 
-            Collection Car = new Collection( "Car" );
+            MongoDBCollection Car = new MongoDBCollection( "Car" );
             Car.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
             Car.DocumentSchema.Attributes.Add( new DataAttribute( "name" ) );
 
-            Collection InsCompany = new Collection( "InsCompany" );
+            MongoDBCollection InsCompany = new MongoDBCollection( "InsCompany" );
             InsCompany.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
             InsCompany.DocumentSchema.Attributes.Add( new DataAttribute( "name" ) );
 
-            Collection Insurance = new Collection( "Insurance" );
+            MongoDBCollection Insurance = new MongoDBCollection( "Insurance" );
             Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
             Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "idCompany" ) );
             Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "idPerson" ) );
             Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "idCar" ) );
 
-            MongoSchema Schema = new MongoSchema( "PersonDrivesCar", new List<Collection> { Person, Car, InsCompany, Insurance } );
+            MongoSchema Schema = new MongoSchema( "PersonDrivesCar", new List<MongoDBCollection> { Person, Car, InsCompany, Insurance } );
             return Schema;
         }
     }
