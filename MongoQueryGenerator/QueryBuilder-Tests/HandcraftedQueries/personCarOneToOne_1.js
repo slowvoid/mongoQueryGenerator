@@ -9,13 +9,15 @@
     },
     {
         $project: {
+            carId: true,
+            _id: true,
             name: '$name',
-            drives_Car: {
+            data_Drives: {
                 $map: {
                     input: '$data_Car',
                     as: 'car_data',
                     in: {
-                        Car_id: '$$car_data._id',
+                        Car_carId: '$$car_data._id',
                         Car_name: '$$car_data.name',
                         Car_year: '$$car_data.year'
                     }

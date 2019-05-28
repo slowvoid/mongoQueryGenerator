@@ -123,7 +123,7 @@ namespace QueryBuilder.Operation
                         }
                         else
                         {
-                            string TargetLookupAttribute = $"data_{TargetEntity.Name}";
+                            string TargetLookupAttribute = $"data_{Relationship.Name}";
 
                             // Lookup entity
                             LookupOperator LookupTarget = new LookupOperator
@@ -134,31 +134,34 @@ namespace QueryBuilder.Operation
                                 As = TargetLookupAttribute
                             };
 
-                            // Add fields and hide source object
-                            Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
-                            Dictionary<string, ProjectExpression> TargetFieldsToRemove = new Dictionary<string, ProjectExpression>();
-                            // attributes in the data_RelName attribute
+                            // Rename joined data to match algebra
+                            string MapInput = $"${TargetLookupAttribute}";
+                            string MapAs = $"{TargetEntity.Name.ToLower()}_data";
 
+                            Dictionary<string, string> AttributeMapRules = new Dictionary<string, string>();
                             foreach ( DataAttribute Attribute in TargetEntity.Attributes )
                             {
-                                string AttributeMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
-
-                                if ( AttributeMappedTo != null )
-                                {
-                                    AddTargetAttributes.Add( $"\"{joinedAttributeName}.{TargetEntity.Name}_{Attribute.Name}\"", $"${TargetLookupAttribute}.{AttributeMappedTo}" );
-                                }
+                                // Find Attribute mapping
+                                string AttributeMappedTo = TargetRule.Rules.First( R => R.Key == Attribute.Name ).Value;
+                                AttributeMapRules.Add( $"{TargetEntity.Name}_{Attribute.Name}", $"$${MapAs}.{AttributeMappedTo}" );
                             }
 
-                            // Unwind joined data
-                            Unwind UnwindOp = new Unwind( TargetLookupAttribute );
+                            MapExpr MapOp = new MapExpr( MapInput, MapAs, AttributeMapRules );
 
-                            // Only one field to hide
-                            TargetFieldsToRemove.Add( TargetLookupAttribute, new BooleanExpr( false ) );
+                            Dictionary<string, ProjectExpression> ProjectAttributes = new Dictionary<string, ProjectExpression>();
 
-                            AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
-                            Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
+                            foreach ( DataAttribute Attribute in SourceEntity.Attributes )
+                            {
+                                string AttributeMappedTo = SourceRule.Rules.First( R => R.Key == Attribute.Name ).Value;
+                                ProjectAttributes.Add( AttributeMappedTo, new BooleanExpr( true ) );
+                            }
 
-                            OperationsToExecute.AddRange( new MongoDBOperator[] { LookupTarget, UnwindOp, AddFieldsOp, RemoveFieldsOp } );
+                            // Also add MapOp to list
+                            ProjectAttributes.Add( TargetLookupAttribute, MapOp );
+
+                            Project ProjectOp = new Project( ProjectAttributes );
+
+                            OperationsToExecute.AddRange( new MongoDBOperator[] { LookupTarget, ProjectOp } );
                         }
                     }
                 }
