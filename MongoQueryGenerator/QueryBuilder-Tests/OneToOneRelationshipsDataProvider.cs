@@ -40,7 +40,7 @@ namespace QueryBuilder.Tests
             MongoDBCollection PersonCollection = new MongoDBCollection( "Person" );
             PersonCollection.DocumentSchema.AddAttribute( "_id" );
             PersonCollection.DocumentSchema.AddAttribute( "name" );
-            PersonCollection.DocumentSchema.AddAttribute( "year" );
+            PersonCollection.DocumentSchema.AddAttribute( "carId" );
 
             MongoDBCollection CarCollection = new MongoDBCollection( "Car" );
             CarCollection.DocumentSchema.AddAttribute( "_id" );
@@ -59,6 +59,57 @@ namespace QueryBuilder.Tests
             CarRule.AddRule( "carId", "_id" );
             CarRule.AddRule( "name", "name" );
             CarRule.AddRule( "year", "year" );
+
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule } );
+
+            return new RequiredDataContainer( Model, Schema, Map );
+        }
+        /// <summary>
+        /// Generates required data to test a One to One relationship
+        /// with an embbebed document 
+        /// </summary>
+        /// <returns></returns>
+        public static RequiredDataContainer OneToOneEmbbebed()
+        {
+            // Create ER Stuff
+            Entity Person = new Entity( "Person" );
+            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "name" );
+            Person.AddAttribute( "carId" );
+
+            Entity Car = new Entity( "Car" );
+            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carName" );
+            Car.AddAttribute( "carYear" );
+
+            Relationship Drives = new Relationship( "Drives", RelationshipCardinality.OneToOne );
+            RelationshipConnection PersonCar = new RelationshipConnection(
+                Person, Person.GetAttribute( "carId" ), Car, Car.GetAttribute( "carId" ) );
+            Drives.AddRelation( PersonCar );
+
+            ERModel Model = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, Drives } );
+
+            // Create MongoDB schema
+            MongoDBCollection PersonCollection = new MongoDBCollection( "Person" );
+            PersonCollection.DocumentSchema.AddAttribute( "_id" );
+            PersonCollection.DocumentSchema.AddAttribute( "name" );
+            PersonCollection.DocumentSchema.AddAttribute( "carId" );
+            PersonCollection.DocumentSchema.AddAttribute( "drives.carId" );
+            PersonCollection.DocumentSchema.AddAttribute( "drives.carName" );
+            PersonCollection.DocumentSchema.AddAttribute( "drives.carYear" );
+
+            MongoSchema Schema = new MongoSchema( "PersonCarSchema", new List<MongoDBCollection> { PersonCollection } );
+
+            // Create Map
+            MapRule PersonRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "Person" ) );
+            PersonRule.AddRule( "personId", "_id" );
+            PersonRule.AddRule( "name", "name" );
+            PersonRule.AddRule( "carId", "carId" );
+
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ) );
+            CarRule.AddRule( "carId", "drives.carId" );
+            CarRule.AddRule( "carName", "drives.carName" );
+            CarRule.AddRule( "carYear", "drives.carYear" );
 
             ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule } );
 
