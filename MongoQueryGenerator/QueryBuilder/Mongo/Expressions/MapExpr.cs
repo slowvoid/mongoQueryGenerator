@@ -16,7 +16,6 @@ namespace QueryBuilder.Mongo.Expressions
         /// <summary>
         /// Input field
         /// </summary>
-
         public string Input { get; set; }
         /// <summary>
         /// Alias to access each memeber of the array

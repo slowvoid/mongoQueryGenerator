@@ -81,7 +81,6 @@ namespace QueryBuilder.Operation
 
                         if ( SharesMapping )
                         {
-
                             // This means that target entity is embbeded in source entity
                             // So we have to add the fields to the relationship attribute
                             // In this case we just have to setup the output to match the algebra
@@ -102,13 +101,15 @@ namespace QueryBuilder.Operation
                                 }
                             }
 
+                            string JoinedObject = $"{joinedAttributeName}Obj";
+
                             foreach ( DataAttribute Attribute in TargetEntity.Attributes )
                             {
                                 string AttributeMappedTo = TargetRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
 
                                 if ( AttributeMappedTo != null )
                                 {
-                                    AddTargetAttributes.Add( $"\"{joinedAttributeName}.{TargetEntity.Name}_{Attribute.Name}\"", $"${AttributeMappedTo}" );
+                                    AddTargetAttributes.Add( $"\"{JoinedObject}.{TargetEntity.Name}_{Attribute.Name}\"", $"${AttributeMappedTo}" );
                                     if ( !FoundRootAttribute )
                                     {
                                         TargetFieldsToRemove.Add( AttributeMappedTo, new BooleanExpr( false ) );
@@ -119,7 +120,23 @@ namespace QueryBuilder.Operation
                             AddFields AddFieldsOp = new AddFields( AddTargetAttributes );
                             Project RemoveFieldsOp = new Project( TargetFieldsToRemove );
 
-                            OperationsToExecute.AddRange( new MongoDBOperator[] { AddFieldsOp, RemoveFieldsOp } );
+                            // Project attributes converting the joined object into array
+                            Dictionary<string, ProjectExpression> RemapAttributes = new Dictionary<string, ProjectExpression>();
+                            // Add source entity attributes
+                            foreach ( DataAttribute Attribute in SourceEntity.Attributes )
+                            {
+                                string AttributeMappedTo = SourceRule.Rules.FirstOrDefault( A => A.Key == Attribute.Name ).Value;
+                                if ( AttributeMappedTo != null )
+                                {
+                                    RemapAttributes.Add( AttributeMappedTo, new BooleanExpr( true ) );
+                                }
+                            }
+                            // Convert object to array
+                            RemapAttributes.Add( joinedAttributeName, new ValueExpr( $"[\"${JoinedObject}\"]" ) );
+
+                            Project RemapOp = new Project( RemapAttributes );
+
+                            OperationsToExecute.AddRange( new MongoDBOperator[] { AddFieldsOp, RemoveFieldsOp, RemapOp } );
                         }
                         else
                         {

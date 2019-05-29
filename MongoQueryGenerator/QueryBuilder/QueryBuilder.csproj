@@ -74,6 +74,7 @@
     <Compile Include="Javascript\JSBoolean.cs" />
     <Compile Include="Javascript\JSCode.cs" />
     <Compile Include="Javascript\JSObject.cs" />
+    <Compile Include="Javascript\JSString.cs" />
     <Compile Include="Map\MapRule.cs" />
     <Compile Include="Map\ModelMapping.cs" />
     <Compile Include="Mongo\Aggregation\Aggregate.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Mongo\Expressions\MapExpr.cs" />
     <Compile Include="Mongo\Expressions\MergeObjects.cs" />
     <Compile Include="Mongo\Expressions\ProjectExpression.cs" />
+    <Compile Include="Mongo\Expressions\ValueExpr.cs" />
     <Compile Include="Mongo\Schema.cs" />
     <Compile Include="Operation\AddFieldsOperation.cs" />
     <Compile Include="Operation\Exceptions\ImpossibleOperationException.cs" />
