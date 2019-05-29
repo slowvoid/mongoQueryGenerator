@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace QueryBuilder.Tests
 {
     /// <summary>
-    /// Provides data fro tests
+    /// Provides data for tests
     /// </summary>
     public static class OneToOneRelationshipsDataProvider
     {

@@ -33,6 +33,7 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="package.json" />
+    <Content Include="seedOneToMany.js" />
     <Content Include="README.md" />
     <Content Include="seedOneToOneEmbbebed.js">
       <SubType>Code</SubType>

@@ -289,19 +289,54 @@ namespace QueryBuilder.Operation
                         }
                         else
                         {
-                            /* In this case, the target entity is mapped to its own collection
+                            /* 
+                             * In this case, the target entity is mapped to its own collection
                              * Which also means that if the relationship has attributes
                              * it must have been mapped to target collection
                              */
-                            LookupOperator LookupOp = new LookupOperator
+
+                            // Run a custom pipeline to rename the joined entity attributes
+                            List<MongoDBOperator> CustomPipeline = new List<MongoDBOperator>();
+
+                            // First thing to do in the pipeline is to match the joined entity with the source entity
+                            Dictionary<string, string> PipelineVariables = new Dictionary<string, string>();
+                            RelationshipConnection SourceConnection = Relationship.Relations.First();
+                            string SourceRef = SourceRule.Rules.First( R => R.Key == SourceConnection.SourceAttribute.Name ).Value;
+                            string SourceVar = $"source_{SourceConnection.SourceAttribute.Name}";
+                            PipelineVariables.Add( SourceVar, $"${SourceRef}" );
+
+                            string SourceEntityAttribute = TargetRule.Rules.First( R => R.Key == SourceConnection.TargetAttribute.Name ).Value;
+                            EqExpr MatchSourceEq = new EqExpr( $"${SourceEntityAttribute}", $"$${SourceVar}" );
+                            Match MatchSourceOp = new Match( new Expr( MatchSourceEq ) );
+
+                            // Rename attributes
+                            Dictionary<string, ProjectExpression> RenameAttributes = new Dictionary<string, ProjectExpression>();
+                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                            {
+                                string AttributeMappedTo = TargetRule.Rules.First( R => R.Key == Attribute.Name ).Value;
+                                if ( AttributeMappedTo != null )
+                                {
+                                    RenameAttributes.Add( $"{TargetEntity.Name}_{Attribute.Name}", new ValueExpr( $"\"${AttributeMappedTo}\"" ) );
+                                }
+                            }
+
+                            // Force remove _id
+                            RenameAttributes.Add( "_id", new BooleanExpr( false ) );
+
+                            Project RenameOp = new Project( RenameAttributes );
+
+                            CustomPipeline.AddRange( new List<MongoDBOperator> { MatchSourceOp, RenameOp } );
+
+                            LookupOperator RelationshipLookup = new LookupOperator
                             {
                                 From = TargetRule.Target.Name,
-                                ForeignField = TargetRule.Rules.First( R => R.Key == RelationshipData.TargetAttribute.Name ).Value,
-                                LocalField = SourceRule.Rules.First( R => R.Key == RelationshipData.SourceAttribute.Name ).Value,
+                                Let = PipelineVariables,
+                                Pipeline = CustomPipeline,
                                 As = $"data_{Relationship.Name}"
                             };
+                          
 
-                            OperationsToExecute.Add( LookupOp );
+                            OperationsToExecute.Add( RelationshipLookup );
                         }
                     }
                 }
