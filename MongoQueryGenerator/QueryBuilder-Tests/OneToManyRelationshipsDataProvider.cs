@@ -67,6 +67,49 @@ namespace QueryBuilder.Tests
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
+        /// <summary>
+        /// Generates required data for a OneToMany relationship with embedded documents
+        /// </summary>
+        /// <returns></returns>
+        public static RequiredDataContainer OneToManyEmbedded()
+        {
+            // Create ER Stuff
+            Entity Person = new Entity( "Person" );
+            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "name" );
+
+            Entity Car = new Entity( "Car" );
+            Car.AddAttribute( "name" );
+            Car.AddAttribute( "year" );
+
+            Relationship Drives = new Relationship( "Drives", RelationshipCardinality.OneToMany );
+            RelationshipConnection PersonCar = new RelationshipConnection(
+                Person, Person.GetAttribute( "personId" ), Car, Car.GetAttribute( "personId" ) );
+            Drives.AddRelation( PersonCar );
+
+            ERModel Model = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, Drives } );
+
+            // Create MongoDB schema
+            MongoDBCollection PersonCollection = new MongoDBCollection( "PersonDrivesCars" );
+            PersonCollection.DocumentSchema.AddAttribute( "_id" );
+            PersonCollection.DocumentSchema.AddAttribute( "name" );
+            PersonCollection.DocumentSchema.AddAttribute( "cars" );
+
+            MongoSchema Schema = new MongoSchema( "PersonCarSchema", new List<MongoDBCollection> { PersonCollection } );
+
+            // Create Map
+            MapRule PersonRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "PersonDrivesCars" ) );
+            PersonRule.AddRule( "personId", "_id" );
+            PersonRule.AddRule( "name", "name" );
+
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "PersonDrivesCars" ) );
+            CarRule.AddRule( "name", "cars.name" );
+            CarRule.AddRule( "year", "cars.year" );
+
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule } );
+
+            return new RequiredDataContainer( Model, Schema, Map );
+        }
         #endregion
     }
 }
