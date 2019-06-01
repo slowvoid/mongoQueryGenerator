@@ -88,7 +88,7 @@ namespace QueryBuilder.Operation
                             Dictionary<string, ProjectExpression> TargetFieldsToRemove = new Dictionary<string, ProjectExpression>();
                             // attributes in the data_RelName attribute
 
-                            // Check if it is possible to find the root attribute for the embbebed collection
+                            // Check if it is possible to find the root attribute for the embedded collection
                             bool FoundRootAttribute = false;
                             string RootAttributeMap = TargetRule.Rules.FirstOrDefault().Value;
                             if ( RootAttributeMap != null )
@@ -211,7 +211,7 @@ namespace QueryBuilder.Operation
                         // Are source and target mapped to the same collection
                         if ( SourceRule.Target.Name == TargetRule.Target.Name )
                         {
-                            /* Target entity is embbebed in the source entity
+                            /* Target entity is embedded in the source entity
                                This also means that the relationship attributes (if any)
                                are mapped to the same collection.
 
@@ -227,7 +227,7 @@ namespace QueryBuilder.Operation
                                 // Retrieve attribute mapping
                                 string AttributeMappedTo = RelationshipRule.Rules.FirstOrDefault( R => R.Key == Attribute.Name ).Value;
 
-                                // Check if the attribute is mapped to a complex attribute (like an embbebed document)
+                                // Check if the attribute is mapped to a complex attribute (like an embedded document)
                                 if ( AttributeMappedTo.Contains( "." ) )
                                 {
                                     string[] AttributeHierarchy = AttributeMappedTo.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
@@ -252,7 +252,7 @@ namespace QueryBuilder.Operation
                             // For an One-To-Many relationship, we need to map the array containing
                             // the joined entity and rename it to match the algebra
                             Dictionary<string, string> AttributeMapRules = new Dictionary<string, string>();
-                            // Retrieve the name of the attribute that holds the embbebed document
+                            // Retrieve the name of the attribute that holds the embedded document
                             string AttributePath = TargetRule.Rules.First( R => R.Key == TargetEntity.Attributes.First().Name ).Value;
                             string[] AttributeMap = AttributePath.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
                             string AttributeRoot = AttributeMap.First();

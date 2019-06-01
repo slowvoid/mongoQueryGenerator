@@ -13,10 +13,10 @@ namespace QueryBuilder.Tests
         #region Methods
         /// <summary>
         /// Generates required data to test a One to One relationship
-        /// without an embbebed document
+        /// without an embedded document
         /// </summary>
         /// <returns></returns>
-        public static RequiredDataContainer OneToOneNotEmbbebed()
+        public static RequiredDataContainer OneToOneNotEmbedded()
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
@@ -66,10 +66,10 @@ namespace QueryBuilder.Tests
         }
         /// <summary>
         /// Generates required data to test a One to One relationship
-        /// with an embbebed document 
+        /// with an embedded document 
         /// </summary>
         /// <returns></returns>
-        public static RequiredDataContainer OneToOneEmbbebed()
+        public static RequiredDataContainer OneToOneEmbedded()
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
@@ -110,6 +110,102 @@ namespace QueryBuilder.Tests
             CarRule.AddRule( "carId", "drives.carId" );
             CarRule.AddRule( "carName", "drives.carName" );
             CarRule.AddRule( "carYear", "drives.carYear" );
+
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule } );
+
+            return new RequiredDataContainer( Model, Schema, Map );
+        }
+        /// <summary>
+        /// Generates required data to test a One to One relationship
+        /// with an embedded document without a master attribute
+        /// </summary>
+        /// <returns></returns>
+        public static RequiredDataContainer OneToOneEmbeddedNoMasterAttribute()
+        {
+            // Create ER Stuff
+            Entity Person = new Entity( "Person" );
+            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "name" );
+
+            Entity Car = new Entity( "Car" );
+            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carName" );
+            Car.AddAttribute( "carYear" );
+
+            Relationship Drives = new Relationship( "Drives", RelationshipCardinality.OneToOne );
+            RelationshipConnection PersonCar = new RelationshipConnection(
+                Person, Person.GetAttribute( "carId" ), Car, Car.GetAttribute( "carId" ) );
+            Drives.AddRelation( PersonCar );
+
+            ERModel Model = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, Drives } );
+
+            // Create MongoDB schema
+            MongoDBCollection PersonCollection = new MongoDBCollection( "PersonDrivesCar" );
+            PersonCollection.DocumentSchema.AddAttribute( "_id" );
+            PersonCollection.DocumentSchema.AddAttribute( "name" );
+            PersonCollection.DocumentSchema.AddAttribute( "carId" );
+            PersonCollection.DocumentSchema.AddAttribute( "carName" );
+            PersonCollection.DocumentSchema.AddAttribute( "carYear" );
+
+            MongoSchema Schema = new MongoSchema( "PersonCarSchema", new List<MongoDBCollection> { PersonCollection } );
+
+            // Create Map
+            MapRule PersonRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "PersonDrivesCar" ) );
+            PersonRule.AddRule( "personId", "_id" );
+            PersonRule.AddRule( "name", "name" );
+
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "PersonDrivesCar" ) );
+            CarRule.AddRule( "carId", "carId" );
+            CarRule.AddRule( "carName", "carName" );
+            CarRule.AddRule( "carYear", "carYear" );
+
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule } );
+
+            return new RequiredDataContainer( Model, Schema, Map );
+        }
+        /// <summary>
+        /// Generates required data to test a One to One relationship
+        /// with an embedded document with data mixed in direct embedded and using master attribute
+        /// </summary>
+        /// <returns></returns>
+        public static RequiredDataContainer OneToOneEmbeddedMixed()
+        {
+            // Create ER Stuff
+            Entity Person = new Entity( "Person" );
+            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "name" );
+
+            Entity Car = new Entity( "Car" );
+            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carName" );
+            Car.AddAttribute( "carYear" );
+
+            Relationship Drives = new Relationship( "Drives", RelationshipCardinality.OneToOne );
+            RelationshipConnection PersonCar = new RelationshipConnection(
+                Person, Person.GetAttribute( "carId" ), Car, Car.GetAttribute( "carId" ) );
+            Drives.AddRelation( PersonCar );
+
+            ERModel Model = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, Drives } );
+
+            // Create MongoDB schema
+            MongoDBCollection PersonCollection = new MongoDBCollection( "PersonDrivesCarMixed" );
+            PersonCollection.DocumentSchema.AddAttribute( "_id" );
+            PersonCollection.DocumentSchema.AddAttribute( "name" );
+            PersonCollection.DocumentSchema.AddAttribute( "carData.carId" );
+            PersonCollection.DocumentSchema.AddAttribute( "carData.carName" );
+            PersonCollection.DocumentSchema.AddAttribute( "carData.carYear" );
+
+            MongoSchema Schema = new MongoSchema( "PersonCarSchema", new List<MongoDBCollection> { PersonCollection } );
+
+            // Create Map
+            MapRule PersonRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "PersonDrivesCarMixed" ) );
+            PersonRule.AddRule( "personId", "_id" );
+            PersonRule.AddRule( "name", "name" );
+
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "PersonDrivesCarMixed" ) );
+            CarRule.AddRule( "carId", "carId" );
+            CarRule.AddRule( "carName", "carData.carName" );
+            CarRule.AddRule( "carYear", "carData.carYear" );
 
             ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule } );
 

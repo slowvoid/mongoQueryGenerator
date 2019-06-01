@@ -35,7 +35,13 @@
     <Content Include="package.json" />
     <Content Include="seedOneToMany.js" />
     <Content Include="README.md" />
-    <Content Include="seedOneToOneEmbbebed.js">
+    <Content Include="seedOneToOneEmbedded.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="seedOneToOneEmbedded_2.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="seedOneToOneEmbedded_3.js">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>

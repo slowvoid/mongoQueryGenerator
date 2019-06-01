@@ -15,11 +15,11 @@ namespace QueryBuilder.Tests
     public class OneToManyRelationships
     {
         [TestMethod]
-        public void OneToManyNotEmbbebed()
+        public void OneToManyNotembedded()
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToManyRelationshipsDataProvider.OneToManyNotEmbbebed();
+            RequiredDataContainer ModelData = OneToManyRelationshipsDataProvider.OneToManyNotEmbedded();
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarOneToMany_1.js" );

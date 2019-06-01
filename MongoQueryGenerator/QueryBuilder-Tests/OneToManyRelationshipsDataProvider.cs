@@ -16,10 +16,10 @@ namespace QueryBuilder.Tests
     {
         #region Methods
         /// <summary>
-        /// Generates required data for a OneToMany relationship without embbebed documents
+        /// Generates required data for a OneToMany relationship without embedded documents
         /// </summary>
         /// <returns></returns>
-        public static RequiredDataContainer OneToManyNotEmbbebed()
+        public static RequiredDataContainer OneToManyNotEmbedded()
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
