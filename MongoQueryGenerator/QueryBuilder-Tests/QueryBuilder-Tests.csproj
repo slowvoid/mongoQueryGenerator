@@ -52,6 +52,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ManyToManyRelationships.cs" />
+    <Compile Include="ManyToManyRelationshipsDataProvider.cs" />
     <Compile Include="OneToManyRelationships.cs" />
     <Compile Include="OneToManyRelationshipsDataProvider.cs" />
     <Compile Include="OneToOneRelationships.cs" />
@@ -94,6 +96,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="HandcraftedQueries\personCarOneToMany_2.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HandcraftedQueries\personCarManyToMany_1.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

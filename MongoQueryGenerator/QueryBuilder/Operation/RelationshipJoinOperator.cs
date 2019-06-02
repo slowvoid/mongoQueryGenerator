@@ -362,17 +362,6 @@ namespace QueryBuilder.Operation
 
                 CustomPipeline.Add( MatchSourceOp );
 
-                // Add Lookup for relationship
-                LookupOperator RelationshipLookup = new LookupOperator
-                {
-                    From = RelationshipRule.Target.Name,
-                    Let = PipelineVariables,
-                    Pipeline = CustomPipeline,
-                    As = $"data_{Relationship.Name}"
-                };
-
-                OperationsToExecute.Add( RelationshipLookup );
-
                 foreach ( Entity TargetEntity in TargetEntities )
                 {
                     if ( TargetEntity is ComputedEntity )
@@ -435,7 +424,34 @@ namespace QueryBuilder.Operation
 
                         CustomPipeline.AddRange( new MongoDBOperator[] { LookupTargetOp, UnwindTarget, AddFieldsOp, ProjectOp } );
                     }
-                }                
+                }
+
+                // Also rename relationship attributes
+                Dictionary<string, string> RelationshipAttributesToAdd = new Dictionary<string, string>();
+                Dictionary<string, ProjectExpression> RelationshipAttributesToRemove = new Dictionary<string, ProjectExpression>();
+
+                foreach ( DataAttribute Attribute in Relationship.Attributes )
+                {
+                    string AttributeMap = RelationshipRule.Rules.First( R => R.Key == Attribute.Name ).Value;
+                    RelationshipAttributesToAdd.Add( $"{Relationship.Name}_{Attribute.Name}", $"${AttributeMap}" );
+                    RelationshipAttributesToRemove.Add( AttributeMap, new BooleanExpr( false ) );
+                }
+
+                AddFields RAddFields = new AddFields( RelationshipAttributesToAdd );
+                Project RRemoveOp = new Project( RelationshipAttributesToRemove );
+
+                CustomPipeline.AddRange( new MongoDBOperator[] { RAddFields, RRemoveOp } );
+
+                // Add Lookup for relationship
+                LookupOperator RelationshipLookup = new LookupOperator
+                {
+                    From = RelationshipRule.Target.Name,
+                    Let = PipelineVariables,
+                    Pipeline = CustomPipeline,
+                    As = $"data_{Relationship.Name}"
+                };
+
+                OperationsToExecute.Add( RelationshipLookup );
             }
 
             // Assign operation list
