@@ -50,6 +50,8 @@
     <Content Include="seedOneToOneEmbedded_3.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="seedOneToOneMultipleEntities.js" />
+    <Content Include="seedOneToOneMultipleEntitiesMixed.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="seedOneToOne.js">

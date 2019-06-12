@@ -211,6 +211,143 @@ namespace QueryBuilder.Tests
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
+        /// <summary>
+        /// Generates required data to test a One to One relationship
+        /// without an embedded document with multiple entities
+        /// </summary>
+        /// <returns></returns>
+        public static RequiredDataContainer OneToOneNotEmbeddedMultipleEntities()
+        {
+            // Create ER Stuff
+            Entity Person = new Entity( "Person" );
+            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "name" );
+            Person.AddAttribute( "carId" );
+            Person.AddAttribute( "insuranceId" );
+
+            Entity Car = new Entity( "Car" );
+            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "name" );
+            Car.AddAttribute( "year" );
+
+            Entity Insurance = new Entity( "Insurance" );
+            Insurance.AddAttribute( "insuranceId" );
+            Insurance.AddAttribute( "name" );
+
+            Relationship HasInsurance = new Relationship( "HasInsurance", RelationshipCardinality.OneToOne );
+            RelationshipConnection PersonCar = new RelationshipConnection(
+                Person, Person.GetAttribute( "carId" ), Car, Car.GetAttribute( "carId" ) );
+            HasInsurance.AddRelation( PersonCar );
+
+            RelationshipConnection PersonInsurance = new RelationshipConnection(
+                Person, Person.GetAttribute( "insuranceId" ), Insurance, Insurance.GetAttribute( "insuranceId" ) );
+            HasInsurance.AddRelation( PersonInsurance );
+
+            ERModel Model = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, HasInsurance, Insurance } );
+
+            // Create MongoDB schema
+            MongoDBCollection PersonCollection = new MongoDBCollection( "Person" );
+            PersonCollection.DocumentSchema.AddAttribute( "_id" );
+            PersonCollection.DocumentSchema.AddAttribute( "name" );
+            PersonCollection.DocumentSchema.AddAttribute( "carId" );
+            PersonCollection.DocumentSchema.AddAttribute( "insuranceId" );
+
+            MongoDBCollection CarCollection = new MongoDBCollection( "Car" );
+            CarCollection.DocumentSchema.AddAttribute( "_id" );
+            CarCollection.DocumentSchema.AddAttribute( "name" );
+            CarCollection.DocumentSchema.AddAttribute( "year" );
+
+            MongoDBCollection InsuranceCollection = new MongoDBCollection( "Insurance" );
+            InsuranceCollection.DocumentSchema.AddAttribute( "_id" );
+            InsuranceCollection.DocumentSchema.AddAttribute( "name" );
+
+            MongoSchema Schema = new MongoSchema( "PersonCarSchema", new List<MongoDBCollection> { PersonCollection, CarCollection, InsuranceCollection } );
+
+            // Create Map
+            MapRule PersonRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "Person" ) );
+            PersonRule.AddRule( "personId", "_id" );
+            PersonRule.AddRule( "name", "name" );
+            PersonRule.AddRule( "carId", "carId" );
+            PersonRule.AddRule( "insuranceId", "insuranceId" );
+
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Car" ) );
+            CarRule.AddRule( "carId", "_id" );
+            CarRule.AddRule( "name", "name" );
+            CarRule.AddRule( "year", "year" );
+
+            MapRule InsuranceRule = new MapRule( Model.FindByName( "Insurance" ), Schema.FindByName( "Insurance" ) );
+            InsuranceRule.AddRule( "insuranceId", "_id" );
+            InsuranceRule.AddRule( "name", "name" );
+
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, InsuranceRule } );
+
+            return new RequiredDataContainer( Model, Schema, Map );
+        }
+        /// <summary>
+        /// Generates required data to test a One to One relationship
+        /// joining multiple entities with and without being embedded
+        /// </summary>
+        /// <returns></returns>
+        public static RequiredDataContainer OneToOneMultipleEntitiesMixed()
+        {
+            // Create ER Stuff
+            Entity Person = new Entity( "Person" );
+            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "name" );
+            Person.AddAttribute( "insuranceId" );
+
+            Entity Car = new Entity( "Car" );
+            Car.AddAttribute( "name" );
+            Car.AddAttribute( "year" );
+
+            Entity Insurance = new Entity( "Insurance" );
+            Insurance.AddAttribute( "insuranceId" );
+            Insurance.AddAttribute( "name" );
+
+            Relationship HasInsurance = new Relationship( "HasInsurance", RelationshipCardinality.OneToOne );
+            RelationshipConnection PersonCar = new RelationshipConnection(
+                Person, Person.GetAttribute( "carId" ), Car, Car.GetAttribute( "name" ) );
+            HasInsurance.AddRelation( PersonCar );
+
+            RelationshipConnection PersonInsurance = new RelationshipConnection(
+                Person, Person.GetAttribute( "insuranceId" ), Insurance, Insurance.GetAttribute( "insuranceId" ) );
+            HasInsurance.AddRelation( PersonInsurance );
+
+            ERModel Model = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, HasInsurance, Insurance } );
+
+            // Create MongoDB schema
+            MongoDBCollection PersonCollection = new MongoDBCollection( "Person" );
+            PersonCollection.DocumentSchema.AddAttribute( "_id" );
+            PersonCollection.DocumentSchema.AddAttribute( "name" );
+            PersonCollection.DocumentSchema.AddAttribute( "car.name" );
+            PersonCollection.DocumentSchema.AddAttribute( "car.year" );
+            PersonCollection.DocumentSchema.AddAttribute( "insuranceId" );
+
+            MongoDBCollection InsuranceCollection = new MongoDBCollection( "Insurance" );
+            InsuranceCollection.DocumentSchema.AddAttribute( "_id" );
+            InsuranceCollection.DocumentSchema.AddAttribute( "name" );
+
+            MongoSchema Schema = new MongoSchema( "PersonCarSchema", new List<MongoDBCollection> { PersonCollection, InsuranceCollection } );
+
+            // Create Map
+            MapRule PersonRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "Person" ) );
+            PersonRule.AddRule( "personId", "_id" );
+            PersonRule.AddRule( "name", "name" );
+            PersonRule.AddRule( "carId", "carId" );
+            PersonRule.AddRule( "insuranceId", "insuranceId" );
+
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ) );
+            CarRule.AddRule( "name", "car.name" );
+            CarRule.AddRule( "year", "car.year" );
+
+            MapRule InsuranceRule = new MapRule( Model.FindByName( "Insurance" ), Schema.FindByName( "Insurance" ) );
+            InsuranceRule.AddRule( "insuranceId", "_id" );
+            InsuranceRule.AddRule( "name", "name" );
+
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, InsuranceRule } );
+
+            return new RequiredDataContainer( Model, Schema, Map );
+        }
         #endregion
     }
 }
