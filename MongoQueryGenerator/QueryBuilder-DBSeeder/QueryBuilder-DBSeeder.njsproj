@@ -44,6 +44,7 @@
     <Content Include="seedOneToOneEmbedded.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="seedOneToOneEmbeddedRelationshipAttributes.js" />
     <Content Include="seedOneToOneEmbedded_2.js">
       <SubType>Code</SubType>
     </Content>
