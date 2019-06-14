@@ -66,7 +66,7 @@ namespace QueryBuilder.Operation
             if ( AttributesToProject.Count > 0 )
             {
                 // Found attributes to project, add command to pipeline
-                Project ProjectCommand = new Project( AttributesToProject );
+                ProjectOperator ProjectCommand = new ProjectOperator( AttributesToProject );
                 LastResult.Commands.Add( ProjectCommand );
             }
         }

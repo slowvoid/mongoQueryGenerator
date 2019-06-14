@@ -10,7 +10,7 @@ namespace QueryBuilder.Mongo.Expressions
     /// <summary>
     /// Represents the $mergeObjects expression
     /// </summary>
-    public class MergeObjects : BaseExpression
+    public class MergeObjectsOperator : BaseExpression
     {
         #region Properties
         /// <summary>
@@ -42,7 +42,7 @@ namespace QueryBuilder.Mongo.Expressions
         /// <summary>
         /// Initializes a new instance of MergeObjects class
         /// </summary>
-        public MergeObjects()
+        public MergeObjectsOperator()
         {
             Objects = new List<string>();
         }

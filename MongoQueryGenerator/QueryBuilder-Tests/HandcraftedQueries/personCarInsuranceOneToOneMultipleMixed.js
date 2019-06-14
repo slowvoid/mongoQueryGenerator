@@ -19,14 +19,14 @@
     {
         "$addFields": {
             data_Insurance: {
-                Insurance_id: '$data_InsuranceJoin._id',
+                Insurance_insuranceId: '$data_InsuranceJoin._id',
                 Insurance_name: '$data_InsuranceJoin.name'
             }
         }
     },
     {
         "$addFields": {
-            data_Drives: [{
+            data_HasInsurance: [{
                 $mergeObjects: ['$data_Car', '$data_Insurance']
             }]
         }

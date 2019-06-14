@@ -29,6 +29,17 @@ namespace QueryBuilder.Javascript
         }
         #endregion
 
+        #region Operators
+        /// <summary>
+        /// Implicit conversion from string
+        /// </summary>
+        /// <param name="str"></param>
+        public static implicit operator JSString( string str )
+        {
+            return new JSString( str );
+        }
+        #endregion
+
         #region Constructor
         /// <summary>
         /// Initializes a new instance of JSString class

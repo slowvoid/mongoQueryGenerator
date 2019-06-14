@@ -1,4 +1,5 @@
-﻿using QueryBuilder.Map;
+﻿using QueryBuilder.Javascript;
+using QueryBuilder.Map;
 using QueryBuilder.Mongo.Aggregation.Operators;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// Attribute name value pairs
         /// </summary>
-        public Dictionary<string, string> Attributes { get; set; }
+        public Dictionary<string, JSCode> Attributes { get; set; }
         #endregion
 
         #region Methods
@@ -28,7 +29,7 @@ namespace QueryBuilder.Operation
         /// <returns></returns>
         public override void Run( ref AlgebraOperatorResult LastResult )
         {
-            AddFields AddFieldsOperator = new AddFields( Attributes );
+            AddFieldsOperator AddFieldsOperator = new AddFieldsOperator( Attributes );
 
             if ( Attributes.Count > 0 )
             {
@@ -43,7 +44,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="Attributes"></param>
         /// <param name="Map"></param>
-        public AddFieldsOperation( Dictionary<string, string> Attributes, ModelMapping Map ) : base(Map)
+        public AddFieldsOperation( Dictionary<string, JSCode> Attributes, ModelMapping Map ) : base(Map)
         {
             this.Attributes = Attributes;
         }

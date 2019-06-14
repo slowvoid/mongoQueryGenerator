@@ -11,7 +11,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Represents the $project aggregation stage
     /// </summary>
-    public class Project : MongoDBOperator
+    public class ProjectOperator : MongoDBOperator
     {
         #region Properties
         /// <summary>
@@ -37,13 +37,28 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         {
             return new JSObject( "$project", Attributes.ToDictionary( I => I.Key, I => (object)I.Value.ToJSCode() ) );
         }
+        /// <summary>
+        /// Generate a ProjectOperator instance setup to hide the given Attributes
+        /// </summary>
+        /// <param name="Attributes">Attributes to hide</param>
+        /// <returns></returns>
+        public static ProjectOperator HideAttributesOperator( IEnumerable<string> Attributes )
+        {
+            Dictionary<string, ProjectExpression> Expressions = new Dictionary<string, ProjectExpression>();
+            foreach ( string Attribute in Attributes )
+            {
+                Expressions.Add( Attribute, new BooleanExpr( false ) );
+            }
+
+            return new ProjectOperator( Expressions );
+        }
         #endregion
 
         #region Constructors
         /// <summary>
         /// Initialize a new instance of Project class
         /// </summary>
-        public Project( Dictionary<string, ProjectExpression> Attributes )
+        public ProjectOperator( Dictionary<string, ProjectExpression> Attributes )
         {
             this.Attributes = Attributes;
         }

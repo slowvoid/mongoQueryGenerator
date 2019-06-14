@@ -10,7 +10,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Represents the $unwind operator
     /// </summary>
-    public class Unwind : MongoDBOperator
+    public class UnwindOperator : MongoDBOperator
     {
         #region Properties
         /// <summary>
@@ -46,7 +46,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Initialize a new Unwind instance
         /// </summary>
-        public Unwind(string Field, bool PreserveNullOrEmpty = true)
+        public UnwindOperator(string Field, bool PreserveNullOrEmpty = true)
         {
             this.Field = $"${Field}";
             this.PreserveNullOrEmpty = PreserveNullOrEmpty;

@@ -10,14 +10,14 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Represents the $addFields aggregation stage
     /// </summary>
-    public class AddFields : MongoDBOperator
+    public class AddFieldsOperator : MongoDBOperator
     {
         #region Properties
         /// <summary>
         /// Attribute name <> value pairs to be added
         /// Use dot notation to add depth to attributes
         /// </summary>
-        public Dictionary<string, string> Attributes { get; set; }
+        public Dictionary<string, JSCode> Attributes { get; set; }
         #endregion
 
         #region Methods
@@ -46,7 +46,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Initialize a new instance of AddFields class
         /// </summary>
-        public AddFields( Dictionary<string, string> Attributes )
+        public AddFieldsOperator( Dictionary<string, JSCode> Attributes )
         {
             this.Attributes = Attributes;
         }

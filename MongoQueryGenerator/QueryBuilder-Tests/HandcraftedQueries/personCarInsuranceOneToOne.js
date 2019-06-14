@@ -45,7 +45,7 @@
                     input: '$data_Insurance',
                     as: 'insurance_data',
                     in: {
-                        Insurance_carId: '$$insurance_data._id',
+                        Insurance_insuranceId: '$$insurance_data._id',
                         Insurance_name: '$$insurance_data.name'
                     }
                 }
@@ -55,7 +55,7 @@
     { "$unwind": '$data_MappedInsurance' },
     {
         "$addFields": {
-            data_Insurance: [{
+            data_HasInsurance: [{
                 $mergeObjects: ['$data_MappedCar', '$data_MappedInsurance']
             }]
         }
