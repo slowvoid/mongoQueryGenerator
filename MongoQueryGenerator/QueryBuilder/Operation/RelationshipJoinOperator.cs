@@ -178,6 +178,9 @@ namespace QueryBuilder.Operation
                     }
                 }
 
+                // Additional fields to remove
+                List<string> FieldsToRemove = new List<string>();
+
                 // Entities taken care of, check if the relationship has attributes
                 // and it's attributes aren't processed yet
                 if ( Relationship.Attributes.Count > 0 && !HasRelationshipBeenProcessed )
@@ -188,6 +191,8 @@ namespace QueryBuilder.Operation
                     {
                         string RuleValue = RelationshipRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
                         RelationshipAttributes.Add( $"\"{RelationshipAttributesField}.{Relationship.Name}_{Attribute.Name}\"", (JSString)$"\"${RuleValue}\"" );
+                        // Add to removal list (source relationship attribute)
+                        FieldsToRemove.Add( RuleValue );
                     }
 
                     AddFieldsOperator AddOp = new AddFieldsOperator( RelationshipAttributes );
@@ -197,7 +202,6 @@ namespace QueryBuilder.Operation
 
                 // Create a single object containing relationship/joined data
                 MergeObjectsOperator MergeOp = new MergeObjectsOperator();
-                List<string> FieldsToRemove = new List<string>();
 
                 foreach ( Entity Target in TargetEntities )
                 {
@@ -207,6 +211,9 @@ namespace QueryBuilder.Operation
 
                 // Add relationship data
                 MergeOp.Objects.Add( $"${RelationshipAttributesField}" );
+
+                // Also add relationship attribute object to remove list
+                FieldsToRemove.Add( $"{RelationshipAttributesField}" );
 
                 // Build operation to hide all entity/relationship data attributes
                 Dictionary<string, JSCode> BuildJoinData = new Dictionary<string, JSCode>();

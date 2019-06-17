@@ -24,7 +24,7 @@
     {
         "$addFields": {
             data_Insurance: {
-                Insurance_id: '$data_InsuranceJoin._id',
+                Insurance_insuranceId: '$data_InsuranceJoin._id',
                 Insurance_name: '$data_InsuranceJoin.name'
             }
         }
@@ -37,7 +37,7 @@
     {
         "$addFields": {
             data_RelationshipAttributes: {
-                Drives_insuranceValue: '$insuranceValue'
+                HasInsurance_insuranceValue: '$insuranceValue'
             }
         }
     },
