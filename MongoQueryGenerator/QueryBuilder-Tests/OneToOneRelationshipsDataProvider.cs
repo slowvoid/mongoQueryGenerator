@@ -418,6 +418,82 @@ namespace QueryBuilder.Tests
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
+        /// <summary>
+        /// Generates required data to test a One to One relationship
+        /// joining multiple entities with relationship attribute and multiple root attributes 
+        /// </summary>
+        /// <returns></returns>
+        public static RequiredDataContainer OneToOneRelationshipMultipleRootAttributes()
+        {
+            // Create ER Stuff
+            Entity Person = new Entity( "Person" );
+            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "name" );
+            Person.AddAttribute( "insuranceId" );
+
+            Entity Car = new Entity( "Car" );
+            Car.AddAttribute( "name" );
+            Car.AddAttribute( "year" );
+            Car.AddAttribute( "engine" );
+            Car.AddAttribute( "fuel" );
+
+            Entity Insurance = new Entity( "Insurance" );
+            Insurance.AddAttribute( "insuranceId" );
+            Insurance.AddAttribute( "name" );
+
+            Relationship HasInsurance = new Relationship( "HasInsurance", RelationshipCardinality.OneToOne );
+            HasInsurance.AddAttribute( "insuranceValue" );
+            RelationshipConnection PersonCar = new RelationshipConnection(
+                Person, Person.GetAttribute( "carId" ), Car, Car.GetAttribute( "name" ) );
+            HasInsurance.AddRelation( PersonCar );
+
+            RelationshipConnection PersonInsurance = new RelationshipConnection(
+                Person, Person.GetAttribute( "insuranceId" ), Insurance, Insurance.GetAttribute( "insuranceId" ) );
+            HasInsurance.AddRelation( PersonInsurance );
+
+            ERModel Model = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, HasInsurance, Insurance } );
+
+            // Create MongoDB schema
+            MongoDBCollection PersonCollection = new MongoDBCollection( "Person" );
+            PersonCollection.DocumentSchema.AddAttribute( "_id" );
+            PersonCollection.DocumentSchema.AddAttribute( "name" );
+            PersonCollection.DocumentSchema.AddAttribute( "car.name" );
+            PersonCollection.DocumentSchema.AddAttribute( "car.year" );
+            PersonCollection.DocumentSchema.AddAttribute( "carDetails.engine" );
+            PersonCollection.DocumentSchema.AddAttribute( "CarDetails.fuel" );
+            PersonCollection.DocumentSchema.AddAttribute( "insuranceId" );
+            PersonCollection.DocumentSchema.AddAttribute( "insuranceValue" );
+
+            MongoDBCollection InsuranceCollection = new MongoDBCollection( "Insurance" );
+            InsuranceCollection.DocumentSchema.AddAttribute( "_id" );
+            InsuranceCollection.DocumentSchema.AddAttribute( "name" );
+
+            MongoSchema Schema = new MongoSchema( "PersonCarSchema", new List<MongoDBCollection> { PersonCollection, InsuranceCollection } );
+
+            // Create Map
+            MapRule PersonRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "Person" ) );
+            PersonRule.AddRule( "personId", "_id" );
+            PersonRule.AddRule( "name", "name" );
+            PersonRule.AddRule( "carId", "carId" );
+            PersonRule.AddRule( "insuranceId", "insuranceId" );
+
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ) );
+            CarRule.AddRule( "name", "car.name" );
+            CarRule.AddRule( "year", "car.year" );
+            CarRule.AddRule( "engine", "carDetails.engine" );
+            CarRule.AddRule( "fuel", "carDetails.fuel" );
+
+            MapRule InsuranceRule = new MapRule( Model.FindByName( "Insurance" ), Schema.FindByName( "Insurance" ) );
+            InsuranceRule.AddRule( "insuranceId", "_id" );
+            InsuranceRule.AddRule( "name", "name" );
+
+            MapRule RelationshipRule = new MapRule( Model.FindByName( "HasInsurance" ), Schema.FindByName( "Person" ) );
+            RelationshipRule.AddRule( "insuranceValue", "insuranceValue" );
+
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, InsuranceRule, RelationshipRule } );
+
+            return new RequiredDataContainer( Model, Schema, Map );
+        }
         #endregion
     }
 }

@@ -53,6 +53,7 @@
     </Content>
     <Content Include="seedOneToOneMultipleEntities.js" />
     <Content Include="seedOneToOneMultipleEntitiesMixed.js" />
+    <Content Include="seedOneToOneMultipleRootAttributes.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="seedOneToOne.js">
