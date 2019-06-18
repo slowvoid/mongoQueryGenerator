@@ -320,48 +320,52 @@ namespace QueryBuilder.Operation
                              * it must have been mapped to target collection
                              */
 
-                            // Run a custom pipeline to rename the joined entity attributes
-                            List<MongoDBOperator> CustomPipeline = new List<MongoDBOperator>();
-
-                            // First thing to do in the pipeline is to match the joined entity with the source entity
-                            Dictionary<string, string> PipelineVariables = new Dictionary<string, string>();
-                            RelationshipConnection SourceConnection = Relationship.Relations.First();
-                            string SourceRef = SourceRule.Rules.First( R => R.Key == SourceConnection.SourceAttribute.Name ).Value;
-                            string SourceVar = $"source_{SourceConnection.SourceAttribute.Name}";
-                            PipelineVariables.Add( SourceVar, $"${SourceRef}" );
-
-                            string SourceEntityAttribute = TargetRule.Rules.First( R => R.Key == SourceConnection.TargetAttribute.Name ).Value;
-                            EqExpr MatchSourceEq = new EqExpr( $"${SourceEntityAttribute}", $"$${SourceVar}" );
-                            Match MatchSourceOp = new Match( new Expr( MatchSourceEq ) );
-
-                            // Rename attributes
-                            Dictionary<string, ProjectExpression> RenameAttributes = new Dictionary<string, ProjectExpression>();
-                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
-                            {
-                                string AttributeMappedTo = TargetRule.Rules.First( R => R.Key == Attribute.Name ).Value;
-                                if ( AttributeMappedTo != null )
-                                {
-                                    RenameAttributes.Add( $"{TargetEntity.Name}_{Attribute.Name}", new ValueExpr( $"\"${AttributeMappedTo}\"" ) );
-                                }
-                            }
-
-                            // Force remove _id
-                            RenameAttributes.Add( "_id", new BooleanExpr( false ) );
-
-                            ProjectOperator RenameOp = new ProjectOperator( RenameAttributes );
-
-                            CustomPipeline.AddRange( new List<MongoDBOperator> { MatchSourceOp, RenameOp } );
-
-                            LookupOperator RelationshipLookup = new LookupOperator
+                            // Fetch target entity
+                            LookupOperator TargetLookupOp = new LookupOperator
                             {
                                 From = TargetRule.Target.Name,
-                                Let = PipelineVariables,
-                                Pipeline = CustomPipeline,
-                                As = $"data_{Relationship.Name}"
+                                ForeignField = TargetRule.Rules.First( Rule => Rule.Key == RelationshipData.TargetAttribute.Name ).Value,
+                                LocalField = SourceRule.Rules.First( Rule => Rule.Key == RelationshipData.SourceAttribute.Name ).Value,
+                                As = $"data_{TargetEntity.Name}"
                             };
-                          
 
-                            OperationsToExecute.Add( RelationshipLookup );
+                            // Run a project with map to rename joined attributes
+                            Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
+                            string RootAttribute = $"data_{TargetEntity.Name}";
+                            string MapAttributeAs = $"data_{RootAttribute}";
+
+                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                            {
+                                string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+
+                                MapParams.Add( $"\"{TargetEntity.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{RuleValue}\"" ) );
+                            }
+
+                            // Do the same thing to the relationship attributes
+                            foreach ( DataAttribute Attribute in Relationship.Attributes )
+                            {
+                                string RuleValue = RelationshipRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+
+                                MapParams.Add( $"\"{Relationship.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{RuleValue}\"" ) );
+                            }
+
+                            // Setup project operation
+                            MapExpr AttributeMap = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
+                            Dictionary<string, ProjectExpression> ProjectFields = new Dictionary<string, ProjectExpression>();
+                            ProjectFields.Add( $"data_{Relationship.Name}", AttributeMap );
+
+
+                            // Keep source entity attributes
+                            foreach ( DataAttribute Attribute in SourceEntity.Attributes )
+                            {
+                                string RuleValue = SourceRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+                                ProjectFields.Add( $"\"{RuleValue}\"", new BooleanExpr( true ) );
+                            }
+
+                            ProjectOperator ProjectOp = new ProjectOperator( ProjectFields );
+
+
+                            OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, ProjectOp } );
                         }
                     }
                 }
