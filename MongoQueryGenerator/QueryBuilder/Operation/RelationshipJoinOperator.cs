@@ -265,74 +265,52 @@ namespace QueryBuilder.Operation
                                We just need to move them to a more appropriate place
                             */
 
-                            Dictionary<string, string> AddTargetAttributes = new Dictionary<string, string>();
-                            Dictionary<string, ProjectExpression> TargetFieldsToRemove = new Dictionary<string, ProjectExpression>();
-                            
-                            // Move relationship attributes first
-                            foreach ( DataAttribute Attribute in Relationship.Attributes )
-                            {
-                                // Retrieve attribute mapping
-                                string AttributeMappedTo = RelationshipRule.Rules.FirstOrDefault( R => R.Key == Attribute.Name ).Value;
-
-                                // Check if the attribute is mapped to a complex attribute (like an embedded document)
-                                if ( AttributeMappedTo.Contains( "." ) )
-                                {
-                                    string[] AttributeHierarchy = AttributeMappedTo.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
-                                    string Root = AttributeHierarchy[ 0 ];
-
-                                    // Add to remove list
-                                    if ( !TargetFieldsToRemove.ContainsKey( Root ) )
-                                    {
-                                        TargetFieldsToRemove.Add( Root, new BooleanExpr( false ) );
-                                    }
-                                }
-
-                                // If not found, skip the attribute
-                                if ( string.IsNullOrWhiteSpace( AttributeMappedTo ) )
-                                {
-                                    continue;
-                                }
-
-                                AddTargetAttributes.Add( $"data_{Relationship.Name}.{Relationship.Name}_{Attribute.Name}", $"${AttributeMappedTo}" );
-                            }
-
-                            // For an One-To-Many relationship, we need to map the array containing
-                            // the joined entity and rename it to match the algebra
-                            Dictionary<string, string> AttributeMapRules = new Dictionary<string, string>();
-                            // Retrieve the name of the attribute that holds the embedded document
-                            string AttributePath = TargetRule.Rules.First( R => R.Key == TargetEntity.Attributes.First().Name ).Value;
-                            string[] AttributeMap = AttributePath.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
-                            string AttributeRoot = AttributeMap.First();
-
-                            string AttributeMapNameRef = $"{ Relationship.Name.ToLower() }_{ TargetEntity.Name}";
-
+                            // Instead of using AddAtributes
+                            // We're using a single project operation reshape de document
+                            Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
+                            string RootAttribute = string.Empty;
+                            string MapAttributeAs = string.Empty;
+                            // Iterate target entity attributes
                             foreach ( DataAttribute Attribute in TargetEntity.Attributes )
                             {
-                                string AttrMappedTo = TargetRule.Rules.First( R => R.Key == Attribute.Name ).Value;
-                                string[] AttrMap = AttrMappedTo.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
-                                string AttrName = AttrMap[ 1 ];
+                                string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+                                string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
 
-                                AttributeMapRules.Add( $"{TargetEntity.Name}_{Attribute.Name}", $"$${AttributeMapNameRef}.{AttrName}" );
+                                if ( string.IsNullOrWhiteSpace( RootAttribute ) )
+                                {
+                                    RootAttribute = $"{RulePath.First()}";
+                                    MapAttributeAs = $"data_{RootAttribute}";
+                                }
+
+                                MapParams.Add( $"\"{TargetEntity.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
                             }
 
-                            MapExpr ProjectMap = new MapExpr( $"${AttributeRoot}", AttributeMapNameRef, AttributeMapRules );
+                            // Do the same thing to the relationship attributes
+                            foreach ( DataAttribute Attribute in Relationship.Attributes )
+                            {
+                                string RuleValue = RelationshipRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+                                string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
 
+                                MapParams.Add( $"\"{Relationship.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
+                            }
+
+                            // Setup project operation
+                            MapExpr AttributeMap = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
                             Dictionary<string, ProjectExpression> ProjectFields = new Dictionary<string, ProjectExpression>();
-                            ProjectFields.Add( $"data_{Relationship.Name}", ProjectMap );
-                            
-                            // As we're executing a project operation to add a new field, we need to also
-                            // set the source entity attributes as visible
+                            ProjectFields.Add( $"data_{Relationship.Name}", AttributeMap );
+
+
+                            // Keep source entity attributes
                             foreach ( DataAttribute Attribute in SourceEntity.Attributes )
                             {
-                                string SourceAttrMappedTo = SourceRule.Rules.First( R => R.Key == Attribute.Name ).Value;
-                                ProjectFields.Add( SourceAttrMappedTo, new BooleanExpr( true ) );
+                                string RuleValue = SourceRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+                                ProjectFields.Add( $"\"{RuleValue}\"", new BooleanExpr( true ) );
                             }
-
 
                             ProjectOperator ProjectOp = new ProjectOperator( ProjectFields );
 
 
-                            OperationsToExecute.AddRange( new MongoDBOperator[] { ProjectOp } );
+                            OperationsToExecute.Add( ProjectOp );
                         }
                         else
                         {

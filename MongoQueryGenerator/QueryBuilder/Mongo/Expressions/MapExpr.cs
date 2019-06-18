@@ -24,7 +24,7 @@ namespace QueryBuilder.Mongo.Expressions
         /// <summary>
         /// Attribute map
         /// </summary>
-        public Dictionary<string, string> In { get; set; }
+        public Dictionary<string, JSCode> In { get; set; }
         #endregion
 
         #region Methods
@@ -50,8 +50,13 @@ namespace QueryBuilder.Mongo.Expressions
         /// <param name="Input"></param>
         /// <param name="As"></param>
         /// <param name="In"></param>
-        public MapExpr(string Input, string As, Dictionary<string, string> In)
+        public MapExpr(string Input, string As, Dictionary<string, JSCode> In)
         {
+            if ( !Input.StartsWith("$") )
+            {
+                Input = $"${Input}";
+            }
+
             this.Input = Input;
             this.As = As;
             this.In = In;
