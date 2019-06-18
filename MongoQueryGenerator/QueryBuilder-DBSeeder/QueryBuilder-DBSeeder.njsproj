@@ -36,6 +36,7 @@
     <Content Include="seedManyToMany.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="seedManyToManyRelationshipAttribute.js" />
     <Content Include="seedOneToMany.js" />
     <Content Include="README.md" />
     <Content Include="seedOneToManyEmbedded.js">
