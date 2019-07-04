@@ -370,5 +370,50 @@ namespace QueryBuilder.Tests
             // Check if both results are equal
             Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
         }
+        [TestMethod]
+        public void OneToOneLeftSideEmbedded()
+        {
+            // Asserts if the query result for a simple binary join is equal
+            // to a handcrafted query
+            RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneLeftSideEmbedded();
+
+            // Load handcrafted query
+            string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/oneToOneLeftSideEmbedded.js" );
+
+            // Assert if the handcrafted query is not null
+            Assert.IsNotNull( HandcraftedQuery );
+
+            // Prepare query generator
+            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ),
+                (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasInsurance" ),
+                new List<Entity> {
+                    (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ) },
+                ModelData.ERMongoMapping );
+
+            List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
+            Pipeline pipeline = new Pipeline( OpList );
+            QueryGenerator QueryGen = new QueryGenerator( pipeline )
+            {
+                CollectionName = "Person"
+            };
+
+            string GeneratedQuery = QueryGen.Run();
+
+            // Assert if generated query is not null
+            Assert.IsNotNull( GeneratedQuery );
+
+            // Run Queries
+            QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", "oneToOneLeftEmbedded" );
+
+            string HandcraftedResult = Runner.GetJSON( HandcraftedQuery );
+            string GeneratedResult = Runner.GetJSON( GeneratedQuery );
+
+            // Check if either result is null
+            Assert.IsNotNull( HandcraftedResult );
+            Assert.IsNotNull( GeneratedResult );
+
+            // Check if both results are equal
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
+        }
     }
 }

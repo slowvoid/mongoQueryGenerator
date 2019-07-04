@@ -494,6 +494,58 @@ namespace QueryBuilder.Tests
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
+        /// <summary>
+        /// Generates required data to test a One to One relationship
+        /// joining one entity while the left side entity is embedded into another
+        /// </summary>
+        /// <returns></returns>
+        public static RequiredDataContainer OneToOneLeftSideEmbedded()
+        {
+            Entity Car = new Entity( "Car" );
+            Car.AddAttribute( "model" );
+            Car.AddAttribute( "insuranceId" );
+
+            Entity Insurance = new Entity( "Insurance" );
+            Insurance.AddAttribute( "insuranceId" );
+            Insurance.AddAttribute( "name" );
+            Insurance.AddAttribute( "value" );
+
+            Relationship HasInsurance = new Relationship( "HasInsurance", RelationshipCardinality.OneToOne );
+            RelationshipConnection CarInsuranceConn = new RelationshipConnection(
+                Car,
+                Car.GetAttribute( "insuranceId" ),
+                Insurance,
+                Insurance.GetAttribute( "insuranceId" ) );
+
+            HasInsurance.AddRelation( CarInsuranceConn );
+
+            ERModel Model = new ERModel( "CarIns", new List<BaseERElement> { Car, Insurance, HasInsurance } );
+
+            MongoDBCollection CarCol = new MongoDBCollection( "Car" );
+            CarCol.DocumentSchema.AddAttribute( "model" );
+            CarCol.DocumentSchema.AddAttribute( "insuranceId" );
+
+            MongoDBCollection InsCol = new MongoDBCollection( "Insurance" );
+            InsCol.DocumentSchema.AddAttribute( "insuranceId" );
+            InsCol.DocumentSchema.AddAttribute( "name" );
+            InsCol.DocumentSchema.AddAttribute( "value" );
+
+            MongoSchema Schema = new MongoSchema( "CarInsSchema", new List<MongoDBCollection> { CarCol, InsCol } );
+
+            MapRule CarRules = new MapRule( Car, CarCol );
+            CarRules.AddRule( "model", "car.model" );
+            CarRules.AddRule( "insuranceId", "car.insuranceId" );
+
+            MapRule InsRules = new MapRule( Insurance, InsCol );
+            InsRules.AddRule( "insuranceId", "_id" );
+            InsRules.AddRule( "name", "name" );
+            InsRules.AddRule( "value", "value" );
+
+            ModelMapping Map = new ModelMapping( "CarInsModel" );
+            Map.Rules.AddRange( new MapRule[] { CarRules, InsRules } );
+
+            return new RequiredDataContainer( Model, Schema, Map );
+        }
         #endregion
     }
 }
