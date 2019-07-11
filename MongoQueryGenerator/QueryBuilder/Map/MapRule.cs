@@ -27,6 +27,10 @@ namespace QueryBuilder.Map
         /// Mapping rules
         /// </summary>
         public Dictionary<string, string> Rules { get; set; }
+        /// <summary>
+        /// Is this the main mapping for the Source entity?
+        /// </summary>
+        public bool IsMain { get; set; }
         #endregion
 
         #region Methods
@@ -52,6 +56,8 @@ namespace QueryBuilder.Map
             this.Source = Source;
             this.Target = Target;
 
+            IsMain = false;
+
             Rules = new Dictionary<string, string>();
         }
         /// <summary>
@@ -60,12 +66,14 @@ namespace QueryBuilder.Map
         /// <param name="Source"></param>
         /// <param name="Target"></param>
         /// <param name="Rules"></param>
-        public MapRule( BaseERElement Source, MongoDBCollection Target, Dictionary<string, string> Rules )
+        public MapRule( BaseERElement Source, MongoDBCollection Target, Dictionary<string, string> Rules, bool IsMain = false )
         {
             this.Source = Source;
             this.Target = Target;
 
             this.Rules = Rules;
+
+            this.IsMain = IsMain;
         }
         #endregion
     }

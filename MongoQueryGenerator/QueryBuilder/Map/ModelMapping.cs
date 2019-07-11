@@ -41,6 +41,17 @@ namespace QueryBuilder.Map
         public ModelMapping( string Name, List<MapRule> Rules )
         {
             this.Name = Name;
+
+            // Check if within the Rules there are multiple main mappings for the same entity
+            var GroupedRules = Rules.GroupBy( MP => MP.Source );
+            foreach ( var GRules in GroupedRules )
+            {
+                if ( GRules.Count( R => R.IsMain ) > 1 )
+                {
+                    throw new InvalidOperationException( "Cannot set multiple main mappings for the same entity" );
+                }
+            }
+            
             this.Rules = Rules;
         }
         #endregion
