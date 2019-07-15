@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using QueryBuilder.ER;
@@ -16,62 +17,26 @@ namespace QueryBuilderApp
     {
         public static void Main()
         {
-            Console.WriteLine( "Preparing data to run" );
+            ERModel Model = CreateERModel();
+            MongoSchema Schema = CreateSchema();
+            ModelMapping Map = CreateMap( Model, Schema );
 
+            Console.WriteLine( "Data ready, initializing query generator..." );
 
-            ERModel ErModel = CreateERModel();
-            MongoSchema MSchema = CreateMongoSchema();
+            string InitialEntity = "Person";
 
-            // ER Model and MongoDB Schema ready, time to create the mapping
+            var GroupedInitialEntityMap = Map.Rules.GroupBy( R => R.Source ).Where( R => R.Key.Name == InitialEntity );
+            var GroupedEntityMap = Map.Rules.GroupBy( R => R.Source ).Where( R => R.Key.Name != InitialEntity );
 
-            // Let's create rules first
-            // Map Person Entity to Person Collection
-            MapRule PersonRule = new MapRule( ErModel.FindByName( "Person" ), MSchema.Collections.Find( C => C.Name == "Person" ) );
-            PersonRule.Rules.Add( "personId", "_id" );
-            PersonRule.Rules.Add( "name", "name" );
-            PersonRule.Rules.Add( "salary", "salary" );
-
-            // Map Car Entity to Car Collection
-            MapRule CarRule = new MapRule( ErModel.FindByName( "Car" ), MSchema.Collections.Find( C => C.Name == "Car" ) );
-            CarRule.Rules.Add( "carId", "_id" );
-            CarRule.Rules.Add( "name", "name" );
-
-            MapRule InsCompanyRule = new MapRule( ErModel.FindByName( "InsCompany" ), MSchema.Collections.Find( C => C.Name == "InsCompany" ) );
-            InsCompanyRule.Rules.Add( "companyId", "_id" );
-            InsCompanyRule.Rules.Add( "name", "name" );
-
-            MapRule InsuranceRule = new MapRule( ErModel.FindByName( "Insurance" ), MSchema.Collections.Find( C => C.Name == "Insurance" ) );
-            InsuranceRule.Rules.Add( "insuranceId", "_id" );
-            InsuranceRule.Rules.Add( "idCompany", "idCompany" );
-            InsuranceRule.Rules.Add( "idPerson", "idPerson" );
-            InsuranceRule.Rules.Add( "idCar", "idCar" );
-
-            // Build mapping rules
-            List<MapRule> Rules = new List<MapRule>();
-            Rules.AddRange( new MapRule[] { PersonRule, CarRule, InsCompanyRule, InsuranceRule } );
-
-            ModelMapping map = new ModelMapping( "PersonCar", Rules );
-
-            // Everything ready, we'll need a query parser to generate pipeline from a query string
-            // but we'll skip it now (query parser not available)
-            //(Entity)ErModel.FindByName( "LifeInsurance" )
-            RelationshipJoinOperator JoinOP = new RelationshipJoinOperator( (Entity)ErModel.FindByName( "Person" ),
-                                                     (Relationship)ErModel.FindByName( "Insurance" ),
-                                                     new List<Entity> { (Entity)ErModel.FindByName( "Car" ), (Entity)ErModel.FindByName("InsCompany") },
-                                                     map );
-
-            List<AlgebraOperator> Operations = new List<AlgebraOperator> {
-                JoinOP
-            };
-
-            Pipeline QueryPipeline = new Pipeline( Operations );
-
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline )
+            foreach( var InitialEntityRules in GroupedInitialEntityMap )
             {
-                CollectionName = "Person"
-            };
-            string queryString = QueryGen.Run();
-            Console.WriteLine( string.Format( "Query output: {0}", queryString ) );
+                Console.WriteLine( $"ERElement: {InitialEntityRules.Key.Name} | Count: {InitialEntityRules.Count()}" );
+
+                foreach ( var EntityRules in GroupedEntityMap )
+                {
+                    Console.WriteLine( $"ERElement: {EntityRules.Key.Name} | Count: {EntityRules.Count()}" );
+                }
+            }
 
             Console.Read();
         }
@@ -79,71 +44,103 @@ namespace QueryBuilderApp
         public static ERModel CreateERModel()
         {
             Entity Person = new Entity( "Person" );
-            Person.Attributes.Add( new DataAttribute( "personId" ) );
-            Person.Attributes.Add( new DataAttribute( "name" ) );
-            Person.Attributes.Add( new DataAttribute( "salary" ) );
+            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "name" );
 
             Entity Car = new Entity( "Car" );
-            Car.Attributes.Add( new DataAttribute( "carId" ) );
-            Car.Attributes.Add( new DataAttribute( "name" ) );
+            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "model" );
+            Car.AddAttribute( "year" );
+            Car.AddAttribute( "engine" );
+            Car.AddAttribute( "fuel" );
 
             Entity InsCompany = new Entity( "InsCompany" );
-            InsCompany.Attributes.Add( new DataAttribute( "companyId" ) );
-            InsCompany.Attributes.Add( new DataAttribute( "name" ) );
+            InsCompany.AddAttribute( "companyId" );
+            InsCompany.AddAttribute( "name" );
 
-            Relationship Insurance = new Relationship( "Insurance", RelationshipCardinality.ManyToMany );
-            Insurance.Attributes.Add( new DataAttribute( "insuranceId" ) );
-            Insurance.Attributes.Add( new DataAttribute( "idCompany" ) );
-            Insurance.Attributes.Add( new DataAttribute( "idPerson" ) );
-            Insurance.Attributes.Add( new DataAttribute( "idCar" ) );
-
+            Relationship Drives = new Relationship( "Drives", RelationshipCardinality.OneToMany );
             RelationshipConnection PersonCar = new RelationshipConnection(
                 Person,
-                Person.Attributes.Find( A => A.Name == "personId" ),
-                Insurance.Attributes.Find( A => A.Name == "idPerson" ),
+                Person.GetAttribute( "personId" ),
                 Car,
-                Car.Attributes.Find( A => A.Name == "carId" ),
-                Insurance.Attributes.Find( A => A.Name == "idCar" )
-            );
+                Car.GetAttribute( "carId" ) );
+            Drives.AddRelation( PersonCar );
 
-            RelationshipConnection PersonInsCompany = new RelationshipConnection(
-                Person,
-                Person.Attributes.Find( A => A.Name == "personId" ),
-                Insurance.Attributes.Find( A => A.Name == "idPerson" ),
+            Relationship HasInsurance = new Relationship( "HasInsurance", RelationshipCardinality.ManyToMany );
+            HasInsurance.AddAttribute( "carId" );
+            HasInsurance.AddAttribute( "companyId" );
+            HasInsurance.AddAttribute( "value" );
+            RelationshipConnection CarInsCompany = new RelationshipConnection(
+                Car,
+                Car.GetAttribute( "carId" ),
+                HasInsurance.GetAttribute( "carId" ),
                 InsCompany,
-                InsCompany.Attributes.Find( A => A.Name == "companyId" ),
-                Insurance.Attributes.Find( A => A.Name == "idCompany" )
-            );
+                InsCompany.GetAttribute( "companyId" ),
+                HasInsurance.GetAttribute( "companyId" ) );
+            HasInsurance.AddRelation( CarInsCompany );
 
-            Insurance.Relations.AddRange( new RelationshipConnection[] { PersonCar, PersonInsCompany } );
-
-            ERModel ERModel = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, Insurance, InsCompany } );
-            return ERModel;
+            ERModel Model = new ERModel( "RefactorModel", new List<BaseERElement> { Person, Car, InsCompany, Drives, HasInsurance } );
+            return Model;
         }
 
-        public static MongoSchema CreateMongoSchema()
+        public static MongoSchema CreateSchema()
         {
-            MongoDBCollection Person = new MongoDBCollection( "Person" );
-            Person.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
-            Person.DocumentSchema.Attributes.Add( new DataAttribute( "name" ) );
-            Person.DocumentSchema.Attributes.Add( new DataAttribute( "salary" ) );
+            MongoDBCollection PersonCol = new MongoDBCollection( "Person" );
+            PersonCol.DocumentSchema.AddAttribute( "_id" );
+            PersonCol.DocumentSchema.AddAttribute( "name" );
+            PersonCol.DocumentSchema.AddAttribute( "cars" );
 
-            MongoDBCollection Car = new MongoDBCollection( "Car" );
-            Car.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
-            Car.DocumentSchema.Attributes.Add( new DataAttribute( "name" ) );
+            MongoDBCollection CarCol = new MongoDBCollection( "Car" );
+            CarCol.DocumentSchema.AddAttribute( "_id" );
+            CarCol.DocumentSchema.AddAttribute( "model" );
+            CarCol.DocumentSchema.AddAttribute( "year" );
+            CarCol.DocumentSchema.AddAttribute( "engine" );
+            CarCol.DocumentSchema.AddAttribute( "fuel" );
 
-            MongoDBCollection InsCompany = new MongoDBCollection( "InsCompany" );
-            InsCompany.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
-            InsCompany.DocumentSchema.Attributes.Add( new DataAttribute( "name" ) );
+            MongoDBCollection InsCompanyCol = new MongoDBCollection( "InsCompany" );
+            InsCompanyCol.DocumentSchema.AddAttribute( "_id" );
+            InsCompanyCol.DocumentSchema.AddAttribute( "name" );
 
-            MongoDBCollection Insurance = new MongoDBCollection( "Insurance" );
-            Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "_id" ) );
-            Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "idCompany" ) );
-            Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "idPerson" ) );
-            Insurance.DocumentSchema.Attributes.Add( new DataAttribute( "idCar" ) );
+            MongoDBCollection InsuranceCol = new MongoDBCollection( "HasInsurance" );
+            InsuranceCol.DocumentSchema.AddAttribute( "_id" );
+            InsuranceCol.DocumentSchema.AddAttribute( "carId" );
+            InsuranceCol.DocumentSchema.AddAttribute( "companyId" );
+            InsuranceCol.DocumentSchema.AddAttribute( "value" );
 
-            MongoSchema Schema = new MongoSchema( "PersonDrivesCar", new List<MongoDBCollection> { Person, Car, InsCompany, Insurance } );
+            MongoSchema Schema = new MongoSchema( "RefactorSchema", new List<MongoDBCollection> { PersonCol, CarCol, InsCompanyCol, InsuranceCol } );
             return Schema;
+        }
+
+        public static ModelMapping CreateMap(ERModel Model, MongoSchema Schema)
+        {
+            MapRule PersonRules = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "Person" ) );
+            PersonRules.AddRule( "personId", "_id" );
+            PersonRules.AddRule( "name", "name" );
+
+            MapRule CarRules = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Car" ) );
+            CarRules.AddRule( "carId", "_id" );
+            CarRules.AddRule( "model", "model" );
+            CarRules.AddRule( "year", "year" );
+            CarRules.AddRule( "engine", "engine" );
+            CarRules.AddRule( "fuel", "fuel" );
+
+            MapRule CarRules_Embedded = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ) );
+            CarRules_Embedded.AddRule( "carId", "cars._id" );
+            CarRules_Embedded.AddRule( "model", "cars.model" );
+            CarRules_Embedded.AddRule( "year", "cars.year" );
+            CarRules_Embedded.IsMain = false;
+
+            MapRule InsCompanyRules = new MapRule( Model.FindByName( "InsCompany" ), Schema.FindByName( "InsCompany" ) );
+            InsCompanyRules.AddRule( "companyId", "_id" );
+            InsCompanyRules.AddRule( "name", "name" );
+
+            MapRule InsuranceRules = new MapRule( Model.FindByName( "HasInsurance" ), Schema.FindByName( "HasInsurance" ) );
+            InsuranceRules.AddRule( "carId", "carId" );
+            InsuranceRules.AddRule( "companyId", "companyId" );
+            InsuranceRules.AddRule( "value", "value" );
+
+            ModelMapping Map = new ModelMapping( "RefactorMapping", new List<MapRule> { PersonRules, CarRules, CarRules_Embedded, InsuranceRules, InsCompanyRules } );
+            return Map;
         }
     }
 }

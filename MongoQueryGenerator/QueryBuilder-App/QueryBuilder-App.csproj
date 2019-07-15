@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>QueryBuilderApp.ModelSampleFunDep1</StartupObject>
+    <StartupObject>QueryBuilderApp.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />

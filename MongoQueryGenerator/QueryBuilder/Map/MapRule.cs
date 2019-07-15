@@ -56,7 +56,7 @@ namespace QueryBuilder.Map
             this.Source = Source;
             this.Target = Target;
 
-            IsMain = false;
+            IsMain = true;
 
             Rules = new Dictionary<string, string>();
         }
@@ -66,7 +66,7 @@ namespace QueryBuilder.Map
         /// <param name="Source"></param>
         /// <param name="Target"></param>
         /// <param name="Rules"></param>
-        public MapRule( BaseERElement Source, MongoDBCollection Target, Dictionary<string, string> Rules, bool IsMain = false )
+        public MapRule( BaseERElement Source, MongoDBCollection Target, Dictionary<string, string> Rules, bool IsMain = true )
         {
             this.Source = Source;
             this.Target = Target;
