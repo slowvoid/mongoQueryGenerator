@@ -27,7 +27,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="LastResult"></param>
         /// <returns></returns>
-        public override void Run( ref AlgebraOperatorResult LastResult )
+        public override AlgebraOperatorResult Run( AlgebraOperatorResult LastResult )
         {
             AddFieldsOperator AddFieldsOperator = new AddFieldsOperator( Attributes );
 
@@ -35,6 +35,8 @@ namespace QueryBuilder.Operation
             {
                 LastResult.Commands.Add( AddFieldsOperator );
             }
+
+            return LastResult;
         }
         #endregion
 

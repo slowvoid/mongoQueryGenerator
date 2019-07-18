@@ -22,6 +22,28 @@ namespace QueryBuilder.Mongo
         public Document DocumentSchema { get; set; }
         #endregion
 
+        #region Methods
+        /// <summary>
+        /// Add an attribute to the document schema
+        /// </summary>
+        /// <param name="Name"></param>
+        public void AddAttribute(string Name)
+        {
+            DocumentSchema.AddAttribute( Name );
+        }
+        /// <summary>
+        /// Add a sequence of attributes to the document schema
+        /// </summary>
+        /// <param name="Names"></param>
+        public void AddAttributes( params string[] Names )
+        {
+            foreach ( string Name in Names )
+            {
+                AddAttribute( Name );
+            }
+        }
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Initialize a new Collection instance

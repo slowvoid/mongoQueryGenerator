@@ -35,6 +35,17 @@ namespace QueryBuilder.ER
             Attributes.Add( new DataAttribute( Name, Identifier ) );
         }
         /// <summary>
+        /// Add a list of string as attributes
+        /// </summary>
+        /// <param name="Names"></param>
+        public void AddAttributes( params string[] Names )
+        {
+            foreach ( string Name in Names )
+            {
+                AddAttribute( Name );
+            }
+        }
+        /// <summary>
         /// Find an attribute with the given name
         /// </summary>
         /// <param name="Name">Attribute name</param>

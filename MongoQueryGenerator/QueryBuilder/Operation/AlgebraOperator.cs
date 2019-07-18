@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using QueryBuilder.Map;
 using QueryBuilder.ER;
+using QueryBuilder.Mongo.Aggregation.Operators;
 
 namespace QueryBuilder.Operation
 {
@@ -27,8 +28,9 @@ namespace QueryBuilder.Operation
         /// Run operation
         /// </summary>
         /// <returns></returns>
-        public virtual void Run( ref AlgebraOperatorResult LastResult )
+        public virtual AlgebraOperatorResult Run( AlgebraOperatorResult LastResult )
         {
+            return LastResult;
         }
         #endregion
 

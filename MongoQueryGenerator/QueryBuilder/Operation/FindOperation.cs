@@ -27,9 +27,9 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
-        public override void Run( ref AlgebraOperatorResult LastResult )
+        public override AlgebraOperatorResult Run( AlgebraOperatorResult LastResult )
         {
-            base.Run( ref LastResult );
+            return base.Run( LastResult );
         }
         #endregion
 

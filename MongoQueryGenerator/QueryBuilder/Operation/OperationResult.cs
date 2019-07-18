@@ -1,4 +1,5 @@
 ﻿using QueryBuilder.ER;
+using QueryBuilder.Map;
 using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Query;
 using System;
@@ -16,9 +17,9 @@ namespace QueryBuilder.Operation
     {
         #region Properties
         /// <summary>
-        /// Available ER elements
+        /// Virtual mapping of the resulting computed entity
         /// </summary>
-        public List<BaseERElement> PipelineResult { get; set; }
+        public VirtualMap ResultMap { get; set; }
         /// <summary>
         /// List of commands to be executed
         /// </summary>
@@ -31,10 +32,10 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="PipelineResult"></param>
         /// <param name="Commands"></param>
-        public AlgebraOperatorResult( List<BaseERElement> PipelineResult, List<MongoDBOperator> Commands )
+        public AlgebraOperatorResult( List<MongoDBOperator> Commands )
         {
-            this.PipelineResult = PipelineResult;
             this.Commands = Commands;
+            ResultMap = new VirtualMap();
         }
         #endregion
     }

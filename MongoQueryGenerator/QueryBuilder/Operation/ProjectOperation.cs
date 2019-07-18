@@ -28,7 +28,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="LastResult"></param>
         /// <returns></returns>
-        public override void Run( ref AlgebraOperatorResult LastResult )
+        public override AlgebraOperatorResult Run( AlgebraOperatorResult LastResult )
         {
             // For projection it is mandatory to use qualified name (Entity.Attribute)
             // Support for aliases might be done later
@@ -69,6 +69,8 @@ namespace QueryBuilder.Operation
                 ProjectOperator ProjectCommand = new ProjectOperator( AttributesToProject );
                 LastResult.Commands.Add( ProjectCommand );
             }
+
+            return LastResult;
         }
         #endregion
 

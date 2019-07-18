@@ -36,11 +36,11 @@ namespace QueryBuilder.Query
         public string Run()
         {
             // Setup results
-            AlgebraOperatorResult Result = new AlgebraOperatorResult( new List<BaseERElement>(), new List<MongoDBOperator>() );
+            AlgebraOperatorResult Result = new AlgebraOperatorResult( new List<MongoDBOperator>() );
 
             foreach ( AlgebraOperator Op in Pipeline.Operations )
             {
-                Op.Run( ref Result );
+                Op.Run( Result );
             }
 
             // Store command objects

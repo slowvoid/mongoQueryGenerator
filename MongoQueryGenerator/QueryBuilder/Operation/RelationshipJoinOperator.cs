@@ -34,19 +34,34 @@ namespace QueryBuilder.Operation
         /// Relationship connecting both entities
         /// </summary>
         public Relationship Relationship { get; set; }
-        #endregion
-
-        #region Private Data
-        
+        /// <summary>
+        /// Source entity map
+        /// </summary>
+        private MapRule SourceRule => ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.Name && Rule.IsMain );
+        /// <summary>
+        /// Relationship map
+        /// </summary>
+        private MapRule RelationshipRule => ModelMap.Rules.First( Rule => Rule.Source.Name == Relationship.Name );
         #endregion
 
         #region Methods
-        public override void Run( ref AlgebraOperatorResult LastResult )
+        /// <summary>
+        /// Process a computed entity
+        /// </summary>
+        /// <param name="Target">Target Computed Entity</param>
+        /// <returns></returns>
+        public List<MongoDBOperator> ProcessComputedEntity( ComputedEntity Target )
         {
-            // Retrieve mapping rules for Source Entity and Relationship
-            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.Name );
-            MapRule RelationshipRule = ModelMap.Rules.FirstOrDefault( Rule => Rule.Source.Name == Relationship.Name );
+            // Retrieve relationship rules
+            MapRule ComputedRelationshipRule = ModelMap.Rules.First( Rule => Rule.Source.Name == Target.Relationship.Name );
 
+            
+
+            return new List<MongoDBOperator>();
+        }
+
+        public override AlgebraOperatorResult Run( AlgebraOperatorResult LastResult )
+        {
             // Check if the relationship has attributes
             bool RelationshipHasAttributes = Relationship.Attributes.Count > 0;
 
@@ -68,6 +83,9 @@ namespace QueryBuilder.Operation
                     if ( TargetEntity is ComputedEntity )
                     {
                         // TODO:
+                        ComputedEntity CE = TargetEntity as ComputedEntity;
+                        RelationshipJoinOperator CEOp = new RelationshipJoinOperator( CE.SourceEntity, CE.Relationship, CE.TargetEntities, ModelMap );
+                        CEOp.Run( LastResult );
                     }
                     else
                     {
@@ -238,6 +256,9 @@ namespace QueryBuilder.Operation
                     if ( TargetEntity is ComputedEntity )
                     {
                         // Computed entities require better handling
+                        ComputedEntity CE = TargetEntity as ComputedEntity;
+                        RelationshipJoinOperator CEOp = new RelationshipJoinOperator( CE.SourceEntity, CE.Relationship, CE.TargetEntities, ModelMap );
+                        CEOp.Run( LastResult );
                     }
                     else
                     {
@@ -378,7 +399,7 @@ namespace QueryBuilder.Operation
 
                 // The first operation for each relationship is to match the relationship document to the source entity
                 Dictionary<string, string> PipelineVariables = new Dictionary<string, string>();
-                RelationshipConnection SourceConnection = Relationship.Relations.First();
+                RelationshipConnection SourceConnection = Relationship.Relations.First( R => R.SourceEntity == SourceEntity );
                 string SourceRef = SourceRule.Rules.First( R => R.Key == SourceConnection.SourceAttribute.Name ).Value;
                 string SourceVar = $"source_{SourceConnection.SourceAttribute.Name}";
 
@@ -395,6 +416,11 @@ namespace QueryBuilder.Operation
                 {
                     if ( TargetEntity is ComputedEntity )
                     {
+                        ComputedEntity CE = TargetEntity as ComputedEntity;
+                        RelationshipJoinOperator CEOp = new RelationshipJoinOperator( CE.SourceEntity, CE.Relationship, CE.TargetEntities, ModelMap );
+                        AlgebraOperatorResult customRes = CEOp.Run( new AlgebraOperatorResult( new List<MongoDBOperator>() ) );
+
+                        CustomPipeline.AddRange( customRes.Commands );
                     }
                     else
                     {
@@ -485,6 +511,8 @@ namespace QueryBuilder.Operation
 
             // Assign operation list
             LastResult.Commands.AddRange( OperationsToExecute );
+
+            return LastResult;
         }
         #endregion
 
