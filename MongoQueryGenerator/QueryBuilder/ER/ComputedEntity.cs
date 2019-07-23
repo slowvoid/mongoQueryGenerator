@@ -16,7 +16,7 @@ namespace QueryBuilder.ER
     {
         #region Properties
         /// <summary>
-        /// Source Entity
+        /// Source entity
         /// </summary>
         public Entity SourceEntity { get; set; }
         /// <summary>
@@ -41,13 +41,6 @@ namespace QueryBuilder.ER
             this.SourceEntity = SourceEntity;
             this.Relationship = Relationship;
             this.TargetEntities = TargetEntities;
-
-            // Attributes for a computed entity are composed from all attributes from the source entity + relationship and target entities
-            Attributes.AddRange( SourceEntity.Attributes );
-            DataAttribute R = new DataAttribute( $"data_{Relationship.Name}" );
-            R.Children.AddRange( Relationship.Attributes );
-            TargetEntities.ForEach( E => R.Children.AddRange( E.Attributes ) );
-            Attributes.Add( R );
         }
         #endregion
     }

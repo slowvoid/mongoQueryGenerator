@@ -10,6 +10,7 @@ using QueryBuilder.Map;
 using QueryBuilder.Mongo;
 using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Mongo.Expressions;
+using QueryBuilder.Operation.Arguments;
 using QueryBuilder.Operation.Exceptions;
 using QueryBuilder.Query;
 using QueryBuilder.Shared;
@@ -23,512 +24,286 @@ namespace QueryBuilder.Operation
     {
         #region Properties
         /// <summary>
-        /// Relationship startpoint
+        /// Source entity
         /// </summary>
         public Entity SourceEntity { get; set; }
         /// <summary>
-        /// Relationship endpoint
+        /// What is to be joined
         /// </summary>
-        public List<Entity> TargetEntities { get; set; }
-        /// <summary>
-        /// Relationship connecting both entities
-        /// </summary>
-        public Relationship Relationship { get; set; }
-        /// <summary>
-        /// Source entity map
-        /// </summary>
-        private MapRule SourceRule => ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.Name && Rule.IsMain );
-        /// <summary>
-        /// Relationship map
-        /// </summary>
-        private MapRule RelationshipRule => ModelMap.Rules.First( Rule => Rule.Source.Name == Relationship.Name );
+        public List<RelationshipJoinArguments> Targets { get; set; }
         #endregion
 
         #region Methods
         /// <summary>
-        /// Process a computed entity
+        /// Run the algorithm
         /// </summary>
-        /// <param name="Target">Target Computed Entity</param>
+        /// <param name="LastResult"></param>
         /// <returns></returns>
-        public List<MongoDBOperator> ProcessComputedEntity( ComputedEntity Target )
+        public override AlgebraOperatorResult Run()
         {
-            // Retrieve relationship rules
-            MapRule ComputedRelationshipRule = ModelMap.Rules.First( Rule => Rule.Source.Name == Target.Relationship.Name );
+            // Locate rules for source entity
+            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.Name && Rule.IsMain );
+            // If not found, throw error
+            if ( SourceRule == null )
+            {
+                throw new InvalidOperationException( $"Entity {SourceEntity.Name} does not have a main map." );
+            }
 
-            
-
-            return new List<MongoDBOperator>();
-        }
-
-        public override AlgebraOperatorResult Run( AlgebraOperatorResult LastResult )
-        {
-            // Check if the relationship has attributes
-            bool RelationshipHasAttributes = Relationship.Attributes.Count > 0;
-
+            // Store all operations that must be executed before returning
             List<MongoDBOperator> OperationsToExecute = new List<MongoDBOperator>();
 
-            string joinedAttributeName = $"data_{Relationship.Name}";
-
-            if ( Relationship.Cardinality == RelationshipCardinality.OneToOne )
+            // Process each joined pair of relationship + computed entity
+            foreach ( RelationshipJoinArguments TargetData in Targets )
             {
-                // Keep list of operators to run
-                List<MongoDBOperator> OneToOneOperatorsToExecute = new List<MongoDBOperator>();
-                // Store info regarding whether relationship attributes (if any) were already mapped
-                bool HasRelationshipBeenProcessed = false;
-                string RelationshipAttributesField = $"data_{Relationship.Name}Attributes";
+                // Retrieve relationship rules (if any)
+                MapRule RelationshipRule = ModelMap.Rules.FirstOrDefault( Rule => Rule.Source.Name == TargetData.Relationship.Name );
 
-                // Work on each entity
-                foreach ( Entity TargetEntity in TargetEntities )
+                // Processing may vary based on relationship cardinality
+                if ( TargetData.Relationship.Cardinality == RelationshipCardinality.OneToOne )
                 {
-                    if ( TargetEntity is ComputedEntity )
+                    // List of operations to be executed by this relationship
+                    List<MongoDBOperator> RelationshipOperations = new List<MongoDBOperator>();
+
+                    // Store info regarding wheter the relationship attributes (if any) were already mapped
+                    bool HasRelationshipBeenProcessed = false;
+                    string RelationshipAttributesField = $"data_{TargetData.Relationship.Name}";
+                    // Store all fields that should be merged under data_Relationship
+                    List<string> FieldsToMerge = new List<string>();
+
+                    // Process each entity to be joined
+                    foreach ( Entity TargetEntity in TargetData.Targets )
                     {
-                        // TODO:
-                        ComputedEntity CE = TargetEntity as ComputedEntity;
-                        RelationshipJoinOperator CEOp = new RelationshipJoinOperator( CE.SourceEntity, CE.Relationship, CE.TargetEntities, ModelMap );
-                        CEOp.Run( LastResult );
-                    }
-                    else
-                    {
-                        // Retrieve map rules from the target entity
-                        MapRule TargetRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetEntity.Name );
-
-                        // Get relationship data
-                        RelationshipConnection RelationshipData = Relationship.GetRelation( SourceEntity, TargetEntity );
-
-                        if ( RelationshipData == null )
+                        // If the target is a ComputedEntity
+                        // Run another RJOINOperator
+                        if ( TargetEntity is ComputedEntity TargetAsCE )
                         {
-                            throw new ImpossibleOperationException( $"Entity {TargetEntity.Name} is not reachable through {Relationship.Name}" );
-                        }
-
-                        // Check if the source entity and target entity shares the collection
-                        // which means one is embedded in the other
-                        if ( SourceRule.Target.Name == TargetRule.Target.Name )
-                        {
-                            // First we add the fields to a data_Target attribue
-                            Dictionary<string, JSCode> TargetFields = new Dictionary<string, JSCode>();
-                            List<string> RootAttributes = new List<string>();
-
-                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                            // Retrieve the CE source entity before calling another RJOIN instance
+                            // Retreive CE-SE rule
+                            MapRule CESERule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetAsCE.SourceEntity.Name && Rule.IsMain );
+                            // Stop if rule not found
+                            if ( CESERule == null )
                             {
-                                // Find root attribute (if any)
-                                string RuleValue = TargetRule.Rules.FirstOrDefault( Rule => Rule.Key == Attribute.Name ).Value;
-
-                                if ( RuleValue != null )
-                                {
-                                    string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
-                                    if ( RulePath.Length > 1 )
-                                    {
-                                        // Using dot notation, first element is the root attribute
-                                        RootAttributes.Add( RulePath.First() );
-                                    }
-                                    else
-                                    {
-                                        RootAttributes.Add( RuleValue ); // Attribute is first level
-                                    }
-
-                                    // Add new field
-                                    // Using dot notation tells MongoDB that it is an object
-                                    TargetFields.Add( $"\"data_{TargetEntity.Name}.{TargetEntity.Name}_{Attribute.Name}\"", (JSString)$"\"${RuleValue}\"" );
-                                }
+                                throw new RuleNotFoundException( $"Entity [{TargetAsCE.SourceEntity.Name}] is not mapped." );
                             }
 
-                            // Remove attributes mapped to data_Entity
-                            Dictionary<string, ProjectExpression> RemoveAttributes = new Dictionary<string, ProjectExpression>();
-                            // Lookup data from the RootAttributes list
-                            foreach ( string Attribute in RootAttributes.Distinct() )
+                            // Left side entities cannot be embedded
+                            if ( SourceRule.Target.Name == CESERule.Target.Name )
                             {
-                                RemoveAttributes.Add( Attribute, new BooleanExpr( false ) );
+                                throw new InvalidMapException( $"Entities that are the left operand of a join operation cannot be embedded into another entity. [{TargetAsCE.SourceEntity.Name}" );
                             }
 
-                            // Setup MongoDB operators
-                            AddFieldsOperator AddOp = new AddFieldsOperator( TargetFields );
-                            ProjectOperator ProjectOp = new ProjectOperator( RemoveAttributes );
+                            // Check if the entities are related
+                            if ( !TargetData.Relationship.HasRelation( SourceEntity, TargetAsCE.SourceEntity ) )
+                            {
+                                throw new NotRelatedException( $"Entity {SourceEntity.Name} is not related to {TargetAsCE.SourceEntity.Name} through {TargetData.Relationship.Name}" );
+                            }
 
-                            // Add to execution list
-                            OneToOneOperatorsToExecute.AddRange( new MongoDBOperator[] { AddOp, ProjectOp } );
-                        }
-                        else
-                        {
-                            // Entity is not embedded
-                            string LookupTargetAs = $"data_{TargetEntity.Name}Join";
-                            // Fetch it
+                            // Retrieve connection rules for this entity
+                            RelationshipConnection ConnRules = TargetData.Relationship.GetRelation( SourceEntity, TargetAsCE.SourceEntity );
+
+                            // Start a lookup operation with custom pipeline
+                            List<MongoDBOperator> CEPipeline = new List<MongoDBOperator>();
+
+                            // Pipeline variables
+                            Dictionary<string, string> CEPipelineVars = new Dictionary<string, string>();
+                            string SourceIdentifier = $"{SourceEntity.Name.ToLower()}_identifier";
+                            string SourceIdentifierValue = SourceRule.Rules.First( Rule => Rule.Key == ConnRules.SourceAttribute.Name ).Value;
+
+                            string TargetRuleValue = CESERule.Rules.First( Rule => Rule.Key == ConnRules.TargetAttribute.Name ).Value;
+
+                            CEPipelineVars.Add( SourceIdentifier, $"${SourceIdentifierValue}" );
+
+                            // Match source with incoming
+                            Expr MatchExpr = new Expr( new EqExpr( $"$${SourceIdentifier}", $"${TargetRuleValue}" ) );
+                            MatchOperator MatchOp = new MatchOperator( MatchExpr );
+
+                            CEPipeline.Add( MatchOp );
+
+                            // Setup a new Argument instance
+                            RelationshipJoinArguments newArgs = new RelationshipJoinArguments(
+                                TargetAsCE.Relationship,
+                                TargetAsCE.TargetEntities );
+
+                            RelationshipJoinOperator TargetCEOperator = new RelationshipJoinOperator(
+                                SourceEntity,
+                                new List<RelationshipJoinArguments> { newArgs },
+                                ModelMap );
+
+                            CEPipeline.AddRange( TargetCEOperator.Run().Commands );
+
+                            // Create lookup
                             LookupOperator LookupOp = new LookupOperator
                             {
-                                From = TargetRule.Target.Name,
-                                ForeignField = TargetRule.Rules.First( Rule => Rule.Key == RelationshipData.TargetAttribute.Name ).Value,
-                                LocalField = SourceRule.Rules.First( Rule => Rule.Key == RelationshipData.SourceAttribute.Name ).Value,
-                                As = LookupTargetAs
-                            };
-
-                            // Unwind data (becomes a single object)
-                            UnwindOperator UnwindOp = new UnwindOperator( LookupTargetAs, false );
-
-                            // Build a new field to match algebra definition
-                            Dictionary<string, JSCode> TargetFields = new Dictionary<string, JSCode>();
-
-                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
-                            {
-                                string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                                TargetFields.Add( $"\"data_{TargetEntity.Name}.{TargetEntity.Name}_{Attribute.Name}\"", (JSString)$"\"${LookupTargetAs}.{RuleValue}\"" );
-                            }
-
-                            // Check if relationship attributes are mapped to this entity
-                            if ( Relationship.Attributes.Count > 0 && RelationshipRule.Target.Name == TargetRule.Target.Name )
-                            {
-                                // Map attributes to relationship object
-                                foreach ( DataAttribute Attribute in Relationship.Attributes )
-                                {
-                                    string RuleValue = RelationshipRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                                    TargetFields.Add( $"\"{RelationshipAttributesField}.{Relationship.Name}_{Attribute.Name}\"", (JSString)$"\"${LookupTargetAs}.{RuleValue}\"" );
-                                }
-
-                                // Mark relationship attributes as processed
-                                HasRelationshipBeenProcessed = true;
-                            }
-
-                            AddFieldsOperator AddOp = new AddFieldsOperator( TargetFields );
-
-                            // Remove unwanted attributes
-                            ProjectOperator ProjectOp = ProjectOperator.HideAttributesOperator( new string[] { LookupTargetAs } );
-
-                            OneToOneOperatorsToExecute.AddRange( new MongoDBOperator[] { LookupOp, UnwindOp, AddOp, ProjectOp } );
-                        }
-                    }
-                }
-
-                // Additional fields to remove
-                List<string> FieldsToRemove = new List<string>();
-
-                // Entities taken care of, check if the relationship has attributes
-                // and it's attributes aren't processed yet
-                if ( Relationship.Attributes.Count > 0 && !HasRelationshipBeenProcessed )
-                {
-                    Dictionary<string, JSCode> RelationshipAttributes = new Dictionary<string, JSCode>();
-                    // Add Relationship attributes to a single object
-                    foreach ( DataAttribute Attribute in Relationship.Attributes )
-                    {
-                        string RuleValue = RelationshipRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                        RelationshipAttributes.Add( $"\"{RelationshipAttributesField}.{Relationship.Name}_{Attribute.Name}\"", (JSString)$"\"${RuleValue}\"" );
-                        // Add to removal list (source relationship attribute)
-                        FieldsToRemove.Add( RuleValue );
-                    }
-
-                    AddFieldsOperator AddOp = new AddFieldsOperator( RelationshipAttributes );
-
-                    OneToOneOperatorsToExecute.Add( AddOp );
-                }
-
-                // Create a single object containing relationship/joined data
-                MergeObjectsOperator MergeOp = new MergeObjectsOperator();
-
-                foreach ( Entity Target in TargetEntities )
-                {
-                    MergeOp.Objects.Add( $"$data_{Target.Name}" );
-                    FieldsToRemove.Add( $"data_{Target.Name}" );
-                }
-
-                // Add relationship data
-                MergeOp.Objects.Add( $"${RelationshipAttributesField}" );
-
-                // Also add relationship attribute object to remove list
-                FieldsToRemove.Add( $"{RelationshipAttributesField}" );
-
-                // Build operation to hide all entity/relationship data attributes
-                Dictionary<string, JSCode> BuildJoinData = new Dictionary<string, JSCode>();
-                BuildJoinData.Add( $"data_{Relationship.Name}", new JSArray( new List<object> { MergeOp.ToJSCode() } ) );
-
-                AddFieldsOperator BuildOp = new AddFieldsOperator( BuildJoinData );
-
-                // Remove extra fields
-                ProjectOperator RemoveOp = ProjectOperator.HideAttributesOperator( FieldsToRemove );
-
-                // Add to execution list
-                OneToOneOperatorsToExecute.AddRange( new MongoDBOperator[] { BuildOp, RemoveOp } );
-
-                // Send to main execution queue
-                OperationsToExecute.AddRange( OneToOneOperatorsToExecute.ToArray() );
-            }
-            else if ( Relationship.Cardinality == RelationshipCardinality.OneToMany )
-            {
-                // Go through all target entities
-                foreach ( Entity TargetEntity in TargetEntities )
-                {
-                    if ( TargetEntity is ComputedEntity )
-                    {
-                        // Computed entities require better handling
-                        ComputedEntity CE = TargetEntity as ComputedEntity;
-                        RelationshipJoinOperator CEOp = new RelationshipJoinOperator( CE.SourceEntity, CE.Relationship, CE.TargetEntities, ModelMap );
-                        CEOp.Run( LastResult );
-                    }
-                    else
-                    {
-                        // Retrieve mapping rule for target
-                        MapRule TargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == TargetEntity.Name );
-                        if ( TargetRule == null )
-                        {
-                            throw new ImpossibleOperationException( $"Entity {TargetEntity.Name} has no valid mapping." );
-                        }
-
-                        if ( !Relationship.HasRelation( SourceEntity, TargetEntity ) )
-                        {
-                            throw new ImpossibleOperationException( $"Entities {SourceEntity.Name} and {TargetEntity.Name} are not related through {Relationship.Name}" );
-                        }
-
-                        RelationshipConnection RelationshipData = Relationship.GetRelation( SourceEntity, TargetEntity );
-
-                        // Are source and target mapped to the same collection
-                        if ( SourceRule.Target.Name == TargetRule.Target.Name )
-                        {
-                            /* Target entity is embedded in the source entity
-                               This also means that the relationship attributes (if any)
-                               are mapped to the same collection.
-
-                               We just need to move them to a more appropriate place
-                            */
-
-                            // Instead of using AddAtributes
-                            // We're using a single project operation reshape de document
-                            Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
-                            string RootAttribute = string.Empty;
-                            string MapAttributeAs = string.Empty;
-                            // Iterate target entity attributes
-                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
-                            {
-                                string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                                string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
-
-                                if ( string.IsNullOrWhiteSpace( RootAttribute ) )
-                                {
-                                    RootAttribute = $"{RulePath.First()}";
-                                    MapAttributeAs = $"data_{RootAttribute}";
-                                }
-
-                                MapParams.Add( $"\"{TargetEntity.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
-                            }
-
-                            // Do the same thing to the relationship attributes
-                            foreach ( DataAttribute Attribute in Relationship.Attributes )
-                            {
-                                string RuleValue = RelationshipRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                                string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
-
-                                MapParams.Add( $"\"{Relationship.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
-                            }
-
-                            // Setup project operation
-                            MapExpr AttributeMap = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
-                            Dictionary<string, ProjectExpression> ProjectFields = new Dictionary<string, ProjectExpression>();
-                            ProjectFields.Add( $"data_{Relationship.Name}", AttributeMap );
-
-
-                            // Keep source entity attributes
-                            foreach ( DataAttribute Attribute in SourceEntity.Attributes )
-                            {
-                                string RuleValue = SourceRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                                ProjectFields.Add( $"\"{RuleValue}\"", new BooleanExpr( true ) );
-                            }
-
-                            ProjectOperator ProjectOp = new ProjectOperator( ProjectFields );
-
-
-                            OperationsToExecute.Add( ProjectOp );
-                        }
-                        else
-                        {
-                            /* 
-                             * In this case, the target entity is mapped to its own collection
-                             * Which also means that if the relationship has attributes
-                             * it must have been mapped to target collection
-                             */
-
-                            // Fetch target entity
-                            LookupOperator TargetLookupOp = new LookupOperator
-                            {
-                                From = TargetRule.Target.Name,
-                                ForeignField = TargetRule.Rules.First( Rule => Rule.Key == RelationshipData.TargetAttribute.Name ).Value,
-                                LocalField = SourceRule.Rules.First( Rule => Rule.Key == RelationshipData.SourceAttribute.Name ).Value,
+                                From = CESERule.Target.Name,
+                                Let = CEPipelineVars,
+                                Pipeline = CEPipeline,
                                 As = $"data_{TargetEntity.Name}"
                             };
 
-                            // Run a project with map to rename joined attributes
-                            Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
-                            string RootAttribute = $"data_{TargetEntity.Name}";
-                            string MapAttributeAs = $"data_{RootAttribute}";
+                            OperationsToExecute.Add( LookupOp );
 
-                            foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                            // Add Field to merge list
+                            FieldsToMerge.Add( LookupOp.As );
+                        }
+                        else
+                        {
+                            MapRule TargetRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetEntity.Name );
+
+                            if ( !TargetData.Relationship.HasRelation( SourceEntity, TargetEntity ) )
                             {
-                                string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-
-                                MapParams.Add( $"\"{TargetEntity.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{RuleValue}\"" ) );
+                                throw new NotRelatedException( $"Entities [{SourceEntity.Name}] and [{TargetEntity.Name}] are not related through {TargetData.Relationship.Name}" );
                             }
 
-                            // Do the same thing to the relationship attributes
-                            foreach ( DataAttribute Attribute in Relationship.Attributes )
+                            RelationshipConnection ConnRules = TargetData.Relationship.GetRelation( SourceEntity, TargetEntity );
+                            // Throw error if rule is not found
+                            if ( TargetRule == null )
                             {
-                                string RuleValue = RelationshipRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-
-                                MapParams.Add( $"\"{Relationship.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{RuleValue}\"" ) );
+                                throw new RuleNotFoundException( $"Entity [{TargetEntity.Name}] is not mapped." );
                             }
 
-                            // Setup project operation
-                            MapExpr AttributeMap = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
-                            Dictionary<string, ProjectExpression> ProjectFields = new Dictionary<string, ProjectExpression>();
-                            ProjectFields.Add( $"data_{Relationship.Name}", AttributeMap );
-
-
-                            // Keep source entity attributes
-                            foreach ( DataAttribute Attribute in SourceEntity.Attributes )
+                            // Check if the target is embedded into the source
+                            if ( SourceRule.Target.Name == TargetRule.Target.Name )
                             {
-                                string RuleValue = SourceRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                                ProjectFields.Add( $"\"{RuleValue}\"", new BooleanExpr( true ) );
+                                // Add target fields to a single attribute
+                                Dictionary<string, JSCode> TargetFields = new Dictionary<string, JSCode>();
+                                List<string> RootAttributes = new List<string>();
+
+                                foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                                {
+                                    // Find root attribute (if any)
+                                    string RuleValue = TargetRule.Rules.FirstOrDefault( Rule => Rule.Key == Attribute.Name ).Value;
+
+                                    if ( RuleValue != null )
+                                    {
+                                        string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+                                        if ( RulePath.Length > 1 )
+                                        {
+                                            // Using dot notation, first element is the root attribute
+                                            RootAttributes.Add( RulePath.First() );
+                                        }
+                                        else
+                                        {
+                                            RootAttributes.Add( RuleValue ); // Attribute is first level
+                                        }
+
+                                        // Add new field
+                                        // Using dot notation tells MongoDB that it is an object
+                                        TargetFields.Add( $"\"data_{TargetEntity.Name}.{TargetEntity.Name}_{Attribute.Name}\"",
+                                            (JSString)$"\"${RuleValue}\"" );
+                                    }
+                                }
+
+                                // Remove attribute mapped to data_Entity
+                                Dictionary<string, ProjectExpression> RemoveAttributes = new Dictionary<string, ProjectExpression>();
+                                // Lookup data from the RootAttributes list
+                                foreach ( string Attribute in RootAttributes.Distinct() )
+                                {
+                                    RemoveAttributes.Add( Attribute, new BooleanExpr( false ) );
+                                }
+
+                                // Setup MongoDB operators
+                                AddFieldsOperator AddOp = new AddFieldsOperator( TargetFields );
+                                ProjectOperator ProjectOp = new ProjectOperator( RemoveAttributes );
+
+                                // Add to execution list
+                                RelationshipOperations.AddRange( new MongoDBOperator[] { AddOp, ProjectOp } );
                             }
+                            else
+                            {
+                                // Entity is not embedded
+                                string LookupTargetAs = $"data_{TargetEntity.Name}Join";
+                                // Fetch it
+                                LookupOperator LookupOp = new LookupOperator
+                                {
+                                    From = TargetRule.Target.Name,
+                                    ForeignField = TargetRule.Rules.First( Rule => Rule.Key == ConnRules.TargetAttribute.Name ).Value,
+                                    LocalField = SourceRule.Rules.First( Rule => Rule.Key == ConnRules.SourceAttribute.Name ).Value,
+                                    As = LookupTargetAs
+                                };
 
-                            ProjectOperator ProjectOp = new ProjectOperator( ProjectFields );
+                                // Unwind data (becomes a single object)
+                                UnwindOperator UnwindOp = new UnwindOperator( LookupTargetAs, false );
 
+                                // Build a new field to match algebra definition
+                                Dictionary<string, JSCode> TargetFields = new Dictionary<string, JSCode>();
 
-                            OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, ProjectOp } );
+                                foreach ( DataAttribute Attribute in TargetEntity.Attributes )
+                                {
+                                    string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+                                    TargetFields.Add( $"\"data_{TargetEntity.Name}.{TargetEntity.Name}_{Attribute.Name}\"", (JSString)$"\"${LookupTargetAs}.{RuleValue}\"" );
+                                }
+
+                                // Check if relationship attributes are mapped to this entity
+                                if ( TargetData.Relationship.Attributes.Count > 0 && RelationshipRule.Target.Name == TargetRule.Target.Name )
+                                {
+                                    // Map attributes to relationship object
+                                    foreach ( DataAttribute Attribute in TargetData.Relationship.Attributes )
+                                    {
+                                        string RuleValue = RelationshipRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+                                        TargetFields.Add( $"\"{RelationshipAttributesField}.{TargetData.Relationship.Name}_{Attribute.Name}\"", (JSString)$"\"${LookupTargetAs}.{RuleValue}\"" );
+                                    }
+
+                                    // Mark relationship attributes as processed
+                                    HasRelationshipBeenProcessed = true;
+                                }
+
+                                AddFieldsOperator AddOp = new AddFieldsOperator( TargetFields );
+
+                                // Remove unwanted attributes
+                                ProjectOperator ProjectOp = ProjectOperator.HideAttributesOperator( new string[] { LookupTargetAs } );
+
+                                RelationshipOperations.AddRange( new MongoDBOperator[] { LookupOp, UnwindOp, AddOp, ProjectOp } );
+                            }
                         }
                     }
-                }
-            }
-            else if ( Relationship.Cardinality == RelationshipCardinality.ManyToMany )
-            {
-                // On Many to Many relationships we need to run custom pipelines to join entities
-                // and multiple entities must be in the same pipeline as the relationship
-                List<MongoDBOperator> CustomPipeline = new List<MongoDBOperator>();
 
-                // The first operation for each relationship is to match the relationship document to the source entity
-                Dictionary<string, string> PipelineVariables = new Dictionary<string, string>();
-                RelationshipConnection SourceConnection = Relationship.Relations.First( R => R.SourceEntity == SourceEntity );
-                string SourceRef = SourceRule.Rules.First( R => R.Key == SourceConnection.SourceAttribute.Name ).Value;
-                string SourceVar = $"source_{SourceConnection.SourceAttribute.Name}";
-
-                PipelineVariables.Add( SourceVar, $"${SourceRef}" );
-
-                string RelationshipSourceRef = RelationshipRule.Rules.First( R => R.Key == SourceConnection.RefSourceAtrribute.Name ).Value;
-                EqExpr MatchSourceEq = new EqExpr( $"${RelationshipSourceRef}", $"$${SourceVar}" );
-
-                Match MatchSourceOp = new Match( new Expr( MatchSourceEq ) );
-
-                CustomPipeline.Add( MatchSourceOp );
-
-                foreach ( Entity TargetEntity in TargetEntities )
-                {
-                    if ( TargetEntity is ComputedEntity )
+                    // Process entity attributes (if any)
+                    if ( TargetData.Relationship.Attributes.Count > 0 )
                     {
-                        ComputedEntity CE = TargetEntity as ComputedEntity;
-                        RelationshipJoinOperator CEOp = new RelationshipJoinOperator( CE.SourceEntity, CE.Relationship, CE.TargetEntities, ModelMap );
-                        AlgebraOperatorResult customRes = CEOp.Run( new AlgebraOperatorResult( new List<MongoDBOperator>() ) );
-
-                        CustomPipeline.AddRange( customRes.Commands );
+                        // Process
                     }
-                    else
+
+                    // Remove these fields
+                    List<string> FieldsToRemove = new List<string>();
+                    // Merge Fields
+                    MergeObjectsOperator MergeOp = new MergeObjectsOperator();
+                    foreach ( string Field in FieldsToMerge )
                     {
-                        // Get Target rule
-                        MapRule TargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == TargetEntity.Name );
-                        if ( TargetRule == null )
-                        {
-                            throw new ImpossibleOperationException( $"Entity {TargetEntity.Name} has no valid mapping." );
-                        }
-
-                        if ( !Relationship.HasRelation( SourceEntity, TargetEntity ) )
-                        {
-                            throw new ImpossibleOperationException( $"Entities {SourceEntity.Name} and {TargetEntity.Name} are not related through {Relationship.Name}" );
-                        }
-
-                        RelationshipConnection RelationshipData = Relationship.GetRelation( SourceEntity, TargetEntity );
-
-                        // Many to many relationships so far we're only considering that entities are mapped to distinct collections
-                        // and the relationship linking them has it's own collection
-
-                        // Build the operations for the custom pipeline
-
-                        // Foreach target entity, we must do a lookup, unwind, addfields and project operations
-                        // Lookup target
-                        string TargetLookupAs = $"data_{TargetEntity.Name}"; 
-
-                        LookupOperator LookupTargetOp = new LookupOperator
-                        {
-                            From = TargetRule.Target.Name,
-                            ForeignField = TargetRule.Rules.First( R => R.Key == RelationshipData.TargetAttribute.Name ).Value,
-                            LocalField = RelationshipRule.Rules.First( R => R.Key == RelationshipData.RefTargetAttribute.Name ).Value,
-                            As = TargetLookupAs
-                        };
-
-                        // Unwind
-                        UnwindOperator UnwindTarget = new UnwindOperator( TargetLookupAs );
-
-
-                        // Add fields
-                        Dictionary<string, JSCode> FieldsToAdd = new Dictionary<string, JSCode>();
-
-                        foreach ( DataAttribute Attribute in TargetEntity.Attributes )
-                        {
-                            string AttributeMappedTo = TargetRule.Rules.First( R => R.Key == Attribute.Name ).Value;
-                            FieldsToAdd.Add( $"{TargetEntity.Name}_{Attribute.Name}", (JSString)$"\"${TargetLookupAs}.{AttributeMappedTo}\"" );
-                        }
-
-                        AddFieldsOperator AddFieldsOp = new AddFieldsOperator( FieldsToAdd );
-
-                        // Project - remove joined data extra data
-                        Dictionary<string, ProjectExpression> ProjectExpressions = new Dictionary<string, ProjectExpression>
-                        {
-                            { TargetLookupAs, new BooleanExpr( false ) }
-                        };
-                        ProjectOperator ProjectOp = new ProjectOperator( ProjectExpressions );
-
-                        CustomPipeline.AddRange( new MongoDBOperator[] { LookupTargetOp, UnwindTarget, AddFieldsOp, ProjectOp } );
+                        MergeOp.Objects.Add( $"${Field}" );
+                        FieldsToRemove.Add( Field );
                     }
+                    
+                    // Build operation to hide all entity/relationship data attributes
+                    Dictionary<string, JSCode> BuildJoinData = new Dictionary<string, JSCode>();
+                    BuildJoinData.Add( $"data_{TargetData.Relationship.Name}", new JSArray( new List<object> { MergeOp.ToJSCode() } ) );
+
+                    AddFieldsOperator BuildOp = new AddFieldsOperator( BuildJoinData );
+                    ProjectOperator HideFields = ProjectOperator.HideAttributesOperator( FieldsToRemove );
+
+                    OperationsToExecute.AddRange( new List<MongoDBOperator> { BuildOp, HideFields } );
                 }
-
-                // Also rename relationship attributes
-                Dictionary<string, JSCode> RelationshipAttributesToAdd = new Dictionary<string, JSCode>();
-                Dictionary<string, ProjectExpression> RelationshipAttributesToRemove = new Dictionary<string, ProjectExpression>();
-
-                foreach ( DataAttribute Attribute in Relationship.Attributes )
-                {
-                    string AttributeMap = RelationshipRule.Rules.First( R => R.Key == Attribute.Name ).Value;
-                    RelationshipAttributesToAdd.Add( $"{Relationship.Name}_{Attribute.Name}", (JSString)$"\"${AttributeMap}\"" );
-                    RelationshipAttributesToRemove.Add( AttributeMap, new BooleanExpr( false ) );
-                }
-
-                AddFieldsOperator RAddFields = new AddFieldsOperator( RelationshipAttributesToAdd );
-                ProjectOperator RRemoveOp = new ProjectOperator( RelationshipAttributesToRemove );
-
-                CustomPipeline.AddRange( new MongoDBOperator[] { RAddFields, RRemoveOp } );
-
-                // Add Lookup for relationship
-                LookupOperator RelationshipLookup = new LookupOperator
-                {
-                    From = RelationshipRule.Target.Name,
-                    Let = PipelineVariables,
-                    Pipeline = CustomPipeline,
-                    As = $"data_{Relationship.Name}"
-                };
-
-                OperationsToExecute.Add( RelationshipLookup );
+                else if ( TargetData.Relationship.Cardinality == RelationshipCardinality.OneToMany )
+                { }
+                else if ( TargetData.Relationship.Cardinality == RelationshipCardinality.ManyToMany )
+                { }
             }
 
-            // Assign operation list
-            LastResult.Commands.AddRange( OperationsToExecute );
-
-            return LastResult;
+            // Return operations
+            return new AlgebraOperatorResult( OperationsToExecute );
         }
         #endregion
 
         #region Constructors
         /// <summary>
-        /// Initialize a new instance of Join Operation class
+        /// Initialize a new instance of RelationshipJoinOperator
         /// </summary>
-        /// <param name="SourceEntity">Source entity</param>
-        /// <param name="Relationship">Join through this relationship</param>
-        /// <param name="TargetEntities">Target entities</param>
-        /// <param name="ModelMap">Map rules between ER and Mongo</param>
-        public RelationshipJoinOperator( Entity SourceEntity, Relationship Relationship, List<Entity> TargetEntities, ModelMapping ModelMap ) : base( ModelMap )
+        /// <param name="SourceEntity"></param>
+        /// <param name="Targets"></param>
+        /// <param name="Map"></param>
+        public RelationshipJoinOperator( Entity SourceEntity, List<RelationshipJoinArguments> Targets, ModelMapping Map ) : base( Map )
         {
             this.SourceEntity = SourceEntity;
-            this.TargetEntities = TargetEntities;
-            this.Relationship = Relationship;
+            this.Targets = Targets;
         }
         #endregion
     }

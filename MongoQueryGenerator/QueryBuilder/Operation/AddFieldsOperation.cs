@@ -27,16 +27,17 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="LastResult"></param>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run( AlgebraOperatorResult LastResult )
+        public override AlgebraOperatorResult Run()
         {
             AddFieldsOperator AddFieldsOperator = new AddFieldsOperator( Attributes );
-
+            List<MongoDBOperator> OperationsToExecute = new List<MongoDBOperator>();
+            
             if ( Attributes.Count > 0 )
             {
-                LastResult.Commands.Add( AddFieldsOperator );
+                OperationsToExecute.Add( AddFieldsOperator );
             }
 
-            return LastResult;
+            return new AlgebraOperatorResult( OperationsToExecute );
         }
         #endregion
 

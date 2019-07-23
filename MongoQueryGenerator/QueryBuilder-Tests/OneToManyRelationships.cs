@@ -28,8 +28,14 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator( (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ), new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ) },
+            ComputedEntity TargetCE = new ComputedEntity( "InsCar",
+                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
+                new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ) } );
+
+            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
+                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                new List<Entity> { TargetCE },
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
@@ -71,8 +77,14 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator( (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ), new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ) },
+            ComputedEntity TargetCE = new ComputedEntity( "InsCar",
+                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
+                new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ) } );
+
+            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
+                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                new List<Entity> { TargetCE },
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
@@ -114,8 +126,14 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator( (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ), new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ) },
+            ComputedEntity TargetCE = new ComputedEntity( "InsCar",
+                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
+                new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ) } );
+
+            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
+                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                new List<Entity> { TargetCE },
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
@@ -157,8 +175,14 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator( (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ), new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ) },
+            ComputedEntity TargetCE = new ComputedEntity( "InsCar",
+                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
+                new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ) } );
+
+            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
+                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                new List<Entity> { TargetCE },
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
@@ -200,9 +224,14 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ),
+            ComputedEntity TargetCE = new ComputedEntity( "InsCar",
+                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasInsurance" ),
-                new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ) },
+                new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ) } );
+
+            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
+                (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ),
+                new List<Entity> { TargetCE },
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };

@@ -11,7 +11,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Represents the Match aggregation stage
     /// </summary>
-    public class Match : MongoDBOperator
+    public class MatchOperator : MongoDBOperator
     {
         #region Properties
         /// <summary>
@@ -58,7 +58,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Initialize a new instance of Match
         /// </summary>
-        public Match()
+        public MatchOperator()
         {
             FieldsToMatch = new Dictionary<string, object>();
         }
@@ -66,7 +66,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// Initialize a new instance of Match
         /// </summary>
         /// <param name="FieldsToMatch">Fields to match against</param>
-        public Match( Dictionary<string, object> FieldsToMatch )
+        public MatchOperator( Dictionary<string, object> FieldsToMatch )
         {
             this.FieldsToMatch = FieldsToMatch;
         }
@@ -74,7 +74,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// Initialize a new instance of Match
         /// </summary>
         /// <param name="Expression">Expression to be evalueted</param>
-        public Match( BaseExpression Expression )
+        public MatchOperator( BaseExpression Expression )
         {
             this.Expression = Expression;
             FieldsToMatch = new Dictionary<string, object>();

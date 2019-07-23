@@ -99,7 +99,10 @@
     <Compile Include="Mongo\Expressions\ValueExpr.cs" />
     <Compile Include="Mongo\Schema.cs" />
     <Compile Include="Operation\AddFieldsOperation.cs" />
+    <Compile Include="Operation\Arguments\RelationshipJoinArguments.cs" />
     <Compile Include="Operation\Exceptions\ImpossibleOperationException.cs" />
+    <Compile Include="Operation\Exceptions\InvalidMapException.cs" />
+    <Compile Include="Operation\Exceptions\NotRelatedException.cs" />
     <Compile Include="Operation\Exceptions\RuleNotFoundException.cs" />
     <Compile Include="Operation\FindOperation.cs" />
     <Compile Include="Operation\RelationshipJoinOperator.cs" />

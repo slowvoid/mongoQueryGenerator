@@ -1,5 +1,6 @@
 ﻿using QueryBuilder.ER;
 using QueryBuilder.Map;
+using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Query;
 using System;
 using System.Collections.Generic;
@@ -27,9 +28,9 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
-        public override AlgebraOperatorResult Run( AlgebraOperatorResult LastResult )
+        public override AlgebraOperatorResult Run()
         {
-            return base.Run( LastResult );
+            return new AlgebraOperatorResult( new List<MongoDBOperator>() );
         }
         #endregion
 

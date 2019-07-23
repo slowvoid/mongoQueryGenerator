@@ -28,9 +28,9 @@ namespace QueryBuilder.Operation
         /// Run operation
         /// </summary>
         /// <returns></returns>
-        public virtual AlgebraOperatorResult Run( AlgebraOperatorResult LastResult )
+        public virtual AlgebraOperatorResult Run()
         {
-            return LastResult;
+            return new AlgebraOperatorResult( new List<MongoDBOperator>() );
         }
         #endregion
 

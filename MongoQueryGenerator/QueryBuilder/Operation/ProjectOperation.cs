@@ -28,11 +28,14 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="LastResult"></param>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run( AlgebraOperatorResult LastResult )
+        public override AlgebraOperatorResult Run()
         {
             // For projection it is mandatory to use qualified name (Entity.Attribute)
             // Support for aliases might be done later
             Dictionary<string, ProjectExpression> AttributesToProject = new Dictionary<string, ProjectExpression>();
+
+            // Operations to execute
+            List<MongoDBOperator> OperationsToExecute = new List<MongoDBOperator>();
 
             // Locate each attribute mapping
             foreach ( string AttributeQualifiedName in Attributes.Keys )
@@ -67,10 +70,10 @@ namespace QueryBuilder.Operation
             {
                 // Found attributes to project, add command to pipeline
                 ProjectOperator ProjectCommand = new ProjectOperator( AttributesToProject );
-                LastResult.Commands.Add( ProjectCommand );
+                OperationsToExecute.Add( ProjectCommand );
             }
 
-            return LastResult;
+            return new AlgebraOperatorResult( OperationsToExecute );
         }
         #endregion
 

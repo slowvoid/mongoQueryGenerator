@@ -71,7 +71,6 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="ComputedEntityTest.cs" />
-    <Compile Include="ModelSampleFunDep1.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

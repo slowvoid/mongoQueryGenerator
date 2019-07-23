@@ -40,7 +40,7 @@ namespace QueryBuilder.Query
 
             foreach ( AlgebraOperator Op in Pipeline.Operations )
             {
-                Op.Run( Result );
+                Result.Commands.AddRange( Op.Run().Commands );
             }
 
             // Store command objects
