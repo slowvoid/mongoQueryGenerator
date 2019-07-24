@@ -207,7 +207,7 @@ namespace QueryBuilder.Operation
                         foreach ( DataAttribute Attribute in TargetData.Relationship.Attributes )
                         {
                             string RuleValue = RelationshipRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                            RelationshipAttributes.Add( $"\"{RelationshipAttributesField}.{TargetData.Relationship.Name}.{Attribute.Name}\"",
+                            RelationshipAttributes.Add( $"\"{RelationshipAttributesField}.{TargetData.Relationship.Name}_{Attribute.Name}\"",
                                 (JSString)$"\"${RuleValue}\"" );
                             // Add to removal list
                             FieldsToRemove.Add( RuleValue );
@@ -219,12 +219,22 @@ namespace QueryBuilder.Operation
 
                     // Merge Fields
                     MergeObjectsOperator MergeOp = new MergeObjectsOperator();
+
+                    foreach ( Entity Target in TargetData.Targets )
+                    {
+                        MergeOp.Objects.Add( $"$data_{Target.Name}" );
+                        FieldsToRemove.Add( $"data_{Target.Name}" );
+                    }
+
                     foreach ( string Field in FieldsToMerge )
                     {
                         MergeOp.Objects.Add( $"${Field}" );
                         FieldsToRemove.Add( Field );
                     }
-                    
+
+                    // Add relationship data
+                    MergeOp.Objects.Add( $"${RelationshipAttributesField}" );
+
                     // Build operation to hide all entity/relationship data attributes
                     Dictionary<string, JSCode> BuildJoinData = new Dictionary<string, JSCode>();
                     BuildJoinData.Add( $"data_{TargetData.Relationship.Name}", new JSArray( new List<object> { MergeOp.ToJSCode() } ) );
@@ -232,7 +242,8 @@ namespace QueryBuilder.Operation
                     AddFieldsOperator BuildOp = new AddFieldsOperator( BuildJoinData );
                     ProjectOperator HideFields = ProjectOperator.HideAttributesOperator( FieldsToRemove );
 
-                    OperationsToExecute.AddRange( new List<MongoDBOperator> { BuildOp, HideFields } );
+                    RelationshipOperations.AddRange( new MongoDBOperator[] { BuildOp, HideFields } );
+                    OperationsToExecute.AddRange( RelationshipOperations.ToArray() );
                 }
                 else if ( TargetData.Relationship.Cardinality == RelationshipCardinality.OneToMany )
                 {
