@@ -89,5 +89,103 @@ namespace QueryBuilder.Tests
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
+        /// <summary>
+        /// Generates data to test a RJOIN operation with a one to one relationship
+        /// connecting to a composition of three other entities
+        /// </summary>
+        /// <returns></returns>
+        public static RequiredDataContainer OneToOneComputedEntityMultiple()
+        {
+            Entity Person = new Entity( "Person" );
+            Person.AddAttributes( "personId", "name", "carId" );
+
+            Entity Car = new Entity( "Car" );
+            Car.AddAttributes( "carId", "model", "year" );
+
+            Entity Garage = new Entity( "Garage" );
+            Garage.AddAttributes( "garageId", "name" );
+
+            Entity Supplier = new Entity( "Supplier" );
+            Supplier.AddAttributes( "supplierId", "name" );
+
+            Relationship Drives = new Relationship( "Drives", RelationshipCardinality.OneToOne );
+            RelationshipConnection PersonDrivesCar = new RelationshipConnection(
+                Person,
+                Person.GetAttribute( "carId" ),
+                Car,
+                Car.GetAttribute( "carId" ) );
+
+            Drives.AddRelation( PersonDrivesCar );
+
+            Relationship Repaired = new Relationship( "Repaired", RelationshipCardinality.ManyToMany );
+            Repaired.AddAttributes( "repairedId", "carId", "garageId", "supplierId", "repaired" );
+            RelationshipConnection CarRepairedByGarage = new RelationshipConnection(
+                Car,
+                Car.GetAttribute( "carId" ),
+                Repaired.GetAttribute( "carId" ),
+                Garage,
+                Garage.GetAttribute( "garageId" ),
+                Repaired.GetAttribute( "garageId" ) );
+            Repaired.AddRelation( CarRepairedByGarage );
+
+            RelationshipConnection CarRepairedSupplier = new RelationshipConnection(
+                Car,
+                Car.GetAttribute( "carId" ),
+                Repaired.GetAttribute( "carId" ),
+                Supplier,
+                Supplier.GetAttribute( "supplierId" ),
+                Repaired.GetAttribute( "supplierId" ) );
+            Repaired.AddRelation( CarRepairedSupplier );
+
+            ERModel Model = new ERModel( "ERModel", new List<BaseERElement> { Person, Car, Garage, Drives, Repaired, Supplier } );
+
+            // Mongo Schema
+            MongoDBCollection PersonCol = new MongoDBCollection( "Person" );
+            PersonCol.AddAttributes( "_id", "name", "carId" );
+
+            MongoDBCollection CarCol = new MongoDBCollection( "Car" );
+            CarCol.AddAttributes( "_id", "model", "year" );
+
+            MongoDBCollection GarageCol = new MongoDBCollection( "Garage" );
+            GarageCol.AddAttributes( "_id", "name" );
+
+            MongoDBCollection SupplierCol = new MongoDBCollection( "Supplier" );
+            SupplierCol.AddAttributes( "_id", "name" );
+
+            MongoDBCollection RepairedCol = new MongoDBCollection( "Repaired" );
+            RepairedCol.AddAttributes( "_id", "carId", "garageId", "supplierId", "repaired" );
+
+            MongoSchema Schema = new MongoSchema( "Schema", new List<MongoDBCollection> { PersonCol, CarCol, GarageCol, RepairedCol, SupplierCol } );
+
+            // Map Rules
+            MapRule PersonRule = new MapRule( Person, PersonCol );
+            PersonRule.AddRule( "personId", "_id" );
+            PersonRule.AddRule( "name", "name" );
+            PersonRule.AddRule( "carId", "carId" );
+
+            MapRule CarRule = new MapRule( Car, CarCol );
+            CarRule.AddRule( "carId", "_id" );
+            CarRule.AddRule( "model", "model" );
+            CarRule.AddRule( "year", "year" );
+
+            MapRule GarageRule = new MapRule( Garage, GarageCol );
+            GarageRule.AddRule( "garageId", "_id" );
+            GarageRule.AddRule( "name", "name" );
+
+            MapRule SupplierRule = new MapRule( Supplier, SupplierCol );
+            SupplierRule.AddRule( "supplierId", "_id" );
+            SupplierRule.AddRule( "name", "name" );
+
+            MapRule RepairedRule = new MapRule( Repaired, RepairedCol );
+            RepairedRule.AddRule( "repairedId", "_id" );
+            RepairedRule.AddRule( "carId", "carId" );
+            RepairedRule.AddRule( "garageId", "garageId" );
+            RepairedRule.AddRule( "supplierId", "supplierId" );
+            RepairedRule.AddRule( "repaired", "repaired" );
+
+            ModelMapping Map = new ModelMapping( "Map", new List<MapRule> { PersonRule, CarRule, GarageRule, RepairedRule, SupplierRule } );
+
+            return new RequiredDataContainer( Model, Schema, Map );
+        }
     }
 }
