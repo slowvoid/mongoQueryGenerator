@@ -569,6 +569,26 @@ namespace QueryBuilder.Operation
 
             CEPipeline.AddRange( TargetCEOperator.Run().Commands );
 
+            // Rename entity attributes (avoids possible merge conflicts)
+            Dictionary<string, JSCode> AttributesToRename = new Dictionary<string, JSCode>();
+            List<string> AttributesToHide = new List<string>();
+            foreach ( DataAttribute Attribute in TargetAsCE.SourceEntity.Attributes )
+            {
+                string RuleValue = CESERule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+                if ( RuleValue == null )
+                {
+                    continue;
+                }
+
+                AttributesToRename.Add( $"{TargetAsCE.SourceEntity.Name}_{Attribute.Name}", (JSString)$"\"${RuleValue}\"" );
+                AttributesToHide.Add( RuleValue );
+            }
+
+            AddFieldsOperator RenameOp = new AddFieldsOperator( AttributesToRename );
+            ProjectOperator HideOp = ProjectOperator.HideAttributesOperator( AttributesToHide );
+
+            CEPipeline.AddRange( new MongoDBOperator[] { RenameOp, HideOp } );
+
             // Create lookup
             LookupOperator LookupOp = new LookupOperator
             {

@@ -37,7 +37,7 @@ namespace QueryBuilder.Tests
             Drives.AddRelation( PersonDrivesCar );
 
             Relationship Repaired = new Relationship( "Repaired", RelationshipCardinality.ManyToMany );
-            Repaired.AddAttributes( "carId", "garageId", "repaired" );
+            Repaired.AddAttributes( "repairedId", "carId", "garageId", "repaired" );
             RelationshipConnection CarRepairedByGarage = new RelationshipConnection(
                 Car,
                 Car.GetAttribute( "carId" ),
@@ -80,6 +80,7 @@ namespace QueryBuilder.Tests
             GarageRule.AddRule( "name", "name" );
 
             MapRule RepairedRule = new MapRule( Repaired, RepairedCol );
+            RepairedRule.AddRule( "repairedId", "_id" );
             RepairedRule.AddRule( "carId", "carId" );
             RepairedRule.AddRule( "garageId", "garageId" );
             RepairedRule.AddRule( "repaired", "repaired" );
