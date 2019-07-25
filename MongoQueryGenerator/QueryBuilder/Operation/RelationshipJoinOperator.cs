@@ -78,8 +78,9 @@ namespace QueryBuilder.Operation
                         if ( TargetEntity is ComputedEntity TargetAsCE )
                         {
                             LookupOperator LookupOp = LookupComputedEntity( SourceRule, TargetData, TargetEntity, TargetAsCE );
+                            UnwindOperator UnwindLookup = new UnwindOperator( LookupOp.As );
 
-                            OperationsToExecute.Add( LookupOp );
+                            OperationsToExecute.AddRange( new MongoDBOperator[] { LookupOp, UnwindLookup } );
 
                             // Add Field to merge list
                             FieldsToMerge.Add( LookupOp.As );
@@ -221,7 +222,7 @@ namespace QueryBuilder.Operation
                     MergeObjectsOperator MergeOp = new MergeObjectsOperator();
 
                     foreach ( Entity Target in TargetData.Targets )
-                    {
+                    { 
                         MergeOp.Objects.Add( $"$data_{Target.Name}" );
                         FieldsToRemove.Add( $"data_{Target.Name}" );
                     }

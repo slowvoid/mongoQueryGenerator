@@ -47,7 +47,11 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
             Dictionary<string, ProjectExpression> Expressions = new Dictionary<string, ProjectExpression>();
             foreach ( string Attribute in Attributes )
             {
-                Expressions.Add( Attribute, new BooleanExpr( false ) );
+                // Check if key exists and only add it if not
+                if ( !Expressions.ContainsKey( Attribute ) )
+                {
+                    Expressions.Add( Attribute, new BooleanExpr( false ) );
+                }
             }
 
             return new ProjectOperator( Expressions );
