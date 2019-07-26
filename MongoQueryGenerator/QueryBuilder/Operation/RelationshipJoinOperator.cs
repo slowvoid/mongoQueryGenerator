@@ -248,12 +248,17 @@ namespace QueryBuilder.Operation
                 }
                 else if ( TargetData.Relationship.Cardinality == RelationshipCardinality.OneToMany )
                 {
+                    // Store fields to be concatenated
+                    // Poor mapping of relationships may lead to weird results
+                    List<string> ConcatArrays = new List<string>();
+
                     foreach ( Entity TargetEntity in TargetData.Targets )
                     {
                         if ( TargetEntity is ComputedEntity TargetAsCE )
                         {
                             LookupOperator LookupCE = LookupComputedEntity( SourceRule, TargetData, TargetEntity, TargetAsCE );
                             RelationshipOperations.Add( LookupCE );
+                            ConcatArrays.Add( LookupCE.As );
                         }
                         else
                         {
@@ -385,6 +390,23 @@ namespace QueryBuilder.Operation
                             }
                         }
                     }
+
+                    // Check if there are arrays to concat
+                    if ( ConcatArrays.Count > 0 )
+                    {
+                        // Create concat expression
+                        ConcatArrayExpr ConcatExpr = new ConcatArrayExpr( ConcatArrays );
+                        // Add concatenation result as a new field
+                        Dictionary<string, JSCode> ConcatenatedFields = new Dictionary<string, JSCode>();
+                        ConcatenatedFields.Add( RelationshipAttributesField, ConcatExpr.ToJSCode() );
+                        AddFieldsOperator AddConcatOp = new AddFieldsOperator( ConcatenatedFields );
+                        // Remove fields
+                        ProjectOperator RemoveConcatSourceOp = ProjectOperator.HideAttributesOperator( ConcatArrays );
+
+                        RelationshipOperations.AddRange( new MongoDBOperator[] { AddConcatOp, RemoveConcatSourceOp } );
+                    }
+
+                    OperationsToExecute.AddRange( RelationshipOperations.ToArray() );
                 }
                 else if ( TargetData.Relationship.Cardinality == RelationshipCardinality.ManyToMany )
                 {

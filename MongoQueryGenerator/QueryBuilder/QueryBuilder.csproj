@@ -91,6 +91,7 @@
     <Compile Include="Mongo\Document.cs" />
     <Compile Include="Mongo\Expressions\BaseExpression.cs" />
     <Compile Include="Mongo\Expressions\BooleanExpr.cs" />
+    <Compile Include="Mongo\Expressions\ConcatArrayExpr.cs" />
     <Compile Include="Mongo\Expressions\EqExpr.cs" />
     <Compile Include="Mongo\Expressions\Expr.cs" />
     <Compile Include="Mongo\Expressions\MapExpr.cs" />
