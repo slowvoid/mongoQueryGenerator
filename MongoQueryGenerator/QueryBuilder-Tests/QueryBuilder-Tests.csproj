@@ -57,6 +57,9 @@
     <Content Include="HandcraftedQueries\ceOneToOne-Multiple.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="HandcraftedQueries\ceOneToOne-Multiple2.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="HandcraftedQueries\ceOneToOne.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
