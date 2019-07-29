@@ -54,6 +54,9 @@
   <ItemGroup>
     <Compile Include="ComputedEntity.cs" />
     <Compile Include="ComputedEntityDataProvider.cs" />
+    <Content Include="HandcraftedQueries\ceOneToMany-2.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="HandcraftedQueries\ceOneToMany.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
