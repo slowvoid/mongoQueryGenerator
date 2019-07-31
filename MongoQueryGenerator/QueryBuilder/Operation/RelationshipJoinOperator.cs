@@ -219,22 +219,23 @@ namespace QueryBuilder.Operation
                     }
 
                     // Merge Fields
-                    MergeObjectsOperator MergeOp = new MergeObjectsOperator();
+                    List<string> MergeObjects = new List<string>();
 
                     foreach ( Entity Target in TargetData.Targets )
                     { 
-                        MergeOp.Objects.Add( $"$data_{Target.Name}" );
+                        MergeObjects.Add( $"$data_{Target.Name}" );
                         FieldsToRemove.Add( $"data_{Target.Name}" );
                     }
 
                     foreach ( string Field in FieldsToMerge )
                     {
-                        MergeOp.Objects.Add( $"${Field}" );
+                        MergeObjects.Add( $"${Field}" );
                         FieldsToRemove.Add( Field );
                     }
 
                     // Add relationship data
-                    MergeOp.Objects.Add( $"${RelationshipAttributesField}" );
+                    MergeObjects.Add( $"${RelationshipAttributesField}" );
+                    MergeObjectsOperator MergeOp = new MergeObjectsOperator( MergeObjects );
 
                     // Build operation to hide all entity/relationship data attributes
                     Dictionary<string, JSCode> BuildJoinData = new Dictionary<string, JSCode>();
@@ -429,12 +430,22 @@ namespace QueryBuilder.Operation
 
                     CustomPipeline.Add( MatchSourceOp );
 
+                    // Store fields that should be merged with the root attribute
+                    List<string> FieldsToMergeWithRoot = new List<string>();
+
                     foreach ( Entity TargetEntity in TargetData.Targets )
                     {
                         if ( TargetEntity is ComputedEntity TargetAsCE )
                         {
                             LookupOperator LookupCE = LookupComputedEntity( SourceRule, TargetData, TargetEntity, TargetAsCE );
                             CustomPipeline.Add( LookupCE );
+
+                            // Unwind joined entity
+                            UnwindOperator UnwindOp = new UnwindOperator( LookupCE.As );
+                            CustomPipeline.Add( UnwindOp );
+
+                            // Add to merge list
+                            FieldsToMergeWithRoot.Add( LookupCE.As );
                         }
                         else
                         {
@@ -511,6 +522,20 @@ namespace QueryBuilder.Operation
 
                     CustomPipeline.AddRange( new MongoDBOperator[] { RAddFields, RRemoveOp } );
 
+                    // Merge fields with root (if any)
+                    if ( FieldsToMergeWithRoot.Count > 0 )
+                    {
+                        // Add $$ROOT to merge
+                        FieldsToMergeWithRoot.Add( "$$ROOT" );
+                        MergeObjectsOperator MergeWithRoot = new MergeObjectsOperator( FieldsToMergeWithRoot );
+                        ReplaceRootOperator ReplaceRootOp = new ReplaceRootOperator( MergeWithRoot.ToJSCode() );
+                        CustomPipeline.Add( ReplaceRootOp );
+
+                        // Hide merged attributes to avoid duplicates
+                        ProjectOperator HideMerged = ProjectOperator.HideAttributesOperator( FieldsToMergeWithRoot.Where( Field => Field != "$$ROOT" ) );
+                        CustomPipeline.Add( HideMerged );
+                    }
+
                     // Add Lookup for relationship
                     LookupOperator RelationshipLookup = new LookupOperator
                     {
@@ -538,8 +563,9 @@ namespace QueryBuilder.Operation
         private LookupOperator LookupComputedEntity( MapRule SourceRule, RelationshipJoinArguments TargetData, Entity TargetEntity, ComputedEntity TargetAsCE )
         {
             // Retrieve the CE source entity before calling another RJOIN instance
-            // Retreive CE-SE rule
+            // Retrieve CE-SE rule
             MapRule CESERule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetAsCE.SourceEntity.Name && Rule.IsMain );
+
             // Stop if rule not found
             if ( CESERule == null )
             {
@@ -549,7 +575,7 @@ namespace QueryBuilder.Operation
             // Left side entities cannot be embedded
             if ( SourceRule.Target.Name == CESERule.Target.Name )
             {
-                throw new InvalidMapException( $"Entities that are the left operand of a join operation cannot be embedded into another entity. [{TargetAsCE.SourceEntity.Name}" );
+                throw new InvalidMapException( $"Entities that are the left operand of a join operation cannot be embedded into another entity. [{TargetAsCE.SourceEntity.Name}]" );
             }
 
             // Check if the entities are related
@@ -570,6 +596,13 @@ namespace QueryBuilder.Operation
             string SourceIdentifierValue = SourceRule.Rules.First( Rule => Rule.Key == ConnRules.SourceAttribute.Name ).Value;
 
             string TargetRuleValue = CESERule.Rules.First( Rule => Rule.Key == ConnRules.TargetAttribute.Name ).Value;
+
+            // Check if the source relationship is many to many
+            if ( TargetData.Relationship.Cardinality == RelationshipCardinality.ManyToMany )
+            {
+                MapRule RelationshipRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetData.Relationship.Name );
+                SourceIdentifierValue = RelationshipRule.Rules.First( Rule => Rule.Key == ConnRules.RefTargetAttribute.Name ).Value;
+            }
 
             CEPipelineVars.Add( SourceIdentifier, $"${SourceIdentifierValue}" );
 

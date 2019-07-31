@@ -11,13 +11,13 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
     /// <summary>
     /// Represents the $replaceRoot operator
     /// </summary>
-    public class ReplaceRoot : MongoDBOperator
+    public class ReplaceRootOperator : MongoDBOperator
     {
         #region Properties
         /// <summary>
         /// Path to the attribute containg the replacement document
         /// </summary>
-        public string NewRoot { get; set; }
+        public JSCode NewRoot { get; set; }
         #endregion
 
         #region Methods
@@ -39,6 +39,17 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
             Attrs.Add( "newRoot", NewRoot );
 
             return new JSObject( "$replaceRoot", Attrs );
+        }
+        #endregion
+
+        #region Constructor
+        /// <summary>
+        /// Initialize a new instance of ReplaceRootOperator
+        /// </summary>
+        /// <param name="NewRoot"></param>
+        public ReplaceRootOperator( JSCode NewRoot )
+        {
+            this.NewRoot = NewRoot;
         }
         #endregion
     }

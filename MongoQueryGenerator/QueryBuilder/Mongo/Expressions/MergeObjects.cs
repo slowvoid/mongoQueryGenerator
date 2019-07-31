@@ -41,10 +41,24 @@ namespace QueryBuilder.Mongo.Expressions
         #region Constructor
         /// <summary>
         /// Initializes a new instance of MergeObjects class
+        /// <param name="Fields">Fields to merge</param>
         /// </summary>
-        public MergeObjectsOperator()
+        public MergeObjectsOperator( IEnumerable<string> Fields )
         {
+            // Initialize object list
             Objects = new List<string>();
+            // Check if the incoming fields begin with '$' and append if not
+            foreach ( string Field in Fields )
+            {
+                if ( !Field.StartsWith("$") )
+                {
+                    Objects.Add( $"${Field}" );
+                }
+                else
+                {
+                    Objects.Add( Field );
+                }
+            }
         }
         #endregion
     }
