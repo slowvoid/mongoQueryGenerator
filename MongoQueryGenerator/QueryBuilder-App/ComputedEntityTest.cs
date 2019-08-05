@@ -23,16 +23,20 @@ namespace QueryBuilderApp
             ModelMapping Map = CreateMap( Model, Schema );
 
             ComputedEntity CarInsCompany = new ComputedEntity( "CarRepairedGarage",
-                Model.FindByName( "Car" ) as Entity,
+                new JoinableEntity( Model.FindByName( "Car" ) as Entity, "car" ),
                 Model.FindByName( "Repaired" ) as Relationship,
-                new List<Entity> { Model.FindByName( "Garage" ) as Entity } );
+                new List<JoinableEntity> {
+                    new JoinableEntity( Model.FindByName( "Garage" ) as Entity, "garage" )
+                } );
 
             RelationshipJoinArguments args = new RelationshipJoinArguments(
                 Model.FindByName( "Drives" ) as Relationship,
-                new List<Entity> { CarInsCompany } );
+                new List<JoinableEntity> {
+                    new JoinableEntity( CarInsCompany )
+                } );
 
             RelationshipJoinOperator RJoin = new RelationshipJoinOperator(
-                Model.FindByName( "Person" ) as Entity,
+                new JoinableEntity( Model.FindByName( "Person" ) as Entity, "person" ),
                 new List<RelationshipJoinArguments> { args },
                 Map );
 

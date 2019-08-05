@@ -19,7 +19,7 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// Virtual mapping of the resulting computed entity
         /// </summary>
-        public VirtualMap ResultMap { get; set; }
+        public ModelMapping ResultMap { get; set; }
         /// <summary>
         /// List of commands to be executed
         /// </summary>
@@ -35,7 +35,7 @@ namespace QueryBuilder.Operation
         public AlgebraOperatorResult( List<MongoDBOperator> Commands )
         {
             this.Commands = Commands;
-            ResultMap = new VirtualMap();
+            ResultMap = new ModelMapping( "ResultModel" );
         }
         #endregion
     }

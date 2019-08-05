@@ -77,8 +77,6 @@
     <Compile Include="Javascript\JSString.cs" />
     <Compile Include="Map\MapRule.cs" />
     <Compile Include="Map\ModelMapping.cs" />
-    <Compile Include="Map\VirtualMap.cs" />
-    <Compile Include="Map\VirtualRule.cs" />
     <Compile Include="Mongo\Aggregation\Aggregate.cs" />
     <Compile Include="Mongo\Aggregation\Operators\AddFields.cs" />
     <Compile Include="Mongo\Aggregation\Operators\MongoDBOperator.cs" />
@@ -100,6 +98,7 @@
     <Compile Include="Mongo\Expressions\ValueExpr.cs" />
     <Compile Include="Mongo\Schema.cs" />
     <Compile Include="Operation\AddFieldsOperation.cs" />
+    <Compile Include="Operation\Arguments\JoinableEntity.cs" />
     <Compile Include="Operation\Arguments\RelationshipJoinArguments.cs" />
     <Compile Include="Operation\Exceptions\ImpossibleOperationException.cs" />
     <Compile Include="Operation\Exceptions\InvalidMapException.cs" />

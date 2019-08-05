@@ -26,9 +26,20 @@ namespace QueryBuilder.Query
         /// Collection used a start point
         /// </summary>
         public string CollectionName { get; set; }
+        /// <summary>
+        /// Output document model
+        /// </summary>
+        public ModelMapping OutputModel { get; set; }
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Generates the output model based on the pipeline
+        /// </summary>
+        private void GenerateOutputModel()
+        {
+
+        }
         /// <summary>
         /// Run the query generator
         /// </summary>

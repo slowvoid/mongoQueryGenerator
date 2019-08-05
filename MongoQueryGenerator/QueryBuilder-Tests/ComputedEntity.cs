@@ -30,16 +30,17 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarRepairedByGarage",
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Repaired" ),
-                new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" ) } );
+                new List<JoinableEntity> {
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" ), "garage" ) } );
 
             RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                new List<Entity> { CarRepairedByGarage } );
+                new List<JoinableEntity> { new JoinableEntity( CarRepairedByGarage ) } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArguments> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
@@ -83,19 +84,19 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarRepairedByGarage",
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Repaired" ),
-                new List<Entity> {
-                    (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" ),
-                    (Entity)ModelData.EntityRelationshipModel.FindByName("Supplier")
+                new List<JoinableEntity> {
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" ), "garage" ),
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName("Supplier"), "supplier" )
                 } );
 
             RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                new List<Entity> { CarRepairedByGarage } );
+                new List<JoinableEntity> { new JoinableEntity( CarRepairedByGarage ) } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArguments> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
@@ -139,23 +140,23 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarRepairedByGarage",
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Repaired" ),
-                new List<Entity> {
-                    (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" ),
-                    (Entity)ModelData.EntityRelationshipModel.FindByName("Supplier")
+                new List<JoinableEntity> {
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" ), "garage" ),
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName("Supplier"), "supplier" )
                 } );
 
             RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                new List<Entity> { CarRepairedByGarage } );
+                new List<JoinableEntity> { new JoinableEntity( CarRepairedByGarage ) } );
 
             RelationshipJoinArguments RJoinArgs2 = new RelationshipJoinArguments(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasInsurance" ),
-                new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ) } );
+                new List<JoinableEntity> { new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ), "insurance") } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArguments> { RJoinArgs, RJoinArgs2 },
                 ModelData.ERMongoMapping );
 
@@ -199,18 +200,18 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarRepairedByGarage",
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Repaired" ),
-                new List<Entity> {
-                    (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" )
+                new List<JoinableEntity> {
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" ), "garage" )
                 } );
 
             RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                new List<Entity> { CarRepairedByGarage } );
+                new List<JoinableEntity> { new JoinableEntity( CarRepairedByGarage ) } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArguments> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
@@ -254,23 +255,27 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarRepairedByGarage",
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Repaired" ),
-                new List<Entity> {
-                    (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" ),
-                    (Entity)ModelData.EntityRelationshipModel.FindByName( "Supplier" )
+                new List<JoinableEntity> {
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" ), "garage" ),
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Supplier" ), "supplier" )
                 } );
 
             RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                new List<Entity> { CarRepairedByGarage } );
+                new List<JoinableEntity> {
+                    new JoinableEntity( CarRepairedByGarage )
+                } );
 
             RelationshipJoinArguments RJoinArgs2 = new RelationshipJoinArguments(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasInsurance" ),
-                new List<Entity> { (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ) } );
+                new List<JoinableEntity> {
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ), "insurance" )
+                } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArguments> { RJoinArgs, RJoinArgs2 },
                 ModelData.ERMongoMapping );
 
@@ -314,21 +319,22 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarRepairedByGarage",
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Repaired" ),
-                new List<Entity> {
-                    (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" ),
-                    (Entity)ModelData.EntityRelationshipModel.FindByName( "Supplier" )
+                new List<JoinableEntity> {
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Garage" ), "garage" ),
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Supplier" ), "supplier" )
                 } );
 
             RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Owns" ),
-                new List<Entity> {
-                    CarRepairedByGarage,
-                    (Entity)ModelData.EntityRelationshipModel.FindByName("Insurance") } );
+                new List<JoinableEntity> {
+                    new JoinableEntity( CarRepairedByGarage ),
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName("Insurance"), "insurance" )
+                } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArguments> { RJoinArgs},
                 ModelData.ERMongoMapping );
 
@@ -372,19 +378,20 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarManufacturedBy",
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "ManufacturedBy" ),
-                new List<Entity> {
-                    (Entity)ModelData.EntityRelationshipModel.FindByName( "Manufacturer" )
+                new List<JoinableEntity> {
+                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Manufacturer" ), "manufacturer" )
                 } );
 
             RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Owns" ),
-                new List<Entity> {
-                    CarRepairedByGarage } );
+                new List<JoinableEntity> {
+                    new JoinableEntity( CarRepairedByGarage )
+                } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
+                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArguments> { RJoinArgs },
                 ModelData.ERMongoMapping );
 

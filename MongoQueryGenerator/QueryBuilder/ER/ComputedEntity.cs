@@ -1,4 +1,5 @@
-﻿using QueryBuilder.Shared;
+﻿using QueryBuilder.Operation.Arguments;
+using QueryBuilder.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace QueryBuilder.ER
         /// <summary>
         /// Source entity
         /// </summary>
-        public Entity SourceEntity { get; set; }
+        public JoinableEntity SourceEntity { get; set; }
         /// <summary>
         /// Relationship
         /// </summary>
@@ -26,7 +27,7 @@ namespace QueryBuilder.ER
         /// <summary>
         /// Joined entities (They can be Computed Entities)
         /// </summary>
-        public List<Entity> TargetEntities { get; set; }
+        public List<JoinableEntity> TargetEntities { get; set; }
         #endregion
 
         #region Constructor
@@ -35,7 +36,7 @@ namespace QueryBuilder.ER
         /// </summary>
         /// <param name="Name">Computed Entity name</param>
         /// <param name="Attributes">Attributes</param>
-        public ComputedEntity( string Name, Entity SourceEntity, Relationship Relationship, List<Entity> TargetEntities )
+        public ComputedEntity( string Name, JoinableEntity SourceEntity, Relationship Relationship, List<JoinableEntity> TargetEntities )
         {
             this.Name = Name;
             this.SourceEntity = SourceEntity;
