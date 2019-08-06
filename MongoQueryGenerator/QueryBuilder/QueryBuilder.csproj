@@ -75,8 +75,11 @@
     <Compile Include="Javascript\JSCode.cs" />
     <Compile Include="Javascript\JSObject.cs" />
     <Compile Include="Javascript\JSString.cs" />
+    <Compile Include="Map\Exceptions\DuplicatedMapException.cs" />
     <Compile Include="Map\MapRule.cs" />
     <Compile Include="Map\ModelMapping.cs" />
+    <Compile Include="Map\VirtualMap.cs" />
+    <Compile Include="Map\VirtualRule.cs" />
     <Compile Include="Mongo\Aggregation\Aggregate.cs" />
     <Compile Include="Mongo\Aggregation\Operators\AddFields.cs" />
     <Compile Include="Mongo\Aggregation\Operators\MongoDBOperator.cs" />

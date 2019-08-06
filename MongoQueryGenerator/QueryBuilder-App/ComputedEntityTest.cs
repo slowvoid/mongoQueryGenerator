@@ -40,6 +40,11 @@ namespace QueryBuilderApp
                 new List<RelationshipJoinArguments> { args },
                 Map );
 
+            // Generate virtual map
+            VirtualMap VMap = RJoin.ComputeVirtualMap();
+
+            Console.WriteLine( $"Virtual map: {VMap.ToString()}" );
+
             List<AlgebraOperator> Operators = new List<AlgebraOperator>();
             Operators.Add( RJoin );
             Pipeline Pipeline = new Pipeline( ( Operators ) );

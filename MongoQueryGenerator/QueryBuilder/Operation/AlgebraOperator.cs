@@ -32,6 +32,14 @@ namespace QueryBuilder.Operation
         {
             return new AlgebraOperatorResult( new List<MongoDBOperator>() );
         }
+        /// <summary>
+        /// Computes the resulting virtual map after processing this operator
+        /// </summary>
+        /// <returns></returns>
+        public virtual VirtualMap ComputeVirtualMap()
+        {
+            return new VirtualMap( new List<VirtualRule>() );
+        }
         #endregion
 
         #region Constructors

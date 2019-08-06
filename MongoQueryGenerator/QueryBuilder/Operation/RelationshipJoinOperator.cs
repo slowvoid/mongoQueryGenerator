@@ -654,6 +654,132 @@ namespace QueryBuilder.Operation
             };
             return LookupOp;
         }
+        /// <summary>
+        /// Computes the virtual map after executing this instance
+        /// </summary>
+        /// <returns></returns>
+        public override VirtualMap ComputeVirtualMap()
+        {
+            // The virtal map represents the output document after this operator is executed
+            // To generate it we basically need to iterate over all targetted entities
+            // but without the need to dive deep into how the operation is executed.
+            List<VirtualRule> OperatorRules = new List<VirtualRule>();
+            // Only the first entity requires to fetch data from ModelMap
+            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.JoinedEntity.Name );
+            // The source entity is not renamed, so we add it as is.
+            VirtualRule SourceVirtualRule = new VirtualRule( SourceEntity.JoinedEntity, SourceEntity.Alias );
+            foreach ( DataAttribute Attribute in SourceEntity.JoinedEntity.Attributes )
+            {
+                // We only need the ModelMap for the origin entity
+                // all other entities are renamed and bound to this one (through relationships)
+                string AttributeRuleValue = SourceRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+
+                SourceVirtualRule.AddRule( Attribute.Name, AttributeRuleValue );
+            }
+
+            // Add to rule list
+            OperatorRules.Add( SourceVirtualRule );
+
+            // Process relationships and target entities
+            foreach ( RelationshipJoinArguments Argument in Targets )
+            {
+                // Attributes here are accesible through 'data_Relationship.Entity_Attribute'
+                // Dot notation is mandatory as MongoDB accepts it as path to an attribute
+                string RootAttribute = $"data_{Argument.Relationship.Name}";
+
+                VirtualRule RelationshipVirtualRule = new VirtualRule( Argument.Relationship ); 
+                // Process relationship attributes
+                foreach ( DataAttribute Attribute in Argument.Relationship.Attributes )
+                {
+                    RelationshipVirtualRule.AddRule( Attribute.Name, $"{RootAttribute}.{Argument.Relationship.Name}_{Attribute.Name}" );
+                }
+
+                // Add to list
+                OperatorRules.Add( RelationshipVirtualRule );
+
+                // Process targetted entities
+                foreach ( JoinableEntity Target in Argument.Targets )
+                {
+                    // Check if the target entity is computed
+                    if ( Target.JoinedEntity is ComputedEntity TargetAsCE )
+                    {
+                        OperatorRules.AddRange( ComputeCEVirtualMap( RootAttribute, TargetAsCE ) );
+                    }
+                    else
+                    {
+                        // Create rule
+                        VirtualRule VirtualEntityRule = new VirtualRule( Target.JoinedEntity, Target.Alias );
+                        // Parse attributes
+                        foreach ( DataAttribute Attribute in Target.JoinedEntity.Attributes )
+                        {
+                            VirtualEntityRule.AddRule( Attribute.Name, $"{RootAttribute}.{Target.JoinedEntity.Name}_{Attribute.Name}" );
+                        }
+
+                        // Add to list
+                        OperatorRules.Add( VirtualEntityRule );
+                    }
+                }
+            }
+
+            // When done
+            VirtualMap OperatorMap = new VirtualMap( OperatorRules );
+            return OperatorMap;
+        }
+        /// <summary>
+        /// Compute the virtual map of a ComputedEntity
+        /// </summary>
+        /// <param name="RootAttribute"></param>
+        /// <param name="TargetEntity"></param>
+        private List<VirtualRule> ComputeCEVirtualMap( string RootAttribute, ComputedEntity TargetEntity )
+        {
+            // Rule list to return
+            List<VirtualRule> RuleList = new List<VirtualRule>();
+            // Shorten path to entity
+            Entity CurrentEntity = TargetEntity.SourceEntity.JoinedEntity;
+            // Create rule for the base entity
+            VirtualRule VirtualEntityRule = new VirtualRule( TargetEntity.SourceEntity.JoinedEntity, TargetEntity.SourceEntity.Alias );
+            // Iterate it's attributes
+            foreach ( DataAttribute Attribute in CurrentEntity.Attributes )
+            {
+                VirtualEntityRule.AddRule( Attribute.Name, $"{RootAttribute}.{CurrentEntity.Name}_{Attribute.Name}" );
+            }
+            // Add to list
+            RuleList.Add( VirtualEntityRule );
+
+            // Set new root attribute for relationship and joining entities
+            string NewRootAttribute = $"{RootAttribute}.data_{TargetEntity.Relationship.Name}";
+            // Process relationship
+            VirtualRule RelationshipVirtualRule = new VirtualRule( TargetEntity.Relationship );
+            foreach ( DataAttribute Attribute in TargetEntity.Relationship.Attributes )
+            {
+                RelationshipVirtualRule.AddRule( Attribute.Name, $"{NewRootAttribute}.{TargetEntity.Relationship.Name}_{Attribute.Name}" );
+            }
+            // Add to list
+            RuleList.Add( RelationshipVirtualRule );
+
+            // Process additional entities
+            foreach ( JoinableEntity Target in TargetEntity.TargetEntities )
+            {
+                if ( Target.JoinedEntity is ComputedEntity TargetAsCE )
+                {
+                    RuleList.AddRange( ComputeCEVirtualMap( NewRootAttribute, TargetAsCE ) );
+                }
+                else
+                {
+                    // Rules
+                    VirtualRule TargetEntityVirtualRule = new VirtualRule( Target.JoinedEntity, Target.Alias );
+                    // Process attributes
+                    foreach ( DataAttribute Attribute in Target.JoinedEntity.Attributes )
+                    {
+                        TargetEntityVirtualRule.AddRule( Attribute.Name, $"{NewRootAttribute}.{Target.JoinedEntity.Name}_{Attribute.Name}" );
+                    }
+                    // Add to list
+                    RuleList.Add( TargetEntityVirtualRule );
+                }
+            }
+
+            return RuleList;
+        }
         #endregion
 
         #region Constructors
