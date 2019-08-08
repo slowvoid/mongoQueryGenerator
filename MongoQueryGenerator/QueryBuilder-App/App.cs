@@ -8,6 +8,7 @@ using QueryBuilder.Map;
 using QueryBuilder.Mongo;
 using QueryBuilder.Mongo.Expressions;
 using QueryBuilder.Operation;
+using QueryBuilder.Operation.Arguments;
 using QueryBuilder.Query;
 using QueryBuilder.Shared;
 
@@ -25,18 +26,51 @@ namespace QueryBuilderApp
 
             string InitialEntity = "Person";
 
-            var GroupedInitialEntityMap = Map.Rules.GroupBy( R => R.Source ).Where( R => R.Key.Name == InitialEntity );
-            var GroupedEntityMap = Map.Rules.GroupBy( R => R.Source ).Where( R => R.Key.Name != InitialEntity );
+            JoinableEntity Car = new JoinableEntity( (Entity)Model.FindByName( "Car" ), "car" );
+            JoinableEntity Person = new JoinableEntity( (Entity)Model.FindByName( "Person" ), "person" );
 
-            foreach( var InitialEntityRules in GroupedInitialEntityMap )
-            {
-                Console.WriteLine( $"ERElement: {InitialEntityRules.Key.Name} | Count: {InitialEntityRules.Count()}" );
+            RelationshipJoinArgument JoinArgs = new RelationshipJoinArgument(
+                (Relationship)Model.FindByName( "Drives" ),
+                new List<JoinableEntity> {
+                    Car
+                } );
 
-                foreach ( var EntityRules in GroupedEntityMap )
-                {
-                    Console.WriteLine( $"ERElement: {EntityRules.Key.Name} | Count: {EntityRules.Count()}" );
-                }
-            }
+            RelationshipJoinOperator RJoin = new RelationshipJoinOperator(
+                Person,
+                new List<RelationshipJoinArgument> {
+                    JoinArgs
+                }, Map );
+
+            VirtualMap VMap = RJoin.ComputeVirtualMap();
+
+            // Select only name and car model
+            // Arguments for person
+            Dictionary<string, ProjectExpression> ProjectPersonAttrs = new Dictionary<string, ProjectExpression>();
+            ProjectPersonAttrs.Add( Person.JoinedElement.GetAttribute( "name" ).Name, new BooleanExpr( true ) );
+            ProjectArgument PersonArgs = new ProjectArgument( Person, ProjectPersonAttrs );
+
+            // Arguments for car
+            Dictionary<string, ProjectExpression> ProjectCarAttrs = new Dictionary<string, ProjectExpression>();
+            ProjectCarAttrs.Add( Car.JoinedElement.GetAttribute( "model" ).Name, new BooleanExpr( true ) );
+            ProjectCarAttrs.Add( Car.JoinedElement.GetAttribute( "year" ).Name, new BooleanExpr( true ) );
+            ProjectArgument CarArgs = new ProjectArgument( Car, ProjectCarAttrs );
+
+            // Project
+            ProjectStage ProjectOp = new ProjectStage( new List<ProjectArgument> {
+                PersonArgs,
+                CarArgs
+            }, VMap );
+
+            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator> {
+                RJoin,
+                ProjectOp
+            } );
+
+            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
+            QueryGen.CollectionName = InitialEntity;
+            string Query = QueryGen.Run();
+
+            Console.WriteLine( Query );
 
             Console.Read();
         }

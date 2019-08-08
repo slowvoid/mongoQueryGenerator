@@ -21,6 +21,10 @@ namespace QueryBuilder.Operation
         /// ER -> MongoDB map
         /// </summary>
         protected ModelMapping ModelMap { get; set; }
+        /// <summary>
+        /// Virtual Map between ER model and Output document
+        /// </summary>
+        protected IModelMap VirtualMap { get; set; }
         #endregion
 
         #region Methods
@@ -44,12 +48,16 @@ namespace QueryBuilder.Operation
 
         #region Constructors
         /// <summary>
-        /// Initialize a new instance of Operation class
+        /// Initialize a new instance of AlgebraOperator class
         /// </summary>
         public AlgebraOperator( ModelMapping ModelMap )
         {
             this.ModelMap = ModelMap;
         }
+        /// <summary>
+        /// Initialize a new instance of AlgebraOperator class
+        /// </summary>
+        public AlgebraOperator() { }
         #endregion
     }
 }

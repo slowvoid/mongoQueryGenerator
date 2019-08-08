@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QueryBuilder.ER;
+using QueryBuilder.Operation.Exceptions;
 
 namespace QueryBuilder.Map
 {
     /// <summary>
     /// Defines the model mapping structure
     /// </summary>
-    public class ModelMapping
+    public class ModelMapping : IModelMap
     {
         #region Properties
         /// <summary>
@@ -20,6 +22,28 @@ namespace QueryBuilder.Map
         /// Mapping rules
         /// </summary>
         public List<MapRule> Rules { get; set; }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Get rule value for an attribute that belongs to the given entity
+        /// </summary>
+        /// <param name="NameOrAlias"></param>
+        /// <param name="AttributeName"></param>
+        /// <returns></returns>
+        public string GetRuleValue( string NameOrAlias, string AttributeName )
+        {
+            MapRule Rule = Rules.First( R => R.Source.Name == NameOrAlias );
+            
+            if ( Rule != null )
+            {
+                return Rule.Rules.First( R => R.Key == AttributeName ).Value;
+            }
+            else
+            {
+                throw new RuleNotFoundException( $"No map rules found for ERElement [{NameOrAlias}]" );
+            }
+        }
         #endregion
 
         #region Constructors

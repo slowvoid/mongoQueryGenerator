@@ -30,7 +30,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
+            RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
                 new List<JoinableEntity> {
                     new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
@@ -38,7 +38,7 @@ namespace QueryBuilder.Tests
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
                 new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                new List<RelationshipJoinArguments> { RJoinArgs },
+                new List<RelationshipJoinArgument> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
@@ -80,7 +80,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
+            RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
                 new List<JoinableEntity> {
                     new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
@@ -88,7 +88,7 @@ namespace QueryBuilder.Tests
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
                 new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                new List<RelationshipJoinArguments> { RJoinArgs },
+                new List<RelationshipJoinArgument> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
@@ -130,7 +130,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
+            RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
                 new List<JoinableEntity> {
                     new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
@@ -138,7 +138,7 @@ namespace QueryBuilder.Tests
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
                 new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                new List<RelationshipJoinArguments> { RJoinArgs },
+                new List<RelationshipJoinArgument> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
@@ -180,7 +180,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
+            RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
                 new List<JoinableEntity> {
                     new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
@@ -188,7 +188,7 @@ namespace QueryBuilder.Tests
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
                 new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                new List<RelationshipJoinArguments> { RJoinArgs },
+                new List<RelationshipJoinArgument> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
@@ -230,7 +230,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinArguments RJoinArgs = new RelationshipJoinArguments(
+            RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasInsurance" ),
                 new List<JoinableEntity> {
                     new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ), "insurance" )
@@ -238,7 +238,7 @@ namespace QueryBuilder.Tests
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
                 new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
-                new List<RelationshipJoinArguments> { RJoinArgs },
+                new List<RelationshipJoinArgument> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };

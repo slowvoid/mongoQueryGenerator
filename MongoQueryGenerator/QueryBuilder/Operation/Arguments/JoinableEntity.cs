@@ -20,7 +20,7 @@ namespace QueryBuilder.Operation.Arguments
         /// <summary>
         /// Entity to be joined
         /// </summary>
-        public Entity JoinedEntity { get; set; }
+        public BaseERElement JoinedElement { get; set; }
         #endregion
 
         #region Constructor
@@ -28,10 +28,10 @@ namespace QueryBuilder.Operation.Arguments
         /// Initialize a new instance of JoinableEntity
         /// </summary>
         /// <param name="Alias"></param>
-        /// <param name="JoinedEntity"></param>
-        public JoinableEntity( Entity JoinedEntity, string Alias = null )
+        /// <param name="JoinedElement"></param>
+        public JoinableEntity( BaseERElement JoinedElement, string Alias = null )
         {
-            this.JoinedEntity = JoinedEntity;
+            this.JoinedElement = JoinedElement;
             this.Alias = Alias;
         }
         #endregion

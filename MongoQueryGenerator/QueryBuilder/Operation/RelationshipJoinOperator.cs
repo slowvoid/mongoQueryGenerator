@@ -30,7 +30,7 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// What is to be joined
         /// </summary>
-        public List<RelationshipJoinArguments> Targets { get; set; }
+        public List<RelationshipJoinArgument> Targets { get; set; }
         #endregion
 
         #region Methods
@@ -42,18 +42,18 @@ namespace QueryBuilder.Operation
         public override AlgebraOperatorResult Run()
         {
             // Locate rules for source entity
-            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.JoinedEntity.Name && Rule.IsMain );
+            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.JoinedElement.Name && Rule.IsMain );
             // If not found, throw error
             if ( SourceRule == null )
             {
-                throw new InvalidOperationException( $"Entity {SourceEntity.JoinedEntity.Name} does not have a main map." );
+                throw new InvalidOperationException( $"Entity {SourceEntity.JoinedElement.Name} does not have a main map." );
             }
 
             // Store all operations that must be executed before returning
             List<MongoDBOperator> OperationsToExecute = new List<MongoDBOperator>();
 
             // Process each joined pair of relationship + computed entity
-            foreach ( RelationshipJoinArguments TargetData in Targets )
+            foreach ( RelationshipJoinArgument TargetData in Targets )
             {
                 // Retrieve relationship rules (if any)
                 MapRule RelationshipRule = ModelMap.Rules.FirstOrDefault( Rule => Rule.Source.Name == TargetData.Relationship.Name );
@@ -75,9 +75,9 @@ namespace QueryBuilder.Operation
                     {
                         // If the target is a ComputedEntity
                         // Run another RJOINOperator
-                        if ( TargetEntity.JoinedEntity is ComputedEntity TargetAsCE )
+                        if ( TargetEntity.JoinedElement is ComputedEntity TargetAsCE )
                         {
-                            LookupOperator LookupOp = LookupComputedEntity( SourceRule, TargetData, TargetEntity.JoinedEntity, TargetAsCE );
+                            LookupOperator LookupOp = LookupComputedEntity( SourceRule, TargetData, (Entity)TargetEntity.JoinedElement, TargetAsCE );
                             UnwindOperator UnwindLookup = new UnwindOperator( LookupOp.As );
 
                             OperationsToExecute.AddRange( new MongoDBOperator[] { LookupOp, UnwindLookup } );
@@ -87,18 +87,18 @@ namespace QueryBuilder.Operation
                         }
                         else
                         {
-                            MapRule TargetRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetEntity.JoinedEntity.Name );
+                            MapRule TargetRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetEntity.JoinedElement.Name );
 
-                            if ( !TargetData.Relationship.HasRelation( SourceEntity.JoinedEntity, TargetEntity.JoinedEntity ) )
+                            if ( !TargetData.Relationship.HasRelation( (Entity)SourceEntity.JoinedElement, (Entity)TargetEntity.JoinedElement ) )
                             {
-                                throw new NotRelatedException( $"Entities [{SourceEntity.JoinedEntity.Name}] and [{TargetEntity.JoinedEntity.Name}] are not related through {TargetData.Relationship.Name}" );
+                                throw new NotRelatedException( $"Entities [{SourceEntity.JoinedElement.Name}] and [{TargetEntity.JoinedElement.Name}] are not related through {TargetData.Relationship.Name}" );
                             }
 
-                            RelationshipConnection ConnRules = TargetData.Relationship.GetRelation( SourceEntity.JoinedEntity, TargetEntity.JoinedEntity );
+                            RelationshipConnection ConnRules = TargetData.Relationship.GetRelation( (Entity)SourceEntity.JoinedElement, (Entity)TargetEntity.JoinedElement );
                             // Throw error if rule is not found
                             if ( TargetRule == null )
                             {
-                                throw new RuleNotFoundException( $"Entity [{TargetEntity.JoinedEntity.Name}] is not mapped." );
+                                throw new RuleNotFoundException( $"Entity [{TargetEntity.JoinedElement.Name}] is not mapped." );
                             }
 
                             // Check if the target is embedded into the source
@@ -108,7 +108,7 @@ namespace QueryBuilder.Operation
                                 Dictionary<string, JSCode> TargetFields = new Dictionary<string, JSCode>();
                                 List<string> RootAttributes = new List<string>();
 
-                                foreach ( DataAttribute Attribute in TargetEntity.JoinedEntity.Attributes )
+                                foreach ( DataAttribute Attribute in TargetEntity.JoinedElement.Attributes )
                                 {
                                     // Find root attribute (if any)
                                     string RuleValue = TargetRule.Rules.FirstOrDefault( Rule => Rule.Key == Attribute.Name ).Value;
@@ -128,7 +128,7 @@ namespace QueryBuilder.Operation
 
                                         // Add new field
                                         // Using dot notation tells MongoDB that it is an object
-                                        TargetFields.Add( $"\"data_{TargetEntity.JoinedEntity.Name}.{TargetEntity.JoinedEntity.Name}_{Attribute.Name}\"",
+                                        TargetFields.Add( $"\"data_{TargetEntity.JoinedElement.Name}.{TargetEntity.JoinedElement.Name}_{Attribute.Name}\"",
                                             (JSString)$"\"${RuleValue}\"" );
                                     }
                                 }
@@ -143,7 +143,7 @@ namespace QueryBuilder.Operation
 
                                 // Setup MongoDB operators
                                 AddFieldsOperator AddOp = new AddFieldsOperator( TargetFields );
-                                ProjectOperator ProjectOp = new ProjectOperator( RemoveAttributes );
+                                Mongo.Aggregation.Operators.ProjectOperator ProjectOp = new Mongo.Aggregation.Operators.ProjectOperator( RemoveAttributes );
 
                                 // Add to execution list
                                 RelationshipOperations.AddRange( new MongoDBOperator[] { AddOp, ProjectOp } );
@@ -151,7 +151,7 @@ namespace QueryBuilder.Operation
                             else
                             {
                                 // Entity is not embedded
-                                string LookupTargetAs = $"data_{TargetEntity.JoinedEntity.Name}Join";
+                                string LookupTargetAs = $"data_{TargetEntity.JoinedElement.Name}Join";
                                 // Fetch it
                                 LookupOperator LookupOp = new LookupOperator
                                 {
@@ -167,10 +167,10 @@ namespace QueryBuilder.Operation
                                 // Build a new field to match algebra definition
                                 Dictionary<string, JSCode> TargetFields = new Dictionary<string, JSCode>();
 
-                                foreach ( DataAttribute Attribute in TargetEntity.JoinedEntity.Attributes )
+                                foreach ( DataAttribute Attribute in TargetEntity.JoinedElement.Attributes )
                                 {
                                     string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                                    TargetFields.Add( $"\"data_{TargetEntity.JoinedEntity.Name}.{TargetEntity.JoinedEntity.Name}_{Attribute.Name}\"", (JSString)$"\"${LookupTargetAs}.{RuleValue}\"" );
+                                    TargetFields.Add( $"\"data_{TargetEntity.JoinedElement.Name}.{TargetEntity.JoinedElement.Name}_{Attribute.Name}\"", (JSString)$"\"${LookupTargetAs}.{RuleValue}\"" );
                                 }
 
                                 // Check if relationship attributes are mapped to this entity
@@ -190,7 +190,7 @@ namespace QueryBuilder.Operation
                                 AddFieldsOperator AddOp = new AddFieldsOperator( TargetFields );
 
                                 // Remove unwanted attributes
-                                ProjectOperator ProjectOp = ProjectOperator.HideAttributesOperator( new string[] { LookupTargetAs } );
+                                Mongo.Aggregation.Operators.ProjectOperator ProjectOp = Mongo.Aggregation.Operators.ProjectOperator.HideAttributesOperator( new string[] { LookupTargetAs } );
 
                                 RelationshipOperations.AddRange( new MongoDBOperator[] { LookupOp, UnwindOp, AddOp, ProjectOp } );
                             }
@@ -223,8 +223,8 @@ namespace QueryBuilder.Operation
 
                     foreach ( JoinableEntity Target in TargetData.Targets )
                     { 
-                        MergeObjects.Add( $"$data_{Target.JoinedEntity.Name}" );
-                        FieldsToRemove.Add( $"data_{Target.JoinedEntity.Name}" );
+                        MergeObjects.Add( $"$data_{Target.JoinedElement.Name}" );
+                        FieldsToRemove.Add( $"data_{Target.JoinedElement.Name}" );
                     }
 
                     foreach ( string Field in FieldsToMerge )
@@ -242,7 +242,7 @@ namespace QueryBuilder.Operation
                     BuildJoinData.Add( $"data_{TargetData.Relationship.Name}", new JSArray( new List<object> { MergeOp.ToJSCode() } ) );
 
                     AddFieldsOperator BuildOp = new AddFieldsOperator( BuildJoinData );
-                    ProjectOperator HideFields = ProjectOperator.HideAttributesOperator( FieldsToRemove );
+                    Mongo.Aggregation.Operators.ProjectOperator HideFields = Mongo.Aggregation.Operators.ProjectOperator.HideAttributesOperator( FieldsToRemove );
 
                     RelationshipOperations.AddRange( new MongoDBOperator[] { BuildOp, HideFields } );
                     OperationsToExecute.AddRange( RelationshipOperations.ToArray() );
@@ -255,27 +255,27 @@ namespace QueryBuilder.Operation
 
                     foreach ( JoinableEntity TargetEntity in TargetData.Targets )
                     {
-                        if ( TargetEntity.JoinedEntity is ComputedEntity TargetAsCE )
+                        if ( TargetEntity.JoinedElement is ComputedEntity TargetAsCE )
                         {
-                            LookupOperator LookupCE = LookupComputedEntity( SourceRule, TargetData, TargetEntity.JoinedEntity, TargetAsCE );
+                            LookupOperator LookupCE = LookupComputedEntity( SourceRule, TargetData, (Entity)TargetEntity.JoinedElement, TargetAsCE );
                             RelationshipOperations.Add( LookupCE );
                             ConcatArrays.Add( LookupCE.As );
                         }
                         else
                         {
                             // Retrieve mapping rule for target
-                            MapRule TargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == TargetEntity.JoinedEntity.Name );
+                            MapRule TargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == TargetEntity.JoinedElement.Name );
                             if ( TargetRule == null )
                             {
-                                throw new ImpossibleOperationException( $"Entity {TargetEntity.JoinedEntity.Name} has no valid mapping." );
+                                throw new ImpossibleOperationException( $"Entity {TargetEntity.JoinedElement.Name} has no valid mapping." );
                             }
 
-                            if ( !TargetData.Relationship.HasRelation( SourceEntity.JoinedEntity, TargetEntity.JoinedEntity ) )
+                            if ( !TargetData.Relationship.HasRelation( (Entity)SourceEntity.JoinedElement, (Entity)TargetEntity.JoinedElement ) )
                             {
-                                throw new ImpossibleOperationException( $"Entities {SourceEntity.JoinedEntity.Name} and {TargetEntity.JoinedEntity.Name} are not related through {TargetData.Relationship.Name}" );
+                                throw new ImpossibleOperationException( $"Entities {SourceEntity.JoinedElement.Name} and {TargetEntity.JoinedElement.Name} are not related through {TargetData.Relationship.Name}" );
                             }
 
-                            RelationshipConnection RelationshipData = TargetData.Relationship.GetRelation( SourceEntity.JoinedEntity, TargetEntity.JoinedEntity );
+                            RelationshipConnection RelationshipData = TargetData.Relationship.GetRelation( (Entity)SourceEntity.JoinedElement, (Entity)TargetEntity.JoinedElement );
 
                             // Are source and target mapped to the same collection
                             if ( SourceRule.Target.Name == TargetRule.Target.Name )
@@ -293,7 +293,7 @@ namespace QueryBuilder.Operation
                                 string RootAttribute = string.Empty;
                                 string MapAttributeAs = string.Empty;
                                 // Iterate target entity attributes
-                                foreach ( DataAttribute Attribute in TargetEntity.JoinedEntity.Attributes )
+                                foreach ( DataAttribute Attribute in TargetEntity.JoinedElement.Attributes )
                                 {
                                     string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
                                     string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
@@ -304,7 +304,7 @@ namespace QueryBuilder.Operation
                                         MapAttributeAs = $"data_{RootAttribute}";
                                     }
 
-                                    MapParams.Add( $"\"{TargetEntity.JoinedEntity.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
+                                    MapParams.Add( $"\"{TargetEntity.JoinedElement.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
                                 }
 
                                 // Do the same thing to the relationship attributes
@@ -323,13 +323,13 @@ namespace QueryBuilder.Operation
 
 
                                 // Keep source entity attributes
-                                foreach ( DataAttribute Attribute in SourceEntity.JoinedEntity.Attributes )
+                                foreach ( DataAttribute Attribute in SourceEntity.JoinedElement.Attributes )
                                 {
                                     string RuleValue = SourceRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
                                     ProjectFields.Add( $"\"{RuleValue}\"", new BooleanExpr( true ) );
                                 }
 
-                                ProjectOperator ProjectOp = new ProjectOperator( ProjectFields );
+                                Mongo.Aggregation.Operators.ProjectOperator ProjectOp = new Mongo.Aggregation.Operators.ProjectOperator( ProjectFields );
 
 
                                 OperationsToExecute.Add( ProjectOp );
@@ -348,19 +348,19 @@ namespace QueryBuilder.Operation
                                     From = TargetRule.Target.Name,
                                     ForeignField = TargetRule.Rules.First( Rule => Rule.Key == RelationshipData.TargetAttribute.Name ).Value,
                                     LocalField = SourceRule.Rules.First( Rule => Rule.Key == RelationshipData.SourceAttribute.Name ).Value,
-                                    As = $"data_{TargetEntity.JoinedEntity.Name}"
+                                    As = $"data_{TargetEntity.JoinedElement.Name}"
                                 };
 
                                 // Run a project with map to rename joined attributes
                                 Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
-                                string RootAttribute = $"data_{TargetEntity.JoinedEntity.Name}";
+                                string RootAttribute = $"data_{TargetEntity.JoinedElement.Name}";
                                 string MapAttributeAs = $"data_{RootAttribute}";
 
-                                foreach ( DataAttribute Attribute in TargetEntity.JoinedEntity.Attributes )
+                                foreach ( DataAttribute Attribute in TargetEntity.JoinedElement.Attributes )
                                 {
                                     string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
 
-                                    MapParams.Add( $"\"{TargetEntity.JoinedEntity.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{RuleValue}\"" ) );
+                                    MapParams.Add( $"\"{TargetEntity.JoinedElement.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{RuleValue}\"" ) );
                                 }
 
                                 // Do the same thing to the relationship attributes
@@ -378,13 +378,13 @@ namespace QueryBuilder.Operation
 
 
                                 // Keep source entity attributes
-                                foreach ( DataAttribute Attribute in SourceEntity.JoinedEntity.Attributes )
+                                foreach ( DataAttribute Attribute in SourceEntity.JoinedElement.Attributes )
                                 {
                                     string RuleValue = SourceRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
                                     ProjectFields.Add( $"\"{RuleValue}\"", new BooleanExpr( true ) );
                                 }
 
-                                ProjectOperator ProjectOp = new ProjectOperator( ProjectFields );
+                                Mongo.Aggregation.Operators.ProjectOperator ProjectOp = new Mongo.Aggregation.Operators.ProjectOperator( ProjectFields );
 
 
                                 OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, ProjectOp } );
@@ -402,7 +402,7 @@ namespace QueryBuilder.Operation
                         ConcatenatedFields.Add( RelationshipAttributesField, ConcatExpr.ToJSCode() );
                         AddFieldsOperator AddConcatOp = new AddFieldsOperator( ConcatenatedFields );
                         // Remove fields
-                        ProjectOperator RemoveConcatSourceOp = ProjectOperator.HideAttributesOperator( ConcatArrays );
+                        Mongo.Aggregation.Operators.ProjectOperator RemoveConcatSourceOp = Mongo.Aggregation.Operators.ProjectOperator.HideAttributesOperator( ConcatArrays );
 
                         RelationshipOperations.AddRange( new MongoDBOperator[] { AddConcatOp, RemoveConcatSourceOp } );
                     }
@@ -435,9 +435,9 @@ namespace QueryBuilder.Operation
 
                     foreach ( JoinableEntity TargetEntity in TargetData.Targets )
                     {
-                        if ( TargetEntity.JoinedEntity is ComputedEntity TargetAsCE )
+                        if ( TargetEntity.JoinedElement is ComputedEntity TargetAsCE )
                         {
-                            LookupOperator LookupCE = LookupComputedEntity( SourceRule, TargetData, TargetEntity.JoinedEntity, TargetAsCE );
+                            LookupOperator LookupCE = LookupComputedEntity( SourceRule, TargetData, (Entity)TargetEntity.JoinedElement, TargetAsCE );
                             CustomPipeline.Add( LookupCE );
 
                             // Unwind joined entity
@@ -450,18 +450,18 @@ namespace QueryBuilder.Operation
                         else
                         {
                             // Get Target rule
-                            MapRule TargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == TargetEntity.JoinedEntity.Name );
+                            MapRule TargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == TargetEntity.JoinedElement.Name );
                             if ( TargetRule == null )
                             {
-                                throw new ImpossibleOperationException( $"Entity {TargetEntity.JoinedEntity.Name} has no valid mapping." );
+                                throw new ImpossibleOperationException( $"Entity {TargetEntity.JoinedElement.Name} has no valid mapping." );
                             }
 
-                            if ( !TargetData.Relationship.HasRelation( SourceEntity.JoinedEntity, TargetEntity.JoinedEntity ) )
+                            if ( !TargetData.Relationship.HasRelation( (Entity)SourceEntity.JoinedElement, (Entity)TargetEntity.JoinedElement ) )
                             {
-                                throw new ImpossibleOperationException( $"Entities {SourceEntity.JoinedEntity.Name} and {TargetEntity.JoinedEntity.Name} are not related through {TargetData.Relationship.Name}" );
+                                throw new ImpossibleOperationException( $"Entities {SourceEntity.JoinedElement.Name} and {TargetEntity.JoinedElement.Name} are not related through {TargetData.Relationship.Name}" );
                             }
 
-                            RelationshipConnection RelationshipData = TargetData.Relationship.GetRelation( SourceEntity.JoinedEntity, TargetEntity.JoinedEntity );
+                            RelationshipConnection RelationshipData = TargetData.Relationship.GetRelation( (Entity)SourceEntity.JoinedElement, (Entity)TargetEntity.JoinedElement );
 
                             // Many to many relationships so far we're only considering that entities are mapped to distinct collections
                             // and the relationship linking them has it's own collection
@@ -470,7 +470,7 @@ namespace QueryBuilder.Operation
 
                             // Foreach target entity, we must do a lookup, unwind, addfields and project operations
                             // Lookup target
-                            string TargetLookupAs = $"data_{TargetEntity.JoinedEntity.Name}";
+                            string TargetLookupAs = $"data_{TargetEntity.JoinedElement.Name}";
 
                             LookupOperator LookupTargetOp = new LookupOperator
                             {
@@ -487,10 +487,10 @@ namespace QueryBuilder.Operation
                             // Add fields
                             Dictionary<string, JSCode> FieldsToAdd = new Dictionary<string, JSCode>();
 
-                            foreach ( DataAttribute Attribute in TargetEntity.JoinedEntity.Attributes )
+                            foreach ( DataAttribute Attribute in TargetEntity.JoinedElement.Attributes )
                             {
                                 string AttributeMappedTo = TargetRule.Rules.First( R => R.Key == Attribute.Name ).Value;
-                                FieldsToAdd.Add( $"{TargetEntity.JoinedEntity.Name}_{Attribute.Name}", (JSString)$"\"${TargetLookupAs}.{AttributeMappedTo}\"" );
+                                FieldsToAdd.Add( $"{TargetEntity.JoinedElement.Name}_{Attribute.Name}", (JSString)$"\"${TargetLookupAs}.{AttributeMappedTo}\"" );
                             }
 
                             AddFieldsOperator AddFieldsOp = new AddFieldsOperator( FieldsToAdd );
@@ -500,7 +500,7 @@ namespace QueryBuilder.Operation
                             {
                                 { TargetLookupAs, new BooleanExpr( false ) }
                             };
-                            ProjectOperator ProjectOp = new ProjectOperator( ProjectExpressions );
+                            Mongo.Aggregation.Operators.ProjectOperator ProjectOp = new Mongo.Aggregation.Operators.ProjectOperator( ProjectExpressions );
 
                             CustomPipeline.AddRange( new MongoDBOperator[] { LookupTargetOp, UnwindTarget, AddFieldsOp, ProjectOp } );
                         }
@@ -518,7 +518,7 @@ namespace QueryBuilder.Operation
                     }
 
                     AddFieldsOperator RAddFields = new AddFieldsOperator( RelationshipAttributesToAdd );
-                    ProjectOperator RRemoveOp = new ProjectOperator( RelationshipAttributesToRemove );
+                    Mongo.Aggregation.Operators.ProjectOperator RRemoveOp = new Mongo.Aggregation.Operators.ProjectOperator( RelationshipAttributesToRemove );
 
                     CustomPipeline.AddRange( new MongoDBOperator[] { RAddFields, RRemoveOp } );
 
@@ -532,7 +532,7 @@ namespace QueryBuilder.Operation
                         CustomPipeline.Add( ReplaceRootOp );
 
                         // Hide merged attributes to avoid duplicates
-                        ProjectOperator HideMerged = ProjectOperator.HideAttributesOperator( FieldsToMergeWithRoot.Where( Field => Field != "$$ROOT" ) );
+                        Mongo.Aggregation.Operators.ProjectOperator HideMerged = Mongo.Aggregation.Operators.ProjectOperator.HideAttributesOperator( FieldsToMergeWithRoot.Where( Field => Field != "$$ROOT" ) );
                         CustomPipeline.Add( HideMerged );
                     }
 
@@ -560,39 +560,39 @@ namespace QueryBuilder.Operation
         /// <param name="TargetEntity"></param>
         /// <param name="TargetAsCE"></param>
         /// <returns></returns>
-        private LookupOperator LookupComputedEntity( MapRule SourceRule, RelationshipJoinArguments TargetData, Entity TargetEntity, ComputedEntity TargetAsCE )
+        private LookupOperator LookupComputedEntity( MapRule SourceRule, RelationshipJoinArgument TargetData, Entity TargetEntity, ComputedEntity TargetAsCE )
         {
             // Retrieve the CE source entity before calling another RJOIN instance
             // Retrieve CE-SE rule
-            MapRule CESERule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetAsCE.SourceEntity.JoinedEntity.Name && Rule.IsMain );
+            MapRule CESERule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetAsCE.SourceEntity.JoinedElement.Name && Rule.IsMain );
 
             // Stop if rule not found
             if ( CESERule == null )
             {
-                throw new RuleNotFoundException( $"Entity [{TargetAsCE.SourceEntity.JoinedEntity.Name}] is not mapped." );
+                throw new RuleNotFoundException( $"Entity [{TargetAsCE.SourceEntity.JoinedElement.Name}] is not mapped." );
             }
 
             // Left side entities cannot be embedded
             if ( SourceRule.Target.Name == CESERule.Target.Name )
             {
-                throw new InvalidMapException( $"Entities that are the left operand of a join operation cannot be embedded into another entity. [{TargetAsCE.SourceEntity.JoinedEntity.Name}]" );
+                throw new InvalidMapException( $"Entities that are the left operand of a join operation cannot be embedded into another entity. [{TargetAsCE.SourceEntity.JoinedElement.Name}]" );
             }
 
             // Check if the entities are related
-            if ( !TargetData.Relationship.HasRelation( SourceEntity.JoinedEntity, TargetAsCE.SourceEntity.JoinedEntity ) )
+            if ( !TargetData.Relationship.HasRelation( (Entity)SourceEntity.JoinedElement, (Entity)TargetAsCE.SourceEntity.JoinedElement ) )
             {
-                throw new NotRelatedException( $"Entity {SourceEntity.JoinedEntity.Name} is not related to {TargetAsCE.SourceEntity.JoinedEntity.Name} through {TargetData.Relationship.Name}" );
+                throw new NotRelatedException( $"Entity {SourceEntity.JoinedElement.Name} is not related to {TargetAsCE.SourceEntity.JoinedElement.Name} through {TargetData.Relationship.Name}" );
             }
 
             // Retrieve connection rules for this entity
-            RelationshipConnection ConnRules = TargetData.Relationship.GetRelation( SourceEntity.JoinedEntity, TargetAsCE.SourceEntity.JoinedEntity );
+            RelationshipConnection ConnRules = TargetData.Relationship.GetRelation( (Entity)SourceEntity.JoinedElement, (Entity)TargetAsCE.SourceEntity.JoinedElement );
 
             // Start a lookup operation with custom pipeline
             List<MongoDBOperator> CEPipeline = new List<MongoDBOperator>();
 
             // Pipeline variables
             Dictionary<string, string> CEPipelineVars = new Dictionary<string, string>();
-            string SourceIdentifier = $"{SourceEntity.JoinedEntity.Name.ToLower()}_identifier";
+            string SourceIdentifier = $"{SourceEntity.JoinedElement.Name.ToLower()}_identifier";
             string SourceIdentifierValue = SourceRule.Rules.First( Rule => Rule.Key == ConnRules.SourceAttribute.Name ).Value;
 
             string TargetRuleValue = CESERule.Rules.First( Rule => Rule.Key == ConnRules.TargetAttribute.Name ).Value;
@@ -613,13 +613,13 @@ namespace QueryBuilder.Operation
             CEPipeline.Add( MatchOp );
 
             // Setup a new Argument instance
-            RelationshipJoinArguments newArgs = new RelationshipJoinArguments(
+            RelationshipJoinArgument newArgs = new RelationshipJoinArgument(
                 TargetAsCE.Relationship,
                 TargetAsCE.TargetEntities );
 
             RelationshipJoinOperator TargetCEOperator = new RelationshipJoinOperator(
                 TargetAsCE.SourceEntity,
-                new List<RelationshipJoinArguments> { newArgs },
+                new List<RelationshipJoinArgument> { newArgs },
                 ModelMap );
 
             CEPipeline.AddRange( TargetCEOperator.Run().Commands );
@@ -627,7 +627,7 @@ namespace QueryBuilder.Operation
             // Rename entity attributes (avoids possible merge conflicts)
             Dictionary<string, JSCode> AttributesToRename = new Dictionary<string, JSCode>();
             List<string> AttributesToHide = new List<string>();
-            foreach ( DataAttribute Attribute in TargetAsCE.SourceEntity.JoinedEntity.Attributes )
+            foreach ( DataAttribute Attribute in TargetAsCE.SourceEntity.JoinedElement.Attributes )
             {
                 string RuleValue = CESERule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
                 if ( RuleValue == null )
@@ -635,12 +635,12 @@ namespace QueryBuilder.Operation
                     continue;
                 }
 
-                AttributesToRename.Add( $"{TargetAsCE.SourceEntity.JoinedEntity.Name}_{Attribute.Name}", (JSString)$"\"${RuleValue}\"" );
+                AttributesToRename.Add( $"{TargetAsCE.SourceEntity.JoinedElement.Name}_{Attribute.Name}", (JSString)$"\"${RuleValue}\"" );
                 AttributesToHide.Add( RuleValue );
             }
 
             AddFieldsOperator RenameOp = new AddFieldsOperator( AttributesToRename );
-            ProjectOperator HideOp = ProjectOperator.HideAttributesOperator( AttributesToHide );
+            Mongo.Aggregation.Operators.ProjectOperator HideOp = Mongo.Aggregation.Operators.ProjectOperator.HideAttributesOperator( AttributesToHide );
 
             CEPipeline.AddRange( new MongoDBOperator[] { RenameOp, HideOp } );
 
@@ -665,10 +665,10 @@ namespace QueryBuilder.Operation
             // but without the need to dive deep into how the operation is executed.
             List<VirtualRule> OperatorRules = new List<VirtualRule>();
             // Only the first entity requires to fetch data from ModelMap
-            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.JoinedEntity.Name );
+            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.JoinedElement.Name );
             // The source entity is not renamed, so we add it as is.
-            VirtualRule SourceVirtualRule = new VirtualRule( SourceEntity.JoinedEntity, SourceEntity.Alias );
-            foreach ( DataAttribute Attribute in SourceEntity.JoinedEntity.Attributes )
+            VirtualRule SourceVirtualRule = new VirtualRule( SourceEntity.JoinedElement, SourceEntity.Alias );
+            foreach ( DataAttribute Attribute in SourceEntity.JoinedElement.Attributes )
             {
                 // We only need the ModelMap for the origin entity
                 // all other entities are renamed and bound to this one (through relationships)
@@ -681,7 +681,7 @@ namespace QueryBuilder.Operation
             OperatorRules.Add( SourceVirtualRule );
 
             // Process relationships and target entities
-            foreach ( RelationshipJoinArguments Argument in Targets )
+            foreach ( RelationshipJoinArgument Argument in Targets )
             {
                 // Attributes here are accesible through 'data_Relationship.Entity_Attribute'
                 // Dot notation is mandatory as MongoDB accepts it as path to an attribute
@@ -701,18 +701,18 @@ namespace QueryBuilder.Operation
                 foreach ( JoinableEntity Target in Argument.Targets )
                 {
                     // Check if the target entity is computed
-                    if ( Target.JoinedEntity is ComputedEntity TargetAsCE )
+                    if ( Target.JoinedElement is ComputedEntity TargetAsCE )
                     {
                         OperatorRules.AddRange( ComputeCEVirtualMap( RootAttribute, TargetAsCE ) );
                     }
                     else
                     {
                         // Create rule
-                        VirtualRule VirtualEntityRule = new VirtualRule( Target.JoinedEntity, Target.Alias );
+                        VirtualRule VirtualEntityRule = new VirtualRule( Target.JoinedElement, Target.Alias );
                         // Parse attributes
-                        foreach ( DataAttribute Attribute in Target.JoinedEntity.Attributes )
+                        foreach ( DataAttribute Attribute in Target.JoinedElement.Attributes )
                         {
-                            VirtualEntityRule.AddRule( Attribute.Name, $"{RootAttribute}.{Target.JoinedEntity.Name}_{Attribute.Name}" );
+                            VirtualEntityRule.AddRule( Attribute.Name, $"{RootAttribute}.{Target.JoinedElement.Name}_{Attribute.Name}" );
                         }
 
                         // Add to list
@@ -735,9 +735,9 @@ namespace QueryBuilder.Operation
             // Rule list to return
             List<VirtualRule> RuleList = new List<VirtualRule>();
             // Shorten path to entity
-            Entity CurrentEntity = TargetEntity.SourceEntity.JoinedEntity;
+            Entity CurrentEntity = (Entity)TargetEntity.SourceEntity.JoinedElement;
             // Create rule for the base entity
-            VirtualRule VirtualEntityRule = new VirtualRule( TargetEntity.SourceEntity.JoinedEntity, TargetEntity.SourceEntity.Alias );
+            VirtualRule VirtualEntityRule = new VirtualRule( TargetEntity.SourceEntity.JoinedElement, TargetEntity.SourceEntity.Alias );
             // Iterate it's attributes
             foreach ( DataAttribute Attribute in CurrentEntity.Attributes )
             {
@@ -760,18 +760,18 @@ namespace QueryBuilder.Operation
             // Process additional entities
             foreach ( JoinableEntity Target in TargetEntity.TargetEntities )
             {
-                if ( Target.JoinedEntity is ComputedEntity TargetAsCE )
+                if ( Target.JoinedElement is ComputedEntity TargetAsCE )
                 {
                     RuleList.AddRange( ComputeCEVirtualMap( NewRootAttribute, TargetAsCE ) );
                 }
                 else
                 {
                     // Rules
-                    VirtualRule TargetEntityVirtualRule = new VirtualRule( Target.JoinedEntity, Target.Alias );
+                    VirtualRule TargetEntityVirtualRule = new VirtualRule( Target.JoinedElement, Target.Alias );
                     // Process attributes
-                    foreach ( DataAttribute Attribute in Target.JoinedEntity.Attributes )
+                    foreach ( DataAttribute Attribute in Target.JoinedElement.Attributes )
                     {
-                        TargetEntityVirtualRule.AddRule( Attribute.Name, $"{NewRootAttribute}.{Target.JoinedEntity.Name}_{Attribute.Name}" );
+                        TargetEntityVirtualRule.AddRule( Attribute.Name, $"{NewRootAttribute}.{Target.JoinedElement.Name}_{Attribute.Name}" );
                     }
                     // Add to list
                     RuleList.Add( TargetEntityVirtualRule );
@@ -789,7 +789,7 @@ namespace QueryBuilder.Operation
         /// <param name="SourceEntity"></param>
         /// <param name="Targets"></param>
         /// <param name="Map"></param>
-        public RelationshipJoinOperator( JoinableEntity SourceEntity, List<RelationshipJoinArguments> Targets, ModelMapping Map ) : base( Map )
+        public RelationshipJoinOperator( JoinableEntity SourceEntity, List<RelationshipJoinArgument> Targets, ModelMapping Map ) : base( Map )
         {
             this.SourceEntity = SourceEntity;
             this.Targets = Targets;

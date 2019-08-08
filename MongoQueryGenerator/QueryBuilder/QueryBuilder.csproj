@@ -76,6 +76,7 @@
     <Compile Include="Javascript\JSObject.cs" />
     <Compile Include="Javascript\JSString.cs" />
     <Compile Include="Map\Exceptions\DuplicatedMapException.cs" />
+    <Compile Include="Map\IModelMap.cs" />
     <Compile Include="Map\MapRule.cs" />
     <Compile Include="Map\ModelMapping.cs" />
     <Compile Include="Map\VirtualMap.cs" />
@@ -102,7 +103,8 @@
     <Compile Include="Mongo\Schema.cs" />
     <Compile Include="Operation\AddFieldsOperation.cs" />
     <Compile Include="Operation\Arguments\JoinableEntity.cs" />
-    <Compile Include="Operation\Arguments\RelationshipJoinArguments.cs" />
+    <Compile Include="Operation\Arguments\ProjectArgument.cs" />
+    <Compile Include="Operation\Arguments\RelationshipJoinArgument.cs" />
     <Compile Include="Operation\Exceptions\ImpossibleOperationException.cs" />
     <Compile Include="Operation\Exceptions\InvalidMapException.cs" />
     <Compile Include="Operation\Exceptions\NotRelatedException.cs" />
@@ -112,7 +114,7 @@
     <Compile Include="Operation\AlgebraOperator.cs" />
     <Compile Include="Operation\OperationResult.cs" />
     <Compile Include="Operation\Pipeline.cs" />
-    <Compile Include="Operation\ProjectOperation.cs" />
+    <Compile Include="Operation\ProjectStage.cs" />
     <Compile Include="Operation\SelectOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\FindCommand.cs" />

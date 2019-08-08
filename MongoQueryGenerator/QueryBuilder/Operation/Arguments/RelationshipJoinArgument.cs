@@ -10,7 +10,7 @@ namespace QueryBuilder.Operation.Arguments
     /// <summary>
     /// Represents the arguments to be used in a Relationship Join operator
     /// </summary>
-    public class RelationshipJoinArguments
+    public class RelationshipJoinArgument
     {
         #region Properties
         /// <summary>
@@ -29,7 +29,7 @@ namespace QueryBuilder.Operation.Arguments
         /// </summary>
         /// <param name="Relationship"></param>
         /// <param name="Targets"></param>
-        public RelationshipJoinArguments( Relationship Relationship, List<JoinableEntity> Targets )
+        public RelationshipJoinArgument( Relationship Relationship, List<JoinableEntity> Targets )
         {
             this.Relationship = Relationship;
             this.Targets = Targets;

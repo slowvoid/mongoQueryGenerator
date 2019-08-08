@@ -29,7 +29,7 @@ namespace QueryBuilderApp
                     new JoinableEntity( Model.FindByName( "Garage" ) as Entity, "garage" )
                 } );
 
-            RelationshipJoinArguments args = new RelationshipJoinArguments(
+            RelationshipJoinArgument args = new RelationshipJoinArgument(
                 Model.FindByName( "Drives" ) as Relationship,
                 new List<JoinableEntity> {
                     new JoinableEntity( CarInsCompany )
@@ -37,7 +37,7 @@ namespace QueryBuilderApp
 
             RelationshipJoinOperator RJoin = new RelationshipJoinOperator(
                 new JoinableEntity( Model.FindByName( "Person" ) as Entity, "person" ),
-                new List<RelationshipJoinArguments> { args },
+                new List<RelationshipJoinArgument> { args },
                 Map );
 
             // Generate virtual map

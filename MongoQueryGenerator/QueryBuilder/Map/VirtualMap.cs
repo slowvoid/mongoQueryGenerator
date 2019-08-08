@@ -1,4 +1,6 @@
-﻿using QueryBuilder.Map.Exceptions;
+﻿using QueryBuilder.ER;
+using QueryBuilder.Map.Exceptions;
+using QueryBuilder.Operation.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ namespace QueryBuilder.Map
     /// <summary>
     /// Virtual map between Entities and the output document
     /// </summary>
-    public class VirtualMap
+    public class VirtualMap : IModelMap
     {
         #region Properties
         /// <summary>
@@ -29,6 +31,25 @@ namespace QueryBuilder.Map
             }
 
             return sb.ToString();
+        }
+        /// <summary>
+        /// Get rule value for an attribute that belongs to the given entity
+        /// </summary>
+        /// <param name="NameOrAlias"></param>
+        /// <param name="AttributeName"></param>
+        /// <returns></returns>
+        public string GetRuleValue( string NameOrAlias, string AttributeName )
+        {
+            VirtualRule Rule = Rules.First( R => R.SourceERElement.Name == NameOrAlias || R.Alias == NameOrAlias );
+
+            if ( Rule != null )
+            {
+                return Rule.Rules.First( R => R.Key == AttributeName ).Value;
+            }
+            else
+            {
+                throw new RuleNotFoundException( $"No map rule found for ER Element [{NameOrAlias}]" );
+            }
         }
         #endregion
 
