@@ -52,8 +52,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CartesianProduct.cs" />
+    <Compile Include="CartesianProductDataProvider.cs" />
     <Compile Include="ComputedEntity.cs" />
     <Compile Include="ComputedEntityDataProvider.cs" />
+    <Content Include="HandcraftedQueries\cartersianProduct-1.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="HandcraftedQueries\ceManyToMany-2.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -61,9 +61,12 @@ namespace QueryBuilderApp
                 CarArgs
             }, VMap );
 
+            CartesianProductOperator CartesianOp = new CartesianProductOperator( (Entity)Person.JoinedElement, (Entity)Car.JoinedElement, Map );
+
             Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator> {
-                RJoin,
-                ProjectOp
+                //RJoin,
+                //ProjectOp
+                CartesianOp
             } );
 
             QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );

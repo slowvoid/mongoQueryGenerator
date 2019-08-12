@@ -37,6 +37,10 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// Variables to be accesible in the pipeline
         /// </summary>
         public Dictionary<string, string> Let { get; set; }
+        /// <summary>
+        /// Gets/Sets wheter to force an empty pipeline
+        /// </summary>
+        private bool ForceEmptyPipeline { get; set; }
         #endregion
 
         #region Methods
@@ -56,7 +60,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
             Attrs.Add( "from", From );
             Attrs.Add( "as", As );
 
-            if ( Pipeline.Count > 0 )
+            if ( Pipeline.Count > 0 || ForceEmptyPipeline )
             {
                 Attrs.Add( "let", new JSObject( Let.ToDictionary( I => I.Key, I => (object)I.Value ) ) );
                 List<object> PipelineJS = new List<object>();
@@ -80,10 +84,11 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Initialize a new LookupOperator instance
         /// </summary>
-        public LookupOperator()
+        public LookupOperator( bool ForceEmptyPipeline = false )
         {
             Pipeline = new List<MongoDBOperator>();
             Let = new Dictionary<string, string>();
+            this.ForceEmptyPipeline = ForceEmptyPipeline;
         }
         #endregion
     }
