@@ -81,9 +81,17 @@
     <Compile Include="OneToManyRelationshipsDataProvider.cs" />
     <Compile Include="OneToOneRelationships.cs" />
     <Compile Include="OneToOneRelationshipsDataProvider.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="ProjectDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequiredDataContainer.cs" />
     <Compile Include="Utils.cs" />
+    <Content Include="HandcraftedQueries\projectQuery.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HandcraftedQueries\projectQuerySimple.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
