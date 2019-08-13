@@ -80,6 +80,7 @@
     <Content Include="HandcraftedQueries\ceOneToOne.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Compile Include="JoinableEntityModelData\EntityRelationshipModel.cs" />
     <Compile Include="ManyToManyRelationships.cs" />
     <Compile Include="ManyToManyRelationshipsDataProvider.cs" />
     <Compile Include="OneToManyRelationships.cs" />

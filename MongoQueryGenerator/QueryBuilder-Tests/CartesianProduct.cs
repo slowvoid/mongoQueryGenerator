@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using QueryBuilder.ER;
 using QueryBuilder.Operation;
+using QueryBuilder.Operation.Arguments;
 using QueryBuilder.Query;
 using System.Collections.Generic;
 
@@ -25,12 +26,14 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             CartesianProductOperator CartesianOp = new CartesianProductOperator( 
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), ModelData.ERMongoMapping );
+                new JoinableEntity(ModelData.EntityRelationshipModel.FindByName( "Person" ), "person"),
+                new JoinableEntity(ModelData.EntityRelationshipModel.FindByName( "Car" ), "car"),
+                ModelData.ERMongoMapping );
 
             CartesianProductOperator CartesianOp2 = new CartesianProductOperator(
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ),
-                (Entity)ModelData.EntityRelationshipModel.FindByName( "Supplier" ), ModelData.ERMongoMapping );
+                new JoinableEntity(ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
+                new JoinableEntity(ModelData.EntityRelationshipModel.FindByName( "Supplier" ), "supplier" ),
+                ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { CartesianOp, CartesianOp2 };
             Pipeline pipeline = new Pipeline( OpList );

@@ -658,7 +658,7 @@ namespace QueryBuilder.Operation
         /// Computes the virtual map after executing this instance
         /// </summary>
         /// <returns></returns>
-        public override VirtualMap ComputeVirtualMap()
+        public override VirtualMap ComputeVirtualMap( VirtualMap ExistingVirtualMap = null )
         {
             // The virtal map represents the output document after this operator is executed
             // To generate it we basically need to iterate over all targetted entities

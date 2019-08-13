@@ -61,13 +61,28 @@ namespace QueryBuilderApp
                 CarArgs
             }, VMap );
 
-            CartesianProductOperator CartesianOp = new CartesianProductOperator( (Entity)Person.JoinedElement, (Entity)Car.JoinedElement, Map );
+            CartesianProductOperator CartesianOp = new CartesianProductOperator( 
+                Person,
+                Car,
+                Map );
+
+            JoinableEntity InsCompany = new JoinableEntity( Model.FindByName( "InsCompany" ), "inscompany" );
+
+            CartesianProductOperator CartesianOp2 = new CartesianProductOperator(
+                Person,
+                InsCompany,
+                Map );
 
             Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator> {
                 //RJoin,
-                //ProjectOp
-                CartesianOp
+                //ProjectOp,
+                CartesianOp,
+                CartesianOp2
             } );
+
+            VirtualMap VCartesianMap = CartesianOp.ComputeVirtualMap();
+
+            Console.WriteLine( CartesianOp2.ComputeVirtualMap( VCartesianMap ).ToString() );
 
             QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
             QueryGen.CollectionName = InitialEntity;

@@ -40,7 +40,7 @@ namespace QueryBuilder.Operation
         /// Computes the resulting virtual map after processing this operator
         /// </summary>
         /// <returns></returns>
-        public virtual VirtualMap ComputeVirtualMap()
+        public virtual VirtualMap ComputeVirtualMap( VirtualMap ExistingVirtualMap = null )
         {
             return new VirtualMap( new List<VirtualRule>() );
         }
