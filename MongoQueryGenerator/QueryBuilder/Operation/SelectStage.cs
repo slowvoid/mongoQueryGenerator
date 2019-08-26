@@ -10,7 +10,7 @@ namespace QueryBuilder.Operation
     /// Defines a selection operation
     /// aka filters over a collection
     /// </summary>
-    public class SelectOperation
+    public class SelectStage : AlgebraOperator
     {
         #region Properties
         #endregion

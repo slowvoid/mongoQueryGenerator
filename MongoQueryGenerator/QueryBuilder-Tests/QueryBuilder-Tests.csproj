@@ -80,7 +80,6 @@
     <Content Include="HandcraftedQueries\ceOneToOne.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Compile Include="JoinableEntityModelData\EntityRelationshipModel.cs" />
     <Compile Include="ManyToManyRelationships.cs" />
     <Compile Include="ManyToManyRelationshipsDataProvider.cs" />
     <Compile Include="OneToManyRelationships.cs" />
@@ -91,6 +90,8 @@
     <Compile Include="ProjectDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequiredDataContainer.cs" />
+    <Compile Include="Select.cs" />
+    <Compile Include="SelectDataProvider.cs" />
     <Compile Include="Utils.cs" />
     <Content Include="HandcraftedQueries\projectQuery.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

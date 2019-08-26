@@ -70,6 +70,7 @@
     <Compile Include="ER\Exceptions\ElementNotFoundException.cs" />
     <Compile Include="ER\Model.cs" />
     <Compile Include="ER\Relationship.cs" />
+    <Compile Include="Javascript\JSAny.cs" />
     <Compile Include="Javascript\JSArray.cs" />
     <Compile Include="Javascript\JSBoolean.cs" />
     <Compile Include="Javascript\JSCode.cs" />
@@ -96,8 +97,14 @@
     <Compile Include="Mongo\Expressions\ConcatArrayExpr.cs" />
     <Compile Include="Mongo\Expressions\EqExpr.cs" />
     <Compile Include="Mongo\Expressions\Expr.cs" />
+    <Compile Include="Mongo\Expressions\GteExpr.cs" />
+    <Compile Include="Mongo\Expressions\GtExpr.cs" />
+    <Compile Include="Mongo\Expressions\InExpr.cs" />
+    <Compile Include="Mongo\Expressions\LteExpr.cs" />
+    <Compile Include="Mongo\Expressions\LtExpr.cs" />
     <Compile Include="Mongo\Expressions\MapExpr.cs" />
     <Compile Include="Mongo\Expressions\MergeObjects.cs" />
+    <Compile Include="Mongo\Expressions\NeqExpr.cs" />
     <Compile Include="Mongo\Expressions\ProjectExpression.cs" />
     <Compile Include="Mongo\Expressions\ValueExpr.cs" />
     <Compile Include="Mongo\Schema.cs" />
@@ -116,7 +123,7 @@
     <Compile Include="Operation\OperationResult.cs" />
     <Compile Include="Operation\Pipeline.cs" />
     <Compile Include="Operation\ProjectStage.cs" />
-    <Compile Include="Operation\SelectOperation.cs" />
+    <Compile Include="Operation\SelectStage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\FindCommand.cs" />
     <Compile Include="Query\JoinCommand.cs" />
