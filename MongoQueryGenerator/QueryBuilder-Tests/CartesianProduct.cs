@@ -26,13 +26,13 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             CartesianProductOperator CartesianOp = new CartesianProductOperator( 
-                new JoinableEntity(ModelData.EntityRelationshipModel.FindByName( "Person" ), "person"),
-                new JoinableEntity(ModelData.EntityRelationshipModel.FindByName( "Car" ), "car"),
+                new QueryableEntity(ModelData.EntityRelationshipModel.FindByName( "Person" ), "person"),
+                new QueryableEntity(ModelData.EntityRelationshipModel.FindByName( "Car" ), "car"),
                 ModelData.ERMongoMapping );
 
             CartesianProductOperator CartesianOp2 = new CartesianProductOperator(
-                new JoinableEntity(ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                new JoinableEntity(ModelData.EntityRelationshipModel.FindByName( "Supplier" ), "supplier" ),
+                new QueryableEntity(ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
+                new QueryableEntity(ModelData.EntityRelationshipModel.FindByName( "Supplier" ), "supplier" ),
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { CartesianOp, CartesianOp2 };

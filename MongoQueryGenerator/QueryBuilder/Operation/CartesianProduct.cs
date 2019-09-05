@@ -21,11 +21,11 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// Source entity (start point)
         /// </summary>
-        public JoinableEntity SourceEntity { get; set; }
+        public QueryableEntity SourceEntity { get; set; }
         /// <summary>
         /// Entity to fetch
         /// </summary>
-        public JoinableEntity TargetEntity { get; set; }
+        public QueryableEntity TargetEntity { get; set; }
         #endregion
 
         #region Methods
@@ -40,14 +40,14 @@ namespace QueryBuilder.Operation
             // No support for embedded entities
             List<MongoDBOperator> OperatorsToExecute = new List<MongoDBOperator>();
             // Fetch rules
-            MapRule TargetRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetEntity.JoinedElement.Name && Rule.IsMain );
+            MapRule TargetRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetEntity.Element.Name && Rule.IsMain );
 
             // Create operator
             LookupOperator LookupOp = new LookupOperator(true)
             {
                 From = TargetRule.Target.Name,
                 Pipeline = new List<MongoDBOperator>(),
-                As = $"data_{TargetEntity.JoinedElement.Name}"
+                As = $"data_{TargetEntity.Element.Name}"
             };
 
             // Add to list
@@ -64,23 +64,23 @@ namespace QueryBuilder.Operation
         public override VirtualMap ComputeVirtualMap( VirtualMap ExistingVirtualMap = null )
         {
             // Adds the prefix 'data_Entity' to attributes
-            VirtualRule TargetVRule = new VirtualRule( TargetEntity.JoinedElement, TargetEntity.Alias );
+            VirtualRule TargetVRule = new VirtualRule( TargetEntity.Element, TargetEntity.Alias );
 
             // Fetch original map for target entity
-            MapRule TargetRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetEntity.JoinedElement.Name && Rule.IsMain );
+            MapRule TargetRule = ModelMap.Rules.First( Rule => Rule.Source.Name == TargetEntity.Element.Name && Rule.IsMain );
 
-            foreach ( DataAttribute Attribute in TargetEntity.JoinedElement.Attributes )
+            foreach ( DataAttribute Attribute in TargetEntity.Element.Attributes )
             {
                 string AttributeRule = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                TargetVRule.AddRule( Attribute.Name, $"data_{TargetEntity.JoinedElement.Name}.{AttributeRule}" );
+                TargetVRule.AddRule( Attribute.Name, $"data_{TargetEntity.Element.Name}.{AttributeRule}" );
             }
 
             // Also process source entity rule
-            VirtualRule SourceVRule = new VirtualRule( SourceEntity.JoinedElement, SourceEntity.Alias );
+            VirtualRule SourceVRule = new VirtualRule( SourceEntity.Element, SourceEntity.Alias );
             // Fetch original map for source entity
-            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.JoinedElement.Name && Rule.IsMain );
+            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.Element.Name && Rule.IsMain );
 
-            foreach ( DataAttribute Attribute in SourceEntity.JoinedElement.Attributes )
+            foreach ( DataAttribute Attribute in SourceEntity.Element.Attributes )
             {
                 string AttributeRule = SourceRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
                 SourceVRule.AddRule( Attribute.Name, AttributeRule );
@@ -92,12 +92,12 @@ namespace QueryBuilder.Operation
             if ( ExistingVirtualMap != null )
             {
                 // Check if source rule already exist
-                if ( ExistingVirtualMap.Rules.Exists( Rule => Rule.SourceERElement.Name == SourceEntity.JoinedElement.Name && Rule.Alias == SourceEntity.Alias ) )
+                if ( ExistingVirtualMap.Rules.Exists( Rule => Rule.SourceERElement.Name == SourceEntity.Element.Name && Rule.Alias == SourceEntity.Alias ) )
                 {
                     VMap.Rules.Remove( SourceVRule );
                 }
                 // Check if the new rules already exists
-                if ( ExistingVirtualMap.Rules.Exists( Rule => Rule.SourceERElement.Name == TargetEntity.JoinedElement.Name && Rule.Alias == TargetEntity.Alias ) )
+                if ( ExistingVirtualMap.Rules.Exists( Rule => Rule.SourceERElement.Name == TargetEntity.Element.Name && Rule.Alias == TargetEntity.Alias ) )
                 {
                     VMap.Rules.Remove( TargetVRule );
                 }
@@ -115,7 +115,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="SourceEntity"></param>
         /// <param name="TargetEntity"></param>
-        public CartesianProductOperator( JoinableEntity SourceEntity, JoinableEntity TargetEntity, ModelMapping Map )
+        public CartesianProductOperator( QueryableEntity SourceEntity, QueryableEntity TargetEntity, ModelMapping Map )
         {
             this.SourceEntity = SourceEntity;
             this.TargetEntity = TargetEntity;

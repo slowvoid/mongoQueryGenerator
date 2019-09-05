@@ -20,7 +20,7 @@ namespace QueryBuilder.Operation.Arguments
         /// <summary>
         /// Target entities
         /// </summary>
-        public List<JoinableEntity> Targets { get; set; }
+        public List<QueryableEntity> Targets { get; set; }
         #endregion
 
         #region Constructor
@@ -29,7 +29,7 @@ namespace QueryBuilder.Operation.Arguments
         /// </summary>
         /// <param name="Relationship"></param>
         /// <param name="Targets"></param>
-        public RelationshipJoinArgument( Relationship Relationship, List<JoinableEntity> Targets )
+        public RelationshipJoinArgument( Relationship Relationship, List<QueryableEntity> Targets )
         {
             this.Relationship = Relationship;
             this.Targets = Targets;

@@ -33,7 +33,7 @@ namespace QueryBuilder.Tests
             ProjectPersonAttrs.Add( Person.GetAttribute( "name" ).Name, new BooleanExpr( true ) );
             ProjectPersonAttrs.Add( Person.GetAttribute( "age" ).Name, new BooleanExpr( true ) );
 
-            ProjectArgument PersonArgs = new ProjectArgument( new JoinableEntity( Person ), ProjectPersonAttrs );
+            ProjectArgument PersonArgs = new ProjectArgument( new QueryableEntity( Person ), ProjectPersonAttrs );
             ProjectStage ProjectOp = new ProjectStage( new ProjectArgument[] { PersonArgs }, ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { ProjectOp };
@@ -76,20 +76,20 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarManufacturedBy",
-                new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
+                new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "ManufacturedBy" ),
-                new List<JoinableEntity> {
-                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Manufacturer" ), "manufacturer" )
+                new List<QueryableEntity> {
+                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Manufacturer" ), "manufacturer" )
                 } );
 
             RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Owns" ),
-                new List<JoinableEntity> {
-                    new JoinableEntity( CarRepairedByGarage )
+                new List<QueryableEntity> {
+                    new QueryableEntity( CarRepairedByGarage )
                 } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
+                new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArgument> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
@@ -98,18 +98,18 @@ namespace QueryBuilder.Tests
             Dictionary<string, ProjectExpression> ProjectPersonAttrs = new Dictionary<string, ProjectExpression>();
             Entity Person = (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" );
             ProjectPersonAttrs.Add( Person.GetAttribute( "name" ).Name, new BooleanExpr( true ) );
-            ProjectArgument PersonArgs = new ProjectArgument( new JoinableEntity( Person, "person" ), ProjectPersonAttrs );
+            ProjectArgument PersonArgs = new ProjectArgument( new QueryableEntity( Person, "person" ), ProjectPersonAttrs );
 
             Dictionary<string, ProjectExpression> ProjectCarAttrs = new Dictionary<string, ProjectExpression>();
             Entity Car = (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" );
             ProjectCarAttrs.Add( Car.GetAttribute( "model" ).Name, new BooleanExpr( true ) );
             ProjectCarAttrs.Add( Car.GetAttribute( "year" ).Name, new BooleanExpr( true ) );
-            ProjectArgument CarArgs = new ProjectArgument( new JoinableEntity( Car, "car" ), ProjectCarAttrs );
+            ProjectArgument CarArgs = new ProjectArgument( new QueryableEntity( Car, "car" ), ProjectCarAttrs );
 
             Dictionary<string, ProjectExpression> ProjectManufacturerAttrs = new Dictionary<string, ProjectExpression>();
             Entity Manufacturer = (Entity)ModelData.EntityRelationshipModel.FindByName( "Manufacturer" );
             ProjectManufacturerAttrs.Add( ModelData.EntityRelationshipModel.FindByName( "Manufacturer" ).GetAttribute( "name" ).Name, new BooleanExpr( true ) );
-            ProjectArgument ManufacturerArgs = new ProjectArgument( new JoinableEntity( Manufacturer, "manufacturer" ), ProjectManufacturerAttrs );
+            ProjectArgument ManufacturerArgs = new ProjectArgument( new QueryableEntity( Manufacturer, "manufacturer" ), ProjectManufacturerAttrs );
 
             ProjectStage ProjectOp = new ProjectStage( new ProjectArgument[] { PersonArgs, CarArgs, ManufacturerArgs }, VMap );
 

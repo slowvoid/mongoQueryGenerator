@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace QueryBuilder.Operation.Arguments
 {
     /// <summary>
-    /// Represents an Entity in a joinable context
+    /// Represents an Entity in a queryable context
     /// </summary>
-    public class JoinableEntity
+    public class QueryableEntity
     {
         #region Properties
         /// <summary>
@@ -20,7 +20,7 @@ namespace QueryBuilder.Operation.Arguments
         /// <summary>
         /// Entity to be joined
         /// </summary>
-        public BaseERElement JoinedElement { get; set; }
+        public BaseERElement Element { get; set; }
         #endregion
 
         #region Constructor
@@ -28,10 +28,10 @@ namespace QueryBuilder.Operation.Arguments
         /// Initialize a new instance of JoinableEntity
         /// </summary>
         /// <param name="Alias"></param>
-        /// <param name="JoinedElement"></param>
-        public JoinableEntity( BaseERElement JoinedElement, string Alias = null )
+        /// <param name="Element"></param>
+        public QueryableEntity( BaseERElement Element, string Alias = null )
         {
-            this.JoinedElement = JoinedElement;
+            this.Element = Element;
             this.Alias = Alias;
         }
         #endregion

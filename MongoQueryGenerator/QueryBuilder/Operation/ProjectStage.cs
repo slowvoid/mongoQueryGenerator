@@ -49,7 +49,7 @@ namespace QueryBuilder.Operation
                 // Iterate Attributes and Expressions
                 foreach ( KeyValuePair<string, ProjectExpression> Attribute in Argument.Attributes )
                 {
-                    string AttributeMap = Map.GetRuleValue( Argument.Element.Alias ?? Argument.Element.JoinedElement.Name, Attribute.Key );
+                    string AttributeMap = Map.GetRuleValue( Argument.Element.Alias ?? Argument.Element.Element.Name, Attribute.Key );
                     // If the attribute map is null, we'll ignore it
                     if ( string.IsNullOrWhiteSpace( AttributeMap ) )
                     {

@@ -19,7 +19,7 @@ namespace QueryBuilder.ER
         /// <summary>
         /// Source entity
         /// </summary>
-        public JoinableEntity SourceEntity { get; set; }
+        public QueryableEntity SourceEntity { get; set; }
         /// <summary>
         /// Relationship
         /// </summary>
@@ -27,7 +27,7 @@ namespace QueryBuilder.ER
         /// <summary>
         /// Joined entities (They can be Computed Entities)
         /// </summary>
-        public List<JoinableEntity> TargetEntities { get; set; }
+        public List<QueryableEntity> TargetEntities { get; set; }
         #endregion
 
         #region Constructor
@@ -36,7 +36,7 @@ namespace QueryBuilder.ER
         /// </summary>
         /// <param name="Name">Computed Entity name</param>
         /// <param name="Attributes">Attributes</param>
-        public ComputedEntity( string Name, JoinableEntity SourceEntity, Relationship Relationship, List<JoinableEntity> TargetEntities )
+        public ComputedEntity( string Name, QueryableEntity SourceEntity, Relationship Relationship, List<QueryableEntity> TargetEntities )
         {
             this.Name = Name;
             this.SourceEntity = SourceEntity;

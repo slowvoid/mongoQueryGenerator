@@ -32,12 +32,12 @@ namespace QueryBuilder.Tests
             // Prepare query generator
             RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                new List<JoinableEntity> {
-                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
+                new List<QueryableEntity> {
+                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
                 } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
+                new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArgument> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
@@ -82,12 +82,12 @@ namespace QueryBuilder.Tests
             // Prepare query generator
             RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                new List<JoinableEntity> {
-                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
+                new List<QueryableEntity> {
+                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
                 } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
+                new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArgument> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
@@ -132,12 +132,12 @@ namespace QueryBuilder.Tests
             // Prepare query generator
             RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                new List<JoinableEntity> {
-                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
+                new List<QueryableEntity> {
+                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
                 } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
+                new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArgument> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
@@ -182,12 +182,12 @@ namespace QueryBuilder.Tests
             // Prepare query generator
             RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                new List<JoinableEntity> {
-                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
+                new List<QueryableEntity> {
+                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
                 } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
+                new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 new List<RelationshipJoinArgument> { RJoinArgs },
                 ModelData.ERMongoMapping );
 
@@ -232,12 +232,12 @@ namespace QueryBuilder.Tests
             // Prepare query generator
             RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasInsurance" ),
-                new List<JoinableEntity> {
-                    new JoinableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ), "insurance" )
+                new List<QueryableEntity> {
+                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ), "insurance" )
                 } );
 
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new JoinableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
+                new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
                 new List<RelationshipJoinArgument> { RJoinArgs },
                 ModelData.ERMongoMapping );
 

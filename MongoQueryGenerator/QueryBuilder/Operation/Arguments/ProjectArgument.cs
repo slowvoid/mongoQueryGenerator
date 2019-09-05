@@ -16,7 +16,7 @@ namespace QueryBuilder.Operation.Arguments
         /// <summary>
         /// Base Element
         /// </summary>
-        public JoinableEntity Element { get; set; }
+        public QueryableEntity Element { get; set; }
         /// <summary>
         /// Attributes and the expression to apply
         /// </summary>
@@ -29,7 +29,7 @@ namespace QueryBuilder.Operation.Arguments
         /// </summary>
         /// <param name="Element"></param>
         /// <param name="Attributes"></param>
-        public ProjectArgument( JoinableEntity Element, Dictionary<string, ProjectExpression> Attributes )
+        public ProjectArgument( QueryableEntity Element, Dictionary<string, ProjectExpression> Attributes )
         {
             this.Element = Element;
             this.Attributes = Attributes;

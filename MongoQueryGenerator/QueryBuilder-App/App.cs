@@ -26,12 +26,12 @@ namespace QueryBuilderApp
 
             string InitialEntity = "Person";
 
-            JoinableEntity Car = new JoinableEntity( (Entity)Model.FindByName( "Car" ), "car" );
-            JoinableEntity Person = new JoinableEntity( (Entity)Model.FindByName( "Person" ), "person" );
+            QueryableEntity Car = new QueryableEntity( (Entity)Model.FindByName( "Car" ), "car" );
+            QueryableEntity Person = new QueryableEntity( (Entity)Model.FindByName( "Person" ), "person" );
 
             RelationshipJoinArgument JoinArgs = new RelationshipJoinArgument(
                 (Relationship)Model.FindByName( "Drives" ),
-                new List<JoinableEntity> {
+                new List<QueryableEntity> {
                     Car
                 } );
 
@@ -46,13 +46,13 @@ namespace QueryBuilderApp
             // Select only name and car model
             // Arguments for person
             Dictionary<string, ProjectExpression> ProjectPersonAttrs = new Dictionary<string, ProjectExpression>();
-            ProjectPersonAttrs.Add( Person.JoinedElement.GetAttribute( "name" ).Name, new BooleanExpr( true ) );
+            ProjectPersonAttrs.Add( Person.Element.GetAttribute( "name" ).Name, new BooleanExpr( true ) );
             ProjectArgument PersonArgs = new ProjectArgument( Person, ProjectPersonAttrs );
 
             // Arguments for car
             Dictionary<string, ProjectExpression> ProjectCarAttrs = new Dictionary<string, ProjectExpression>();
-            ProjectCarAttrs.Add( Car.JoinedElement.GetAttribute( "model" ).Name, new BooleanExpr( true ) );
-            ProjectCarAttrs.Add( Car.JoinedElement.GetAttribute( "year" ).Name, new BooleanExpr( true ) );
+            ProjectCarAttrs.Add( Car.Element.GetAttribute( "model" ).Name, new BooleanExpr( true ) );
+            ProjectCarAttrs.Add( Car.Element.GetAttribute( "year" ).Name, new BooleanExpr( true ) );
             ProjectArgument CarArgs = new ProjectArgument( Car, ProjectCarAttrs );
 
             // Project
@@ -66,7 +66,7 @@ namespace QueryBuilderApp
                 Car,
                 Map );
 
-            JoinableEntity InsCompany = new JoinableEntity( Model.FindByName( "InsCompany" ), "inscompany" );
+            QueryableEntity InsCompany = new QueryableEntity( Model.FindByName( "InsCompany" ), "inscompany" );
 
             CartesianProductOperator CartesianOp2 = new CartesianProductOperator(
                 Person,
