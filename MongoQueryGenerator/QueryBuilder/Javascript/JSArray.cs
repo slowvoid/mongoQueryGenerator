@@ -43,6 +43,10 @@ namespace QueryBuilder.Javascript
                 {
                     ItemsAsString.Add( Item.ToString() );
                 }
+                else if ( Item is int )
+                {
+                    ItemsAsString.Add( Item.ToString() );
+                }
                 else
                 {
                     ItemsAsString.Add( (string)Item );

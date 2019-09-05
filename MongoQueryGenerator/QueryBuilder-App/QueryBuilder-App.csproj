@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>QueryBuilderApp.App</StartupObject>
+    <StartupObject>QueryBuilderApp.JSTests</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="ComputedEntityTest.cs" />
+    <Compile Include="JSCodeTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -39,7 +39,8 @@ namespace QueryBuilder.Mongo.Expressions
         public override JSCode ToJSCode()
         {
             Dictionary<string, object> InExprAttr = new Dictionary<string, object>();
-            InExprAttr.Add( "in", new JSArray( Values ) );
+            List<object> OpValues = new List<object>() { Field, new JSArray( Values ) };
+            InExprAttr.Add( "$in", new JSArray( OpValues ) );
 
             return new JSObject( InExprAttr );
         }
