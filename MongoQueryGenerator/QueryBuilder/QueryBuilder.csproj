@@ -123,6 +123,7 @@
     <Compile Include="Operation\Arguments\JoinableEntity.cs" />
     <Compile Include="Operation\Arguments\ProjectArgument.cs" />
     <Compile Include="Operation\Arguments\RelationshipJoinArgument.cs" />
+    <Compile Include="Operation\Arguments\SelectArgument.cs" />
     <Compile Include="Operation\CartesianProduct.cs" />
     <Compile Include="Operation\Exceptions\ImpossibleOperationException.cs" />
     <Compile Include="Operation\Exceptions\InvalidMapException.cs" />
