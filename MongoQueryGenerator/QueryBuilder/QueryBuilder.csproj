@@ -103,13 +103,17 @@
     <Compile Include="Mongo\Collection.cs" />
     <Compile Include="Mongo\Document.cs" />
     <Compile Include="Mongo\Expressions\BaseExpression.cs" />
+    <Compile Include="Mongo\Expressions\BaseLogicalExpression.cs" />
     <Compile Include="Mongo\Expressions\BooleanExpr.cs" />
+    <Compile Include="Mongo\Expressions\LogicalExpression.cs" />
+    <Compile Include="Mongo\Expressions\LogicalOperator.cs" />
     <Compile Include="Mongo\Expressions\ConcatArrayExpr.cs" />
     <Compile Include="Mongo\Expressions\EqExpr.cs" />
     <Compile Include="Mongo\Expressions\Expr.cs" />
     <Compile Include="Mongo\Expressions\GteExpr.cs" />
     <Compile Include="Mongo\Expressions\GtExpr.cs" />
     <Compile Include="Mongo\Expressions\InExpr.cs" />
+    <Compile Include="Mongo\Expressions\LogicalExpressionGroup.cs" />
     <Compile Include="Mongo\Expressions\LteExpr.cs" />
     <Compile Include="Mongo\Expressions\LtExpr.cs" />
     <Compile Include="Mongo\Expressions\MapExpr.cs" />

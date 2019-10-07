@@ -79,6 +79,9 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
+
+            // FROM Person RJOIN (Car, InsCompany)
+
             RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Insurance" ),
                 new List<QueryableEntity> {
