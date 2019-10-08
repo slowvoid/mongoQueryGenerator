@@ -36,9 +36,9 @@ namespace QueryBuilder.Mongo.Expressions
                 case LogicalOperator.LESS_THAN:
                     return "$lt";
                 case LogicalOperator.NOT_EQUAL:
-                    return "$neq";
+                    return "$ne";
                 case LogicalOperator.NOT_IN:
-                    return "$not"; // TODO: This should result in two operators { $not: { $in: [] } }
+                    return "$not"; // This should result in two operators { $not: { $in: [] } }
                 case LogicalOperator.OR:
                     return "$or";
                 case LogicalOperator.NOT:
