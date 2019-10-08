@@ -34,7 +34,7 @@ namespace QueryBuilder.Operation
         /// <returns></returns>
         public override AlgebraOperatorResult Run()
         {
-            MatchOperator MatchOp = new MatchOperator( new Expr( Argument.ExpressionGroup ) );
+            MatchOperator MatchOp = new MatchOperator( new Expr( Argument.Expression ) );
 
             return new AlgebraOperatorResult( new List<MongoDBOperator>() { MatchOp } );
         }

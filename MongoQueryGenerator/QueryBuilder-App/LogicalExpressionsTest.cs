@@ -39,10 +39,11 @@ namespace QueryBuilderApp
             LogicalExpression left = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "name" ).Value}", LogicalOperator.EQUAL,
                 "Astrid" );
 
-            LogicalExpression right = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "age" ).Value}", LogicalOperator.GREATER_THAN,
+            /*LogicalExpression right = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "age" ).Value}", LogicalOperator.GREATER_THAN,
                 100 );
 
-            SelectArgument Arg = new SelectArgument( new LogicalExpressionGroup( left, LogicalOperator.OR, right ) );
+            SelectArgument Arg = new SelectArgument( new LogicalExpressionGroup( left, LogicalOperator.OR, right ) );*/
+            SelectArgument Arg = new SelectArgument( left );
             SelectStage SelectOp = new SelectStage( Arg, Map );
 
             Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );

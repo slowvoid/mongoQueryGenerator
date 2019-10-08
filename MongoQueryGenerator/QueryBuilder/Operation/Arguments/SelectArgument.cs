@@ -16,7 +16,7 @@ namespace QueryBuilder.Operation.Arguments
         /// <summary>
         /// Expression group to resolve
         /// </summary>
-        public LogicalExpressionGroup ExpressionGroup { get; set; }
+        public BaseLogicalExpression Expression { get; set; }
         #endregion
 
         #region Constructor
@@ -24,9 +24,9 @@ namespace QueryBuilder.Operation.Arguments
         /// Initialize a new instance of SelectArgument
         /// </summary>
         /// <param name="ExpressionGroup"></param>
-        public SelectArgument( LogicalExpressionGroup ExpressionGroup )
+        public SelectArgument( BaseLogicalExpression Expression )
         {
-            this.ExpressionGroup = ExpressionGroup;
+            this.Expression = Expression;
         }
         #endregion
     }
