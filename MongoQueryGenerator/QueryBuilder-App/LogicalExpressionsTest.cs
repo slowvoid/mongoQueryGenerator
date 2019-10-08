@@ -1,5 +1,15 @@
-﻿using QueryBuilder.Mongo.Expressions;
+﻿using QueryBuilder.ER;
+using QueryBuilder.Map;
+using QueryBuilder.Mongo;
+using QueryBuilder.Mongo.Expressions;
+using QueryBuilder.Operation;
+using QueryBuilder.Operation.Arguments;
+using System.Collections;
+using System.Collections.Generic;
 using System;
+using System.Linq;
+using QueryBuilder.Mongo.Aggregation.Operators;
+using QueryBuilder.Query;
 
 namespace QueryBuilderApp
 {
@@ -20,6 +30,31 @@ namespace QueryBuilderApp
             LogicalExpressionGroup exprGroup2 = new LogicalExpressionGroup( exprGroup, LogicalOperator.AND, expr );
 
             Console.WriteLine( exprGroup2.ToJSCode().ToString() );
+
+            ERModel Model = TestDataProvider.CreateModel();
+            MongoSchema Schema = TestDataProvider.CreateSchema();
+            ModelMapping Map = TestDataProvider.CreateMap( Model, Schema );
+
+            MapRule PersonRule = Map.Rules.FirstOrDefault( R => R.Source.Name == "Person" );
+            LogicalExpression left = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "name" ).Value}", LogicalOperator.EQUAL,
+                "Astrid" );
+
+            LogicalExpression right = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "age" ).Value}", LogicalOperator.GREATER_THAN,
+                100 );
+
+            SelectArgument Arg = new SelectArgument( new LogicalExpressionGroup( left, LogicalOperator.OR, right ) );
+            SelectStage SelectOp = new SelectStage( Arg, Map );
+
+            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
+            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
+            QueryGen.CollectionName = "Person";
+
+            string QueryString = QueryGen.Run();
+
+            Console.WriteLine( QueryString );
+
+            QueryRunner runner = new QueryRunner( "mongodb://localhost:27017", "testStuff" );
+            Console.WriteLine( runner.GetJSON( QueryString ) );
 
             Console.ReadLine();
         }

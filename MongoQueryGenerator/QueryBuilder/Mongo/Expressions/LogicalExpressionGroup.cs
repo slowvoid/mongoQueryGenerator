@@ -29,6 +29,14 @@ namespace QueryBuilder.Mongo.Expressions
 
         #region Methods
         /// <summary>
+        /// Generates a string representing the javascript version of this instance
+        /// </summary>
+        /// <returns></returns>
+        public override string ToJavaScript()
+        {
+            return ToJSCode().ToString();
+        }
+        /// <summary>
         /// Create a JavaScript representation of this object
         /// </summary>
         /// <returns></returns>

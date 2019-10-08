@@ -143,7 +143,7 @@ namespace QueryBuilder.Operation
 
                                 // Setup MongoDB operators
                                 AddFieldsOperator AddOp = new AddFieldsOperator( TargetFields );
-                                Mongo.Aggregation.Operators.ProjectOperator ProjectOp = new Mongo.Aggregation.Operators.ProjectOperator( RemoveAttributes );
+                                ProjectOperator ProjectOp = new ProjectOperator( RemoveAttributes );
 
                                 // Add to execution list
                                 RelationshipOperations.AddRange( new MongoDBOperator[] { AddOp, ProjectOp } );
@@ -190,7 +190,7 @@ namespace QueryBuilder.Operation
                                 AddFieldsOperator AddOp = new AddFieldsOperator( TargetFields );
 
                                 // Remove unwanted attributes
-                                Mongo.Aggregation.Operators.ProjectOperator ProjectOp = Mongo.Aggregation.Operators.ProjectOperator.HideAttributesOperator( new string[] { LookupTargetAs } );
+                                ProjectOperator ProjectOp = ProjectOperator.HideAttributesOperator( new string[] { LookupTargetAs } );
 
                                 RelationshipOperations.AddRange( new MongoDBOperator[] { LookupOp, UnwindOp, AddOp, ProjectOp } );
                             }
@@ -242,7 +242,7 @@ namespace QueryBuilder.Operation
                     BuildJoinData.Add( $"data_{TargetData.Relationship.Name}", new JSArray( new List<object> { MergeOp.ToJSCode() } ) );
 
                     AddFieldsOperator BuildOp = new AddFieldsOperator( BuildJoinData );
-                    Mongo.Aggregation.Operators.ProjectOperator HideFields = Mongo.Aggregation.Operators.ProjectOperator.HideAttributesOperator( FieldsToRemove );
+                    ProjectOperator HideFields = ProjectOperator.HideAttributesOperator( FieldsToRemove );
 
                     RelationshipOperations.AddRange( new MongoDBOperator[] { BuildOp, HideFields } );
                     OperationsToExecute.AddRange( RelationshipOperations.ToArray() );
@@ -329,7 +329,7 @@ namespace QueryBuilder.Operation
                                     ProjectFields.Add( $"\"{RuleValue}\"", new BooleanExpr( true ) );
                                 }
 
-                                Mongo.Aggregation.Operators.ProjectOperator ProjectOp = new Mongo.Aggregation.Operators.ProjectOperator( ProjectFields );
+                                ProjectOperator ProjectOp = new ProjectOperator( ProjectFields );
 
 
                                 OperationsToExecute.Add( ProjectOp );
@@ -384,7 +384,7 @@ namespace QueryBuilder.Operation
                                     ProjectFields.Add( $"\"{RuleValue}\"", new BooleanExpr( true ) );
                                 }
 
-                                Mongo.Aggregation.Operators.ProjectOperator ProjectOp = new Mongo.Aggregation.Operators.ProjectOperator( ProjectFields );
+                                ProjectOperator ProjectOp = new ProjectOperator( ProjectFields );
 
 
                                 OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, ProjectOp } );
@@ -402,7 +402,7 @@ namespace QueryBuilder.Operation
                         ConcatenatedFields.Add( RelationshipAttributesField, ConcatExpr.ToJSCode() );
                         AddFieldsOperator AddConcatOp = new AddFieldsOperator( ConcatenatedFields );
                         // Remove fields
-                        Mongo.Aggregation.Operators.ProjectOperator RemoveConcatSourceOp = Mongo.Aggregation.Operators.ProjectOperator.HideAttributesOperator( ConcatArrays );
+                        ProjectOperator RemoveConcatSourceOp = ProjectOperator.HideAttributesOperator( ConcatArrays );
 
                         RelationshipOperations.AddRange( new MongoDBOperator[] { AddConcatOp, RemoveConcatSourceOp } );
                     }
@@ -500,7 +500,7 @@ namespace QueryBuilder.Operation
                             {
                                 { TargetLookupAs, new BooleanExpr( false ) }
                             };
-                            Mongo.Aggregation.Operators.ProjectOperator ProjectOp = new Mongo.Aggregation.Operators.ProjectOperator( ProjectExpressions );
+                            ProjectOperator ProjectOp = new ProjectOperator( ProjectExpressions );
 
                             CustomPipeline.AddRange( new MongoDBOperator[] { LookupTargetOp, UnwindTarget, AddFieldsOp, ProjectOp } );
                         }
@@ -518,7 +518,7 @@ namespace QueryBuilder.Operation
                     }
 
                     AddFieldsOperator RAddFields = new AddFieldsOperator( RelationshipAttributesToAdd );
-                    Mongo.Aggregation.Operators.ProjectOperator RRemoveOp = new Mongo.Aggregation.Operators.ProjectOperator( RelationshipAttributesToRemove );
+                    ProjectOperator RRemoveOp = new ProjectOperator( RelationshipAttributesToRemove );
 
                     CustomPipeline.AddRange( new MongoDBOperator[] { RAddFields, RRemoveOp } );
 
@@ -532,7 +532,7 @@ namespace QueryBuilder.Operation
                         CustomPipeline.Add( ReplaceRootOp );
 
                         // Hide merged attributes to avoid duplicates
-                        Mongo.Aggregation.Operators.ProjectOperator HideMerged = Mongo.Aggregation.Operators.ProjectOperator.HideAttributesOperator( FieldsToMergeWithRoot.Where( Field => Field != "$$ROOT" ) );
+                        ProjectOperator HideMerged = ProjectOperator.HideAttributesOperator( FieldsToMergeWithRoot.Where( Field => Field != "$$ROOT" ) );
                         CustomPipeline.Add( HideMerged );
                     }
 
@@ -640,7 +640,7 @@ namespace QueryBuilder.Operation
             }
 
             AddFieldsOperator RenameOp = new AddFieldsOperator( AttributesToRename );
-            Mongo.Aggregation.Operators.ProjectOperator HideOp = Mongo.Aggregation.Operators.ProjectOperator.HideAttributesOperator( AttributesToHide );
+            ProjectOperator HideOp = ProjectOperator.HideAttributesOperator( AttributesToHide );
 
             CEPipeline.AddRange( new MongoDBOperator[] { RenameOp, HideOp } );
 

@@ -14,25 +14,19 @@ namespace QueryBuilder.Operation.Arguments
     {
         #region Properties
         /// <summary>
-        /// Entity in which the attributes belong to
+        /// Expression group to resolve
         /// </summary>
-        public QueryableEntity Element { get; set; }
-        /// <summary>
-        /// Attributes and expressions to apply to them
-        /// </summary>
-        public Dictionary<string, BaseExpression> Attributes { get; set; }
+        public LogicalExpressionGroup ExpressionGroup { get; set; }
         #endregion
 
         #region Constructor
         /// <summary>
-        /// Initialize a new instance of Select Argument class
+        /// Initialize a new instance of SelectArgument
         /// </summary>
-        /// <param name="Element"></param>
-        /// <param name="Attributes"></param>
-        public SelectArgument(QueryableEntity Element, Dictionary<string, BaseExpression> Attributes )
+        /// <param name="ExpressionGroup"></param>
+        public SelectArgument( LogicalExpressionGroup ExpressionGroup )
         {
-            this.Element = Element;
-            this.Attributes = Attributes;
+            this.ExpressionGroup = ExpressionGroup;
         }
         #endregion
     }

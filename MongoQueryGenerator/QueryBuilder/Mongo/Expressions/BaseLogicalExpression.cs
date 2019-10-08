@@ -10,15 +10,9 @@ namespace QueryBuilder.Mongo.Expressions
     /// <summary>
     /// Provides base for logical expressions
     /// </summary>
-    public abstract class BaseLogicalExpression
+    public abstract class BaseLogicalExpression : BaseExpression
     {
         #region Methods
-        /// <summary>
-        /// Generates a JSCode representation of this instance
-        /// </summary>
-        /// <returns></returns>
-        public abstract JSCode ToJSCode();
-
         /// <summary>
         /// Return the operator string name (MongoDB compatitle)
         /// </summary>

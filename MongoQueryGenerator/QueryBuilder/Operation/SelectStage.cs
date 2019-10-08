@@ -20,7 +20,7 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// List of arguments
         /// </summary>
-        public IEnumerable<SelectArgument> Arguments { get; set; }
+        public SelectArgument Argument { get; set; }
         /// <summary>
         /// Mapping between ER model and Mongo schema
         /// </summary>
@@ -34,21 +34,9 @@ namespace QueryBuilder.Operation
         /// <returns></returns>
         public override AlgebraOperatorResult Run()
         {
-            // Iterate arguments and build the matching queries
-            foreach ( SelectArgument Argument in Arguments )
-            {
-                // Iterate attributes and expressions
-                foreach ( KeyValuePair<string, BaseExpression> Attribute in Argument.Attributes )
-                {
-                    string AttributeMap = Map.GetRuleValue( Argument.Element.Alias ?? Argument.Element.Element.Name, Attribute.Key );
-                    // If the attribute map is null, we'll ignore it
-                    if ( string.IsNullOrWhiteSpace( AttributeMap ) )
-                    {
-                        continue;
-                    }
-                }
-            }
-            return new AlgebraOperatorResult( new List<MongoDBOperator>() );
+            MatchOperator MatchOp = new MatchOperator( new Expr( Argument.ExpressionGroup ) );
+
+            return new AlgebraOperatorResult( new List<MongoDBOperator>() { MatchOp } );
         }
         #endregion
 
@@ -58,9 +46,9 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="Arguments"></param>
         /// <param name="Map"></param>
-        public SelectStage( IEnumerable<SelectArgument> Arguments, IModelMap Map )
+        public SelectStage( SelectArgument Argument, IModelMap Map )
         {
-            this.Arguments = Arguments;
+            this.Argument = Argument;
             this.Map = Map;
         }
         #endregion
