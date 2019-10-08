@@ -42,13 +42,30 @@ namespace QueryBuilder.Mongo.Expressions
         /// <returns></returns>
         public override JSCode ToJSCode()
         {
-            string OperatorName = _getOperatorString( Operator );
-            JSArray OperatorValues = new JSArray( new List<object> { LeftOperand.ToJSCode(), RightOperand.ToJSCode() } );
+            // Check if it is a NOT IN operator
+            if ( Operator == LogicalOperator.NOT_IN )
+            {
+                string NotOperatorName = _getOperatorString( LogicalOperator.NOT );
+                string InOperatorName = _getOperatorString( LogicalOperator.IN );
 
-            Dictionary<string, object> ObjectData = new Dictionary<string, object>();
-            ObjectData.Add( OperatorName, OperatorValues );
+                JSArray OperatorValues = new JSArray( new List<object> { LeftOperand.ToJSCode(), RightOperand.ToJSCode() } );
 
-            return new JSObject( ObjectData );
+                Dictionary<string, object> ObjectData = new Dictionary<string, object>();
+                ObjectData.Add( InOperatorName, OperatorValues );
+
+                return new JSObject( NotOperatorName, ObjectData );
+            }
+            else
+            {
+                string OperatorName = _getOperatorString( Operator );
+                JSArray OperatorValues = new JSArray( new List<object> { LeftOperand.ToJSCode(), RightOperand.ToJSCode() } );
+
+                Dictionary<string, object> ObjectData = new Dictionary<string, object>();
+                ObjectData.Add( OperatorName, OperatorValues );
+
+                return new JSObject( ObjectData );
+
+            }
         }
         #endregion
 

@@ -10,6 +10,7 @@ using System;
 using System.Linq;
 using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Query;
+using QueryBuilder.Javascript;
 
 namespace QueryBuilderApp
 {
@@ -36,8 +37,8 @@ namespace QueryBuilderApp
             ModelMapping Map = TestDataProvider.CreateMap( Model, Schema );
 
             MapRule PersonRule = Map.Rules.FirstOrDefault( R => R.Source.Name == "Person" );
-            LogicalExpression left = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "name" ).Value}", LogicalOperator.EQUAL,
-                "Astrid" );
+            LogicalExpression left = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "name" ).Value}", LogicalOperator.NOT_IN,
+                new JSArray( new List<object>() { "Astrid", "Jane", "Loiuse" } ) );
 
             /*LogicalExpression right = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "age" ).Value}", LogicalOperator.GREATER_THAN,
                 100 );
