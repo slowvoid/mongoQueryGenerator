@@ -10,7 +10,7 @@ namespace QueryBuilder.Mongo.Expressions
     /// <summary>
     /// Greater than expression
     /// </summary>
-    public class GtExpr : BaseExpression
+    public class GtExpr : BaseLogicalExpression
     {
         #region Properties
         public List<object> Values { get; set; }

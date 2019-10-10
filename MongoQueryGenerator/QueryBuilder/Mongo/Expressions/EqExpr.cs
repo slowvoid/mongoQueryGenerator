@@ -10,7 +10,7 @@ namespace QueryBuilder.Mongo.Expressions
     /// <summary>
     /// Represents an $eq expression
     /// </summary>
-    public class EqExpr : BaseExpression
+    public class EqExpr : BaseLogicalExpression
     {
         #region Properties
         /// <summary>

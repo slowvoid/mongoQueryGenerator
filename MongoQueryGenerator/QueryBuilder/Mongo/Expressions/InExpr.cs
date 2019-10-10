@@ -10,7 +10,7 @@ namespace QueryBuilder.Mongo.Expressions
     /// <summary>
     /// In array expression
     /// </summary>
-    public class InExpr : BaseExpression
+    public class InExpr : BaseLogicalExpression
     {
         #region Properties
         /// <summary>

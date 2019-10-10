@@ -10,7 +10,7 @@ namespace QueryBuilder.Mongo.Expressions
     /// <summary>
     /// Represents a Not Equal expression ($ne)
     /// </summary>
-    public class NeqExpr : BaseExpression
+    public class NeqExpr : BaseLogicalExpression
     {
         #region Properties
         /// <summary>

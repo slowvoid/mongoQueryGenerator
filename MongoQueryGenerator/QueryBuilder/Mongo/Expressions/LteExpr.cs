@@ -10,7 +10,7 @@ namespace QueryBuilder.Mongo.Expressions
     /// <summary>
     /// Less than or equal expression
     /// </summary>
-    public class LteExpr : BaseExpression
+    public class LteExpr : BaseLogicalExpression
     {
         #region Properties
         public List<object> Values { get; set; }
