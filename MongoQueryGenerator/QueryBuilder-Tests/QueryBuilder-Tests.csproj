@@ -93,6 +93,9 @@
     <Compile Include="Select.cs" />
     <Compile Include="SelectDataProvider.cs" />
     <Compile Include="Utils.cs" />
+    <Content Include="HandcraftedQueries\selectOrMultiple.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="HandcraftedQueries\projectQuery.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

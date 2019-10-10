@@ -37,14 +37,17 @@ namespace QueryBuilderApp
             ModelMapping Map = TestDataProvider.CreateMap( Model, Schema );
 
             MapRule PersonRule = Map.Rules.FirstOrDefault( R => R.Source.Name == "Person" );
-            LogicalExpression left = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "name" ).Value}", LogicalOperator.NOT_IN,
+            /*LogicalExpression left = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "name" ).Value}", LogicalOperator.NOT_IN,
                 new JSArray( new List<object>() { "Astrid", "Jane", "Loiuse" } ) );
 
-            /*LogicalExpression right = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "age" ).Value}", LogicalOperator.GREATER_THAN,
-                100 );
-
-            SelectArgument Arg = new SelectArgument( new LogicalExpressionGroup( left, LogicalOperator.OR, right ) );*/
             SelectArgument Arg = new SelectArgument( left );
+            SelectStage SelectOp = new SelectStage( Arg, Map );*/
+
+            //NotInExpr notIn = new NotInExpr($"${PersonRule.Rules.First(R => R.Key == "name").Value}", new List<object>() { "Astrid", "Jane", "Louise"} );
+            //LogicalExpression OrValues = new LogicalExpression( $"${PersonRule.Rules.First( R => R.Key == "age" ).Value}", LogicalOperator.OR, new JSArray( new List<object>() { 26, 27, 43 } ) );
+
+            OrExpr OrValues = new OrExpr( $"${PersonRule.Rules.First( R => R.Key == "age" ).Value}", new List<object>() { 18, 21, 36 } );
+            SelectArgument Arg = new SelectArgument( OrValues );
             SelectStage SelectOp = new SelectStage( Arg, Map );
 
             Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );

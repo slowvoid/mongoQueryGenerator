@@ -383,5 +383,41 @@ namespace QueryBuilder.Tests
             // Check if both results are equal
             Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
         }
+        [TestMethod]
+        public void OrMultiple()
+        {
+            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+
+            string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectOrMultiple.js" );
+
+            Assert.IsNotNull( HandcraftedQuery );
+
+            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            OrExpr expr = new OrExpr( $"${AgeMap}", new List<object>() { 18, 21, 36 } );
+
+            SelectArgument Arg = new SelectArgument( expr );
+            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+
+            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
+            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
+            QueryGen.CollectionName = "Person";
+
+            string GeneratedQuery = QueryGen.Run();
+
+            Assert.IsNotNull( GeneratedQuery );
+
+            QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", "select" );
+
+            string HandcraftedResult = Runner.GetJSON( HandcraftedQuery );
+            string GeneratedResult = Runner.GetJSON( GeneratedQuery );
+
+            // Check if either result is null
+            Assert.IsNotNull( HandcraftedResult );
+            Assert.IsNotNull( GeneratedResult );
+
+            // Check if both results are equal
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
+        }
     }
 }

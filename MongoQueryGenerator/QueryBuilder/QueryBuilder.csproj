@@ -120,6 +120,7 @@
     <Compile Include="Mongo\Expressions\MergeObjects.cs" />
     <Compile Include="Mongo\Expressions\NeqExpr.cs" />
     <Compile Include="Mongo\Expressions\NotInExpr.cs" />
+    <Compile Include="Mongo\Expressions\OrExpr.cs" />
     <Compile Include="Mongo\Expressions\ProjectExpression.cs" />
     <Compile Include="Mongo\Expressions\ValueExpr.cs" />
     <Compile Include="Mongo\Schema.cs" />
