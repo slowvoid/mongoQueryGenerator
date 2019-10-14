@@ -371,23 +371,16 @@ namespace QueryBuilder.Operation
                                     MapParams.Add( $"\"{TargetData.Relationship.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{RuleValue}\"" ) );
                                 }
 
-                                // Setup project operation
+                                // Use add fields operation to add a renamed version of the incoming entity
                                 MapExpr AttributeMap = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
-                                Dictionary<string, ProjectExpression> ProjectFields = new Dictionary<string, ProjectExpression>();
-                                ProjectFields.Add( $"data_{TargetData.Relationship.Name}", AttributeMap );
+                                Dictionary<string, JSCode> AddFieldsDictionary = new Dictionary<string, JSCode>();
+                                AddFieldsDictionary.Add( $"data_{TargetData.Relationship.Name}", AttributeMap.ToJSCode() );
 
+                                AddFieldsOperator AddFieldsOp = new AddFieldsOperator( AddFieldsDictionary );
 
-                                // Keep source entity attributes
-                                foreach ( DataAttribute Attribute in SourceEntity.Element.Attributes )
-                                {
-                                    string RuleValue = SourceRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                                    ProjectFields.Add( $"\"{RuleValue}\"", new BooleanExpr( true ) );
-                                }
+                                ProjectOperator ProjectOp = ProjectOperator.HideAttributesOperator( new string[] { $"data_{TargetEntity.Element.Name}" } );
 
-                                ProjectOperator ProjectOp = new ProjectOperator( ProjectFields );
-
-
-                                OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, ProjectOp } );
+                                OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, AddFieldsOp, ProjectOp } );
                             }
                         }
                     }

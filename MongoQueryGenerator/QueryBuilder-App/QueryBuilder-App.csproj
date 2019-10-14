@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>QueryBuilderApp.LogicalExpressionsTest</StartupObject>
+    <StartupObject>QueryBuilderApp.MultipleRJOINApp</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -83,6 +83,7 @@
     <Compile Include="ComputedEntityTest.cs" />
     <Compile Include="JSCodeTests.cs" />
     <Compile Include="LogicalExpressionsTest.cs" />
+    <Compile Include="MultipleRJOIN.cs" />
     <Compile Include="TestDataProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

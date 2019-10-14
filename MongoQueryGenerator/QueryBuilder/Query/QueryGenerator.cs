@@ -46,6 +46,13 @@ namespace QueryBuilder.Query
         /// <returns></returns>
         public string Run()
         {
+            // Check if collection name is set
+            // otherwise throw error
+            if ( string.IsNullOrWhiteSpace( CollectionName ) )
+            {
+                throw new InvalidOperationException( "CollectionName cannot be empty" );
+            }
+
             // Setup results
             AlgebraOperatorResult Result = new AlgebraOperatorResult( new List<MongoDBOperator>() );
 
