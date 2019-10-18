@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>QueryBuilderApp.MultipleRJOINApp</StartupObject>
+    <StartupObject>QueryBuilderApp.MultipleEntitiesApp</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -83,6 +83,8 @@
     <Compile Include="ComputedEntityTest.cs" />
     <Compile Include="JSCodeTests.cs" />
     <Compile Include="LogicalExpressionsTest.cs" />
+    <Compile Include="MultipleEntitiesApp.cs" />
+    <Compile Include="MultipleEntitiesDataProvider.cs" />
     <Compile Include="MultipleRJOIN.cs" />
     <Compile Include="TestDataProvider.cs" />
   </ItemGroup>
