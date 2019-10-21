@@ -714,6 +714,13 @@ namespace QueryBuilder.Operation
                 }
             }
 
+            // If ExistingVirtualMap is not null
+            // Append data
+            if ( ExistingVirtualMap != null )
+            {
+                OperatorRules.AddRange( ExistingVirtualMap.Rules );
+            }
+
             // When done
             VirtualMap OperatorMap = new VirtualMap( OperatorRules );
             return OperatorMap;

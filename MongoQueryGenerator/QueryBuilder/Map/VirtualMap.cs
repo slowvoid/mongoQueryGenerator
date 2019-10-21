@@ -60,18 +60,16 @@ namespace QueryBuilder.Map
         /// <param name="Rules"></param>
         public VirtualMap( List<VirtualRule> Rules )
         {
-            // Check if there are rules for the same entity with the same alias
-            var GroupedRulesByName = Rules.GroupBy( Rule => Rule.SourceERElement.Name );
-            foreach ( var RuleGroup in GroupedRulesByName )
+            this.Rules = new List<VirtualRule>();
+
+            foreach ( VirtualRule Rule in Rules )
             {
-                var GroupedRulesByAlias = RuleGroup.GroupBy( Rule => Rule.Alias );
-                if ( GroupedRulesByAlias.Count() > 1 )
+                // Check if the rule already exists in the list
+                if ( this.Rules.FirstOrDefault( R => R.SourceERElement.Name == Rule.SourceERElement.Name && R.Alias == Rule.Alias ) == null )
                 {
-                    throw new DuplicatedMapException( RuleGroup.Key );
+                    this.Rules.Add( Rule );
                 }
             }
-
-            this.Rules = Rules;
         }
         #endregion
     }

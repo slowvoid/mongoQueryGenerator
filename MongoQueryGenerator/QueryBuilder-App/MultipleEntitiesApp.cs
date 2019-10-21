@@ -49,6 +49,16 @@ namespace QueryBuilderApp
             RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Person, new List<RelationshipJoinArgument>() { Arg3 }, Map );
             RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Person, new List<RelationshipJoinArgument>() { Arg4 }, Map );
 
+            VirtualMap VMap1 = RJoinOp1.ComputeVirtualMap();
+            VirtualMap VMap2 = RJoinOp2.ComputeVirtualMap( VMap1 );
+            VirtualMap VMap3 = RJoinOp3.ComputeVirtualMap( VMap2 );
+            VirtualMap VMap4 = RJoinOp4.ComputeVirtualMap( VMap3 );
+
+            Console.WriteLine( "Virtual map from RJoinOp1 {0}{1}", Environment.NewLine, VMap1.ToString() );
+            Console.WriteLine( "Virtual map from RJoinOp2 {0}{1}", Environment.NewLine, VMap2.ToString() );
+            Console.WriteLine( "Virtual map from RJoinOp3 {0}{1}", Environment.NewLine, VMap3.ToString() );
+            Console.WriteLine( "Virtual map from RJoinOp4 {0}{1}", Environment.NewLine, VMap4.ToString() );
+
             Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { RJoinOp1, RJoinOp2, RJoinOp3, RJoinOp4 } );
             QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
             QueryGen.CollectionName = "Person";
