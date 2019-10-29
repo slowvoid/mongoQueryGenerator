@@ -39,6 +39,8 @@ namespace QueryBuilder.Mongo.Expressions
         public BooleanExpr( bool Value )
         {
             this.Value = Value;
+
+            this.IsAddingOrForcingAFieldVisible = Value;
         }
         #endregion
     }

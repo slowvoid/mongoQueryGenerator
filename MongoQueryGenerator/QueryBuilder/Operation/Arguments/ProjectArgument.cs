@@ -1,4 +1,5 @@
 ﻿using QueryBuilder.Mongo.Expressions;
+using QueryBuilder.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,25 +15,31 @@ namespace QueryBuilder.Operation.Arguments
     {
         #region Properties
         /// <summary>
-        /// Base Element
+        /// Attribute name
         /// </summary>
-        public QueryableEntity Element { get; set; }
+        public DataAttribute Attribute { get; set; }
         /// <summary>
-        /// Attributes and the expression to apply
+        /// Attribute parent
         /// </summary>
-        public Dictionary<string, ProjectExpression> Attributes { get; set; }
+        public QueryableEntity ParentEntity { get; set; }
+        /// <summary>
+        /// Expression to apply to the attribute
+        /// </summary>
+        public ProjectExpression Expression { get; set; }
         #endregion
 
         #region Constructor
         /// <summary>
-        /// Initialize a new ProjectArgument instance
+        /// Initialize a new instance of ProjectArgument
         /// </summary>
-        /// <param name="Element"></param>
-        /// <param name="Attributes"></param>
-        public ProjectArgument( QueryableEntity Element, Dictionary<string, ProjectExpression> Attributes )
+        /// <param name="Attribute">Attribute name</param>
+        /// <param name="ParentEntity">Entity that owns attribute</param>
+        /// <param name="Expression">Expression to apply to the attribute</param>
+        public ProjectArgument(DataAttribute Attribute, QueryableEntity ParentEntity, ProjectExpression Expression )
         {
-            this.Element = Element;
-            this.Attributes = Attributes;
+            this.Attribute = Attribute;
+            this.ParentEntity = ParentEntity;
+            this.Expression = Expression;
         }
         #endregion
     }

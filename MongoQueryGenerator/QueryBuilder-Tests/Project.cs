@@ -27,14 +27,14 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            Entity Person = (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" );
-            Dictionary<string, ProjectExpression> ProjectPersonAttrs = new Dictionary<string, ProjectExpression>();
-            ProjectPersonAttrs.Add( Person.GetAttribute( "personId" ).Name, new BooleanExpr( false ) );
-            ProjectPersonAttrs.Add( Person.GetAttribute( "name" ).Name, new BooleanExpr( true ) );
-            ProjectPersonAttrs.Add( Person.GetAttribute( "age" ).Name, new BooleanExpr( true ) );
+            QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
 
-            ProjectArgument PersonArgs = new ProjectArgument( new QueryableEntity( Person ), ProjectPersonAttrs );
-            ProjectStage ProjectOp = new ProjectStage( new ProjectArgument[] { PersonArgs }, ModelData.ERMongoMapping );
+            List<ProjectArgument> Arguments = new List<ProjectArgument>();
+            Arguments.Add( new ProjectArgument( Person.GetAttribute( "personId" ), Person, new BooleanExpr( false ) ) );
+            Arguments.Add( new ProjectArgument( Person.GetAttribute( "name" ), Person, new BooleanExpr( true ) ) );
+            Arguments.Add( new ProjectArgument( Person.GetAttribute( "age" ), Person, new BooleanExpr( true ) ) );
+
+            ProjectStage ProjectOp = new ProjectStage( Arguments, ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { ProjectOp };
             Pipeline pipeline = new Pipeline( OpList );
@@ -96,22 +96,18 @@ namespace QueryBuilder.Tests
             VirtualMap VMap = RJoinOp.ComputeVirtualMap();
 
             Dictionary<string, ProjectExpression> ProjectPersonAttrs = new Dictionary<string, ProjectExpression>();
-            Entity Person = (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" );
-            ProjectPersonAttrs.Add( Person.GetAttribute( "name" ).Name, new BooleanExpr( true ) );
-            ProjectArgument PersonArgs = new ProjectArgument( new QueryableEntity( Person, "person" ), ProjectPersonAttrs );
 
-            Dictionary<string, ProjectExpression> ProjectCarAttrs = new Dictionary<string, ProjectExpression>();
-            Entity Car = (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" );
-            ProjectCarAttrs.Add( Car.GetAttribute( "model" ).Name, new BooleanExpr( true ) );
-            ProjectCarAttrs.Add( Car.GetAttribute( "year" ).Name, new BooleanExpr( true ) );
-            ProjectArgument CarArgs = new ProjectArgument( new QueryableEntity( Car, "car" ), ProjectCarAttrs );
+            QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
+            QueryableEntity Car = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Car" ) );
+            QueryableEntity Manufacturer = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Manufacturer" ) );
 
-            Dictionary<string, ProjectExpression> ProjectManufacturerAttrs = new Dictionary<string, ProjectExpression>();
-            Entity Manufacturer = (Entity)ModelData.EntityRelationshipModel.FindByName( "Manufacturer" );
-            ProjectManufacturerAttrs.Add( ModelData.EntityRelationshipModel.FindByName( "Manufacturer" ).GetAttribute( "name" ).Name, new BooleanExpr( true ) );
-            ProjectArgument ManufacturerArgs = new ProjectArgument( new QueryableEntity( Manufacturer, "manufacturer" ), ProjectManufacturerAttrs );
+            List<ProjectArgument> ProjectArguments = new List<ProjectArgument>();
+            ProjectArguments.Add( new ProjectArgument( Person.GetAttribute( "name" ), Person, new BooleanExpr( true ) ) );
+            ProjectArguments.Add( new ProjectArgument( Car.GetAttribute( "model" ), Car, new BooleanExpr( true ) ) );
+            ProjectArguments.Add( new ProjectArgument( Car.GetAttribute( "year" ), Car, new BooleanExpr( true ) ) );
+            ProjectArguments.Add( new ProjectArgument( Manufacturer.GetAttribute( "name" ), Manufacturer, new BooleanExpr( true ) ) );
 
-            ProjectStage ProjectOp = new ProjectStage( new ProjectArgument[] { PersonArgs, CarArgs, ManufacturerArgs }, VMap );
+            ProjectStage ProjectOp = new ProjectStage( ProjectArguments, VMap );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp, ProjectOp };
             Pipeline pipeline = new Pipeline( OpList );

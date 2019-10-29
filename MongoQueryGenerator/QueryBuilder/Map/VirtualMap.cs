@@ -22,6 +22,28 @@ namespace QueryBuilder.Map
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Returns a List with all rule strings
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetRulesAsStringList()
+        {
+            List<string> RuleStringList = new List<string>();
+
+            foreach ( VirtualRule Rule in Rules )
+            {
+                foreach ( KeyValuePair<string, string> RulePair in Rule.Rules )
+                {
+                    RuleStringList.Add( RulePair.Value );
+                }
+            }
+
+            return RuleStringList;
+        } 
+        /// <summary>
+        /// Generate a string representation
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -65,7 +87,7 @@ namespace QueryBuilder.Map
             foreach ( VirtualRule Rule in Rules )
             {
                 // Check if the rule already exists in the list
-                if ( this.Rules.FirstOrDefault( R => R.SourceERElement.Name == Rule.SourceERElement.Name && R.Alias == Rule.Alias ) == null )
+                if ( this.Rules.FirstOrDefault( R => R.SourceERElement.Name == Rule.SourceERElement.Name && R.Alias == Rule.Alias  ) == null )
                 {
                     this.Rules.Add( Rule );
                 }

@@ -32,7 +32,7 @@ namespace QueryBuilder.Mongo
         /// <param name="Identifier"></param>
         public void AddAttribute( string Name, bool Identifier = false )
         {
-            Attributes.Add( new DataAttribute( Name, Identifier ) );
+            Attributes.Add( new DataAttribute( Name, null, Identifier ) );
         }
         /// <summary>
         /// Find an attribute by name

@@ -1,4 +1,5 @@
 ﻿using QueryBuilder.ER;
+using QueryBuilder.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,35 @@ namespace QueryBuilder.Operation.Arguments
         /// Entity to be joined
         /// </summary>
         public BaseERElement Element { get; set; }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Returns the Element name
+        /// </summary>
+        /// <returns></returns>
+        public string Name()
+        {
+            if ( Element != null )
+            {
+                return Element.Name;
+            }
+
+            return string.Empty;
+        }
+        /// <summary>
+        /// Return an attribute from the Element
+        /// </summary>
+        /// <returns></returns>
+        public DataAttribute GetAttribute( string AttributeName )
+        {
+            if ( Element != null )
+            {
+                return Element.GetAttribute( AttributeName );
+            }
+
+            return null;
+        }
         #endregion
 
         #region Constructor

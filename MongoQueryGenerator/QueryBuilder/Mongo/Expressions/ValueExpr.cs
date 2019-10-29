@@ -38,6 +38,7 @@ namespace QueryBuilder.Mongo.Expressions
         public ValueExpr( string Value )
         {
             this.Value = Value;
+            this.IsAddingOrForcingAFieldVisible = true;
         }
         #endregion
     }

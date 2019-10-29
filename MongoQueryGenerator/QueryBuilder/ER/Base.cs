@@ -32,7 +32,7 @@ namespace QueryBuilder.ER
         /// <param name="Identifier"></param>
         public void AddAttribute( string Name, bool Identifier = false )
         {
-            Attributes.Add( new DataAttribute( Name, Identifier ) );
+            Attributes.Add( new DataAttribute( Name, this, Identifier ) );
         }
         /// <summary>
         /// Add a list of string as attributes

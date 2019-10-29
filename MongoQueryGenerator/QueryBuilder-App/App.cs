@@ -44,22 +44,13 @@ namespace QueryBuilderApp
             VirtualMap VMap = RJoin.ComputeVirtualMap();
 
             // Select only name and car model
-            // Arguments for person
-            Dictionary<string, ProjectExpression> ProjectPersonAttrs = new Dictionary<string, ProjectExpression>();
-            ProjectPersonAttrs.Add( Person.Element.GetAttribute( "name" ).Name, new BooleanExpr( true ) );
-            ProjectArgument PersonArgs = new ProjectArgument( Person, ProjectPersonAttrs );
-
-            // Arguments for car
-            Dictionary<string, ProjectExpression> ProjectCarAttrs = new Dictionary<string, ProjectExpression>();
-            ProjectCarAttrs.Add( Car.Element.GetAttribute( "model" ).Name, new BooleanExpr( true ) );
-            ProjectCarAttrs.Add( Car.Element.GetAttribute( "year" ).Name, new BooleanExpr( true ) );
-            ProjectArgument CarArgs = new ProjectArgument( Car, ProjectCarAttrs );
+            List<ProjectArgument> Arguments = new List<ProjectArgument>();
+            Arguments.Add( new ProjectArgument( Person.GetAttribute( "name" ), Person, new BooleanExpr( true ) ) );
+            Arguments.Add( new ProjectArgument( Car.GetAttribute( "model" ), Car, new BooleanExpr( true ) ) );
+            Arguments.Add( new ProjectArgument( Car.GetAttribute( "year" ), Car, new BooleanExpr( true ) ) );
 
             // Project
-            ProjectStage ProjectOp = new ProjectStage( new List<ProjectArgument> {
-                PersonArgs,
-                CarArgs
-            }, VMap );
+            ProjectStage ProjectOp = new ProjectStage( Arguments, VMap );
 
             CartesianProductOperator CartesianOp = new CartesianProductOperator( 
                 Person,

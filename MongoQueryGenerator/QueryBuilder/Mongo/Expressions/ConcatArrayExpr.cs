@@ -49,6 +49,7 @@ namespace QueryBuilder.Mongo.Expressions
             }
 
             this.Fields = FieldList;
+            this.IsAddingOrForcingAFieldVisible = true;
         }
         #endregion
     }

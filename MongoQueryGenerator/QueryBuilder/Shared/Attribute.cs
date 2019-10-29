@@ -1,4 +1,5 @@
-﻿using QueryBuilder.Shared.Exceptions;
+﻿using QueryBuilder.ER;
+using QueryBuilder.Shared.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,10 @@ namespace QueryBuilder.Shared
     public class DataAttribute
     {
         #region Properties
+        /// <summary>
+        /// Parent Element
+        /// </summary>
+        public BaseERElement Parent { get; set; }
         /// <summary>
         /// Type of data stored by this attribute
         /// 
@@ -77,9 +82,10 @@ namespace QueryBuilder.Shared
         /// Initializes a new DataAttribute instance
         /// </summary>
         /// <param name="Name">Attribute name</param>
-        public DataAttribute( string Name )
+        public DataAttribute( string Name, BaseERElement Parent )
         {
             this.Name = Name;
+            this.Parent = Parent;
             Identifier = false;
             Children = new List<DataAttribute>();
         }
@@ -88,9 +94,10 @@ namespace QueryBuilder.Shared
         /// </summary>
         /// <param name="Name">Attribute name</param>
         /// <param name="Identifier">Is this attribute an identifier</param>
-        public DataAttribute( string Name, bool Identifier )
+        public DataAttribute( string Name, BaseERElement Parent, bool Identifier )
         {
             this.Name = Name;
+            this.Parent = Parent;
             this.Identifier = Identifier;
             Children = new List<DataAttribute>();
         }
@@ -100,9 +107,10 @@ namespace QueryBuilder.Shared
         /// <param name="Name">Attribute name</param>
         /// <param name="Identifier">Is this attribute an identifier</param>
         /// <param name="Children">Child attributes</param>
-        public DataAttribute( string Name, bool Identifier, List<DataAttribute> Children )
+        public DataAttribute( string Name, BaseERElement Parent, bool Identifier, List<DataAttribute> Children )
         {
             this.Name = Name;
+            this.Parent = Parent;
             this.Identifier = Identifier;
             this.Children = Children;
         }

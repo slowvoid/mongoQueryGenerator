@@ -56,6 +56,8 @@
     <Compile Include="CartesianProductDataProvider.cs" />
     <Compile Include="ComputedEntity.cs" />
     <Compile Include="ComputedEntityDataProvider.cs" />
+    <Compile Include="VirtualMap.cs" />
+    <Compile Include="VirtualMapDataProvider.cs" />
     <Content Include="HandcraftedQueries\cartersianProduct-1.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
