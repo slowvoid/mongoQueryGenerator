@@ -129,5 +129,33 @@ namespace QueryBuilder.Tests
 
             Assert.IsTrue( !VirtualMapRules.Except( RulesToMatch ).Any() && !RulesToMatch.Except( VirtualMapRules ).Any(), "Virtual maps do not match" );
         }
+        [TestMethod]
+        public void CartesianProduct()
+        {
+            RequiredDataContainer ModelData = VirtualMapDataProvider.VirtualMapModel();
+
+            QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
+            QueryableEntity Pet = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Pet" ) );
+
+            CartesianProductOperator Op = new CartesianProductOperator( Person, Pet, ModelData.ERMongoMapping );
+            VirtualMap CartersianVMap = Op.ComputeVirtualMap();
+
+            Assert.IsNotNull( CartersianVMap, "Cartesian Product virtual map cannot be null" );
+
+            List<string> VirtualMapRules = CartersianVMap.GetRulesAsStringList();
+
+            List<string> RulesToMatch = new List<string>()
+            {
+                "_id",
+                "name",
+                "age",
+                "data_Pet._id",
+                "data_Pet.name",
+                "data_Pet.type",
+                "data_Pet.ownerId",
+            };
+
+            Assert.IsTrue( !VirtualMapRules.Except( RulesToMatch ).Any() && !RulesToMatch.Except( VirtualMapRules ).Any(), "Virtual maps do not match" );
+        }
     }
 }
