@@ -110,9 +110,9 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( RJoinVMap, "RJOIN Virtual map cannot be null" );
 
             List<ProjectArgument> ProjectArguments = new List<ProjectArgument>();
-            ProjectArguments.Add( new ProjectArgument( Person.GetAttribute( "name" ), Person, new BooleanExpr( true ) ) );
-            ProjectArguments.Add( new ProjectArgument( Person.GetAttribute( "age" ), Person, new BooleanExpr( true ) ) );
-            ProjectArguments.Add( new ProjectArgument( Pet.GetAttribute( "name" ), Pet, new BooleanExpr( true ) ) );
+            ProjectArguments.Add( new ProjectArgument( Person.GetAttribute( "name" ), Person, new BooleanExpr( false ) ) );
+            ProjectArguments.Add( new ProjectArgument( Pet.GetAttribute( "type" ), Pet, new BooleanExpr( true ) ) );
+            ProjectArguments.Add( new ProjectArgument( Pet.GetAttribute( "ownerId" ), Pet, new BooleanExpr( true ) ) );
 
             ProjectStage ProjectOp = new ProjectStage( ProjectArguments, RJoinVMap );
 

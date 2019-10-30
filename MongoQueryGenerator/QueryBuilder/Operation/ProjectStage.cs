@@ -73,74 +73,39 @@ namespace QueryBuilder.Operation
         /// <returns></returns>
         public override VirtualMap ComputeVirtualMap(VirtualMap ExistingVirtualMap = null)
         {
-            // Create a list to store the new rules
-            List<VirtualRule> VirtualRules = new List<VirtualRule>();
-
-            // Store value wheter this stage is adding or forcing a field to be visible
-            bool? IsAddingOrForcingAFieldToBeVisible = null;
-
-            // This operation will fetch the attributes from arguments
-            // which can cause a smaller or bigger list than the previous operator
-            foreach ( ProjectArgument Argument in Arguments )
+            // If the virtual map is not set we will use the IModelObject object
+            if ( ExistingVirtualMap == null && Map is ModelMapping)
             {
-                // Create new Virtual Rule
-                VirtualRule AttributeRule = new VirtualRule( Argument.ParentEntity.Element, Argument.ParentEntity.Alias );
-
-                // Check if the expression is adding or forcing a field to be visible
-                if ( !IsAddingOrForcingAFieldToBeVisible.HasValue && Argument.Expression.IsAddingOrForcingAFieldVisible )
-                {
-                    IsAddingOrForcingAFieldToBeVisible = true;
-                }
-
-                string AttributeMap = Map.GetRuleValue( Argument.ParentEntity.Alias ?? Argument.ParentEntity.Name(), Argument.Attribute.Name );
-                if ( string.IsNullOrWhiteSpace( AttributeMap ) )
-                {
-                    continue;
-                }
-
-                AttributeRule.AddRule( Argument.Attribute.Name, AttributeMap );
-
-                // Add to attribute list
-                VirtualRules.Add( AttributeRule );
+                ExistingVirtualMap = VirtualMap.FromModelMap( (ModelMapping)Map );
             }
 
-            // This stage cannot increment a previous VirtualMap if it is adding new fields / forcing fields to be visible [or have a value]
-            // otherwise the whole document is defined within the arguments
-            if ( ( IsAddingOrForcingAFieldToBeVisible.HasValue && IsAddingOrForcingAFieldToBeVisible.Value ) || ExistingVirtualMap == null )
-            {
-                // Create a new Virtual Map instance to receive the new rules
-                return new VirtualMap( VirtualRules );            
-            }
+            // Store new rules
+            List<VirtualRule> NewRules = new List<VirtualRule>();
 
-            List<VirtualRule> RulesToReturn = new List<VirtualRule>();
-
-            foreach ( VirtualRule Rule in ExistingVirtualMap.Rules )
+            // Iterate arguments and keep rules that are either a BooleanExpr(true) or define a value to an attribute
+            foreach ( ProjectArgument Argument in Arguments.Where( Arg => Arg.Expression.IsAddingOrForcingAFieldVisible ) )
             {
-                foreach ( VirtualRule RuleToRemove in VirtualRules )
+                // Check if rule already exists and update it
+                VirtualRule ElementRule = NewRules.Find( R => R.SourceERElement.Name == Argument.ParentEntity.Name() &&
+                    R.Alias == Argument.ParentEntity.Alias );
+
+                string RuleValue = ExistingVirtualMap.GetRuleValue( Argument.ParentEntity.GetAliasOrName(), Argument.Attribute.Name );
+
+                if ( ElementRule == null )
                 {
-                    VirtualRule ReturnRule = new VirtualRule( Rule.SourceERElement, Rule.Alias );
+                    // Create new entry
+                    VirtualRule ArgRule = new VirtualRule( Argument.ParentEntity.Element, Argument.ParentEntity.Alias );
+                    ArgRule.Rules.Add( Argument.Attribute.Name, RuleValue );
 
-                    if ( Rule.SourceERElement.Name == RuleToRemove.SourceERElement.Name &&
-                            Rule.Alias == RuleToRemove.Alias )
-                    {
-                        foreach ( KeyValuePair<string, string> InternalRules in Rule.Rules )
-                        {
-                            if ( !RuleToRemove.Rules.ContainsKey( InternalRules.Key ) )
-                            {
-                                ReturnRule.AddRule( InternalRules.Key, InternalRules.Value );
-                            }
-                        }
-
-                        RulesToReturn.Add( ReturnRule );
-                    }
-                    else
-                    {
-                        RulesToReturn.Add( Rule );
-                    }
+                    NewRules.Add( ArgRule );
+                }
+                else
+                {
+                    ElementRule.Rules.Add( Argument.Attribute.Name, RuleValue );
                 }
             }
 
-            return new VirtualMap( RulesToReturn );
+            return new VirtualMap( NewRules );
         }
         #endregion
 

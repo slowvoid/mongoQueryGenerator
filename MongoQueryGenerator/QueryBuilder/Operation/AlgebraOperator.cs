@@ -24,7 +24,7 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// Virtual Map between ER model and Output document
         /// </summary>
-        protected IModelMap VirtualMap { get; set; }
+        protected IModelMap RuleMap { get; set; }
         #endregion
 
         #region Methods

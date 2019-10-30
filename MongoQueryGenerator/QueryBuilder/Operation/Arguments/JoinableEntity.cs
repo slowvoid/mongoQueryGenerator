@@ -51,6 +51,19 @@ namespace QueryBuilder.Operation.Arguments
 
             return null;
         }
+        /// <summary>
+        /// Return the alias or name if the first is null
+        /// </summary>
+        /// <returns></returns>
+        public string GetAliasOrName()
+        {
+            if ( Element != null )
+            {
+                return Alias ?? Name();
+            }
+
+            return string.Empty;
+        }
         #endregion
 
         #region Constructor

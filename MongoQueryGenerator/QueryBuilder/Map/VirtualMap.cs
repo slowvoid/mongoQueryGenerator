@@ -73,6 +73,27 @@ namespace QueryBuilder.Map
                 throw new RuleNotFoundException( $"No map rule found for ER Element [{NameOrAlias}]" );
             }
         }
+        /// <summary>
+        /// Generates a VirtualMap instance from a ModelMapping instance
+        /// </summary>
+        /// <param name="ModelMap"></param>
+        /// <returns></returns>
+        public static VirtualMap FromModelMap( ModelMapping ModelMap )
+        {
+            // Create list of virtual rules
+            List<VirtualRule> VirtualRules = new List<VirtualRule>();
+
+            // Iterate ModelMap rules
+            foreach ( MapRule Rule in ModelMap.Rules )
+            {
+                VirtualRule ConvertedRule = new VirtualRule( Rule.Source );
+                ConvertedRule.Rules = Rule.Rules;
+
+                VirtualRules.Add( ConvertedRule );
+            }
+
+            return new VirtualMap( VirtualRules );
+        }
         #endregion
 
         #region Constructor
