@@ -71,7 +71,7 @@ namespace QueryBuilder.Query
 
             // TODO: Update this section to generate collection and aggregate
             // according to the query
-            return string.Format( "db.{0}.aggregate([{1}]).pretty();", CollectionName, string.Join( ",", AggregatePipeline ) );
+            return string.Format( "db.{0}.aggregate([{1}], {{allowDiskUse: true}}).pretty();", CollectionName, string.Join( ",", AggregatePipeline ) );
         }
         #endregion
 

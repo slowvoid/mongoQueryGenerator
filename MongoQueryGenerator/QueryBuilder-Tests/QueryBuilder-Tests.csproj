@@ -54,8 +54,10 @@
   <ItemGroup>
     <Compile Include="CartesianProduct.cs" />
     <Compile Include="CartesianProductDataProvider.cs" />
+    <Compile Include="CaseStudy\MarketingCMS.cs" />
     <Compile Include="ComputedEntity.cs" />
     <Compile Include="ComputedEntityDataProvider.cs" />
+    <Compile Include="CaseStudy\MarketingCMSDataProvider.cs" />
     <Compile Include="VirtualMap.cs" />
     <Compile Include="VirtualMapDataProvider.cs" />
     <Content Include="HandcraftedQueries\cartersianProduct-1.js">
