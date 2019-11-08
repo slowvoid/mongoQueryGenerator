@@ -70,7 +70,7 @@ namespace QueryBuilder.Operation
                     continue;
                 }
 
-                SortByTheseFields.Add( AttributeMap, Argument.SortOption );
+                SortByTheseFields.Add( $"\"{AttributeMap}\"", Argument.SortOption );
             }
 
             // Create sort operator
