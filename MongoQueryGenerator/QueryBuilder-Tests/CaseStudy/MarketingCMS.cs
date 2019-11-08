@@ -125,7 +125,16 @@ namespace QueryBuilder.Tests
             string QueryStringMap1 = QueryGenMap1.Run();
             string QueryStringMap2 = QueryGenMap2.Run();
 
-            Assert.IsTrue( true );
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms" );
+            QueryRunner RunnerMap2 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_duplicados" );
+
+            string ResultMap1 = RunnerMap1.GetJSON( QueryStringMap1 );
+            string ResultMap2 = RunnerMap2.GetJSON( QueryStringMap2 );
+
+            Assert.IsNotNull( ResultMap1, "Result [Map1] cannot be null" );
+            Assert.IsNotNull( ResultMap2, "Result [Map2] cannot be null" );
+
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap2 ) ) );
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using QueryBuilder.Map;
 using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Operation.Arguments;
+using QueryBuilder.Operation.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,27 @@ namespace QueryBuilder.Operation
             foreach ( SortArgument Argument in Arguments )
             {
                 // Retrieve attribute map
-                string AttributeMap = MapRules.GetRuleValue( Argument.Entity.GetAliasOrName(), Argument.Attribute.Name );
+                // Check if the MapRules is an instance of ModelMapping
+                // If so, fetch the main mapping
+                string AttributeMap = string.Empty;
+
+                if ( MapRules is ModelMapping )
+                {
+                    MapRule Rule = ( MapRules as ModelMapping ).Rules.FirstOrDefault( R => R.Source.Name == Argument.Entity.GetName() && R.IsMain );
+                    
+                    if ( Rule == null )
+                    {
+                        throw new ImpossibleOperationException( $"A main mapping is required for entity {Argument.Entity.GetName()}" );
+                    }
+                    else
+                    {
+                        AttributeMap = Rule.Rules.FirstOrDefault( R => R.Key == Argument.Attribute.Name ).Value;
+                    }
+                }
+                else
+                {
+                    AttributeMap = MapRules.GetRuleValue( Argument.Entity.GetAliasOrName(), Argument.Attribute.Name );
+                }
                 
                 if ( string.IsNullOrWhiteSpace( AttributeMap ) )
                 {
