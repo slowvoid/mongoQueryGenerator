@@ -47,7 +47,7 @@ namespace QueryBuilder.Operation
             foreach ( ProjectArgument Argument in Arguments )
             {
                 // Each argument provides all necessary data
-                string AttributeMap = Map.GetRuleValue( Argument.ParentEntity.Alias ?? Argument.ParentEntity.Name(), Argument.Attribute.Name );
+                string AttributeMap = Map.GetRuleValue( Argument.ParentEntity.Alias ?? Argument.ParentEntity.GetName(), Argument.Attribute.Name );
 
                 if ( string.IsNullOrWhiteSpace( AttributeMap ) )
                 {
@@ -86,7 +86,7 @@ namespace QueryBuilder.Operation
             foreach ( ProjectArgument Argument in Arguments.Where( Arg => Arg.Expression.IsAddingOrForcingAFieldVisible ) )
             {
                 // Check if rule already exists and update it
-                VirtualRule ElementRule = NewRules.Find( R => R.SourceERElement.Name == Argument.ParentEntity.Name() &&
+                VirtualRule ElementRule = NewRules.Find( R => R.SourceERElement.Name == Argument.ParentEntity.GetName() &&
                     R.Alias == Argument.ParentEntity.Alias );
 
                 string RuleValue = ExistingVirtualMap.GetRuleValue( Argument.ParentEntity.GetAliasOrName(), Argument.Attribute.Name );

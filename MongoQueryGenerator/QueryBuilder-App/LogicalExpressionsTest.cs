@@ -50,9 +50,8 @@ namespace QueryBuilderApp
             SelectArgument Arg = new SelectArgument( OrValues );
             SelectStage SelectOp = new SelectStage( Arg, Map );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            FromArgument StartArg = new FromArgument( new QueryableEntity( Model.FindByName( "Person" ) ), Map );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, new List<AlgebraOperator>() { SelectOp } );
 
             string QueryString = QueryGen.Run();
 

@@ -24,8 +24,6 @@ namespace QueryBuilderApp
 
             Console.WriteLine( "Data ready, initializing query generator..." );
 
-            string InitialEntity = "Person";
-
             QueryableEntity Car = new QueryableEntity( (Entity)Model.FindByName( "Car" ), "car" );
             QueryableEntity Person = new QueryableEntity( (Entity)Model.FindByName( "Person" ), "person" );
 
@@ -64,19 +62,18 @@ namespace QueryBuilderApp
                 InsCompany,
                 Map );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator> {
-                //RJoin,
-                //ProjectOp,
+            FromArgument StartArgument = new FromArgument( Person, Map );
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>()
+            {
                 CartesianOp,
                 CartesianOp2
-            } );
+            };
 
             VirtualMap VCartesianMap = CartesianOp.ComputeVirtualMap();
 
             Console.WriteLine( CartesianOp2.ComputeVirtualMap( VCartesianMap ).ToString() );
 
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = InitialEntity;
+            QueryGenerator QueryGen = new QueryGenerator( StartArgument, OperatorsToExecute );
             string Query = QueryGen.Run();
 
             Console.WriteLine( Query );

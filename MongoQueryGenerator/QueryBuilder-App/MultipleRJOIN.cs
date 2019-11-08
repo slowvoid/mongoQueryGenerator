@@ -35,9 +35,8 @@ namespace QueryBuilderApp
             Console.WriteLine( "Virtual Map 1 {0}{1}", Environment.NewLine, VMap1.ToString() );
             Console.WriteLine( "Virtual Map 2 {0}{1}", Environment.NewLine, VMap2.ToString() );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { RJOINOp1, RJOINOp2 } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            FromArgument StartArg = new FromArgument( Person, Map );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, new List<AlgebraOperator>() { RJOINOp1, RJOINOp2 } );
 
             string QueryString = QueryGen.Run();
             Console.WriteLine( "Query result: {0}{1}", Environment.NewLine, QueryString );

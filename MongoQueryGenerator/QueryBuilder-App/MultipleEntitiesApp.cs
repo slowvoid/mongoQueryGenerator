@@ -59,9 +59,8 @@ namespace QueryBuilderApp
             Console.WriteLine( "Virtual map from RJoinOp3 {0}{1}", Environment.NewLine, VMap3.ToString() );
             Console.WriteLine( "Virtual map from RJoinOp4 {0}{1}", Environment.NewLine, VMap4.ToString() );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { RJoinOp1, RJoinOp2, RJoinOp3, RJoinOp4 } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            FromArgument StartArg = new FromArgument( Person, Map );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, new List<AlgebraOperator>() { RJoinOp1, RJoinOp2, RJoinOp3, RJoinOp4 } );
 
             string QueryString = QueryGen.Run();
             Console.WriteLine( "Query: {0}{1}", Environment.NewLine, QueryString );

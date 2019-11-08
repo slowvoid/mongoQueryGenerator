@@ -8,6 +8,7 @@ using QueryBuilder.Map;
 using QueryBuilder.Operation;
 using QueryBuilder.ER;
 using QueryBuilder.Mongo.Aggregation.Operators;
+using QueryBuilder.Operation.Arguments;
 
 namespace QueryBuilder.Query
 {
@@ -21,31 +22,21 @@ namespace QueryBuilder.Query
         /// <summary>
         /// Command pipeline
         /// </summary>
-        public Pipeline Pipeline { get; set; }
+        public List<AlgebraOperator> PipelineOperators { get; set; }
         /// <summary>
-        /// Collection used a start point
+        /// Data acting as start point
         /// </summary>
-        public string CollectionName { get; set; }
-        /// <summary>
-        /// Output document model
-        /// </summary>
-        public ModelMapping OutputModel { get; set; }
+        public FromArgument StartArgument { get; set; }
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Generates the output model based on the pipeline
-        /// </summary>
-        private void GenerateOutputModel()
-        {
-
-        }
         /// <summary>
         /// Run the query generator
         /// </summary>
         /// <returns></returns>
         public string Run()
         {
+            string CollectionName = StartArgument.GetCollectionName();
             // Check if collection name is set
             // otherwise throw error
             if ( string.IsNullOrWhiteSpace( CollectionName ) )
@@ -56,7 +47,7 @@ namespace QueryBuilder.Query
             // Setup results
             AlgebraOperatorResult Result = new AlgebraOperatorResult( new List<MongoDBOperator>() );
 
-            foreach ( AlgebraOperator Op in Pipeline.Operations )
+            foreach ( AlgebraOperator Op in PipelineOperators )
             {
                 Result.Commands.AddRange( Op.Run().Commands );
             }
@@ -80,9 +71,10 @@ namespace QueryBuilder.Query
         /// Initialize a new instance of QueryGenerator class
         /// </summary>
         /// <param name="Pipeline">Command pipeline</param>
-        public QueryGenerator( Pipeline Pipeline )
+        public QueryGenerator( FromArgument StartArgument, List<AlgebraOperator> PipelineOperators )
         {
-            this.Pipeline = Pipeline;
+            this.StartArgument = StartArgument;
+            this.PipelineOperators = PipelineOperators;
         }
         #endregion
     }

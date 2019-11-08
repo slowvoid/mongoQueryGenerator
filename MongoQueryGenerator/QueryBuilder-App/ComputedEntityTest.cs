@@ -47,12 +47,10 @@ namespace QueryBuilderApp
 
             List<AlgebraOperator> Operators = new List<AlgebraOperator>();
             Operators.Add( RJoin );
-            Pipeline Pipeline = new Pipeline( ( Operators ) );
 
-            QueryGenerator Query = new QueryGenerator( Pipeline )
-            {
-                CollectionName = "Person"
-            };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( Model.FindByName( "Person" ) ), Map );
+
+            QueryGenerator Query = new QueryGenerator( StartArg, Operators );
 
             string QueryString = Query.Run();
             Console.WriteLine( $"Query: {QueryString}" );

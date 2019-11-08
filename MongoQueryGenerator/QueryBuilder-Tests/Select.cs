@@ -31,9 +31,10 @@ namespace QueryBuilder.Tests
             SelectArgument Arg = new SelectArgument( left );
             SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -70,9 +71,10 @@ namespace QueryBuilder.Tests
             SelectArgument Arg = new SelectArgument( expr );
             SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -105,9 +107,10 @@ namespace QueryBuilder.Tests
             SelectArgument Arg = new SelectArgument( left );
             SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -141,9 +144,10 @@ namespace QueryBuilder.Tests
             SelectArgument Arg = new SelectArgument( left );
             SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -178,9 +182,10 @@ namespace QueryBuilder.Tests
             SelectArgument Arg = new SelectArgument( left );
             SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -214,9 +219,10 @@ namespace QueryBuilder.Tests
             SelectArgument Arg = new SelectArgument( left );
             SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -250,9 +256,10 @@ namespace QueryBuilder.Tests
             SelectArgument Arg = new SelectArgument( left );
             SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -287,9 +294,10 @@ namespace QueryBuilder.Tests
             SelectArgument Arg = new SelectArgument( left );
             SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -325,9 +333,10 @@ namespace QueryBuilder.Tests
             SelectArgument Arg = new SelectArgument( left );
             SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -363,9 +372,10 @@ namespace QueryBuilder.Tests
             SelectArgument Arg = new SelectArgument( expr );
             SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -399,9 +409,10 @@ namespace QueryBuilder.Tests
             SelectArgument Arg = new SelectArgument( expr );
             SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            Pipeline QueryPipeline = new Pipeline( new List<AlgebraOperator>() { SelectOp } );
-            QueryGenerator QueryGen = new QueryGenerator( QueryPipeline );
-            QueryGen.CollectionName = "Person";
+            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string GeneratedQuery = QueryGen.Run();
 

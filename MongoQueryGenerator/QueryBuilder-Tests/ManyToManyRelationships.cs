@@ -41,11 +41,10 @@ namespace QueryBuilder.Tests
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
-            Pipeline pipeline = new Pipeline( OpList );
-            QueryGenerator QueryGen = new QueryGenerator( pipeline )
-            {
-                CollectionName = "Person"
-            };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -95,11 +94,10 @@ namespace QueryBuilder.Tests
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
-            Pipeline pipeline = new Pipeline( OpList );
-            QueryGenerator QueryGen = new QueryGenerator( pipeline )
-            {
-                CollectionName = "Person"
-            };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -145,11 +143,10 @@ namespace QueryBuilder.Tests
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
-            Pipeline pipeline = new Pipeline( OpList );
-            QueryGenerator QueryGen = new QueryGenerator( pipeline )
-            {
-                CollectionName = "Person"
-            };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -196,11 +193,10 @@ namespace QueryBuilder.Tests
                 ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
-            Pipeline pipeline = new Pipeline( OpList );
-            QueryGenerator QueryGen = new QueryGenerator( pipeline )
-            {
-                CollectionName = "Person"
-            };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
 
             string GeneratedQuery = QueryGen.Run();
 

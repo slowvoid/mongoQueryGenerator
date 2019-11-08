@@ -37,11 +37,10 @@ namespace QueryBuilder.Tests
             ProjectStage ProjectOp = new ProjectStage( Arguments, ModelData.ERMongoMapping );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { ProjectOp };
-            Pipeline pipeline = new Pipeline( OpList );
-            QueryGenerator QueryGen = new QueryGenerator( pipeline )
-            {
-                CollectionName = "Person"
-            };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -110,11 +109,10 @@ namespace QueryBuilder.Tests
             ProjectStage ProjectOp = new ProjectStage( ProjectArguments, VMap );
 
             List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp, ProjectOp };
-            Pipeline pipeline = new Pipeline( OpList );
-            QueryGenerator QueryGen = new QueryGenerator( pipeline )
-            {
-                CollectionName = "Person"
-            };
+            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+                ModelData.ERMongoMapping );
+
+            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
 
             string GeneratedQuery = QueryGen.Run();
 

@@ -66,12 +66,12 @@ namespace QueryBuilder.Map
         /// <param name="Source"></param>
         /// <param name="Target"></param>
         /// <param name="Rules"></param>
-        public MapRule( BaseERElement Source, MongoDBCollection Target, Dictionary<string, string> Rules, bool IsMain = true )
+        public MapRule( BaseERElement Source, MongoDBCollection Target, bool IsMain = true )
         {
             this.Source = Source;
             this.Target = Target;
 
-            this.Rules = Rules;
+            this.Rules = new Dictionary<string, string>();
 
             this.IsMain = IsMain;
         }

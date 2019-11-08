@@ -62,9 +62,8 @@ namespace QueryBuilder.Tests
             // Build and execute Map1 query
             List<AlgebraOperator> Map1OperatorsList = new List<AlgebraOperator>() { RJoinMap1Op, SortOp };
 
-            Pipeline Map1Pipeline = new Pipeline( Map1OperatorsList );
-            QueryGenerator Generator = new QueryGenerator( Map1Pipeline );
-            Generator.CollectionName = "Product";
+            FromArgument StartArgMap1 = new FromArgument( Product, DataMap.ERMongoMapping );
+            QueryGenerator Generator = new QueryGenerator( StartArgMap1, Map1OperatorsList );
 
             string Map1Query = Generator.Run();
 
@@ -75,9 +74,9 @@ namespace QueryBuilder.Tests
                 DataMapDuplicates.ERMongoMapping );
 
             List<AlgebraOperator> MapDuplicatesOpList = new List<AlgebraOperator>() { RJoinMapDuplicatesOp, SortOp2 };
-            Pipeline MapDuplicatesPipeline = new Pipeline( MapDuplicatesOpList );
-            QueryGenerator GeneratorDuplicates = new QueryGenerator( MapDuplicatesPipeline );
-            GeneratorDuplicates.CollectionName = "Product";
+
+            FromArgument StartArgMap2 = new FromArgument( Product, DataMapDuplicates.ERMongoMapping );
+            QueryGenerator GeneratorDuplicates = new QueryGenerator( StartArgMap2, MapDuplicatesOpList );
 
             string MapDuplicatesQuery = GeneratorDuplicates.Run();
 
@@ -93,6 +92,40 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( ResultMap2, "Result [Map2] cannot be null" );
 
             Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap2 ) ) );
+        }
+        /// <summary>
+        /// Run GetAllStores query
+        /// 
+        /// SQL: SELECT * FROM Store;
+        /// 
+        /// QUERY: FROM Store SELECT *
+        /// </summary>
+        [TestMethod]
+        public void GetAllStores()
+        {
+            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+
+            QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
+
+            SortArgument SortArg = new SortArgument( Store, Store.GetAttribute( "store_id" ), MongoDBSort.Ascending );
+
+            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
+            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
+
+            FromArgument StartArgMap1 = new FromArgument( Store, DataMap.ERMongoMapping );
+            FromArgument StartArgMap2 = new FromArgument( Store, DataMapDuplicates.ERMongoMapping );
+
+            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SortOpMap1 };
+            List<AlgebraOperator> OperatorsMap2 = new List<AlgebraOperator>() { SortOpMap2 };
+
+            QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
+            QueryGenerator QueryGenMap2 = new QueryGenerator( StartArgMap2, OperatorsMap2 );
+
+            string QueryStringMap1 = QueryGenMap1.Run();
+            string QueryStringMap2 = QueryGenMap2.Run();
+
+            Assert.IsTrue( true );
         }
     }
 }

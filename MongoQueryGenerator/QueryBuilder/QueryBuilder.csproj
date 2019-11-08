@@ -127,6 +127,7 @@
     <Compile Include="Mongo\Expressions\ValueExpr.cs" />
     <Compile Include="Mongo\Schema.cs" />
     <Compile Include="Operation\AddFieldsOperation.cs" />
+    <Compile Include="Operation\Arguments\FromArgument.cs" />
     <Compile Include="Operation\Arguments\JoinableEntity.cs" />
     <Compile Include="Operation\Arguments\ProjectArgument.cs" />
     <Compile Include="Operation\Arguments\RelationshipJoinArgument.cs" />
@@ -142,7 +143,6 @@
     <Compile Include="Operation\RelationshipJoinOperator.cs" />
     <Compile Include="Operation\AlgebraOperator.cs" />
     <Compile Include="Operation\OperationResult.cs" />
-    <Compile Include="Operation\Pipeline.cs" />
     <Compile Include="Operation\ProjectStage.cs" />
     <Compile Include="Operation\SelectStage.cs" />
     <Compile Include="Operation\SortStage.cs" />

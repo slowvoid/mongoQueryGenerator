@@ -29,7 +29,7 @@ namespace QueryBuilder.Operation.Arguments
         /// Returns the Element name
         /// </summary>
         /// <returns></returns>
-        public string Name()
+        public string GetName()
         {
             if ( Element != null )
             {
@@ -59,7 +59,7 @@ namespace QueryBuilder.Operation.Arguments
         {
             if ( Element != null )
             {
-                return Alias ?? Name();
+                return Alias ?? GetName();
             }
 
             return string.Empty;
