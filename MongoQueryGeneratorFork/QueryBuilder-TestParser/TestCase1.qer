@@ -1,0 +1,46 @@
+Solution: "Garage"
+Description: "Person has Driver License"
+Version: "1.0"
+
+############## ERModel ################
+
+Garage {
+
+}
+Person {
+    id: int,
+    name: string,
+    address: string
+}
+DriversLicense {
+    id: int,
+    number: string,
+    date: date
+}
+Registration (Person:1, DriversLicense:1) {
+    observation: string
+}
+
+############# MongoDBSchema ############## 
+DocTypePerson [ Person* ]
+{
+    _id     : int       [ Person.id ]
+    fName   : string    [ Person.name ]
+    fAddress: string    [ Person.address ]
+}
+DocTypeDriversLicense [ DriversLicense* ]
+{
+    _id     : int       [ DriversLicense.id ]
+    fNumber : string    [ DriversLicense.number ]
+    fDate   : date      [ DriversLicense.date ]
+}
+DocTypeRegistration [ Registration*, DriversLicense, Person ]
+{
+    _id               : int     [ ]
+    observation       : string  [ Registration.observation ]
+    fPersonId         : int     [ Person.id ] 
+    fName             : string  [ Person.name ] 
+    fAddress          : string  [ Person.address ] 
+    fDriversLicenseId : int     [ DriversLicense.id ]
+    fNumber           : int     [ DriversLicense.number ] 
+}
