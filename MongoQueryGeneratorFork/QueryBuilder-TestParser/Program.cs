@@ -10,22 +10,13 @@ namespace QueryBuilder.TestParser
     {
         static void Main(string[] args)
         {
-            String input = args[0];
-            ICharStream stream = CharStreams.fromPath(input);
-            ITokenSource lexer = new QueryBuilderMappingLexer(stream);
-            ITokenStream tokens = new CommonTokenStream(lexer);
-            QueryBuilderMappingParser parser = new QueryBuilderMappingParser(tokens);
-            parser.BuildParseTree = true;
+            var mapping = QueryBuilderParser.ParseMapping(args[0]);
 
-            IParseTree tree = parser.program();
-
-            var analyzer = new QueryBuilderMappingAnalyzer();
-            analyzer.Visit(tree);
-            Console.WriteLine($"ERModel: {analyzer.EntityRelationshipModel.Name}");
+            Console.WriteLine($"ERModel: {mapping.EntityRelationshipModel.Name}");
 
             Console.WriteLine("\n\n****** ER Model ********\n\n");
 
-            foreach(var e in analyzer.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Entity)))
+            foreach(var e in mapping.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Entity)))
             {
                 Console.WriteLine($"Entity: {e.Name}");
                 e.Attributes.ForEach(a =>
@@ -34,7 +25,7 @@ namespace QueryBuilder.TestParser
                 });
             }
 
-            foreach(var r in analyzer.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Relationship)).ConvertAll<Relationship>(e => (Relationship)e))
+            foreach(var r in mapping.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Relationship)).ConvertAll<Relationship>(e => (Relationship)e))
             {
                 Console.WriteLine($"Relationship: {r.Name}");
 
@@ -51,7 +42,7 @@ namespace QueryBuilder.TestParser
             Console.WriteLine("\n\n****** Mongo DB Schema ********\n\n");
 
 
-            foreach(var c in analyzer.MongoDBSchema.Collections)
+            foreach(var c in mapping.MongoDBSchema.Collections)
             {
                 Console.WriteLine($"Collection: {c.Name}");
                 c.DocumentSchema.Attributes.ForEach(a =>
@@ -63,7 +54,7 @@ namespace QueryBuilder.TestParser
             Console.WriteLine("\n\n****** Mapping ********\n\n");
 
 
-            foreach(var r in analyzer.ERMongoMapping.Rules)
+            foreach(var r in mapping.ERMongoMapping.Rules)
             {
                 Console.WriteLine($"Rule: {r.Source.Name} = {r.Target.Name} (Main={r.IsMain})");
                 foreach(var sr in r.Rules)
@@ -75,9 +66,14 @@ namespace QueryBuilder.TestParser
             Console.WriteLine("\n\n****** Warnings and Errors ********\n\n");
 
 
-            analyzer.Warnings.ForEach(w => Console.WriteLine(w));
-            analyzer.Errors.ForEach(e => Console.WriteLine(e));
+            mapping.Warnings.ForEach(w => Console.WriteLine(w));
+            mapping.Errors.ForEach(e => Console.WriteLine(e));
 
+            String query = "from Person p rjoin (Car c rjoin (Garage g)) rjoin (Teste t)";
+
+            var generatedQuery = QueryBuilderParser.ParseQuery(query);
+
+            // TODO: test the generated query
         }
     }
 }
