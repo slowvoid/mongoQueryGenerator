@@ -415,6 +415,13 @@ namespace QueryBuilder.Tests
             UserRules.AddRule( "user_access", "user.access" );
             UserRules.AddRule( "user_newsletter", "user.newsletter" );
 
+            MapRule UserRulesMain = new MapRule( User, UserCol );
+            UserRulesMain.AddRule( "user_id", "_id" );
+            UserRulesMain.AddRule( "user_name", "user_name" );
+            UserRulesMain.AddRule( "user_email", "user_email" );
+            UserRulesMain.AddRule( "user_access", "user_access" );
+            UserRulesMain.AddRule( "user_newsletter", "user_newsletter" );
+
             Entity Product = (Entity)Model.FindByName( "Product" );
 
             MapRule ProductRules = new MapRule( Product, ProductCol );
@@ -442,7 +449,7 @@ namespace QueryBuilder.Tests
             StoreRulesMain.AddRule( "store_name", "store_name" );
             StoreRulesMain.AddRule( "store_logo", "store_logo" );
 
-            ModelMapping Map = new ModelMapping( "CMSMapDuplicates", new List<MapRule>() { UserRules,
+            ModelMapping Map = new ModelMapping( "CMSMapDuplicates", new List<MapRule>() { UserRules, UserRulesMain,
                 ProductRules, CategoryRulesMain, StoreRulesMain } );
 
             return new RequiredDataContainer( Model, Schema, Map );
