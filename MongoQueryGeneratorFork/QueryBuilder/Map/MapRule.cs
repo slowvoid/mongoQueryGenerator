@@ -51,29 +51,30 @@ namespace QueryBuilder.Map
         /// </summary>
         /// <param name="Source"></param>
         /// <param name="Target"></param>
-        public MapRule( BaseERElement Source, MongoDBCollection Target )
-        {
-            this.Source = Source;
-            this.Target = Target;
+        // Commented to make sure "Main" is always set properly
+        // public MapRule( BaseERElement Source, MongoDBCollection Target )
+        // {
+        //     this.Source = Source;
+        //     this.Target = Target;
 
-            IsMain = true;
+        //     IsMain = true;
 
-            Rules = new Dictionary<string, string>();
-        }
+        //     Rules = new Dictionary<string, string>();
+        // }
         /// <summary>
         /// Initialize a new MapRule instance
         /// </summary>
         /// <param name="Source"></param>
         /// <param name="Target"></param>
-        /// <param name="Rules"></param>
-        public MapRule( BaseERElement Source, MongoDBCollection Target, bool IsMain = true )
+        /// <param name="IsMain"></param>
+        public MapRule( BaseERElement Source, MongoDBCollection Target, bool IsMain )
         {
             this.Source = Source;
             this.Target = Target;
+            this.IsMain = IsMain;
 
             this.Rules = new Dictionary<string, string>();
 
-            this.IsMain = IsMain;
         }
         #endregion
     }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from /Users/daniellucredio/DotNetProjects/MongoQueryGeneratorFork/QueryBuilder-Parser/QueryBuilderMapping.g4 by ANTLR 4.7.1
+// Generated from /home/daniel/GitProjects/mongoQueryGenerator/MongoQueryGeneratorFork/QueryBuilder-Parser/QueryBuilderMapping.g4 by ANTLR 4.7.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -68,12 +68,6 @@ public interface IQueryBuilderMappingVisitor<Result> : IParseTreeVisitor<Result>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitRelationshipEnd([NotNull] QueryBuilderMappingParser.RelationshipEndContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.attributes"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitAttributes([NotNull] QueryBuilderMappingParser.AttributesContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.attribute"/>.
 	/// </summary>

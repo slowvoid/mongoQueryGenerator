@@ -10,9 +10,10 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.0/Queryer.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}",
+
+            "program": "${workspaceFolder}/QueryBuilder-TestParser/bin/Debug/netcoreapp3.0/QueryBuilder-TestParser.dll",
+            "args": ["TestCase1.qer"],
+            "cwd": "${workspaceFolder}/QueryBuilder-TestParser/",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false

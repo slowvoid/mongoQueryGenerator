@@ -9,7 +9,7 @@ namespace QueryBuilder.Operation.Exceptions
     /// <summary>
     /// Rule not found exception
     /// </summary>
-    class RuleNotFoundException : Exception
+    public class RuleNotFoundException : Exception
     {
         /// <summary>
         /// Initialize a new RuleNotFoundException

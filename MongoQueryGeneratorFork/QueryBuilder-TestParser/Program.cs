@@ -16,28 +16,25 @@ namespace QueryBuilder.TestParser
             ITokenStream tokens = new CommonTokenStream(lexer);
             QueryBuilderMappingParser parser = new QueryBuilderMappingParser(tokens);
             parser.BuildParseTree = true;
-            Console.WriteLine("Starting parser...");
-            IParseTree tree = parser.program();
 
-            Console.WriteLine("Starting visitor...");
+            IParseTree tree = parser.program();
 
             var analyzer = new QueryBuilderMappingAnalyzer();
             analyzer.Visit(tree);
-
-            Console.WriteLine("Showing results...");
-
             Console.WriteLine($"ERModel: {analyzer.EntityRelationshipModel.Name}");
 
-            analyzer.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Entity)).ForEach(e =>
+            Console.WriteLine("\n\n****** ER Model ********\n\n");
+
+            foreach(var e in analyzer.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Entity)))
             {
                 Console.WriteLine($"Entity: {e.Name}");
                 e.Attributes.ForEach(a =>
                 {
                     Console.WriteLine($"   Attribute: {a.Name}");
                 });
-            });
+            }
 
-            analyzer.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Relationship)).ConvertAll<Relationship>(e => (Relationship)e).ForEach(r =>
+            foreach(var r in analyzer.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Relationship)).ConvertAll<Relationship>(e => (Relationship)e))
             {
                 Console.WriteLine($"Relationship: {r.Name}");
 
@@ -49,7 +46,38 @@ namespace QueryBuilder.TestParser
                 {
                     Console.WriteLine($"   Attribute: {a.Name}");
                 });
-            });
+            }
+
+            Console.WriteLine("\n\n****** Mongo DB Schema ********\n\n");
+
+
+            foreach(var c in analyzer.MongoDBSchema.Collections)
+            {
+                Console.WriteLine($"Collection: {c.Name}");
+                c.DocumentSchema.Attributes.ForEach(a =>
+                {
+                    Console.WriteLine($"   Field: {a.Name}");
+                });
+            }
+
+            Console.WriteLine("\n\n****** Mapping ********\n\n");
+
+
+            foreach(var r in analyzer.ERMongoMapping.Rules)
+            {
+                Console.WriteLine($"Rule: {r.Source.Name} = {r.Target.Name} (Main={r.IsMain})");
+                foreach(var sr in r.Rules)
+                {
+                    Console.WriteLine($"   {sr.Key} - {sr.Value}");
+                }
+            }
+
+            Console.WriteLine("\n\n****** Warnings and Errors ********\n\n");
+
+
+            analyzer.Warnings.ForEach(w => Console.WriteLine(w));
+            analyzer.Errors.ForEach(e => Console.WriteLine(e));
+
         }
     }
 }
