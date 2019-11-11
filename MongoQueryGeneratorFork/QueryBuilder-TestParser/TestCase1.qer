@@ -4,21 +4,18 @@ Version: "1.0"
 
 ############## ERModel ################
 
-Garage {
-
+Registration (Person:1, DriversLicense:1) {
+    observation: string
 }
 Person {
-    id: int,
-    name: string,
+    id: int
+    name: string
     address: string
 }
 DriversLicense {
-    id: int,
-    number: string,
+    id: int
+    number: string
     date: date
-}
-Registration (Person:1, DriversLicense:1) {
-    observation: string
 }
 
 ############# MongoDBSchema ############## 

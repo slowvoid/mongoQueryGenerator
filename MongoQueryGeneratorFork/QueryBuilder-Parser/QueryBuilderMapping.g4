@@ -5,7 +5,7 @@ ID: [a-zA-Z_][a-zA-Z0-9]+;
 STRING: '"' ~["\n\r]* '"';
 DIVIDER: '#'+;
 WS: [ \t\r\n]+ -> skip;
- 
+
 program:
 	'Solution' ':' name=STRING
 	'Description' ':' descritpion=STRING
@@ -19,16 +19,14 @@ ermodel: erelement*;
 
 erelement: entity | relationship;
 
-entity: name = ID '{' attributes? '}';
+entity: name = ID '{' attribute* '}';
 
 relationship:
 	name = ID '(' relationshipEnd ',' relationshipEnd (
 		',' relationshipEnd
-	)* ')' '{' attributes? '}';
+	)* ')' '{' attribute* '}';
 
 relationshipEnd: name = ID ':' cardinality = CARDINALITY_ITEM;
-
-attributes: attribute (',' attribute)*;
 
 attribute: name = ID ':' type = ID;
 

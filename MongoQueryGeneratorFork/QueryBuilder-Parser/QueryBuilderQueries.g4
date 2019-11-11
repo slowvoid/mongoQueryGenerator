@@ -1,6 +1,6 @@
 grammar QueryBuilderQueries;
 
-NAME: [a-zA-Z][a-zA-Z0-9_]*;
+NAME: [a-zA-Z_][a-zA-Z0-9_]*;
 INTEGER: [0-9]+;
 VALUE: NAME;
 NUMERIC: INTEGER;

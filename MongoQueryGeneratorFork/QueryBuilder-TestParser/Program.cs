@@ -10,34 +10,22 @@ namespace QueryBuilder.TestParser
     {
         static void Main(string[] args)
         {
-            String input = args[0];
-            ICharStream stream = CharStreams.fromPath(input);
-            ITokenSource lexer = new QueryBuilderMappingLexer(stream);
-            ITokenStream tokens = new CommonTokenStream(lexer);
-            QueryBuilderMappingParser parser = new QueryBuilderMappingParser(tokens);
-            parser.BuildParseTree = true;
-            Console.WriteLine("Starting parser...");
-            IParseTree tree = parser.program();
+            var mapping = QueryBuilderParser.ParseMapping(args[0]);
 
-            Console.WriteLine("Starting visitor...");
+            Console.WriteLine($"ERModel: {mapping.EntityRelationshipModel.Name}");
 
-            var analyzer = new QueryBuilderMappingAnalyzer();
-            analyzer.Visit(tree);
+            Console.WriteLine("\n\n****** ER Model ********\n\n");
 
-            Console.WriteLine("Showing results...");
-
-            Console.WriteLine($"ERModel: {analyzer.EntityRelationshipModel.Name}");
-
-            analyzer.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Entity)).ForEach(e =>
+            foreach(var e in mapping.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Entity)))
             {
                 Console.WriteLine($"Entity: {e.Name}");
                 e.Attributes.ForEach(a =>
                 {
                     Console.WriteLine($"   Attribute: {a.Name}");
                 });
-            });
+            }
 
-            analyzer.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Relationship)).ConvertAll<Relationship>(e => (Relationship)e).ForEach(r =>
+            foreach(var r in mapping.EntityRelationshipModel.Elements.FindAll(e => e.GetType() == typeof(Relationship)).ConvertAll<Relationship>(e => (Relationship)e))
             {
                 Console.WriteLine($"Relationship: {r.Name}");
 
@@ -49,7 +37,43 @@ namespace QueryBuilder.TestParser
                 {
                     Console.WriteLine($"   Attribute: {a.Name}");
                 });
-            });
+            }
+
+            Console.WriteLine("\n\n****** Mongo DB Schema ********\n\n");
+
+
+            foreach(var c in mapping.MongoDBSchema.Collections)
+            {
+                Console.WriteLine($"Collection: {c.Name}");
+                c.DocumentSchema.Attributes.ForEach(a =>
+                {
+                    Console.WriteLine($"   Field: {a.Name}");
+                });
+            }
+
+            Console.WriteLine("\n\n****** Mapping ********\n\n");
+
+
+            foreach(var r in mapping.ERMongoMapping.Rules)
+            {
+                Console.WriteLine($"Rule: {r.Source.Name} = {r.Target.Name} (Main={r.IsMain})");
+                foreach(var sr in r.Rules)
+                {
+                    Console.WriteLine($"   {sr.Key} - {sr.Value}");
+                }
+            }
+
+            Console.WriteLine("\n\n****** Warnings and Errors ********\n\n");
+
+
+            mapping.Warnings.ForEach(w => Console.WriteLine(w));
+            mapping.Errors.ForEach(e => Console.WriteLine(e));
+
+            String query = "from Person p rjoin (Car c rjoin (Garage g)) rjoin (Teste t)";
+
+            var generatedQuery = QueryBuilderParser.ParseQuery(query);
+
+            // TODO: test the generated query
         }
     }
 }
