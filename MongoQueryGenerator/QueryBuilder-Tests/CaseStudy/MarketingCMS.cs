@@ -30,6 +30,9 @@ namespace QueryBuilder.Tests
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
             RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
@@ -57,6 +60,9 @@ namespace QueryBuilder.Tests
             SortArgument SortArg = new SortArgument( Product, Product.GetAttribute( "product_id" ), MongoDBSort.Ascending );
             SortStage SortOp = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
             SortStage SortOp2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
+            SortStage SortOp3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
+            SortStage SortOp4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
+            SortStage SortOp5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
             // =====
 
             // Build and execute Map1 query
@@ -82,16 +88,67 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( MapDuplicatesQuery, "Generated query [MapDuplicatesQuery] cannot be null" );
 
+            RelationshipJoinOperator RJoinMapCategoryDuplicatedOp = new RelationshipJoinOperator( Product,
+                new List<RelationshipJoinArgument>() { JoinStoreArgs, JoinCategoryArgs, JoinUserArgs },
+                DataMapCategoryDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> MapCategoryDuplicatedOpList = new List<AlgebraOperator>() { RJoinMapCategoryDuplicatedOp, SortOp3 };
+
+            FromArgument StartArgCategoryDuplicated = new FromArgument( Product, DataMapCategoryDuplicated.ERMongoMapping );
+            QueryGenerator GeneratorCategoryDuplicated = new QueryGenerator( StartArgCategoryDuplicated, MapCategoryDuplicatedOpList );
+
+            string MapCategoryDuplicatedQuery = GeneratorCategoryDuplicated.Run();
+
+            Assert.IsNotNull( MapCategoryDuplicatedQuery, "Generated query [MapCategoryDuplicatedQuery] cannot be null" );
+
+            RelationshipJoinOperator RJoinMapStoreDuplicatedOp = new RelationshipJoinOperator( Product,
+                new List<RelationshipJoinArgument>() { JoinStoreArgs, JoinCategoryArgs, JoinUserArgs },
+                DataMapStoreDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> MapStoreDuplicatedOpList = new List<AlgebraOperator>() { RJoinMapStoreDuplicatedOp, SortOp4 };
+
+            FromArgument StartArgStoreDuplicated = new FromArgument( Product, DataMapStoreDuplicated.ERMongoMapping );
+            QueryGenerator GeneratorStoreDuplicated = new QueryGenerator( StartArgStoreDuplicated, MapStoreDuplicatedOpList );
+
+            string MapStoreDuplicatedQuery = GeneratorStoreDuplicated.Run();
+
+            Assert.IsNotNull( MapStoreDuplicatedQuery, "Generated query [MapStoreDuplicatedQuery] cannot be null" );
+
+            RelationshipJoinOperator RJoinMapUserDuplicatedOp = new RelationshipJoinOperator( Product,
+                new List<RelationshipJoinArgument>() { JoinUserArgs, JoinCategoryArgs, JoinStoreArgs },
+                DataMapUserDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> MapUserDuplicatedOpList = new List<AlgebraOperator>() { RJoinMapUserDuplicatedOp, SortOp5 };
+
+            FromArgument StartArgUserDuplicated = new FromArgument( Product, DataMapUserDuplicated.ERMongoMapping );
+            QueryGenerator GeneratorUserDuplicated = new QueryGenerator( StartArgUserDuplicated, MapUserDuplicatedOpList );
+
+            string MapUserDuplicatedQuery = GeneratorUserDuplicated.Run();
+
+            Assert.IsNotNull( MapUserDuplicatedQuery, "Generated query [MapUserDuplicatedQuery] cannot be null" );
+
             QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms" );
             QueryRunner RunnerMap2 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_duplicados" );
+            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_category_duplicado" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_store_duplicado" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_user_duplicado" );
 
             string ResultMap1 = RunnerMap1.GetJSON( Map1Query );
             string ResultMap2 = RunnerMap2.GetJSON( MapDuplicatesQuery );
+            string ResultMap3 = RunnerMap3.GetJSON( MapCategoryDuplicatedQuery );
+            string ResultMap4 = RunnerMap4.GetJSON( MapStoreDuplicatedQuery );
+            string ResultMap5 = RunnerMap5.GetJSON( MapUserDuplicatedQuery );
 
             Assert.IsNotNull( ResultMap1, "Result [Map1] cannot be null" );
             Assert.IsNotNull( ResultMap2, "Result [Map2] cannot be null" );
+            Assert.IsNotNull( ResultMap3, "Result [Map3] cannot be null" );
+            Assert.IsNotNull( ResultMap4, "Result [Map4] cannot be null" );
+            Assert.IsNotNull( ResultMap5, "Result [Map5] cannot be null" );
 
             Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap2 ) ) );
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap3 ) ) );
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap4 ) ) );
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap5 ) ) );
         }
         /// <summary>
         /// Run GetAllStores query
