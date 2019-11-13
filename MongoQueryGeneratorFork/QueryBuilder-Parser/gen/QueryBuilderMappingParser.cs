@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from /home/daniel/GitProjects/mongoQueryGenerator/MongoQueryGeneratorFork/QueryBuilder-Parser/QueryBuilderMapping.g4 by ANTLR 4.7.1
+// Generated from /Users/daniellucredio/GitProjects/mongoQueryGenerator/MongoQueryGeneratorFork/QueryBuilder-Parser/QueryBuilderMapping.g4 by ANTLR 4.7.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -115,6 +115,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_program; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterProgram(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitProgram(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitProgram(this);
@@ -171,6 +179,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_ermodel; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterErmodel(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitErmodel(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitErmodel(this);
@@ -224,6 +240,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_erelement; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterErelement(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitErelement(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitErelement(this);
@@ -278,6 +302,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_entity; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterEntity(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitEntity(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitEntity(this);
@@ -342,6 +374,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_relationship; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterRelationship(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitRelationship(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitRelationship(this);
@@ -415,6 +455,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_relationshipEnd; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterRelationshipEnd(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitRelationshipEnd(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitRelationshipEnd(this);
@@ -457,6 +505,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_attribute; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterAttribute(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitAttribute(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitAttribute(this);
@@ -499,6 +555,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_mongoschema; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterMongoschema(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitMongoschema(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitMongoschema(this);
@@ -557,6 +621,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_collection; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterCollection(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitCollection(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitCollection(this);
@@ -624,6 +696,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_erRefs; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterErRefs(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitErRefs(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitErRefs(this);
@@ -676,6 +756,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_erRef; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterErRef(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitErRef(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitErRef(this);
@@ -729,6 +817,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_field; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterField(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitField(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitField(this);
@@ -783,6 +879,14 @@ public partial class QueryBuilderMappingParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_erAttributeRef; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.EnterErAttributeRef(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			IQueryBuilderMappingListener typedListener = listener as IQueryBuilderMappingListener;
+			if (typedListener != null) typedListener.ExitErAttributeRef(this);
+		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IQueryBuilderMappingVisitor<TResult> typedVisitor = visitor as IQueryBuilderMappingVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitErAttributeRef(this);

@@ -33,8 +33,11 @@ namespace QueryBuilder.ER
         /// <returns></returns>
         public BaseERElement FindByName( string Name )
         {
+            BaseERElement elementFound = null;
+            try {
             // Store the element
-            BaseERElement elementFound = Elements.First( E => E.Name == Name );
+            elementFound = Elements.First( E => E.Name == Name );
+            } catch(InvalidOperationException) {}
 
             if ( elementFound == null )
             {

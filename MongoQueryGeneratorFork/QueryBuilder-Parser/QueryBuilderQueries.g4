@@ -6,21 +6,17 @@ VALUE: NAME;
 NUMERIC: INTEGER;
 WS: (' ' | '\t' | '\n' | '\r') -> skip;
 
-query:
-	'from' entity 'select' select ('where' where)? (
-		'group by' groupby
-	)? ('having' having)? ('order by' orderby)?;
+query: 'from' entity;
+// 'select' select ('where' where)? ( 'group by' groupby )? ('having' having)? ('order by'
+// orderby)?;
 
-entity: simpleEntity | entity rjoin '(' listOfEntities ')';
-
-simpleEntity: entityName = NAME entityAlias = NAME;
-
-listOfEntities:
-	entity
-	| entity ',' listOfEntities
-	| entity ',' listOfEntities rjoin '(' entity ')';
-
-rjoin: 'rjoin' relationshipName = NAME relationshipAlias = NAME;
+entity
+	returns[ QueryBuilder.Operation.Arguments.QueryableEntity qEntity ]:
+	simpleEntityName = NAME simpleEntityAlias = NAME # simpleEntity
+	| computedEntityLeft = entity 'rjoin' '<' computedEntityRelationshipName = NAME
+		computedEntityRelationshipAlias = NAME '>' '(' computedEntityRight += entity
+		(',' computedEntityRight += entity)* ')' # computedEntity
+	| '(' entity ')' # parenthesisEntity;
 
 select:
 	simpleAttribute

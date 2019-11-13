@@ -78,5 +78,10 @@ namespace QueryBuilder.Operation.Arguments
             this.Alias = Alias;
         }
         #endregion
+
+        override public string ToString()
+        {
+            return $"{Element.Name} ({Element.GetType().Name}) AS {Alias}";
+        }
     }
 }

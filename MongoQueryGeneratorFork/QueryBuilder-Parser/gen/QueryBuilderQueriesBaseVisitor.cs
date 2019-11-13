@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from /home/daniel/GitProjects/mongoQueryGenerator/MongoQueryGeneratorFork/QueryBuilder-Parser/QueryBuilderQueries.g4 by ANTLR 4.7.1
+// Generated from /Users/daniellucredio/GitProjects/mongoQueryGenerator/MongoQueryGeneratorFork/QueryBuilder-Parser/QueryBuilderQueries.g4 by ANTLR 4.7.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -45,17 +45,8 @@ public partial class QueryBuilderQueriesBaseVisitor<Result> : AbstractParseTreeV
 	/// <return>The visitor result.</return>
 	public virtual Result VisitQuery([NotNull] QueryBuilderQueriesParser.QueryContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.entity"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitEntity([NotNull] QueryBuilderQueriesParser.EntityContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.simpleEntity"/>.
+	/// Visit a parse tree produced by the <c>simpleEntity</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.entity"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -65,7 +56,8 @@ public partial class QueryBuilderQueriesBaseVisitor<Result> : AbstractParseTreeV
 	/// <return>The visitor result.</return>
 	public virtual Result VisitSimpleEntity([NotNull] QueryBuilderQueriesParser.SimpleEntityContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.listOfEntities"/>.
+	/// Visit a parse tree produced by the <c>computedEntity</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.entity"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -73,9 +65,10 @@ public partial class QueryBuilderQueriesBaseVisitor<Result> : AbstractParseTreeV
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitListOfEntities([NotNull] QueryBuilderQueriesParser.ListOfEntitiesContext context) { return VisitChildren(context); }
+	public virtual Result VisitComputedEntity([NotNull] QueryBuilderQueriesParser.ComputedEntityContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.rjoin"/>.
+	/// Visit a parse tree produced by the <c>parenthesisEntity</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.entity"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -83,7 +76,7 @@ public partial class QueryBuilderQueriesBaseVisitor<Result> : AbstractParseTreeV
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitRjoin([NotNull] QueryBuilderQueriesParser.RjoinContext context) { return VisitChildren(context); }
+	public virtual Result VisitParenthesisEntity([NotNull] QueryBuilderQueriesParser.ParenthesisEntityContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.select"/>.
 	/// <para>

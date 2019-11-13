@@ -4,40 +4,76 @@ Version: "1.0"
 
 ############## ERModel ################
 
-Registration (Person:1, DriversLicense:1) {
-    observation: string
-}
 Person {
-    id: int
+    id: string
     name: string
-    address: string
+    surname: string
+    salary: double
 }
-DriversLicense {
-    id: int
-    number: string
+Car {
+    id: string
+    reg_no: int
+}
+InsuranceCompany {
+    id: string
+    name: string
+}
+Garage {
+    id: string
+    name: string
+    phone: string
+}
+Insurance (Person:1, Car:1, InsuranceCompany:1) {
+    contract: date
+}
+Drives (Person:1, Car:N) { }
+Repaired (Car:1, Garage:1) { 
     date: date
 }
 
+
 ############# MongoDBSchema ############## 
-DocTypePerson [ Person* ]
+PersonCollection [ Person* ]
 {
-    _id     : int       [ Person.id ]
+    _id     : string    [ Person.id ]
     fName   : string    [ Person.name ]
-    fAddress: string    [ Person.address ]
+    fSurname: string    [ Person.surname ]
+    fSalary : double    [ Person.salary ]
 }
-DocTypeDriversLicense [ DriversLicense* ]
+CarCollection [ Car* ]
 {
-    _id     : int       [ DriversLicense.id ]
-    fNumber : string    [ DriversLicense.number ]
-    fDate   : date      [ DriversLicense.date ]
+    _id     : string    [ Car.id ]
+    fReg_no : int       [ Car.reg_no ]
 }
-DocTypeRegistration [ Registration*, DriversLicense, Person ]
+InsuranceCompanyCollection [ InsuranceCompany* ]
 {
-    _id               : int     [ ]
-    observation       : string  [ Registration.observation ]
-    fPersonId         : int     [ Person.id ] 
-    fName             : string  [ Person.name ] 
-    fAddress          : string  [ Person.address ] 
-    fDriversLicenseId : int     [ DriversLicense.id ]
-    fNumber           : int     [ DriversLicense.number ] 
+    _id     : string    [ InsuranceCompany.id ]
+    fName   : string    [ InsuranceCompany.name ]
+}
+GarageCollection [ Garage* ]
+{
+    _id     : string    [ Garage.id ]
+    fName   : string    [ Garage.name ]
+    fPhone  : string    [ Garage.phone ]
+}
+InsuranceCollection [ Insurance*, Person, Car, InsuranceCompany ]
+{
+    _id         : string    []
+    fPersonId   : string    [ Person.id ]
+    fCarId      : string    [ Car.id ]
+    fInsCoId    : string    [ InsuranceCompany.id ]
+    contract    : date      [ Insurance.date ]
+}
+DrivesCollection [ Drives*, Person, Car ]
+{
+    _id         : string    []
+    fPersonId   : string    [ Person.id ]
+    fCarId      : string    [ Car.id ]
+}
+RepairedCollection [ Repaired*, Car, Garage ]
+{
+    _id         : string    []
+    fCarId      : string    [ Car.id ]
+    fGarageId   : string    [ Garage.id ]
+    fDate       : date      [ Repaired.date ]
 }

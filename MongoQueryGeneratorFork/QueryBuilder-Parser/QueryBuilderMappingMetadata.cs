@@ -5,7 +5,7 @@ using QueryBuilder.Mongo;
 
 namespace QueryBuilder.Parser
 {
-    public class QueryBuilderParserResult
+    public class QueryBuilderMappingMetadata
     {
         public ERModel EntityRelationshipModel { get; set; }
         public MongoSchema MongoDBSchema { get; set; }
@@ -13,7 +13,7 @@ namespace QueryBuilder.Parser
         public List<string> Warnings { get; set; }
         public List<string> Errors { get; set; }
 
-        public QueryBuilderParserResult(ERModel EntityRelationshipModel,
+        public QueryBuilderMappingMetadata(ERModel EntityRelationshipModel,
                                         MongoSchema MongoDBSchema,
                                         ModelMapping ERMongoMapping,
                                         List<string> Warnings,

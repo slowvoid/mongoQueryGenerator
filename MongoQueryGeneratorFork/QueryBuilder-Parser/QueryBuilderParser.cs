@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using QueryBuilder.Query;
@@ -6,9 +8,9 @@ namespace QueryBuilder.Parser
 {
     public class QueryBuilderParser
     {
-        public static QueryBuilderParserResult ParseMapping(string file)
+        public static QueryBuilderMappingMetadata ParseMapping(Stream stream)
         {
-            ICharStream mappingStream = CharStreams.fromPath(file);
+            ICharStream mappingStream = CharStreams.fromStream(stream);
             ITokenSource mappingLexer = new QueryBuilderMappingLexer(mappingStream);
             ITokenStream mappingTokens = new CommonTokenStream(mappingLexer);
             QueryBuilderMappingParser mappingParser = new QueryBuilderMappingParser(mappingTokens);
@@ -19,14 +21,14 @@ namespace QueryBuilder.Parser
             var mappingAnalyzer = new QueryBuilderMappingAnalyzer();
             mappingAnalyzer.Visit(mappingTree);
 
-            return new QueryBuilderParserResult(mappingAnalyzer.EntityRelationshipModel,
+            return new QueryBuilderMappingMetadata(mappingAnalyzer.EntityRelationshipModel,
                                                 mappingAnalyzer.MongoDBSchema,
                                                 mappingAnalyzer.ERMongoMapping,
                                                 mappingAnalyzer.Warnings,
                                                 mappingAnalyzer.Errors);
         }
 
-        public static QueryGenerator ParseQuery(string query)
+        public static QueryGenerator ParseQuery(string query, QueryBuilderMappingMetadata metadata)
         {
             ICharStream queryStream = CharStreams.fromstring(query);
             ITokenSource queryLexer = new QueryBuilderQueriesLexer(queryStream);
@@ -36,9 +38,10 @@ namespace QueryBuilder.Parser
 
             IParseTree tree = queryParser.query();
 
-            // TODO: visit the query tree to assemble the QueryGenerator object
+            QueryBuilderQueryGenerator generator = new QueryBuilderQueryGenerator(metadata);
+            ParseTreeWalker.Default.Walk(generator, tree);
 
-            return new QueryGenerator(null, null);
+            return new QueryGenerator(generator.StartArg, generator.PipelineOperators);
         }
     }
 }
