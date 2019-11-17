@@ -24,6 +24,9 @@ namespace QueryBuilder.ER
         /// Relationship
         /// </summary>
         public Relationship Relationship { get; set; }
+
+        public string RelationshipAlias { get; set; }
+
         /// <summary>
         /// Joined entities (They can be Computed Entities)
         /// </summary>
@@ -36,11 +39,12 @@ namespace QueryBuilder.ER
         /// </summary>
         /// <param name="Name">Computed Entity name</param>
         /// <param name="Attributes">Attributes</param>
-        public ComputedEntity( string Name, QueryableEntity SourceEntity, Relationship Relationship, List<QueryableEntity> TargetEntities )
+        public ComputedEntity( string Name, QueryableEntity SourceEntity, Relationship Relationship, string RelationshipAlias, List<QueryableEntity> TargetEntities )
         {
             this.Name = Name;
             this.SourceEntity = SourceEntity;
             this.Relationship = Relationship;
+            this.RelationshipAlias = RelationshipAlias;
             this.TargetEntities = TargetEntities;
         }
         #endregion

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from /home/daniel/GitProjects/mongoQueryGenerator/MongoQueryGeneratorFork/QueryBuilder-Parser/QueryBuilderQueries.g4 by ANTLR 4.7.1
+// Generated from /Users/daniellucredio/GitProjects/mongoQueryGenerator/MongoQueryGeneratorFork/QueryBuilder-Parser/QueryBuilderQueries.g4 by ANTLR 4.7.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -39,29 +39,26 @@ public interface IQueryBuilderQueriesVisitor<Result> : IParseTreeVisitor<Result>
 	/// <return>The visitor result.</return>
 	Result VisitQuery([NotNull] QueryBuilderQueriesParser.QueryContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.entity"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitEntity([NotNull] QueryBuilderQueriesParser.EntityContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.simpleEntity"/>.
+	/// Visit a parse tree produced by the <c>simpleEntity</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.entity"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitSimpleEntity([NotNull] QueryBuilderQueriesParser.SimpleEntityContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.listOfEntities"/>.
+	/// Visit a parse tree produced by the <c>computedEntity</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.entity"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitListOfEntities([NotNull] QueryBuilderQueriesParser.ListOfEntitiesContext context);
+	Result VisitComputedEntity([NotNull] QueryBuilderQueriesParser.ComputedEntityContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.rjoin"/>.
+	/// Visit a parse tree produced by the <c>parenthesisEntity</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.entity"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitRjoin([NotNull] QueryBuilderQueriesParser.RjoinContext context);
+	Result VisitParenthesisEntity([NotNull] QueryBuilderQueriesParser.ParenthesisEntityContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.select"/>.
 	/// </summary>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from /home/daniel/GitProjects/mongoQueryGenerator/MongoQueryGeneratorFork/QueryBuilder-Parser/QueryBuilderMapping.g4 by ANTLR 4.7.1
+// Generated from /Users/daniellucredio/GitProjects/mongoQueryGenerator/MongoQueryGeneratorFork/QueryBuilder-Parser/QueryBuilderMapping.g4 by ANTLR 4.7.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -133,13 +133,13 @@ public partial class QueryBuilderMappingLexer : Lexer {
 		'\f', '\x17', '\r', '\x19', '\xE', '\x1B', '\xF', '\x1D', '\x10', '\x1F', 
 		'\x11', '!', '\x12', '#', '\x13', '%', '\x14', '\'', '\x15', ')', '\x16', 
 		'\x3', '\x2', '\a', '\x4', '\x2', '\x33', '\x33', 'P', 'P', '\x5', '\x2', 
-		'\x43', '\\', '\x61', '\x61', '\x63', '|', '\x5', '\x2', '\x32', ';', 
-		'\x43', '\\', '\x63', '|', '\x5', '\x2', '\f', '\f', '\xF', '\xF', '$', 
-		'$', '\x5', '\x2', '\v', '\f', '\xF', '\xF', '\"', '\"', '\x2', '\x92', 
-		'\x2', '\x3', '\x3', '\x2', '\x2', '\x2', '\x2', '\x5', '\x3', '\x2', 
-		'\x2', '\x2', '\x2', '\a', '\x3', '\x2', '\x2', '\x2', '\x2', '\t', '\x3', 
-		'\x2', '\x2', '\x2', '\x2', '\v', '\x3', '\x2', '\x2', '\x2', '\x2', '\r', 
-		'\x3', '\x2', '\x2', '\x2', '\x2', '\xF', '\x3', '\x2', '\x2', '\x2', 
+		'\x43', '\\', '\x61', '\x61', '\x63', '|', '\x6', '\x2', '\x32', ';', 
+		'\x43', '\\', '\x61', '\x61', '\x63', '|', '\x5', '\x2', '\f', '\f', '\xF', 
+		'\xF', '$', '$', '\x5', '\x2', '\v', '\f', '\xF', '\xF', '\"', '\"', '\x2', 
+		'\x92', '\x2', '\x3', '\x3', '\x2', '\x2', '\x2', '\x2', '\x5', '\x3', 
+		'\x2', '\x2', '\x2', '\x2', '\a', '\x3', '\x2', '\x2', '\x2', '\x2', '\t', 
+		'\x3', '\x2', '\x2', '\x2', '\x2', '\v', '\x3', '\x2', '\x2', '\x2', '\x2', 
+		'\r', '\x3', '\x2', '\x2', '\x2', '\x2', '\xF', '\x3', '\x2', '\x2', '\x2', 
 		'\x2', '\x11', '\x3', '\x2', '\x2', '\x2', '\x2', '\x13', '\x3', '\x2', 
 		'\x2', '\x2', '\x2', '\x15', '\x3', '\x2', '\x2', '\x2', '\x2', '\x17', 
 		'\x3', '\x2', '\x2', '\x2', '\x2', '\x19', '\x3', '\x2', '\x2', '\x2', 
