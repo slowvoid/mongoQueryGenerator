@@ -466,10 +466,10 @@ namespace QueryBuilder.Tests
             QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_user_duplicado" );
 
             string ResultMap1 = RunnerMap1.GetJSON( QueryMap1 );
-            string ResultMap2 = RunnerMap1.GetJSON( QueryMap2 );
-            string ResultMap3 = RunnerMap1.GetJSON( QueryMap3 );
-            string ResultMap4 = RunnerMap1.GetJSON( QueryMap4 );
-            string ResultMap5 = RunnerMap1.GetJSON( QueryMap5 );
+            string ResultMap2 = RunnerMap2.GetJSON( QueryMap2 );
+            string ResultMap3 = RunnerMap3.GetJSON( QueryMap3 );
+            string ResultMap4 = RunnerMap4.GetJSON( QueryMap4 );
+            string ResultMap5 = RunnerMap5.GetJSON( QueryMap5 );
 
             Assert.IsNotNull( ResultMap1, "Result [Map1] cannot be null" );
             Assert.IsNotNull( ResultMap2, "Result [Map2] cannot be null" );
