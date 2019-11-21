@@ -30,10 +30,20 @@ namespace QueryBuilder.Map
         /// </summary>
         /// <param name="NameOrAlias"></param>
         /// <param name="AttributeName"></param>
+        /// <param name="IsMain"></param>
         /// <returns></returns>
-        public string GetRuleValue( string NameOrAlias, string AttributeName )
+        public string GetRuleValue( string NameOrAlias, string AttributeName, bool IsMain = false )
         {
-            MapRule Rule = Rules.First( R => R.Source.Name == NameOrAlias );
+            MapRule Rule = null;
+
+            if ( IsMain )
+            {
+                Rule = Rules.First( R => R.Source.Name == NameOrAlias && IsMain );
+            }
+            else
+            {
+                Rule = Rules.First( R => R.Source.Name == NameOrAlias );
+            }
             
             if ( Rule != null )
             {

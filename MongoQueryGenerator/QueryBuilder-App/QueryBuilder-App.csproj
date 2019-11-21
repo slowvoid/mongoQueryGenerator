@@ -34,7 +34,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>QueryBuilderApp.CMSTest</StartupObject>
+    <StartupObject>QueryBuilderApp.NewStuff</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - No Tests|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug - No Tests\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -104,17 +115,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App.cs" />
-    <Compile Include="CMSDataProvider.cs" />
-    <Compile Include="CMSTest.cs" />
-    <Compile Include="ComputedEntityTest.cs" />
-    <Compile Include="JSCodeTests.cs" />
-    <Compile Include="LogicalExpressionsTest.cs" />
-    <Compile Include="MultipleEntitiesApp.cs" />
-    <Compile Include="MultipleEntitiesDataProvider.cs" />
-    <Compile Include="MultipleRJOIN.cs" />
+    <Compile Include="NewStuff.cs" />
     <Compile Include="RequiredDataContainer.cs" />
-    <Compile Include="TestDataProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

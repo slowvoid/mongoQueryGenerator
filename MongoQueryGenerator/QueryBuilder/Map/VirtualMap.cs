@@ -60,7 +60,7 @@ namespace QueryBuilder.Map
         /// <param name="NameOrAlias"></param>
         /// <param name="AttributeName"></param>
         /// <returns></returns>
-        public string GetRuleValue( string NameOrAlias, string AttributeName )
+        public string GetRuleValue( string NameOrAlias, string AttributeName, bool IsMain = false )
         {
             VirtualRule Rule = Rules.First( R => R.SourceERElement.Name == NameOrAlias || R.Alias == NameOrAlias );
 

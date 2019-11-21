@@ -54,6 +54,20 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         }
         #endregion
 
+        #region Methods
+        /// <summary>
+        /// Creates a MatchOperator with inner Expr and EqExpr for the given fields
+        /// </summary>
+        /// <param name="SourceField"></param>
+        /// <param name="TargetField"></param>
+        /// <returns></returns>
+        public static MatchOperator CreateLookupMatch( string SourceField, string TargetField )
+        {
+            EqExpr EqOp = new EqExpr( $"${SourceField}", $"$${TargetField}" );
+            return new MatchOperator( new Expr( EqOp ) );
+        }
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Initialize a new instance of Match
@@ -68,7 +82,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <param name="FieldsToMatch">Fields to match against</param>
         public MatchOperator( Dictionary<string, object> FieldsToMatch )
         {
-            this.FieldsToMatch = FieldsToMatch;
+        this.FieldsToMatch = FieldsToMatch;
         }
         /// <summary>
         /// Initialize a new instance of Match

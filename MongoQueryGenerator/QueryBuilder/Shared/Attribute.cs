@@ -45,7 +45,7 @@ namespace QueryBuilder.Shared
         /// <summary>
         /// Gets/Sets wheter this attribute is also an identifier
         /// </summary>
-        public bool Identifier { get; set; }
+        public bool IsIdentifier { get; set; }
         #endregion
 
         #region Functions
@@ -86,7 +86,7 @@ namespace QueryBuilder.Shared
         {
             this.Name = Name;
             this.Parent = Parent;
-            Identifier = false;
+            IsIdentifier = false;
             Children = new List<DataAttribute>();
         }
         /// <summary>
@@ -98,7 +98,7 @@ namespace QueryBuilder.Shared
         {
             this.Name = Name;
             this.Parent = Parent;
-            this.Identifier = Identifier;
+            this.IsIdentifier = Identifier;
             Children = new List<DataAttribute>();
         }
         /// <summary>
@@ -111,7 +111,7 @@ namespace QueryBuilder.Shared
         {
             this.Name = Name;
             this.Parent = Parent;
-            this.Identifier = Identifier;
+            this.IsIdentifier = Identifier;
             this.Children = Children;
         }
         #endregion

@@ -15,9 +15,10 @@ namespace QueryBuilder.Map
         /// <summary>
         /// Get the rule value for an attribute in the given ER element
         /// </summary>
-        /// <param name="NameOrAlias"></param>
-        /// <param name="AttributeName"></param>
+        /// <param name="NameOrAlias">ERElement name or alias</param>
+        /// <param name="AttributeName">Attribute name</param>
+        /// <param name="IsMain">Use only main mapping (Default: false)</param>
         /// <returns></returns>
-        string GetRuleValue( string NameOrAlias, string AttributeName );
+        string GetRuleValue( string NameOrAlias, string AttributeName, bool IsMain = false );
     }
 }

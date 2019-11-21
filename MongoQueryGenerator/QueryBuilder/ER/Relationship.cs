@@ -12,18 +12,8 @@ namespace QueryBuilder.ER
     /// </summary>
     public enum RelationshipCardinality
     {
-        /// <summary>
-        /// One to One relationship
-        /// </summary>
-        OneToOne,
-        /// <summary>
-        /// One to Many relationship
-        /// </summary>
-        OneToMany,
-        /// <summary>
-        /// Many to Many relationship
-        /// </summary>
-        ManyToMany
+        One,
+        Many
     }
     /// <summary>
     /// Represents a relation ship
@@ -32,43 +22,35 @@ namespace QueryBuilder.ER
     {
         #region Properties
         /// <summary>
-        /// List of entities and how they are related through this relationship
+        /// Relationship endpoints
+        /// Entities connected through
         /// </summary>
-        public List<RelationshipConnection> Relations { get; set; }
-        /// <summary>
-        /// Relationship cardinality
-        /// </summary>
-        public RelationshipCardinality Cardinality { get; set; }
+        public List<RelationshipEnd> Ends { get; set; }
         #endregion
 
         #region Methods
         /// <summary>
-        /// Checks if the source and target entities are related through this relationship
+        /// Add a new End to the relationship
+        /// </summary>
+        /// <param name="End"></param>
+        public void AddRelationshipEnd( RelationshipEnd End )
+        {
+            Ends.Add( End );
+        }
+
+        /// <summary>
+        /// Returns wheter the given entities are connected
+        /// through this relationship
         /// </summary>
         /// <param name="Source">Source Entity</param>
         /// <param name="Target">Target Entity</param>
         /// <returns></returns>
-        public bool HasRelation( Entity Source, Entity Target )
+        public bool AreRelated( Entity Source, Entity Target )
         {
-            return Relations.Exists(R => R.SourceEntity == Source && R.TargetEntity == Target);
-        }
-        /// <summary>
-        /// Returns the relation item that describes the connection between Source and Target entities
-        /// </summary>
-        /// <param name="Source">Source Entity</param>
-        /// <param name="Target">Target Entity</param>
-        /// <returns></returns>
-        public RelationshipConnection GetRelation( Entity Source, Entity Target )
-        {
-            return Relations.Find(R => R.SourceEntity == Source && R.TargetEntity == Target);
-        }
-        /// <summary>
-        /// Add relation
-        /// </summary>
-        /// <param name="Relation"></param>
-        public void AddRelation( RelationshipConnection Relation )
-        {
-            Relations.Add( Relation );
+            bool FoundSourceEntity = Ends.First( E => E.TargetEntity.Name == Source.Name ) != null ? true : false;
+            bool FoundTargetEntity = Ends.First( E => E.TargetEntity.Name == Target.Name ) != null ? true : false;
+
+            return FoundSourceEntity && FoundTargetEntity;
         }
         #endregion
 
@@ -77,12 +59,10 @@ namespace QueryBuilder.ER
         /// Initialize a new Relationship instance
         /// </summary>
         /// <param name="Name">Relationship name</param>
-        public Relationship( string Name, RelationshipCardinality Cardinality )
+        public Relationship( string Name )
         {
             this.Name = Name;
-            Attributes = new List<DataAttribute>();
-            Relations = new List<RelationshipConnection>();
-            this.Cardinality = Cardinality;
+            Ends = new List<RelationshipEnd>();
         }
         #endregion
     }

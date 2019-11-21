@@ -19,6 +19,10 @@ namespace QueryBuilder.ER
         /// </summary>
         public string Name { get; set; }
         /// <summary>
+        /// Alias
+        /// </summary>
+        public string Alias { get; set; }
+        /// <summary>
         /// Attributes
         /// </summary>
         public List<DataAttribute> Attributes { get; set; }
@@ -53,6 +57,14 @@ namespace QueryBuilder.ER
         public DataAttribute GetAttribute( string Name )
         {
             return Attributes.Find( A => A.Name == Name );
+        }
+        /// <summary>
+        /// Returns the alias and if it is null returns the name
+        /// </summary>
+        /// <returns></returns>
+        public string GetAliasOrName()
+        {
+            return Alias ?? Name;
         }
         #endregion
     }

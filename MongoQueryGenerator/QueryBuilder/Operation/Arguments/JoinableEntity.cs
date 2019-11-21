@@ -64,6 +64,20 @@ namespace QueryBuilder.Operation.Arguments
 
             return string.Empty;
         }
+        /// <summary>
+        /// Return Element as a computed entity
+        /// If it is not, return null
+        /// </summary>
+        /// <returns></returns>
+        public ComputedEntity GetComputedEntity()
+        {
+            if ( Element is ComputedEntity )
+            {
+                return (ComputedEntity)Element;
+            }
+
+            return null;
+        }
         #endregion
 
         #region Constructor
