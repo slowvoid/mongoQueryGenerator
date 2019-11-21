@@ -237,6 +237,96 @@ namespace QueryBuilder.Operation
                 // This means that either the relationship has no attributes
                 // or that it is embedded into another collection
 
+                // Store fields to merge under data_Relationship
+                List<string> FieldsToMerge = new List<string>();
+
+                // Iterate targets
+                foreach ( QueryableEntity Target in TargetEntities )
+                {
+                    // Check if the target is a computed entity
+                    if ( Target.Element is ComputedEntity )
+                    {
+                        // TODO:
+                    }
+                    else
+                    {
+                        // Check if target is related to source through relationship
+                        if ( !Relationship.AreRelated( (Entity)SourceEntity.Element, (Entity)Target.Element ) )
+                        {
+                            throw new NotRelatedException( $"Entities {SourceEntity.GetName()} and {Target.GetName()} are not related through {Relationship.Name}" );
+                        }
+
+                        // Fetch rule
+                        MapRule TargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == Target.GetName() );
+
+                        if ( TargetRule == null )
+                        {
+                            // Try finding a main mapping
+                            MapRule NewTargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == Target.GetName() && R.IsMain );
+
+                            if ( NewTargetRule == null )
+                            {
+                                throw new RuleNotFoundException( $"No mapping was found for {Target.GetName()}" );
+                            }
+
+                            TargetRule = NewTargetRule;
+                        }
+
+                        // Check if the target and source are embedded
+                        if ( SourceRule.Target.Name == TargetRule.Target.Name )
+                        {
+                            // Target is embedded, check the cardinality
+                            // Assuming that Cardinality is One means that the target is embedded in an object or scattered in the source collection
+                            // Assuming that Cardinality is Many means that the target is embedded in an array
+                            RelationshipEnd TargetEnd = Relationship.Ends.First( E => E.TargetEntity.Name == Target.GetName() );
+
+                            if ( TargetEnd.Cardinality == RelationshipCardinality.One )
+                            {
+                                // Attributes to add
+                                Dictionary<string, JSCode> AttributesToAdd = new Dictionary<string, JSCode>();
+                                List<string> AttributesToRemove = new List<string>();
+                                List<string> RootAttributes = new List<string>();
+                                // Fetch attributes and add them to an object under data_Relationship
+                                foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                                {
+                                    string AttributeMap = TargetRule.Rules.First( R => R.Key == Attribute.Name ).Value;
+                                    AttributesToAdd.Add( $"data_{Target.GetName()}.{Target.GetName()}_{Attribute.Name}", (JSString)$"\"${AttributeMap}\"" );
+
+                                    // Check if it is within an object
+                                    string[] AttributeMapPath = AttributeMap.Split( new char[] { '.' } );
+
+                                    if ( AttributeMapPath.Length > 1 )
+                                    {
+                                        RootAttributes.Add( AttributeMapPath.First() );
+                                    }
+                                    else
+                                    {
+                                        AttributesToRemove.Add( AttributeMap );
+                                    }
+                                }
+
+                                FieldsToMerge.Add( $"data_{Target.GetName()}" );
+
+                                // Add fields
+                                AddFieldsOperator AddTargetFieldsOp = new AddFieldsOperator( AttributesToAdd );
+
+                                // Remove old attributes
+                                AttributesToRemove.AddRange( RootAttributes.Distinct() );
+                                ProjectOperator RemoveTargetFields = ProjectOperator.HideAttributesOperator( AttributesToRemove );
+
+                                OperationsToExecute.AddRange( new MongoDBOperator[] { AddTargetFieldsOp, RemoveTargetFields } );
+                            }
+                            else if ( TargetEnd.Cardinality == RelationshipCardinality.Many)
+                            {
+
+                            }
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                }
             }
 
             // Return operations
