@@ -34,6 +34,11 @@ namespace QueryBuilder.ER
             this.TargetEntity = TargetEntity;
             this.Cardinality = Cardinality;
         }
+        /// <summary>
+        /// Initialize empty instance
+        /// </summary>
+        public RelationshipEnd()
+        { }
         #endregion
     }
 }

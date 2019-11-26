@@ -20,12 +20,12 @@ namespace QueryBuilder.Tests
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
             Person.AddAttribute( "carId" );
 
             Entity Car = new Entity( "Car" );
-            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carId", true );
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
 
@@ -59,6 +59,9 @@ namespace QueryBuilder.Tests
             CarRule.AddRule( "name", "name" );
             CarRule.AddRule( "year", "year" );
 
+            MapRule CarPersonRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ), false );
+            CarPersonRule.AddRule( "carId", "carId" );
+
             ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
@@ -72,12 +75,12 @@ namespace QueryBuilder.Tests
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
             Person.AddAttribute( "carId" );
 
             Entity Car = new Entity( "Car" );
-            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carId", true );
             Car.AddAttribute( "carName" );
             Car.AddAttribute( "carYear" );
 
@@ -104,7 +107,7 @@ namespace QueryBuilder.Tests
             PersonRule.AddRule( "name", "name" );
             PersonRule.AddRule( "carId", "carId" );
 
-            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "PersonDrives" ) );
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "PersonDrives" ), false );
             CarRule.AddRule( "carId", "drives.carId" );
             CarRule.AddRule( "carName", "drives.carName" );
             CarRule.AddRule( "carYear", "drives.carYear" );
@@ -122,11 +125,11 @@ namespace QueryBuilder.Tests
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
 
             Entity Car = new Entity( "Car" );
-            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carId", true );
             Car.AddAttribute( "carName" );
             Car.AddAttribute( "carYear" );
 
@@ -151,7 +154,7 @@ namespace QueryBuilder.Tests
             PersonRule.AddRule( "personId", "_id" );
             PersonRule.AddRule( "name", "name" );
 
-            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "PersonDrivesCar" ) );
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "PersonDrivesCar" ), false );
             CarRule.AddRule( "carId", "carId" );
             CarRule.AddRule( "carName", "carName" );
             CarRule.AddRule( "carYear", "carYear" );
@@ -169,11 +172,11 @@ namespace QueryBuilder.Tests
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
 
             Entity Car = new Entity( "Car" );
-            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carId", true );
             Car.AddAttribute( "carName" );
             Car.AddAttribute( "carYear" );
 
@@ -198,7 +201,7 @@ namespace QueryBuilder.Tests
             PersonRule.AddRule( "personId", "_id" );
             PersonRule.AddRule( "name", "name" );
 
-            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "PersonDrivesCarMixed" ) );
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "PersonDrivesCarMixed" ), false );
             CarRule.AddRule( "carId", "carId" );
             CarRule.AddRule( "carName", "carData.carName" );
             CarRule.AddRule( "carYear", "carData.carYear" );
@@ -216,18 +219,18 @@ namespace QueryBuilder.Tests
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
             Person.AddAttribute( "carId" );
             Person.AddAttribute( "insuranceId" );
 
             Entity Car = new Entity( "Car" );
-            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carId", true );
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
 
             Entity Insurance = new Entity( "Insurance" );
-            Insurance.AddAttribute( "insuranceId" );
+            Insurance.AddAttribute( "insuranceId", true );
             Insurance.AddAttribute( "name" );
 
             Relationship HasInsurance = new Relationship( "HasInsurance" );
@@ -284,7 +287,7 @@ namespace QueryBuilder.Tests
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
             Person.AddAttribute( "insuranceId" );
 
@@ -293,7 +296,7 @@ namespace QueryBuilder.Tests
             Car.AddAttribute( "year" );
 
             Entity Insurance = new Entity( "Insurance" );
-            Insurance.AddAttribute( "insuranceId" );
+            Insurance.AddAttribute( "insuranceId", true );
             Insurance.AddAttribute( "name" );
 
             Relationship HasInsurance = new Relationship( "HasInsurance" );
@@ -345,7 +348,7 @@ namespace QueryBuilder.Tests
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
             Person.AddAttribute( "insuranceId" );
 
@@ -354,7 +357,7 @@ namespace QueryBuilder.Tests
             Car.AddAttribute( "year" );
 
             Entity Insurance = new Entity( "Insurance" );
-            Insurance.AddAttribute( "insuranceId" );
+            Insurance.AddAttribute( "insuranceId", true );
             Insurance.AddAttribute( "name" );
 
             Relationship HasInsurance = new Relationship( "HasInsurance" );
@@ -411,7 +414,7 @@ namespace QueryBuilder.Tests
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
             Person.AddAttribute( "insuranceId" );
 
@@ -422,7 +425,7 @@ namespace QueryBuilder.Tests
             Car.AddAttribute( "fuel" );
 
             Entity Insurance = new Entity( "Insurance" );
-            Insurance.AddAttribute( "insuranceId" );
+            Insurance.AddAttribute( "insuranceId", true );
             Insurance.AddAttribute( "name" );
 
             Relationship HasInsurance = new Relationship( "HasInsurance" );

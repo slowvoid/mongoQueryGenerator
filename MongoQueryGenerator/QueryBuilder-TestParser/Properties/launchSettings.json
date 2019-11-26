@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "QueryBuilder-TestParser": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\johny\\source\\repos\\slowvoid\\mongoQueryGenerator\\MongoQueryGenerator\\QueryBuilder-TestParser\\TestCase1.qer"
+    }
+  }
+}

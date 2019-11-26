@@ -35,6 +35,8 @@ namespace QueryBuilder.Operation
         /// Target entities
         /// </summary>
         public List<QueryableEntity> TargetEntities { get; set; }
+
+        public string RelationshipAlias { get; set; }
         #endregion
 
         #region Methods
@@ -290,7 +292,7 @@ namespace QueryBuilder.Operation
                                 foreach ( DataAttribute Attribute in Target.Element.Attributes )
                                 {
                                     string AttributeMap = TargetRule.Rules.First( R => R.Key == Attribute.Name ).Value;
-                                    AttributesToAdd.Add( $"data_{Target.GetName()}.{Target.GetName()}_{Attribute.Name}", (JSString)$"\"${AttributeMap}\"" );
+                                    AttributesToAdd.Add( $"\"data_{Target.GetName()}.{Target.GetName()}_{Attribute.Name}\"", (JSString)$"\"${AttributeMap}\"" );
 
                                     // Check if it is within an object
                                     string[] AttributeMapPath = AttributeMap.Split( new char[] { '.' } );
@@ -481,6 +483,14 @@ namespace QueryBuilder.Operation
             this.SourceEntity = SourceEntity;
             this.Relationship = Relationship;
             this.TargetEntities = TargetEntities;
+        }
+
+        public RelationshipJoinOperator( QueryableEntity SourceEntity, Relationship Relationship, string RelationshipAlias, List<QueryableEntity> TargetEntities, ModelMapping Map ) : base( Map )
+        {
+            this.SourceEntity = SourceEntity;
+            this.Relationship = Relationship;
+            this.TargetEntities = TargetEntities;
+            this.RelationshipAlias = RelationshipAlias;
         }
         #endregion
     }

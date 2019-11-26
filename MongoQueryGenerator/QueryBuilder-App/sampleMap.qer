@@ -1,0 +1,79 @@
+﻿Solution: "Garage"
+Description: "Person has Driver License"
+Version: "1.0"
+
+############## ERModel ################
+
+Person {
+    id: string
+    name: string
+    surname: string
+    salary: double
+}
+Car {
+    id: string
+    reg_no: int
+}
+InsuranceCompany {
+    id: string
+    name: string
+}
+Garage {
+    id: string
+    name: string
+    phone: string
+}
+Insurance (Person:1, Car:1, InsuranceCompany:1) {
+    contract: date
+}
+Drives (Person:1, Car:N) { }
+Repaired (Car:1, Garage:1) { 
+    date: date
+}
+
+
+############# MongoDBSchema ############## 
+PersonCollection [ Person* ]
+{
+    _id     : string    [ Person.id ]
+    fName   : string    [ Person.name ]
+    fSurname: string    [ Person.surname ]
+    fSalary : double    [ Person.salary ]
+}
+CarCollection [ Car* ]
+{
+    _id     : string    [ Car.id ]
+    fReg_no : int       [ Car.reg_no ]
+}
+InsuranceCompanyCollection [ InsuranceCompany* ]
+{
+    _id     : string    [ InsuranceCompany.id ]
+    fName   : string    [ InsuranceCompany.name ]
+}
+GarageCollection [ Garage* ]
+{
+    _id     : string    [ Garage.id ]
+    fName   : string    [ Garage.name ]
+    fPhone  : string    [ Garage.phone ]
+}
+InsuranceCollection [ Insurance*, Person, Car, InsuranceCompany ]
+{
+    _id         : string    []
+    fPersonId   : string    [ Person.id ]
+    fCarId      : string    [ Car.id ]
+    fInsCoId    : string    [ InsuranceCompany.id ]
+    contract    : date      [ Insurance.date ]
+}
+DrivesCollection [ Drives*, Person, Car ]
+{
+    _id         : string    []
+    fPersonId   : string    [ Person.id ]
+    fCarId      : string    [ Car.id ]
+}
+RepairedCollection [ Repaired*, Car, Garage ]
+{
+    _id         : string    []
+    fCarId      : string    [ Car.id ]
+    fGarageId   : string    [ Garage.id ]
+    fDate       : date      [ Repaired.date ]
+}

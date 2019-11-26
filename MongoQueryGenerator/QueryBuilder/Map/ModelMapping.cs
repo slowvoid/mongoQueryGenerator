@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using QueryBuilder.ER;
+using QueryBuilder.Mongo;
 using QueryBuilder.Operation.Exceptions;
 
 namespace QueryBuilder.Map
@@ -53,6 +54,16 @@ namespace QueryBuilder.Map
             {
                 throw new RuleNotFoundException( $"No map rules found for ERElement [{NameOrAlias}]" );
             }
+        }
+        /// <summary>
+        /// Find rule between an erelement and mongodb collection
+        /// </summary>
+        /// <param name="Source"></param>
+        /// <param name="Target"></param>
+        /// <returns></returns>
+        public MapRule FindRule( BaseERElement Source, MongoDBCollection Target )
+        {
+            return Rules.First( R => R.Source.Name == Source.Name && R.Target.Name == Target.Name );
         }
         #endregion
 
