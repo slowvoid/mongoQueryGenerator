@@ -62,6 +62,7 @@ namespace QueryBuilder.ER
         public Relationship( string Name )
         {
             this.Name = Name;
+            Attributes = new List<DataAttribute>();
             Ends = new List<RelationshipEnd>();
         }
         #endregion

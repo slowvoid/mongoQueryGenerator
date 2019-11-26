@@ -74,6 +74,19 @@ namespace QueryBuilder.ER
         {
             return Attributes.Find( A => A.IsIdentifier );
         }
+        /// <summary>
+        /// Sets the given attribute name the identifier status
+        /// </summary>
+        /// <param name="Name"></param>
+        public void SetIdentifier( string Name )
+        {
+            DataAttribute Attr = Attributes.FirstOrDefault( A => A.Name == Name );
+
+            if ( Attr != null )
+            {
+                Attr.IsIdentifier = true;
+            }
+        }
         #endregion
     }
 }

@@ -15,21 +15,27 @@ namespace QueryBuilder.Tests
         {
             Entity Person = new Entity( "Person" );
             Person.AddAttributes( "personId", "name" );
+            Person.SetIdentifier( "personId" );
 
             Entity Car = new Entity( "Car" );
             Car.AddAttributes( "carId", "model", "year", "manufacturerId" );
+            Car.SetIdentifier( "carId" );
 
             Entity Garage = new Entity( "Garage" );
             Garage.AddAttributes( "garageId", "name" );
+            Garage.SetIdentifier( "garageId" );
 
             Entity Supplier = new Entity( "Supplier" );
             Supplier.AddAttributes( "supplierId", "name" );
+            Supplier.SetIdentifier( "supplierId" );
 
             Entity Insurance = new Entity( "Insurance" );
             Insurance.AddAttributes( "insuranceId", "name", "value" );
+            Insurance.SetIdentifier( "insuranceId" );
 
             Entity Manufacturer = new Entity( "Manufacturer" );
             Manufacturer.AddAttributes( "manufacturerId", "name" );
+            Manufacturer.SetIdentifier( "manufacturerId" );
 
             Relationship Owns = new Relationship( "Owns" );
             Owns.AddAttributes( "ownsId", "personId", "carId", "insuranceId" );
