@@ -30,17 +30,13 @@ namespace QueryBuilder.Tests
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
 
-            Relationship Insurance = new Relationship( "Insurance", RelationshipCardinality.ManyToMany );
+            Relationship Insurance = new Relationship( "Insurance" );
             Insurance.AddAttribute( "insuranceId" );
             Insurance.AddAttribute( "personId" );
             Insurance.AddAttribute( "carId" );
             Insurance.AddAttribute( "companyId" );
-
-            RelationshipConnection PersonCarConn = new RelationshipConnection( Person,
-                Person.GetAttribute( "personId" ), Insurance.GetAttribute( "personId" ), Car,
-                Car.GetAttribute( "carId" ), Insurance.GetAttribute( "carId" ) );
-
-            Insurance.AddRelation( PersonCarConn );
+            Insurance.AddRelationshipEnd( new RelationshipEnd( Person, RelationshipCardinality.Many ) );
+            Insurance.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.Many ) );
 
             ERModel Model = new ERModel( "PersonCar", new List<BaseERElement> { Person, Car, Insurance } );
 
@@ -103,22 +99,14 @@ namespace QueryBuilder.Tests
             InsCompany.AddAttribute( "companyId" );
             InsCompany.AddAttribute( "name" );
 
-            Relationship Insurance = new Relationship( "Insurance", RelationshipCardinality.ManyToMany );
+            Relationship Insurance = new Relationship( "Insurance" );
             Insurance.AddAttribute( "insuranceId" );
             Insurance.AddAttribute( "personId" );
             Insurance.AddAttribute( "carId" );
             Insurance.AddAttribute( "companyId" );
-
-            RelationshipConnection PersonCarConn = new RelationshipConnection( Person,
-                Person.GetAttribute( "personId" ), Insurance.GetAttribute( "personId" ), Car,
-                Car.GetAttribute( "carId" ), Insurance.GetAttribute( "carId" ) );
-
-            RelationshipConnection PersonInsCompanyConn = new RelationshipConnection( Person,
-                Person.GetAttribute( "personId" ), Insurance.GetAttribute( "personId" ), InsCompany,
-                InsCompany.GetAttribute( "companyId" ), Insurance.GetAttribute( "companyId" ) );
-
-            Insurance.AddRelation( PersonCarConn );
-            Insurance.AddRelation( PersonInsCompanyConn );
+            Insurance.AddRelationshipEnd( new RelationshipEnd( Person, RelationshipCardinality.Many ) );
+            Insurance.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.Many ) );
+            Insurance.AddRelationshipEnd( new RelationshipEnd( InsCompany, RelationshipCardinality.Many ) );
 
             ERModel Model = new ERModel( "PersonCar", new List<BaseERElement> { Person, Car, Insurance, InsCompany } );
 
@@ -187,7 +175,7 @@ namespace QueryBuilder.Tests
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
 
-            Relationship Insurance = new Relationship( "Insurance", RelationshipCardinality.ManyToMany );
+            Relationship Insurance = new Relationship( "Insurance" );
             Insurance.AddAttribute( "insuranceId" );
             Insurance.AddAttribute( "personId" );
             Insurance.AddAttribute( "carId" );
@@ -195,11 +183,8 @@ namespace QueryBuilder.Tests
             Insurance.AddAttribute( "insuranceValue" );
             Insurance.AddAttribute( "aRandomValue" );
 
-            RelationshipConnection PersonCarConn = new RelationshipConnection( Person,
-                Person.GetAttribute( "personId" ), Insurance.GetAttribute( "personId" ), Car,
-                Car.GetAttribute( "carId" ), Insurance.GetAttribute( "carId" ) );
-
-            Insurance.AddRelation( PersonCarConn );
+            Insurance.AddRelationshipEnd( new RelationshipEnd( Person, RelationshipCardinality.Many ) );
+            Insurance.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.Many ) );
 
             ERModel Model = new ERModel( "PersonCar", new List<BaseERElement> { Person, Car, Insurance } );
 
@@ -267,24 +252,16 @@ namespace QueryBuilder.Tests
             InsCompany.AddAttribute( "companyId" );
             InsCompany.AddAttribute( "name" );
 
-            Relationship Insurance = new Relationship( "Insurance", RelationshipCardinality.ManyToMany );
+            Relationship Insurance = new Relationship( "Insurance" );
             Insurance.AddAttribute( "insuranceId" );
             Insurance.AddAttribute( "personId" );
             Insurance.AddAttribute( "carId" );
             Insurance.AddAttribute( "companyId" );
             Insurance.AddAttribute( "insuranceValue" );
             Insurance.AddAttribute( "aRandomValue" );
-
-            RelationshipConnection PersonCarConn = new RelationshipConnection( Person,
-                Person.GetAttribute( "personId" ), Insurance.GetAttribute( "personId" ), Car,
-                Car.GetAttribute( "carId" ), Insurance.GetAttribute( "carId" ) );
-
-            RelationshipConnection PersonInsCompanyConn = new RelationshipConnection( Person,
-                Person.GetAttribute( "personId" ), Insurance.GetAttribute( "personId" ), InsCompany,
-                InsCompany.GetAttribute( "companyId" ), Insurance.GetAttribute( "companyId" ) );
-
-            Insurance.AddRelation( PersonCarConn );
-            Insurance.AddRelation( PersonInsCompanyConn );
+            Insurance.AddRelationshipEnd( new RelationshipEnd( Person, RelationshipCardinality.Many ) );
+            Insurance.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.Many ) );
+            Insurance.AddRelationshipEnd( new RelationshipEnd( InsCompany, RelationshipCardinality.Many ) );
 
             ERModel Model = new ERModel( "PersonCar", new List<BaseERElement> { Person, Car, Insurance, InsCompany } );
 

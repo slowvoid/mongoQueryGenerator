@@ -59,53 +59,21 @@ namespace QueryBuilder.Tests
             Entity Manufacturer = new Entity( "Manufacturer" );
             Manufacturer.AddAttributes( "manufacturerId", "name" );
 
-            Relationship Owns = new Relationship( "Owns", RelationshipCardinality.ManyToMany );
+            Relationship Owns = new Relationship( "Owns" );
             Owns.AddAttributes( "ownsId", "personId", "carId", "insuranceId" );
-            RelationshipConnection PersonOwnsCar = new RelationshipConnection(
-                Person,
-                Person.GetAttribute( "personId" ),
-                Owns.GetAttribute( "personId" ),
-                Car,
-                Car.GetAttribute( "carId" ),
-                Owns.GetAttribute( "carId" ) );
-            Owns.AddRelation( PersonOwnsCar );
+            Owns.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.Many ) );
+            Owns.AddRelationshipEnd( new RelationshipEnd( Person, RelationshipCardinality.Many ) );
+            Owns.AddRelationshipEnd( new RelationshipEnd( Insurance, RelationshipCardinality.Many ) );
 
-            RelationshipConnection PersonOwnsInsurance = new RelationshipConnection(
-                Person,
-                Person.GetAttribute( "personId" ),
-                Owns.GetAttribute( "personId" ),
-                Insurance,
-                Insurance.GetAttribute( "insuranceId" ),
-                Owns.GetAttribute( "insuranceId" ) );
-            Owns.AddRelation( PersonOwnsInsurance );
-
-            Relationship Repaired = new Relationship( "Repaired", RelationshipCardinality.ManyToMany );
+            Relationship Repaired = new Relationship( "Repaired" );
             Repaired.AddAttributes( "repairedId", "carId", "garageId", "supplierId", "repaired" );
-            RelationshipConnection CarRepairedByGarage = new RelationshipConnection(
-                Car,
-                Car.GetAttribute( "carId" ),
-                Repaired.GetAttribute( "carId" ),
-                Garage,
-                Garage.GetAttribute( "garageId" ),
-                Repaired.GetAttribute( "garageId" ) );
-            Repaired.AddRelation( CarRepairedByGarage );
+            Repaired.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.Many ) );
+            Repaired.AddRelationshipEnd( new RelationshipEnd( Garage, RelationshipCardinality.Many ) );
+            Repaired.AddRelationshipEnd( new RelationshipEnd( Supplier, RelationshipCardinality.Many ) );
 
-            RelationshipConnection CarRepairedSupplier = new RelationshipConnection(
-                Car,
-                Car.GetAttribute( "carId" ),
-                Repaired.GetAttribute( "carId" ),
-                Supplier,
-                Supplier.GetAttribute( "supplierId" ),
-                Repaired.GetAttribute( "supplierId" ) );
-            Repaired.AddRelation( CarRepairedSupplier );
-
-            Relationship ManufacturedBy = new Relationship( "ManufacturedBy", RelationshipCardinality.OneToOne );
-            RelationshipConnection CarManufacturedBy = new RelationshipConnection(
-                Car,
-                Car.GetAttribute( "manufacturerId" ),
-                Manufacturer,
-                Manufacturer.GetAttribute( "manufacturerId" ) );
-            ManufacturedBy.AddRelation( CarManufacturedBy );
+            Relationship ManufacturedBy = new Relationship( "ManufacturedBy" );
+            ManufacturedBy.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.One ) );
+            ManufacturedBy.AddRelationshipEnd( new RelationshipEnd( Manufacturer, RelationshipCardinality.One ) );
 
             ERModel Model = new ERModel( "ERModel", new List<BaseERElement> { Person, Car, Garage, Repaired, Supplier, Insurance, Owns, Manufacturer, ManufacturedBy } );
 

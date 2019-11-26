@@ -30,66 +30,22 @@ namespace QueryBuilder.Tests
                 "product_category_id", "product_store_id", "product_user_id", "product_published", "product_image" );
 
             // User Relationships
-            Relationship UserHasManyProducts = new Relationship( "HasManyProducts", RelationshipCardinality.OneToMany );
-            RelationshipConnection UserHasManyProductsConnection = new RelationshipConnection(
-                User,
-                User.GetAttribute( "user_id" ),
-                Product,
-                Product.GetAttribute( "product_user_id" ) );
-
-            UserHasManyProducts.AddRelation( UserHasManyProductsConnection );
+            Relationship UserHasManyProducts = new Relationship( "HasManyProducts" );
+            UserHasManyProducts.AddRelationshipEnd( new RelationshipEnd( User, RelationshipCardinality.One ) );
+            UserHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Product, RelationshipCardinality.Many ) );
 
             // Store relationships
-            Relationship StoreHasManyProducts = new Relationship( "StoreHasManyProducts", RelationshipCardinality.OneToMany );
-            RelationshipConnection StoreHasManyProductsConnection = new RelationshipConnection(
-                Store,
-                Store.GetAttribute( "store_id" ),
-                Product,
-                Product.GetAttribute( "product_store_id" ) );
-
-            StoreHasManyProducts.AddRelation( StoreHasManyProductsConnection );
+            Relationship StoreHasManyProducts = new Relationship( "StoreHasManyProducts" );
+            StoreHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Store, RelationshipCardinality.One ) );
+            StoreHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Product, RelationshipCardinality.Many ) );
 
             // Category relationships
-            Relationship CategoryHasManyProducts = new Relationship( "CategoryHasManyProducts", RelationshipCardinality.OneToMany );
-            RelationshipConnection CategoryHasManyProductsConnection = new RelationshipConnection(
-                Category,
-                Category.GetAttribute( "category_id" ),
-                Product,
-                Product.GetAttribute( "product_category_id" ) );
-
-            CategoryHasManyProducts.AddRelation( CategoryHasManyProductsConnection );
-
-            // Product relationships
-            Relationship ProductBelongsToUser = new Relationship( "ProductBelongsToUser", RelationshipCardinality.OneToOne );
-            RelationshipConnection ProductBelongsToUserConnection = new RelationshipConnection(
-                Product,
-                Product.GetAttribute( "product_user_id" ),
-                User,
-                User.GetAttribute( "user_id" ) );
-
-            ProductBelongsToUser.AddRelation( ProductBelongsToUserConnection );
-
-            Relationship ProductBelongsToStore = new Relationship( "ProductBelongsToStore", RelationshipCardinality.OneToOne );
-            RelationshipConnection ProductBelongsToStoreConnection = new RelationshipConnection(
-                Product,
-                Product.GetAttribute( "product_store_id" ),
-                Store,
-                Store.GetAttribute( "store_id" ) );
-
-            ProductBelongsToStore.AddRelation( ProductBelongsToStoreConnection );
-
-            Relationship ProductBelongsToCategory = new Relationship( "ProductBelongsToCategory", RelationshipCardinality.OneToOne );
-            RelationshipConnection ProductBelongsToCategoryConnection = new RelationshipConnection(
-                Product,
-                Product.GetAttribute( "product_category_id" ),
-                Category,
-                Category.GetAttribute( "category_id" ) );
-
-            ProductBelongsToCategory.AddRelation( ProductBelongsToCategoryConnection );
+            Relationship CategoryHasManyProducts = new Relationship( "CategoryHasManyProducts" );
+            CategoryHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Category, RelationshipCardinality.One ) );
+            CategoryHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Product, RelationshipCardinality.Many ) );
 
             return new ERModel( "CMSModel", new List<BaseERElement>() { User, Store, Category, Product,
-                UserHasManyProducts, StoreHasManyProducts, CategoryHasManyProducts, ProductBelongsToUser,
-                ProductBelongsToStore, ProductBelongsToCategory} );
+                UserHasManyProducts, StoreHasManyProducts, CategoryHasManyProducts } );
         }
 
         /// <summary>

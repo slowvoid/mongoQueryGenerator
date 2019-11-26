@@ -39,20 +39,19 @@ namespace QueryBuilder.Tests
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
 
-            RelationshipJoinArgument JoinStoreArgs = new RelationshipJoinArgument(
-                (Relationship)DataMap.EntityRelationshipModel.FindByName( "ProductBelongsToStore" ),
-                new List<QueryableEntity>() { Store } );
+            RelationshipJoinOperator RJoinStoreMap1 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreHasManyProducts" ),
+                new List<QueryableEntity>() { Store },
+                DataMap.ERMongoMapping );
 
-            RelationshipJoinArgument JoinCategoryArgs = new RelationshipJoinArgument(
-                (Relationship)DataMap.EntityRelationshipModel.FindByName( "ProductBelongsToCategory" ),
-                new List<QueryableEntity>() { Category } );
+            RelationshipJoinOperator RJoinCategoryMap1 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryHasManyProducts" ),
+                new List<QueryableEntity>() { Category },
+                DataMap.ERMongoMapping );
 
-            RelationshipJoinArgument JoinUserArgs = new RelationshipJoinArgument(
-                (Relationship)DataMap.EntityRelationshipModel.FindByName( "ProductBelongsToUser" ),
-                new List<QueryableEntity>() { User } );
-
-            RelationshipJoinOperator RJoinMap1Op = new RelationshipJoinOperator( Product,
-                new List<RelationshipJoinArgument>() { JoinStoreArgs, JoinCategoryArgs, JoinUserArgs },
+            RelationshipJoinOperator RJoinUserMap1 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMap.EntityRelationshipModel.FindByName( "HasManyProducts" ),
+                new List<QueryableEntity>() { User },
                 DataMap.ERMongoMapping );
 
             // DEBUG
@@ -66,7 +65,7 @@ namespace QueryBuilder.Tests
             // =====
 
             // Build and execute Map1 query
-            List<AlgebraOperator> Map1OperatorsList = new List<AlgebraOperator>() { RJoinMap1Op, SortOp };
+            List<AlgebraOperator> Map1OperatorsList = new List<AlgebraOperator>() { RJoinStoreMap1, RJoinCategoryMap1, RJoinUserMap1, SortOp };
 
             FromArgument StartArgMap1 = new FromArgument( Product, DataMap.ERMongoMapping );
             QueryGenerator Generator = new QueryGenerator( StartArgMap1, Map1OperatorsList );
@@ -75,11 +74,22 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( Map1Query, "Generated query [Map1Query] cannot be null" );
 
-            RelationshipJoinOperator RJoinMapDuplicatesOp = new RelationshipJoinOperator( Product,
-                new List<RelationshipJoinArgument>() { JoinStoreArgs, JoinCategoryArgs, JoinUserArgs },
+            RelationshipJoinOperator RJoinStoreMap2 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "StoreHasManyProducts" ),
+                new List<QueryableEntity>() { Store },
                 DataMapDuplicates.ERMongoMapping );
 
-            List<AlgebraOperator> MapDuplicatesOpList = new List<AlgebraOperator>() { RJoinMapDuplicatesOp, SortOp2 };
+            RelationshipJoinOperator RJoinCategoryMap2 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "CategoryHasManyProducts" ),
+                new List<QueryableEntity>() { Category },
+                DataMapDuplicates.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinUserMap2 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "HasManyProducts" ),
+                new List<QueryableEntity>() { User },
+                DataMapDuplicates.ERMongoMapping );
+
+            List<AlgebraOperator> MapDuplicatesOpList = new List<AlgebraOperator>() { RJoinStoreMap2, RJoinCategoryMap2, RJoinUserMap2, SortOp2 };
 
             FromArgument StartArgMap2 = new FromArgument( Product, DataMapDuplicates.ERMongoMapping );
             QueryGenerator GeneratorDuplicates = new QueryGenerator( StartArgMap2, MapDuplicatesOpList );
@@ -88,11 +98,22 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( MapDuplicatesQuery, "Generated query [MapDuplicatesQuery] cannot be null" );
 
-            RelationshipJoinOperator RJoinMapCategoryDuplicatedOp = new RelationshipJoinOperator( Product,
-                new List<RelationshipJoinArgument>() { JoinStoreArgs, JoinCategoryArgs, JoinUserArgs },
+            RelationshipJoinOperator RJoinStoreMap3 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "StoreHasManyProducts" ),
+                new List<QueryableEntity>() { Store },
                 DataMapCategoryDuplicated.ERMongoMapping );
 
-            List<AlgebraOperator> MapCategoryDuplicatedOpList = new List<AlgebraOperator>() { RJoinMapCategoryDuplicatedOp, SortOp3 };
+            RelationshipJoinOperator RJoinCategoryMap3 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "CategoryHasManyProducts" ),
+                new List<QueryableEntity>() { Category },
+                DataMapCategoryDuplicated.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinUserMap3 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "HasManyProducts" ),
+                new List<QueryableEntity>() { User },
+                DataMapCategoryDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> MapCategoryDuplicatedOpList = new List<AlgebraOperator>() { RJoinStoreMap3, RJoinCategoryMap3, RJoinUserMap3, SortOp3 };
 
             FromArgument StartArgCategoryDuplicated = new FromArgument( Product, DataMapCategoryDuplicated.ERMongoMapping );
             QueryGenerator GeneratorCategoryDuplicated = new QueryGenerator( StartArgCategoryDuplicated, MapCategoryDuplicatedOpList );
@@ -101,11 +122,22 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( MapCategoryDuplicatedQuery, "Generated query [MapCategoryDuplicatedQuery] cannot be null" );
 
-            RelationshipJoinOperator RJoinMapStoreDuplicatedOp = new RelationshipJoinOperator( Product,
-                new List<RelationshipJoinArgument>() { JoinStoreArgs, JoinCategoryArgs, JoinUserArgs },
+            RelationshipJoinOperator RJoinStoreMap4 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "StoreHasManyProducts" ),
+                new List<QueryableEntity>() { Store },
                 DataMapStoreDuplicated.ERMongoMapping );
 
-            List<AlgebraOperator> MapStoreDuplicatedOpList = new List<AlgebraOperator>() { RJoinMapStoreDuplicatedOp, SortOp4 };
+            RelationshipJoinOperator RJoinCategoryMap4 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "CategoryHasManyProducts" ),
+                new List<QueryableEntity>() { Category },
+                DataMapStoreDuplicated.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinUserMap4 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "HasManyProducts" ),
+                new List<QueryableEntity>() { User },
+                DataMapStoreDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> MapStoreDuplicatedOpList = new List<AlgebraOperator>() { RJoinStoreMap4, RJoinCategoryMap4, RJoinUserMap4, SortOp4 };
 
             FromArgument StartArgStoreDuplicated = new FromArgument( Product, DataMapStoreDuplicated.ERMongoMapping );
             QueryGenerator GeneratorStoreDuplicated = new QueryGenerator( StartArgStoreDuplicated, MapStoreDuplicatedOpList );
@@ -114,11 +146,22 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( MapStoreDuplicatedQuery, "Generated query [MapStoreDuplicatedQuery] cannot be null" );
 
-            RelationshipJoinOperator RJoinMapUserDuplicatedOp = new RelationshipJoinOperator( Product,
-                new List<RelationshipJoinArgument>() { JoinUserArgs, JoinCategoryArgs, JoinStoreArgs },
+            RelationshipJoinOperator RJoinStoreMap5 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "StoreHasManyProducts" ),
+                new List<QueryableEntity>() { Store },
                 DataMapUserDuplicated.ERMongoMapping );
 
-            List<AlgebraOperator> MapUserDuplicatedOpList = new List<AlgebraOperator>() { RJoinMapUserDuplicatedOp, SortOp5 };
+            RelationshipJoinOperator RJoinCategoryMap5 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "CategoryHasManyProducts" ),
+                new List<QueryableEntity>() { Category },
+                DataMapUserDuplicated.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinUserMap5 = new RelationshipJoinOperator( Product,
+                (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "HasManyProducts" ),
+                new List<QueryableEntity>() { User },
+                DataMapUserDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> MapUserDuplicatedOpList = new List<AlgebraOperator>() { RJoinStoreMap5, RJoinCategoryMap5, RJoinUserMap5, SortOp5 };
 
             FromArgument StartArgUserDuplicated = new FromArgument( Product, DataMapUserDuplicated.ERMongoMapping );
             QueryGenerator GeneratorUserDuplicated = new QueryGenerator( StartArgUserDuplicated, MapUserDuplicatedOpList );
@@ -403,23 +446,30 @@ namespace QueryBuilder.Tests
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
 
-            RelationshipJoinArgument JoinProductArg = new RelationshipJoinArgument( (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreHasManyProducts" ),
-                new List<QueryableEntity>() { Product } );
-
             RelationshipJoinOperator JoinOpMap1 = new RelationshipJoinOperator( Store,
-                new List<RelationshipJoinArgument>() { JoinProductArg }, DataMap.ERMongoMapping );
+                (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreHasManyProducts" ),
+                new List<QueryableEntity>() { Product },
+                DataMap.ERMongoMapping );
 
             RelationshipJoinOperator JoinOpMap2 = new RelationshipJoinOperator( Store,
-                new List<RelationshipJoinArgument>() { JoinProductArg }, DataMapDuplicates.ERMongoMapping );
+                (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "StoreHasManyProducts" ),
+                new List<QueryableEntity>() { Product },
+                DataMapDuplicates.ERMongoMapping );
 
             RelationshipJoinOperator JoinOpMap3 = new RelationshipJoinOperator( Store,
-                new List<RelationshipJoinArgument>() { JoinProductArg }, DataMapCategoryDuplicated.ERMongoMapping );
+                (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "StoreHasManyProducts" ),
+                new List<QueryableEntity>() { Product },
+                DataMapCategoryDuplicated.ERMongoMapping );
 
             RelationshipJoinOperator JoinOpMap4 = new RelationshipJoinOperator( Store,
-                new List<RelationshipJoinArgument>() { JoinProductArg }, DataMapStoreDuplicated.ERMongoMapping );
+                (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "StoreHasManyProducts" ),
+                new List<QueryableEntity>() { Product },
+                DataMapStoreDuplicated.ERMongoMapping );
 
             RelationshipJoinOperator JoinOpMap5 = new RelationshipJoinOperator( Store,
-                new List<RelationshipJoinArgument>() { JoinProductArg }, DataMapUserDuplicated.ERMongoMapping );
+                (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "StoreHasManyProducts" ),
+                new List<QueryableEntity>() { Product },
+                DataMapUserDuplicated.ERMongoMapping );
 
             SortArgument SortArg = new SortArgument( Store, Store.GetAttribute( "store_id" ), MongoDBSort.Ascending );
 

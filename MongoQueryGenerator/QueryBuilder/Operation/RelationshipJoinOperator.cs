@@ -318,12 +318,73 @@ namespace QueryBuilder.Operation
                             }
                             else if ( TargetEnd.Cardinality == RelationshipCardinality.Many)
                             {
+                                // Assuming that the embedded data is an array
+                                // if otherwise mongodb will throw an error
+                                Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
+                                string RootAttribute = string.Empty;
+                                string MapAttributeAs = string.Empty;
 
+                                // Iterate attributes
+                                foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                                {
+                                    string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+                                    string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+
+                                    if ( string.IsNullOrWhiteSpace( RootAttribute ) )
+                                    {
+                                        RootAttribute = $"{RulePath.First()}";
+                                        MapAttributeAs = $"data_{RootAttribute}";
+                                    }
+
+                                    MapParams.Add( $"\"{Target.Element.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
+                                }
+
+                                // Create Map Operation
+                                MapExpr MapOp = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
+
+                                // Use AddFields operation to create a mapped attribute
+                                Dictionary<string, JSCode> NewFields = new Dictionary<string, JSCode>();
+                                NewFields.Add( $"data_{Target.GetName()}", MapOp.ToJSCode() );
+
+                                AddFieldsOperator AddFieldsOp = new AddFieldsOperator( NewFields );
+
+                                OperationsToExecute.Add( AddFieldsOp );
                             }
                         }
                         else
                         {
+                            // Not embedded, fetch data from collection
+                            LookupOperator LookupOp = new LookupOperator
+                            {
+                                From = TargetRule.Target.Name,
+                                ForeignField = TargetRule.Rules.First( R => R.Key == SourceEntity.Element.GetIdentifier().Name ).Value,
+                                LocalField = SourceRule.Rules.First( R => R.Key == SourceEntity.Element.GetIdentifier().Name ).Value,
+                                As = $"data_{Target.GetName()}"
+                            };
 
+                            // Rename attributes
+                            Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
+                            string RootAttribute = $"data_{Target.GetName()}";
+                            string MapAttributeAs = $"data_{RootAttribute}";
+
+                            foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                            {
+                                string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+                                MapParams.Add( $"\"{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{RuleValue}\"" ) );
+                            }
+
+                            // Build Map Expr
+                            MapExpr AttributeMap = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
+                            Dictionary<string, JSCode> AddFieldsData = new Dictionary<string, JSCode>();
+                            AddFieldsData.Add( $"data_{Relationship.Name}", AttributeMap.ToJSCode() );
+
+                            // Create add fields operator
+                            AddFieldsOperator AddFieldsOp = new AddFieldsOperator( AddFieldsData );
+
+                            // Use Project operation to hide unecessary data
+                            ProjectOperator ProjectOp = ProjectOperator.HideAttributesOperator( new string[] { $"data_{Target.GetName()}" } );
+
+                            OperationsToExecute.AddRange( new MongoDBOperator[] { AddFieldsOp, ProjectOp } );
                         }
                     }
                 }
@@ -415,9 +476,11 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="SourceEntity"></param>
         /// <param name="Map"></param>
-        public RelationshipJoinOperator( QueryableEntity SourceEntity, ModelMapping Map ) : base( Map )
+        public RelationshipJoinOperator( QueryableEntity SourceEntity, Relationship Relationship, List<QueryableEntity> TargetEntities, ModelMapping Map ) : base( Map )
         {
             this.SourceEntity = SourceEntity;
+            this.Relationship = Relationship;
+            this.TargetEntities = TargetEntities;
         }
         #endregion
     }

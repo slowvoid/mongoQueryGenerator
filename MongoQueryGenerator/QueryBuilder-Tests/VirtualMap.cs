@@ -20,15 +20,10 @@ namespace QueryBuilder.Tests
             QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
             QueryableEntity Pet = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Pet" ) );
 
-            RelationshipJoinArgument Arg = new RelationshipJoinArgument(
+            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator( Person,
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasPet" ),
-                new List<QueryableEntity>() { Pet } );
-
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                Person,
-                new List<RelationshipJoinArgument>() { Arg },
+                new List<QueryableEntity>() { Pet },
                 ModelData.ERMongoMapping );
-
 
             VirtualMap RJoinVMap = RJoinOp.ComputeVirtualMap();
             List<string> VirtualMapRules = RJoinVMap.GetRulesAsStringList();
@@ -56,13 +51,10 @@ namespace QueryBuilder.Tests
             QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
             QueryableEntity Pet = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Pet" ) );
 
-            RelationshipJoinArgument Arg = new RelationshipJoinArgument(
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasPet" ),
-                new List<QueryableEntity>() { Pet } );
-
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
                 Person,
-                new List<RelationshipJoinArgument>() { Arg },
+                (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasPet" ),
+                new List<QueryableEntity>() { Pet },
                 ModelData.ERMongoMapping );
 
             VirtualMap RJoinVMap = RJoinOp.ComputeVirtualMap();
@@ -97,13 +89,10 @@ namespace QueryBuilder.Tests
             QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
             QueryableEntity Pet = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Pet" ) );
 
-            RelationshipJoinArgument Arg = new RelationshipJoinArgument(
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasPet" ),
-                new List<QueryableEntity>() { Pet } );
-
             RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
                 Person,
-                new List<RelationshipJoinArgument>() { Arg },
+                (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasPet" ),
+                new List<QueryableEntity>() { Pet },
                 ModelData.ERMongoMapping );
 
             VirtualMap RJoinVMap = RJoinOp.ComputeVirtualMap();

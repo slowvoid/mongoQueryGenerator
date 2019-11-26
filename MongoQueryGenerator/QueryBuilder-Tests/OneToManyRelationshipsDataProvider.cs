@@ -32,10 +32,9 @@ namespace QueryBuilder.Tests
             Car.AddAttribute( "year" );
             Car.AddAttribute( "personId" );
 
-            Relationship Drives = new Relationship( "Drives", RelationshipCardinality.OneToMany );
-            RelationshipConnection PersonCar = new RelationshipConnection(
-                Person, Person.GetAttribute( "personId" ), Car, Car.GetAttribute( "personId" ) );
-            Drives.AddRelation( PersonCar );
+            Relationship Drives = new Relationship( "Drives" );
+            Drives.AddRelationshipEnd( new RelationshipEnd( Person, RelationshipCardinality.One ) );
+            Drives.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.Many ) );
 
             ERModel Model = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, Drives } );
 
@@ -82,10 +81,9 @@ namespace QueryBuilder.Tests
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
 
-            Relationship Drives = new Relationship( "Drives", RelationshipCardinality.OneToMany );
-            RelationshipConnection PersonCar = new RelationshipConnection(
-                Person, Person.GetAttribute( "personId" ), Car, Car.GetAttribute( "personId" ) );
-            Drives.AddRelation( PersonCar );
+            Relationship Drives = new Relationship( "Drives" );
+            Drives.AddRelationshipEnd( new RelationshipEnd( Person, RelationshipCardinality.One ) );
+            Drives.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.Many ) );
 
             ERModel Model = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, Drives } );
 
@@ -128,11 +126,10 @@ namespace QueryBuilder.Tests
             Car.AddAttribute( "year" );
             Car.AddAttribute( "driverId" );
 
-            Relationship Drives = new Relationship( "Drives", RelationshipCardinality.OneToMany );
-            RelationshipConnection PersonCar = new RelationshipConnection(
-                Person, Person.GetAttribute( "personId" ), Car, Car.GetAttribute( "driverId" ) );
-            Drives.AddRelation( PersonCar );
+            Relationship Drives = new Relationship( "Drives" );
             Drives.AddAttribute( "drivesFor" );
+            Drives.AddRelationshipEnd( new RelationshipEnd( Person, RelationshipCardinality.One ) );
+            Drives.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.Many ) );
 
             ERModel Model = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, Drives } );
 
@@ -184,11 +181,10 @@ namespace QueryBuilder.Tests
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
 
-            Relationship Drives = new Relationship( "Drives", RelationshipCardinality.OneToMany );
-            RelationshipConnection PersonCar = new RelationshipConnection(
-                Person, Person.GetAttribute( "personId" ), Car, Car.GetAttribute( "personId" ) );
-            Drives.AddRelation( PersonCar );
+            Relationship Drives = new Relationship( "Drives" );
             Drives.AddAttribute( "drivesFor" );
+            Drives.AddRelationshipEnd( new RelationshipEnd( Person, RelationshipCardinality.One ) );
+            Drives.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.Many ) );
 
             ERModel Model = new ERModel( "PersonCarModel", new List<BaseERElement> { Person, Car, Drives } );
 
@@ -233,14 +229,9 @@ namespace QueryBuilder.Tests
             Insurance.AddAttribute( "value" );
             Insurance.AddAttribute( "carId" );
 
-            Relationship HasInsurance = new Relationship( "HasInsurance", RelationshipCardinality.OneToMany );
-            RelationshipConnection CarInsuranceConn = new RelationshipConnection(
-                Car,
-                Car.GetAttribute( "carId" ),
-                Insurance,
-                Insurance.GetAttribute( "carId" ) );
-
-            HasInsurance.AddRelation( CarInsuranceConn );
+            Relationship HasInsurance = new Relationship( "HasInsurance" );
+            HasInsurance.AddRelationshipEnd( new RelationshipEnd( Car, RelationshipCardinality.One ) );
+            HasInsurance.AddRelationshipEnd( new RelationshipEnd( Insurance, RelationshipCardinality.Many ) );
 
             ERModel Model = new ERModel( "CarInsuranceModel", new List<BaseERElement> { Car, Insurance, HasInsurance } );
 

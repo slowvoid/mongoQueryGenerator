@@ -66,6 +66,14 @@ namespace QueryBuilder.ER
         {
             return Alias ?? Name;
         }
+        /// <summary>
+        /// Returns the Identifier field
+        /// </summary>
+        /// <returns></returns>
+        public DataAttribute GetIdentifier()
+        {
+            return Attributes.Find( A => A.IsIdentifier );
+        }
         #endregion
     }
 }

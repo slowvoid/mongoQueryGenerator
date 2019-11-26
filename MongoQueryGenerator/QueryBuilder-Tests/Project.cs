@@ -81,15 +81,12 @@ namespace QueryBuilder.Tests
                     new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Manufacturer" ), "manufacturer" )
                 } );
 
-            RelationshipJoinArgument RJoinArgs = new RelationshipJoinArgument(
+            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
+                new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "Owns" ),
                 new List<QueryableEntity> {
                     new QueryableEntity( CarRepairedByGarage )
-                } );
-
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                new List<RelationshipJoinArgument> { RJoinArgs },
+                },
                 ModelData.ERMongoMapping );
 
             VirtualMap VMap = RJoinOp.ComputeVirtualMap();

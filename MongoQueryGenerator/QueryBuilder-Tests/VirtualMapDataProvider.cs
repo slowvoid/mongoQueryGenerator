@@ -20,13 +20,9 @@ namespace QueryBuilder.Tests
             Entity Pet = new Entity( "Pet" );
             Pet.AddAttributes( "petId", "name", "type", "ownerId" );
 
-            Relationship HasPet = new Relationship( "HasPet", RelationshipCardinality.OneToMany );
-            RelationshipConnection PersonHasPet = new RelationshipConnection(
-                Person,
-                Person.GetAttribute( "personId" ),
-                Pet,
-                Pet.GetAttribute( "ownerId" ) );
-            HasPet.AddRelation( PersonHasPet );
+            Relationship HasPet = new Relationship( "HasPet" );
+            HasPet.AddRelationshipEnd( new RelationshipEnd( Person, RelationshipCardinality.One ) );
+            HasPet.AddRelationshipEnd( new RelationshipEnd( Pet, RelationshipCardinality.Many ) );
 
             ERModel Model = new ERModel( "Model", new List<BaseERElement>() { Person, Pet, HasPet } );
 
