@@ -9,7 +9,6 @@
         INT,
         FLOAT,
         BOOL,
-        STRING,
-        ARRAY
+        STRING
     }
 }

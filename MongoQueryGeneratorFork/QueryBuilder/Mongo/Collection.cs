@@ -27,21 +27,21 @@ namespace QueryBuilder.Mongo
         /// Add an attribute to the document schema
         /// </summary>
         /// <param name="Name"></param>
-        public void AddAttribute(string Name)
+        public void AddAttribute(string Name, string OfType, bool MultiValued)
         {
-            DocumentSchema.AddAttribute( Name );
+            DocumentSchema.AddAttribute( Name, OfType, MultiValued );
         }
         /// <summary>
         /// Add a sequence of attributes to the document schema
         /// </summary>
         /// <param name="Names"></param>
-        public void AddAttributes( params string[] Names )
-        {
-            foreach ( string Name in Names )
-            {
-                AddAttribute( Name );
-            }
-        }
+        // public void AddAttributes( params string[] Names )
+        // {
+        //     foreach ( string Name in Names )
+        //     {
+        //         AddAttribute( Name );
+        //     }
+        // }
         #endregion
 
         #region Constructors

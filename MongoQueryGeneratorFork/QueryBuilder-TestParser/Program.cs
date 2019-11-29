@@ -22,7 +22,7 @@ namespace QueryBuilder.TestParser
                 Console.WriteLine($"Entity: {e.Name}");
                 e.Attributes.ForEach(a =>
                 {
-                    Console.WriteLine($"   Attribute: {a.Name}");
+                    Console.WriteLine($"   Attribute: {a.Name} of type {a.OfType}, multivalued={a.MultiValued}");
                 });
             }
 
@@ -36,7 +36,7 @@ namespace QueryBuilder.TestParser
                 });
                 r.Attributes.ForEach(a =>
                 {
-                    Console.WriteLine($"   Attribute: {a.Name}");
+                    Console.WriteLine($"   Attribute: {a.Name} of type {a.OfType}, multivalued={a.MultiValued}");
                 });
             }
 
@@ -48,7 +48,7 @@ namespace QueryBuilder.TestParser
                 Console.WriteLine($"Collection: {c.Name}");
                 c.DocumentSchema.Attributes.ForEach(a =>
                 {
-                    Console.WriteLine($"   Field: {a.Name}");
+                    Console.WriteLine($"   Field: {a.Name} of type {a.OfType}, multivalued={a.MultiValued}");
                 });
             }
 

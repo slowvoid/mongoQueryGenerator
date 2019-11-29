@@ -89,7 +89,9 @@ namespace QueryBuilder.Parser
             if (Pass == 1)
             {
                 Entity entity = new Entity(context.name.Text);
-                entity.AddAttributes(Array.ConvertAll(context.attribute(), a => a.name.Text));
+                foreach(QueryBuilderMappingParser.AttributeContext ac in context.attribute()) {
+                    entity.AddAttribute(ac.name.Text, ac.type.Text, ac.mutivalued != null);
+                }
                 EntityRelationshipModel.Elements.Add(entity);
             }
             return true;
@@ -102,7 +104,10 @@ namespace QueryBuilder.Parser
                 // RelationshipCardinality deveria fazer parte de RelationshipConnection
                 Relationship relationship = new Relationship(context.name.Text);
 
-                relationship.AddAttributes(Array.ConvertAll(context.attribute(), a => a.name.Text));
+                foreach(QueryBuilderMappingParser.AttributeContext ac in context.attribute()) {
+                    relationship.AddAttribute(ac.name.Text, ac.type.Text, ac.mutivalued != null);
+                }
+
 
                 foreach (var end in context.relationshipEnd())
                 {
@@ -143,7 +148,11 @@ namespace QueryBuilder.Parser
             if (Pass == 3)
             {
                 MongoDBCollection collection = new MongoDBCollection(context.name.Text);
-                collection.AddAttributes(Array.ConvertAll(context.field(), f => f.name.Text));
+
+                foreach(QueryBuilderMappingParser.FieldContext fc in context.field()) {
+                    collection.AddAttribute(fc.name.Text, fc.type.Text, fc.mutivalued != null);
+                }
+
                 MongoDBSchema.Collections.Add(collection);
 
                 if (context.erRefs() != null)

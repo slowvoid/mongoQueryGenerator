@@ -20,20 +20,12 @@ namespace QueryBuilder.Shared
         public BaseERElement Parent { get; set; }
         /// <summary>
         /// Type of data stored by this attribute
-        /// 
-        /// See: <see cref="DataType"/>
         /// </summary>
-        public DataType OfType { get; set; }
+        public string OfType { get; set; }
         /// <summary>
         /// Gets wheter this attribute is multivalued. (Array like)
         /// </summary>
-        public bool IsMultiValued
-        {
-            get
-            {
-                return OfType == DataType.ARRAY;
-            }
-        }
+        public bool MultiValued { get; set; }
         /// <summary>
         /// Attribute name
         /// </summary>
@@ -82,22 +74,26 @@ namespace QueryBuilder.Shared
         /// Initializes a new DataAttribute instance
         /// </summary>
         /// <param name="Name">Attribute name</param>
-        public DataAttribute( string Name, BaseERElement Parent )
-        {
-            this.Name = Name;
-            this.Parent = Parent;
-            Identifier = false;
-            Children = new List<DataAttribute>();
-        }
+        // public DataAttribute( string Name, BaseERElement Parent, bool MultiValued )
+        // {
+        //     this.Name = Name;
+        //     this.Parent = Parent;
+        //     this.MultiValued = MultiValued;
+        //     Identifier = false;
+        //     Children = new List<DataAttribute>();
+        // }
         /// <summary>
         /// Initializes a new DataAttribute instance
         /// </summary>
         /// <param name="Name">Attribute name</param>
         /// <param name="Identifier">Is this attribute an identifier</param>
-        public DataAttribute( string Name, BaseERElement Parent, bool Identifier )
+        public DataAttribute( string Name, string OfType, BaseERElement Parent, bool MultiValued, bool Identifier )
         {
             this.Name = Name;
+            this.OfType = OfType;
             this.Parent = Parent;
+            this.MultiValued = MultiValued;
+
             this.Identifier = Identifier;
             Children = new List<DataAttribute>();
         }
@@ -107,13 +103,14 @@ namespace QueryBuilder.Shared
         /// <param name="Name">Attribute name</param>
         /// <param name="Identifier">Is this attribute an identifier</param>
         /// <param name="Children">Child attributes</param>
-        public DataAttribute( string Name, BaseERElement Parent, bool Identifier, List<DataAttribute> Children )
-        {
-            this.Name = Name;
-            this.Parent = Parent;
-            this.Identifier = Identifier;
-            this.Children = Children;
-        }
+        // public DataAttribute( string Name, BaseERElement Parent, bool MultiValued, bool Identifier, List<DataAttribute> Children )
+        // {
+        //     this.Name = Name;
+        //     this.Parent = Parent;
+        //     this.MultiValued = MultiValued;
+        //     this.Identifier = Identifier;
+        //     this.Children = Children;
+        // }
         #endregion
     }
 }

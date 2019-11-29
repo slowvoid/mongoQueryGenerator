@@ -33,10 +33,10 @@ Repaired (Car:1, Garage:1) {
 
 
 ############# MongoDBSchema ############## 
-PersonCollection [ Person* ]
+PersonCollection < Person* >
 {
-    _id     : string    [ Person.id ]
-    fName   : string    [ Person.name ]
+    _id     : string    < Person.id >
+    fName   : string    < Person.name >
     fSurname: string    [ Person.surname ]
     fSalary : double    [ Person.salary ]
 }

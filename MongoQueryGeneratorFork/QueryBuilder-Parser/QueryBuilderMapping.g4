@@ -28,17 +28,17 @@ relationship:
 
 relationshipEnd: name = ID ':' cardinality = CARDINALITY_ITEM;
 
-attribute: name = ID ':' type = ID;
+attribute: name = ID ':' type = ID (mutivalued = '[]')?;
 
 mongoschema: collection*;
 
-collection: name = ID '[' erRefs? ']' '{' field* '}';
+collection: name = ID '<' erRefs? '>' '{' field* '}';
 
 erRefs: erRef (',' erRef)*;
 
 erRef: refName = ID (main = '*')?;
 
-field: name = ID ':' type = ID '[' erAttributeRef? ']';
+field: name = ID ':' type = ID (mutivalued = '[]')? '<' erAttributeRef? '>';
 
 erAttributeRef: refName = ID '.' attributeName = ID;
 
