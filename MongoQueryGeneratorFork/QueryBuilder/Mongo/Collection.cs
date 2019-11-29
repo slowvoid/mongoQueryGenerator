@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QueryBuilder.Shared;
 
 namespace QueryBuilder.Mongo
 {
@@ -31,6 +32,12 @@ namespace QueryBuilder.Mongo
         {
             DocumentSchema.AddAttribute( Name, OfType, MultiValued );
         }
+
+        public DataAttribute GetAttribute( string Name )
+        {
+            return DocumentSchema.Attributes.Find( A => A.Name == Name );
+        }
+
         /// <summary>
         /// Add a sequence of attributes to the document schema
         /// </summary>

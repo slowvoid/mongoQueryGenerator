@@ -24,112 +24,29 @@ Has (Person, Car, Insurance) {
 }
 
 ############# MongoDBSchema ############## 
-DocTypePerson [ Person* ]
+DocTypePerson < Person* >
 {
-    _id     : string    [ Person.id ]
-    fName   : string    [ Person.name ]
-    fAddress: string    [ Person.address ]
+    _id     : string    < Person.id >
+    fName   : string    < Person.name >
+    fAddress: string    < Person.address >
 }
-DocTypeCar [ Car* ]
+DocTypeCar < Car* >
 {
-    _id     : string    [ Car.id ]
-    fName   : string    [ Car.name ]
-    fColor  : string    [ Car.color ]
+    _id     : string    < Car.id >
+    fName   : string    < Car.name >
+    fColor  : string    < Car.color >
 }
-DocTypeInsurance [ Insurance* ]
+DocTypeInsurance < Insurance* >
 {
-    _id     : string    [ Insurance.id ]
-    fValue  : int       [ Insurance.value ]
-    fCompany: string    [ Insurance.company ]
+    _id     : string    < Insurance.id >
+    fValue  : int       < Insurance.value >
+    fCompany: string    < Insurance.company >
 }
 
 DocTypeHas < Has*, Person, Car, Insurance >
 {
-    _id         : string    < Has.id >
+    _id         : string    < >
     fPersonId   : string    < Person.id >
     fCarId      : string    < Car.id >
     fInsuranceId: string    < Insurance.id >
 }
-
-Person p RJOIN Has (Car c, Insurance i)
-
-[
-    {
-        _id: 1,
-        name: João Vitor,
-        data_Has: [
-            {
-                hasId: "has1",
-                fCarId: "Onix",
-                fInsuranceId: 1001
-            },
-            {
-                hasId: "has2",
-                fCarId: "Onix",
-                fInsuranceId: 1002
-            },
-            {
-                hasId: "has3",
-                fCarId: "Celta",
-                fInsuranceId: 1003
-            },
-            {
-                hasId: "has4",
-                fCarId: "Celta",
-                fInsuranceId: 1004
-            }
-        ]
-    },
-    // outras pessoas
-]
-
-
-
-
-
-
-
-DocTypeHas < Has*, Person, Car, Insurance >
-{
-    _id         : string    < Has.id >
-    fPersonId   : string    < Person.id >
-    fCarId      : string    < Car.id >
-    fInsuranceId: string[]  < Insurance.id >
-}
-
-Person p RJOIN Has (Car c, Insurance i)
-
-[
-    {
-        _id: 1,
-        name: João Vitor,
-        data_Has: [
-            {
-                hasId: "has1",
-                fCarId: "Onix",
-                data_Insurance: [
-                    {
-                        _id: 1001,
-                    },
-                    {
-                        _id: 1002,
-                    },
-
-                ]
-            },
-            {
-                hasId: "has2",
-                fCarId: "Celta",
-                data_Insurance: [
-                    {
-                        _id: 1003
-                    },
-                    {
-                        _id: 1004
-                    },
-                ]
-            }
-        ]
-    },
-    // outras pessoas
-]

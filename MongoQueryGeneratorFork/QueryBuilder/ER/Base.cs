@@ -54,6 +54,11 @@ namespace QueryBuilder.ER
         {
             return Attributes.Find( A => A.Name == Name );
         }
+
+        public DataAttribute GetIdentifierAttribute()
+        {
+            return Attributes.Find( A => A.Name == "id");
+        }
         #endregion
     }
 }

@@ -23,11 +23,11 @@ Garage {
     name: string
     phone: string
 }
-Insurance (Person:1, Car:1, InsuranceCompany:1) {
+Insurance (Person, Car, InsuranceCompany) {
     contract: date
 }
-Drives (Person:1, Car:N) { }
-Repaired (Car:1, Garage:1) { 
+Drives (Person, Car) { }
+Repaired (Car, Garage) { 
     date: date
 }
 
@@ -37,43 +37,43 @@ PersonCollection < Person* >
 {
     _id     : string    < Person.id >
     fName   : string    < Person.name >
-    fSurname: string    [ Person.surname ]
-    fSalary : double    [ Person.salary ]
+    fSurname: string    < Person.surname >
+    fSalary : double    < Person.salary >
 }
-CarCollection [ Car* ]
+CarCollection < Car* >
 {
-    _id     : string    [ Car.id ]
-    fReg_no : int       [ Car.reg_no ]
+    _id     : string    < Car.id >
+    fReg_no : int       < Car.reg_no >
 }
-InsuranceCompanyCollection [ InsuranceCompany* ]
+InsuranceCompanyCollection < InsuranceCompany* >
 {
-    _id     : string    [ InsuranceCompany.id ]
-    fName   : string    [ InsuranceCompany.name ]
+    _id     : string    < InsuranceCompany.id >
+    fName   : string    < InsuranceCompany.name >
 }
-GarageCollection [ Garage* ]
+GarageCollection < Garage* >
 {
-    _id     : string    [ Garage.id ]
-    fName   : string    [ Garage.name ]
-    fPhone  : string    [ Garage.phone ]
+    _id     : string    < Garage.id >
+    fName   : string    < Garage.name >
+    fPhone  : string    < Garage.phone >
 }
-InsuranceCollection [ Insurance*, Person, Car, InsuranceCompany ]
+InsuranceCollection < Insurance*, Person, Car, InsuranceCompany >
 {
-    _id         : string    []
-    fPersonId   : string    [ Person.id ]
-    fCarId      : string    [ Car.id ]
-    fInsCoId    : string    [ InsuranceCompany.id ]
-    contract    : date      [ Insurance.date ]
+    _id         : string    <>
+    fPersonId   : string    < Person.id >
+    fCarId      : string    < Car.id >
+    fInsCoId    : string    < InsuranceCompany.id >
+    contract    : date      < Insurance.contract >
 }
-DrivesCollection [ Drives*, Person, Car ]
+DrivesCollection < Drives*, Person, Car >
 {
-    _id         : string    []
-    fPersonId   : string    [ Person.id ]
-    fCarId      : string    [ Car.id ]
+    _id         : string    <>
+    fPersonId   : string    < Person.id >
+    fCarId      : string    < Car.id >
 }
-RepairedCollection [ Repaired*, Car, Garage ]
+RepairedCollection < Repaired*, Car, Garage >
 {
-    _id         : string    []
-    fCarId      : string    [ Car.id ]
-    fGarageId   : string    [ Garage.id ]
-    fDate       : date      [ Repaired.date ]
+    _id         : string    <>
+    fCarId      : string    < Car.id >
+    fGarageId   : string    < Garage.id >
+    fDate       : date      < Repaired.date >
 }

@@ -32,7 +32,7 @@ namespace QueryBuilder.TestParser
 
                 r.Ends.ForEach(e =>
                 {
-                    Console.WriteLine($"   End: {e.TargetEntity.Name} : {e.Cardinality}");
+                    Console.WriteLine($"   End: {e.TargetEntity.Name}");
                 });
                 r.Attributes.ForEach(a =>
                 {
@@ -70,28 +70,28 @@ namespace QueryBuilder.TestParser
             mapping.Warnings.ForEach(w => Console.WriteLine(w));
             mapping.Errors.ForEach(e => Console.WriteLine(e));
 
-            string[] queries = { "from Person p rjoin <Insurance i> (Car c, InsuranceCompany ic)",
-                                 "from Car c rjoin <Repaired r> (Garage g)",
-                                 "from Person p rjoin <Insurance i> (Car c rjoin <Repaired r> (Garage g), InsuranceCompany ic)",
-                                 "from (Person p rjoin <Drives d> (Car c)) rjoin <Repaired r> (Garage g)",
-                                 "from (Person p rjoin <Drives d> (Car c rjoin <Repaired r> (Garage g)))",
-                                 "from Person p rjoin <Drives d> (Car c rjoin <Repaired r> (Garage g))" };
+            // string[] queries = { "from Person p rjoin <Insurance i> (Car c, InsuranceCompany ic)",
+            //                      "from Car c rjoin <Repaired r> (Garage g)",
+            //                      "from Person p rjoin <Insurance i> (Car c rjoin <Repaired r> (Garage g), InsuranceCompany ic)",
+            //                      "from (Person p rjoin <Drives d> (Car c)) rjoin <Repaired r> (Garage g)",
+            //                      "from (Person p rjoin <Drives d> (Car c rjoin <Repaired r> (Garage g)))",
+            //                      "from Person p rjoin <Drives d> (Car c rjoin <Repaired r> (Garage g))" };
 
-            foreach (var q in queries)
-            {
-                Console.WriteLine(q);
-                var generatedQuery = QueryBuilderParser.ParseQuery(q, mapping);
+            // foreach (var q in queries)
+            // {
+            //     Console.WriteLine(q);
+            //     var generatedQuery = QueryBuilderParser.ParseQuery(q, mapping);
 
-                Console.WriteLine("*************");
-                Console.WriteLine($"Start Argument: {generatedQuery.StartArgument.Entity.Element.Name} AS {generatedQuery.StartArgument.Entity.Alias}");
-                var i = 1;
-                foreach (var Op in generatedQuery.PipelineOperators)
-                {
-                    Console.WriteLine($"Operator {i++}: {Op.ToString()}");
-                }
-                Console.WriteLine("*************");
+            //     Console.WriteLine("*************");
+            //     Console.WriteLine($"Start Argument: {generatedQuery.StartArgument.Entity.Element.Name} AS {generatedQuery.StartArgument.Entity.Alias}");
+            //     var i = 1;
+            //     foreach (var Op in generatedQuery.PipelineOperators)
+            //     {
+            //         Console.WriteLine($"Operator {i++}: {Op.ToString()}");
+            //     }
+            //     Console.WriteLine("*************");
 
-            }
+            // }
 
         }
     }

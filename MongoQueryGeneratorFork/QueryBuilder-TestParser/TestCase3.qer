@@ -1,5 +1,5 @@
 Solution: "Garage"
-Description: "Ternary - Mapping 2"
+Description: "Ternary - Mapping 1"
 Version: "1.0"
 
 ############## ERModel ################
@@ -20,31 +20,31 @@ Insurance {
     company: string
 }
 Has (Person, Car, Insurance) {
+}
+Drives (Person, Car) {
 
 }
+
 ############# MongoDBSchema ############## 
-DocTypePerson [ Person* ]
+DocTypePerson < Person*, Car, Drives, Has >
 {
-    _id     : string    [ Person.id ]
-    fName   : string    [ Person.name ]
-    fAddress: string    [ Person.address ]
+    _id     : string            < Person.id >
+    fName   : string            < Person.name >
+    fAddress: string            < Person.address >
+    fCarId  : string            < Car.id >
 }
-DocTypeCar [ Car* ]
+DocTypeCar < Car* >
 {
-    _id     : string    [ Car.id ]
-    fName   : string    [ Car.name ]
-    fColor  : string    [ Car.color ]
+    _id     : string    < Car.id >
+    fName   : string    < Car.name >
+    fColor  : string    < Car.color >
 }
-DocTypeInsurance [ Insurance* ]
+DocTypeInsurance < Insurance*, Person, Has >
 {
-    _id     : string    [ Insurance.id ]
-    fValue  : int       [ Insurance.value ]
-    fCompany: string    [ Insurance.company ]
+    _id      : string   < Insurance.id >
+    fValue   : int      < Insurance.value >
+    fCompany : string   < Insurance.company >
+    fPersonId: string   < Person.id >
 }
-DocTypeHas [ Has*, Person, Car, Insurance ]
-{
-    _id         : string    [ Has.id ]
-    fPersonId   : string    [ Person.id ]
-    fCarId      : string    [ Car.id ]
-    fInsuranceId: string    [ Insurance.id ]
-}
+
+

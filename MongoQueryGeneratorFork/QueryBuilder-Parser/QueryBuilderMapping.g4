@@ -26,7 +26,7 @@ relationship:
 		',' relationshipEnd
 	)* ')' '{' attribute* '}';
 
-relationshipEnd: name = ID ':' cardinality = CARDINALITY_ITEM;
+relationshipEnd: name = ID;
 
 attribute: name = ID ':' type = ID (mutivalued = '[]')?;
 
