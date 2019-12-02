@@ -270,11 +270,17 @@ namespace QueryBuilder.Tests
             CarRule.AddRule( "name", "name" );
             CarRule.AddRule( "year", "year" );
 
+            MapRule CarPersonRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ), false );
+            CarPersonRule.AddRule( "carId", "carId" );
+
             MapRule InsuranceRule = new MapRule( Model.FindByName( "Insurance" ), Schema.FindByName( "Insurance" ) );
             InsuranceRule.AddRule( "insuranceId", "_id" );
             InsuranceRule.AddRule( "name", "name" );
 
-            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, InsuranceRule } );
+            MapRule InsurancePersonRule = new MapRule( Model.FindByName( "Insurance" ), Schema.FindByName( "Person" ), false );
+            InsurancePersonRule.AddRule( "insuranceId", "insuranceId" );
+
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, InsuranceRule, CarPersonRule, InsurancePersonRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
@@ -335,7 +341,10 @@ namespace QueryBuilder.Tests
             InsuranceRule.AddRule( "insuranceId", "_id" );
             InsuranceRule.AddRule( "name", "name" );
 
-            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, InsuranceRule } );
+            MapRule InsurancePersonRule = new MapRule( Model.FindByName( "Insurance" ), Schema.FindByName( "Person" ), false );
+            InsurancePersonRule.AddRule( "insuranceId", "insuranceId" );
+
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, InsuranceRule, InsurancePersonRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
@@ -398,10 +407,13 @@ namespace QueryBuilder.Tests
             InsuranceRule.AddRule( "insuranceId", "_id" );
             InsuranceRule.AddRule( "name", "name" );
 
-            MapRule RelationshipRule = new MapRule( Model.FindByName( "HasInsurance" ), Schema.FindByName( "Person" ) );
+            MapRule InsurancePersonRule = new MapRule( Model.FindByName( "Insurance" ), Schema.FindByName( "Person" ), false );
+            InsurancePersonRule.AddRule( "insuranceId", "insuranceId" );
+
+            MapRule RelationshipRule = new MapRule( Model.FindByName( "HasInsurance" ), Schema.FindByName( "Person" ), false );
             RelationshipRule.AddRule( "insuranceValue", "insuranceValue" );
 
-            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, InsuranceRule, RelationshipRule } );
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, InsuranceRule, RelationshipRule, InsurancePersonRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
@@ -460,7 +472,7 @@ namespace QueryBuilder.Tests
             PersonRule.AddRule( "carId", "carId" );
             PersonRule.AddRule( "insuranceId", "insuranceId" );
 
-            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ) );
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ), false );
             CarRule.AddRule( "name", "car.name" );
             CarRule.AddRule( "year", "car.year" );
             CarRule.AddRule( "engine", "carDetails.engine" );
@@ -470,10 +482,13 @@ namespace QueryBuilder.Tests
             InsuranceRule.AddRule( "insuranceId", "_id" );
             InsuranceRule.AddRule( "name", "name" );
 
-            MapRule RelationshipRule = new MapRule( Model.FindByName( "HasInsurance" ), Schema.FindByName( "Person" ) );
+            MapRule InsurancePersonRule = new MapRule( Model.FindByName( "Insurance" ), Schema.FindByName( "Person" ), false );
+            InsurancePersonRule.AddRule( "insuranceId", "insuranceId" );
+
+            MapRule RelationshipRule = new MapRule( Model.FindByName( "HasInsurance" ), Schema.FindByName( "Person" ), false );
             RelationshipRule.AddRule( "insuranceValue", "insuranceValue" );
 
-            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, InsuranceRule, RelationshipRule } );
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, InsuranceRule, RelationshipRule, InsurancePersonRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
         }

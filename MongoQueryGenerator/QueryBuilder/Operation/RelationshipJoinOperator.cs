@@ -242,151 +242,52 @@ namespace QueryBuilder.Operation
                 // Store fields to merge under data_Relationship
                 List<string> FieldsToMerge = new List<string>();
 
+                // Source entity cardinality in this relationship
+                RelationshipCardinality SourceCardinality = Relationship.GetEnd( SourceEntity.GetEntity() ).Cardinality;
+
                 // Iterate targets
                 foreach ( QueryableEntity Target in TargetEntities )
                 {
-                    // Check if the target is a computed entity
-                    if ( Target.Element is ComputedEntity )
+                    // Check if Source entity and Target entity are related
+                    if ( !Relationship.AreRelated( SourceEntity.GetEntity(), Target.GetEntity() ) )
                     {
-                        // TODO:
+                        throw new NotRelatedException( $"Entities {SourceEntity.GetName()} and {Target.GetName()} are not related through {Relationship.Name}" );
                     }
-                    else
+
+                    RelationshipCardinality TargetCardinality = Relationship.GetEnd( Target.GetEntity() ).Cardinality;
+                    // Proceed based on the ends of source and target entity
+                    if ( SourceCardinality == RelationshipCardinality.One && TargetCardinality == RelationshipCardinality.One )
                     {
-                        // Check if target is related to source through relationship
-                        if ( !Relationship.AreRelated( (Entity)SourceEntity.Element, (Entity)Target.Element ) )
+                        // This means an One-To-One relationship
+                        // which basically means that the reference to the target entity is in the source entity
+                        // To build the lookup (if not embedded), the localField value is a reference to the target identifier
+                        // within the source entity
+
+                        // Check if the Target is a computed entity
+                        if ( Target.Element is ComputedEntity )
                         {
-                            throw new NotRelatedException( $"Entities {SourceEntity.GetName()} and {Target.GetName()} are not related through {Relationship.Name}" );
-                        }
-
-                        // Fetch rule
-                        MapRule TargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == Target.GetName() );
-
-                        if ( TargetRule == null )
-                        {
-                            // Try finding a main mapping
-                            MapRule NewTargetRule = ModelMap.Rules.FirstOrDefault( R => R.Source.Name == Target.GetName() && R.IsMain );
-
-                            if ( NewTargetRule == null )
-                            {
-                                throw new RuleNotFoundException( $"No mapping was found for {Target.GetName()}" );
-                            }
-
-                            TargetRule = NewTargetRule;
-                        }
-
-                        // Check if the target and source are embedded
-                        if ( SourceRule.Target.Name == TargetRule.Target.Name )
-                        {
-                            // Target is embedded, check the cardinality
-                            // Assuming that Cardinality is One means that the target is embedded in an object or scattered in the source collection
-                            // Assuming that Cardinality is Many means that the target is embedded in an array
-                            RelationshipEnd TargetEnd = Relationship.Ends.First( E => E.TargetEntity.Name == Target.GetName() );
-
-                            if ( TargetEnd.Cardinality == RelationshipCardinality.One )
-                            {
-                                // Attributes to add
-                                Dictionary<string, JSCode> AttributesToAdd = new Dictionary<string, JSCode>();
-                                List<string> AttributesToRemove = new List<string>();
-                                List<string> RootAttributes = new List<string>();
-                                // Fetch attributes and add them to an object under data_Relationship
-                                foreach ( DataAttribute Attribute in Target.Element.Attributes )
-                                {
-                                    string AttributeMap = TargetRule.Rules.First( R => R.Key == Attribute.Name ).Value;
-                                    AttributesToAdd.Add( $"\"data_{Target.GetName()}.{Target.GetName()}_{Attribute.Name}\"", (JSString)$"\"${AttributeMap}\"" );
-
-                                    // Check if it is within an object
-                                    string[] AttributeMapPath = AttributeMap.Split( new char[] { '.' } );
-
-                                    if ( AttributeMapPath.Length > 1 )
-                                    {
-                                        RootAttributes.Add( AttributeMapPath.First() );
-                                    }
-                                    else
-                                    {
-                                        AttributesToRemove.Add( AttributeMap );
-                                    }
-                                }
-
-                                FieldsToMerge.Add( $"data_{Target.GetName()}" );
-
-                                // Add fields
-                                AddFieldsOperator AddTargetFieldsOp = new AddFieldsOperator( AttributesToAdd );
-
-                                // Remove old attributes
-                                AttributesToRemove.AddRange( RootAttributes.Distinct() );
-                                ProjectOperator RemoveTargetFields = ProjectOperator.HideAttributesOperator( AttributesToRemove );
-
-                                OperationsToExecute.AddRange( new MongoDBOperator[] { AddTargetFieldsOp, RemoveTargetFields } );
-                            }
-                            else if ( TargetEnd.Cardinality == RelationshipCardinality.Many)
-                            {
-                                // Assuming that the embedded data is an array
-                                // if otherwise mongodb will throw an error
-                                Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
-                                string RootAttribute = string.Empty;
-                                string MapAttributeAs = string.Empty;
-
-                                // Iterate attributes
-                                foreach ( DataAttribute Attribute in Target.Element.Attributes )
-                                {
-                                    string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                                    string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
-
-                                    if ( string.IsNullOrWhiteSpace( RootAttribute ) )
-                                    {
-                                        RootAttribute = $"{RulePath.First()}";
-                                        MapAttributeAs = $"data_{RootAttribute}";
-                                    }
-
-                                    MapParams.Add( $"\"{Target.Element.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
-                                }
-
-                                // Create Map Operation
-                                MapExpr MapOp = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
-
-                                // Use AddFields operation to create a mapped attribute
-                                Dictionary<string, JSCode> NewFields = new Dictionary<string, JSCode>();
-                                NewFields.Add( $"data_{Target.GetName()}", MapOp.ToJSCode() );
-
-                                AddFieldsOperator AddFieldsOp = new AddFieldsOperator( NewFields );
-
-                                OperationsToExecute.Add( AddFieldsOp );
-                            }
+                            // TODO:
                         }
                         else
                         {
-                            // Not embedded, fetch data from collection
-                            LookupOperator LookupOp = new LookupOperator
-                            {
-                                From = TargetRule.Target.Name,
-                                ForeignField = TargetRule.Rules.First( R => R.Key == SourceEntity.Element.GetIdentifier().Name ).Value,
-                                LocalField = SourceRule.Rules.First( R => R.Key == SourceEntity.Element.GetIdentifier().Name ).Value,
-                                As = $"data_{Target.GetName()}"
-                            };
 
-                            // Rename attributes
-                            Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
-                            string RootAttribute = $"data_{Target.GetName()}";
-                            string MapAttributeAs = $"data_{RootAttribute}";
+                        }
+                    }
+                    else if ( SourceCardinality == RelationshipCardinality.One && TargetCardinality == RelationshipCardinality.Many )
+                    {
+                        // This means an One-To-Many relationship
+                        // which means that the source entity has its identifier referenced by the target entity
+                        // TO build the lookup (if not embedded), the foreignField value is a reference of the source identifier
+                        // within the target entity
 
-                            foreach ( DataAttribute Attribute in Target.Element.Attributes )
-                            {
-                                string RuleValue = TargetRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
-                                MapParams.Add( $"\"{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{RuleValue}\"" ) );
-                            }
+                        // Check if the Target is a computed entity
+                        if ( Target.Element is ComputedEntity )
+                        {
+                            // TODO:
+                        }
+                        else
+                        {
 
-                            // Build Map Expr
-                            MapExpr AttributeMap = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
-                            Dictionary<string, JSCode> AddFieldsData = new Dictionary<string, JSCode>();
-                            AddFieldsData.Add( $"data_{Relationship.Name}", AttributeMap.ToJSCode() );
-
-                            // Create add fields operator
-                            AddFieldsOperator AddFieldsOp = new AddFieldsOperator( AddFieldsData );
-
-                            // Use Project operation to hide unecessary data
-                            ProjectOperator ProjectOp = ProjectOperator.HideAttributesOperator( new string[] { $"data_{Target.GetName()}" } );
-
-                            OperationsToExecute.AddRange( new MongoDBOperator[] { AddFieldsOp, ProjectOp } );
                         }
                     }
                 }

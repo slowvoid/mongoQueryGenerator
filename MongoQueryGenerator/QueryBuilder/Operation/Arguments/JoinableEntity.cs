@@ -78,6 +78,24 @@ namespace QueryBuilder.Operation.Arguments
 
             return null;
         }
+        /// <summary>
+        /// Return Element as an Entity
+        /// If Element is a ComputedEntity this will return ComputedEntity.SourceEntity
+        /// </summary>
+        /// <returns></returns>
+        public Entity GetEntity()
+        {
+            if ( Element is Entity )
+            {
+                return (Entity)Element;
+            }
+            else if ( Element is ComputedEntity )
+            {
+                return GetComputedEntity().SourceEntity.GetEntity();
+            }
+
+            return null;
+        }
         #endregion
 
         #region Constructor

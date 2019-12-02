@@ -37,7 +37,17 @@ namespace QueryBuilder.ER
         {
             Ends.Add( End );
         }
-
+        /// <summary>
+        /// Retrieve the RelationshipEnd instance for the given entity
+        /// 
+        /// Throws ArgumentNull exception if not found
+        /// </summary>
+        /// <param name="Related"></param>
+        /// <returns></returns>
+        public RelationshipEnd GetEnd( Entity Related )
+        {
+            return Ends.First( E => E.TargetEntity.Name == Related.Name );
+        }
         /// <summary>
         /// Returns wheter the given entities are connected
         /// through this relationship

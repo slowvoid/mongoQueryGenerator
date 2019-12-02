@@ -50,6 +50,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="TestCase1.qer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Crc32C.NET, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
@@ -109,6 +112,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\QueryBuilder-Parser\QueryBuilder-Parser.csproj">
+      <Project>{e3f70732-fa86-4dca-826e-4aa7b0954312}</Project>
+      <Name>QueryBuilder-Parser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QueryBuilder\QueryBuilder.csproj">
       <Project>{2ba1a345-4d25-4997-953e-e6f0d5b0d0b1}</Project>
       <Name>QueryBuilder</Name>
