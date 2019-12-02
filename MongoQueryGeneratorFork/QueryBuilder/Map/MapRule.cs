@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using QueryBuilder.ER;
 using QueryBuilder.Mongo;
+using QueryBuilder.Shared;
 
 namespace QueryBuilder.Map
 {

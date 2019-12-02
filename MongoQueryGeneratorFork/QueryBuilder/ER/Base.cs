@@ -30,21 +30,21 @@ namespace QueryBuilder.ER
         /// </summary>
         /// <param name="Name">Attribute name</param>
         /// <param name="Identifier"></param>
-        public void AddAttribute( string Name, bool Identifier = false )
+        public void AddAttribute( string Name, string OfType, bool MultiValued, bool Identifier = false )
         {
-            Attributes.Add( new DataAttribute( Name, this, Identifier ) );
+            Attributes.Add( new DataAttribute( Name, OfType, this, MultiValued, Identifier ) );
         }
         /// <summary>
         /// Add a list of string as attributes
         /// </summary>
         /// <param name="Names"></param>
-        public void AddAttributes( params string[] Names )
-        {
-            foreach ( string Name in Names )
-            {
-                AddAttribute( Name );
-            }
-        }
+        // public void AddAttributes( params string[] Names )
+        // {
+        //     foreach ( string Name in Names )
+        //     {
+        //         AddAttribute( Name );
+        //     }
+        // }
         /// <summary>
         /// Find an attribute with the given name
         /// </summary>
@@ -53,6 +53,11 @@ namespace QueryBuilder.ER
         public DataAttribute GetAttribute( string Name )
         {
             return Attributes.Find( A => A.Name == Name );
+        }
+
+        public DataAttribute GetIdentifierAttribute()
+        {
+            return Attributes.Find( A => A.Name == "id");
         }
         #endregion
     }

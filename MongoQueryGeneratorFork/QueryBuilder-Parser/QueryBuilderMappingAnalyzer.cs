@@ -5,6 +5,7 @@ using QueryBuilder.ER.Exceptions;
 using QueryBuilder.Operation.Exceptions;
 using QueryBuilder.Map;
 using QueryBuilder.Mongo;
+using QueryBuilder.Shared;
 
 namespace QueryBuilder.Parser
 {
@@ -29,11 +30,11 @@ namespace QueryBuilder.Parser
 
         private void RunAdditionalVerifications()
         {
-            foreach(var e in EntityRelationshipModel.Elements)
+            foreach (var e in EntityRelationshipModel.Elements)
             {
                 int numMappings = 0;
                 int numMainMappings = 0;
-                foreach(var r in ERMongoMapping.Rules)
+                foreach (var r in ERMongoMapping.Rules)
                 {
                     if (r.Source == e)
                     {
@@ -45,17 +46,60 @@ namespace QueryBuilder.Parser
                     }
 
                 };
-                if(numMappings == 0) {
+                if (numMappings == 0)
+                {
                     Warnings.Add($"Warning: element {e.Name} has no mapped document");
                 }
-                if(numMainMappings == 0) {
+                if (numMainMappings == 0)
+                {
                     Warnings.Add($"Warning: element {e.Name} has no mapped main document");
                 }
-                if(numMainMappings > 1) {
+                if (numMainMappings > 1)
+                {
                     Warnings.Add($"Warning: element {e.Name} has more than one main document");
                 }
-            };
 
+                if (e is Relationship)
+                {
+                    Relationship relationship = e as Relationship;
+                    try
+                    {
+                        MongoDBCollection relationshipMainCollection = ERMongoMapping.FindMainCollection(relationship);
+                        List<MapRule> rules = ERMongoMapping.FindRules(relationshipMainCollection);
+
+                        foreach (RelationshipEnd re in relationship.Ends)
+                        {
+                            DataAttribute da = re.TargetEntity.GetIdentifierAttribute();
+                            bool hasMapping = false;
+                            Console.WriteLine($"Searching r {relationship.Name} / {relationshipMainCollection.Name} / re {re.TargetEntity.Name}.id...");
+                            foreach (MapRule mr in rules)
+                            {
+                                Console.WriteLine($"Rule: {mr.Source.Name} - {mr.Target.Name}");
+                                foreach (var i in mr.Rules)
+                                {
+                                    Console.WriteLine($"Subrule: {i.Key} - {i.Value}");
+                                }
+
+                                if (mr.Source == re.TargetEntity && mr.Rules.ContainsKey(da.Name))
+                                {
+                                    hasMapping = true;
+                                }
+                            }
+                            Console.WriteLine($"Has Mapping = {hasMapping}");
+                            if (!hasMapping)
+                            {
+                                Errors.Add($"Error: the main collection {relationshipMainCollection.Name} for " +
+                                            $"relationship {relationship.Name} does not have a mapping for " +
+                                            $"identifier {da.Name} of entity {re.TargetEntity.Name}");
+                            }
+                        }
+                    }
+                    catch (RuleNotFoundException rnfe)
+                    {
+                        Errors.Add($"Error: relationship {relationship.Name} must have a mapped main document");
+                    }
+                }
+            }
         }
 
         override public bool Visit(Antlr4.Runtime.Tree.IParseTree tree)
@@ -89,7 +133,10 @@ namespace QueryBuilder.Parser
             if (Pass == 1)
             {
                 Entity entity = new Entity(context.name.Text);
-                entity.AddAttributes(Array.ConvertAll(context.attribute(), a => a.name.Text));
+                foreach (QueryBuilderMappingParser.AttributeContext ac in context.attribute())
+                {
+                    entity.AddAttribute(ac.name.Text, ac.type.Text, ac.mutivalued != null);
+                }
                 EntityRelationshipModel.Elements.Add(entity);
             }
             return true;
@@ -102,7 +149,11 @@ namespace QueryBuilder.Parser
                 // RelationshipCardinality deveria fazer parte de RelationshipConnection
                 Relationship relationship = new Relationship(context.name.Text);
 
-                relationship.AddAttributes(Array.ConvertAll(context.attribute(), a => a.name.Text));
+                foreach (QueryBuilderMappingParser.AttributeContext ac in context.attribute())
+                {
+                    relationship.AddAttribute(ac.name.Text, ac.type.Text, ac.mutivalued != null);
+                }
+
 
                 foreach (var end in context.relationshipEnd())
                 {
@@ -117,11 +168,6 @@ namespace QueryBuilder.Parser
                         else
                         {
                             rend.TargetEntity = (Entity)target;
-                            rend.Cardinality = RelationshipCardinality.One;
-                            if (end.cardinality.Text.Equals("N"))
-                            {
-                                rend.Cardinality = RelationshipCardinality.Many;
-                            }
 
                             relationship.AddRelationshipEnd(rend);
                         }
@@ -143,12 +189,11 @@ namespace QueryBuilder.Parser
             if (Pass == 3)
             {
                 MongoDBCollection collection = new MongoDBCollection(context.name.Text);
-                collection.AddAttributes(Array.ConvertAll(context.field(), f => f.name.Text));
-                MongoDBSchema.Collections.Add(collection);
 
+                List<MapRule> mapRules = new List<MapRule>();
                 if (context.erRefs() != null)
                 {
-                    foreach(var er in context.erRefs().erRef())
+                    foreach (var er in context.erRefs().erRef())
                     {
                         try
                         {
@@ -156,32 +201,52 @@ namespace QueryBuilder.Parser
                             var isMain = er.main == null ? false : true;
                             MapRule mapRule = new MapRule(erElement, collection, isMain);
 
-                            ERMongoMapping.Rules.Add(mapRule);
+                            mapRules.Add(mapRule);
                         }
                         catch (Exception)
                         {
                             Errors.Add($"Error (line {er.refName.Line}:{er.refName.Column}): referenced ER element '{er.refName.Text}' not found!");
                         }
-                    };
+                    }
                 }
 
-                foreach(var f in context.field())
+                foreach (var f in context.field())
                 {
-                    if(f.erAttributeRef() != null)
+                    collection.AddAttribute(f.name.Text, f.type.Text, f.mutivalued != null);
+                    if (f.erAttributeRef() != null)
                     {
-                        try
+                        var refElementName = f.erAttributeRef().refName.Text;
+                        var refAttributeName = f.erAttributeRef().attributeName.Text;
+                        foreach (MapRule mr in mapRules)
                         {
-                            var element = EntityRelationshipModel.FindByName(f.erAttributeRef().refName.Text);
-                            var rule = ERMongoMapping.FindRule(element, collection);
-                            rule.AddRule(f.erAttributeRef().attributeName.Text, f.name.Text);
-                        }
-                        catch (ElementNotFoundException)
-                        {
-                            Errors.Add($"Error (line {f.erAttributeRef().refName.Line}:{f.erAttributeRef().refName.Column}): referenced ER element '{f.erAttributeRef().refName.Text}' not found!");
+                            if (mr.Source.Name == refElementName)
+                            {
+                                DataAttribute sourceAttribute = mr.Source.GetAttribute(refAttributeName);
+                                DataAttribute targetAttribute = mr.Target.GetAttribute(f.name.Text);
+                                if (sourceAttribute == null)
+                                {
+                                    Errors.Add($"Error: attribute {mr.Source.Name}.{refAttributeName} not found in ER model"); ;
+                                }
+                                if (targetAttribute == null)
+                                {
+                                    Errors.Add($"Error: field {mr.Target.Name}.{f.name.Text} not found in Mongo DB Schema"); ;
+                                }
+                                if (sourceAttribute != null && targetAttribute != null)
+                                {
+                                    mr.AddRule(sourceAttribute.Name, targetAttribute.Name);
+                                }
+                            }
                         }
                     }
-
                 }
+
+                MongoDBSchema.Collections.Add(collection);
+
+                foreach (var mr in mapRules)
+                {
+                    ERMongoMapping.Rules.Add(mr);
+                }
+
             }
             return true;
         }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using QueryBuilder.ER;
 using QueryBuilder.Mongo;
 using QueryBuilder.Operation.Exceptions;
+using QueryBuilder.Shared;
 
 namespace QueryBuilder.Map
 {
@@ -45,17 +46,42 @@ namespace QueryBuilder.Map
                 throw new RuleNotFoundException( $"No map rules found for ERElement [{NameOrAlias}]" );
             }
         }
-        public MapRule FindRule( BaseERElement source, MongoDBCollection target )
+
+        public List<MapRule> FindRules( MongoDBCollection target )
+        {
+            List<MapRule> ret = new List<MapRule>();
+            foreach(var r in Rules)
+            {
+                if(r.Target == target)
+                {
+                    ret.Add(r);
+                }
+            }
+            return ret;
+        }
+
+        public MongoDBCollection FindMainCollection( BaseERElement source )
         {
             foreach(var r in Rules)
             {
-                if(r.Source == source && r.Target == target)
+                if(r.Source == source && r.IsMain)
                 {
-                    return r;
+                    return r.Target;
                 }
             }
-            throw new RuleNotFoundException( $"No map rule found for Source={source.Name} and Target={target.Name}" );
+             throw new RuleNotFoundException( $"No main collection found for Source={source.Name}" );
         }
+        // public MapRule FindRule( BaseERElement source, MongoDBCollection target )
+        // {
+        //     foreach(var r in Rules)
+        //     {
+        //         if(r.Source == source && r.Target == target)
+        //         {
+        //             return r;
+        //         }
+        //     }
+        //     throw new RuleNotFoundException( $"No map rule found for Source={source.Name} and Target={target.Name}" );
+        // }
 
         #endregion
 

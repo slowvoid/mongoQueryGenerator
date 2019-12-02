@@ -30,9 +30,9 @@ namespace QueryBuilder.Mongo
         /// </summary>
         /// <param name="Name">Attribute name</param>
         /// <param name="Identifier"></param>
-        public void AddAttribute( string Name, bool Identifier = false )
+        public void AddAttribute( string Name, string OfType, bool MultiValued, bool Identifier = false )
         {
-            Attributes.Add( new DataAttribute( Name, null, Identifier ) );
+            Attributes.Add( new DataAttribute( Name, OfType, null, MultiValued, Identifier ) );
         }
         /// <summary>
         /// Find an attribute by name

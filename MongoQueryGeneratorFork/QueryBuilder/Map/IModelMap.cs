@@ -1,4 +1,5 @@
 ﻿using QueryBuilder.ER;
+using QueryBuilder.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
