@@ -16,7 +16,7 @@ namespace QueryBuilderApp
             string query = "from Person p rjoin <Insurance i> (Car c, InsuranceCompany ic)";
             QueryGenerator gen = QueryBuilderParser.ParseQuery( query, map );
 
-            Console.WriteLine( gen.Run() );
+            //Console.WriteLine( gen.Run() );
 
             Console.Read();
         }

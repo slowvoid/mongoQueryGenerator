@@ -65,6 +65,24 @@ namespace QueryBuilder.Map
         {
             return Rules.First( R => R.Source.Name == Source.Name && R.Target.Name == Target.Name );
         }
+        /// <summary>
+        /// Find the main collection of an er element
+        /// </summary>
+        /// <param name="Source"></param>
+        /// <returns></returns>
+        public MongoDBCollection FindMainCollection( BaseERElement Source )
+        {
+            return Rules.Find( R => R.Source == Source && R.IsMain ).Target;
+        }
+        /// <summary>
+        /// Find rules that target the given collection
+        /// </summary>
+        /// <param name="Target"></param>
+        /// <returns></returns>
+        public List<MapRule> FindRules( MongoDBCollection Target )
+        {
+            return Rules.Where( R => R.Target == Target ).ToList();
+        }
         #endregion
 
         #region Constructors

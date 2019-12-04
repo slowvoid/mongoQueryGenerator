@@ -39,6 +39,17 @@ namespace QueryBuilder.ER
             Attributes.Add( new DataAttribute( Name, this, Identifier ) );
         }
         /// <summary>
+        /// Add a new attribute
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="OfType"></param>
+        /// <param name="MultiValued"></param>
+        /// <param name="Identifier"></param>
+        public void AddAttribute( string Name, string OfType, bool MultiValued, bool Identifier = false )
+        {
+            Attributes.Add( new DataAttribute( Name, OfType, this, MultiValued, Identifier ) );
+        }
+        /// <summary>
         /// Add a list of string as attributes
         /// </summary>
         /// <param name="Names"></param>
@@ -70,9 +81,9 @@ namespace QueryBuilder.ER
         /// Returns the Identifier field
         /// </summary>
         /// <returns></returns>
-        public DataAttribute GetIdentifier()
+        public DataAttribute GetIdentifierAttribute()
         {
-            return Attributes.Find( A => A.IsIdentifier );
+            return Attributes.Find( A => A.Name == "id" );
         }
         /// <summary>
         /// Sets the given attribute name the identifier status

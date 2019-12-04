@@ -35,6 +35,17 @@ namespace QueryBuilder.Mongo
             Attributes.Add( new DataAttribute( Name, null, Identifier ) );
         }
         /// <summary>
+        /// Add a new attribute
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="OfType"></param>
+        /// <param name="MultiValued"></param>
+        /// <param name="Identifier"></param>
+        public void AddAttribute( string Name, string OfType, bool MultiValued, bool Identifier = false )
+        {
+            Attributes.Add( new DataAttribute( Name, OfType, null, MultiValued, Identifier ) );
+        }
+        /// <summary>
         /// Find an attribute by name
         /// </summary>
         /// <param name="Name">Attribute name</param>

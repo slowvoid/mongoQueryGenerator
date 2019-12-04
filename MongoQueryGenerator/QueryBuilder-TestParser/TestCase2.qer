@@ -1,0 +1,52 @@
+Solution: "Garage"
+Description: "Ternary - Mapping 1"
+Version: "1.0"
+
+############## ERModel ################
+
+Person {
+    id: string,
+    name: string,
+    address: string
+}
+Car {
+    id: string,
+    name: string,
+    color: string
+}
+Insurance {
+    id: string,
+    value: int,
+    company: string
+}
+Has (Person, Car, Insurance) {
+
+}
+
+############# MongoDBSchema ############## 
+DocTypePerson < Person* >
+{
+    _id     : string    < Person.id >
+    fName   : string    < Person.name >
+    fAddress: string    < Person.address >
+}
+DocTypeCar < Car* >
+{
+    _id     : string    < Car.id >
+    fName   : string    < Car.name >
+    fColor  : string    < Car.color >
+}
+DocTypeInsurance < Insurance* >
+{
+    _id     : string    < Insurance.id >
+    fValue  : int       < Insurance.value >
+    fCompany: string    < Insurance.company >
+}
+
+DocTypeHas < Has*, Person, Car, Insurance >
+{
+    _id         : string    < >
+    fPersonId   : string    < Person.id >
+    fCarId      : string    < Car.id >
+    fInsuranceId: string    < Insurance.id >
+}

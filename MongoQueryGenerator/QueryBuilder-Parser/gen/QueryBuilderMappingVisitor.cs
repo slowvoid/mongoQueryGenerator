@@ -19,96 +19,98 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace QueryBuilder.Parser {
-using Antlr4.Runtime.Misc;
-using Antlr4.Runtime.Tree;
-using IToken = Antlr4.Runtime.IToken;
+namespace QueryBuilder.Parser
+{
+    using Antlr4.Runtime.Misc;
+    using Antlr4.Runtime.Tree;
+    using IToken = Antlr4.Runtime.IToken;
 
-/// <summary>
-/// This interface defines a complete generic visitor for a parse tree produced
-/// by <see cref="QueryBuilderMappingParser"/>.
-/// </summary>
-/// <typeparam name="Result">The return type of the visit operation.</typeparam>
-[System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.7.1")]
-[System.CLSCompliant(false)]
-public interface IQueryBuilderMappingVisitor<Result> : IParseTreeVisitor<Result> {
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.program"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitProgram([NotNull] QueryBuilderMappingParser.ProgramContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.ermodel"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitErmodel([NotNull] QueryBuilderMappingParser.ErmodelContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erelement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitErelement([NotNull] QueryBuilderMappingParser.ErelementContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.entity"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitEntity([NotNull] QueryBuilderMappingParser.EntityContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.relationship"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitRelationship([NotNull] QueryBuilderMappingParser.RelationshipContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.relationshipEnd"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitRelationshipEnd([NotNull] QueryBuilderMappingParser.RelationshipEndContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.attribute"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitAttribute([NotNull] QueryBuilderMappingParser.AttributeContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.mongoschema"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitMongoschema([NotNull] QueryBuilderMappingParser.MongoschemaContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.collection"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitCollection([NotNull] QueryBuilderMappingParser.CollectionContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erRefs"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitErRefs([NotNull] QueryBuilderMappingParser.ErRefsContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erRef"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitErRef([NotNull] QueryBuilderMappingParser.ErRefContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.field"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitField([NotNull] QueryBuilderMappingParser.FieldContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erAttributeRef"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitErAttributeRef([NotNull] QueryBuilderMappingParser.ErAttributeRefContext context);
-}
+    /// <summary>
+    /// This interface defines a complete generic visitor for a parse tree produced
+    /// by <see cref="QueryBuilderMappingParser"/>.
+    /// </summary>
+    /// <typeparam name="Result">The return type of the visit operation.</typeparam>
+    [System.CodeDom.Compiler.GeneratedCode( "ANTLR", "4.7.1" )]
+    [System.CLSCompliant( false )]
+    public interface IQueryBuilderMappingVisitor<Result> : IParseTreeVisitor<Result>
+    {
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.program"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitProgram( [NotNull] QueryBuilderMappingParser.ProgramContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.ermodel"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitErmodel( [NotNull] QueryBuilderMappingParser.ErmodelContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erelement"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitErelement( [NotNull] QueryBuilderMappingParser.ErelementContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.entity"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitEntity( [NotNull] QueryBuilderMappingParser.EntityContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.relationship"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitRelationship( [NotNull] QueryBuilderMappingParser.RelationshipContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.relationshipEnd"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitRelationshipEnd( [NotNull] QueryBuilderMappingParser.RelationshipEndContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.attribute"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitAttribute( [NotNull] QueryBuilderMappingParser.AttributeContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.mongoschema"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitMongoschema( [NotNull] QueryBuilderMappingParser.MongoschemaContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.collection"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitCollection( [NotNull] QueryBuilderMappingParser.CollectionContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erRefs"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitErRefs( [NotNull] QueryBuilderMappingParser.ErRefsContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erRef"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitErRef( [NotNull] QueryBuilderMappingParser.ErRefContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.field"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitField( [NotNull] QueryBuilderMappingParser.FieldContext context );
+        /// <summary>
+        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erAttributeRef"/>.
+        /// </summary>
+        /// <param name="context">The parse tree.</param>
+        /// <return>The visitor result.</return>
+        Result VisitErAttributeRef( [NotNull] QueryBuilderMappingParser.ErAttributeRefContext context );
+    }
 } // namespace QueryBuilder.Parser

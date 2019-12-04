@@ -13,11 +13,11 @@ namespace QueryBuilder.Parser
         public List<string> Warnings { get; set; }
         public List<string> Errors { get; set; }
 
-        public QueryBuilderMappingMetadata(ERModel EntityRelationshipModel,
+        public QueryBuilderMappingMetadata( ERModel EntityRelationshipModel,
                                         MongoSchema MongoDBSchema,
                                         ModelMapping ERMongoMapping,
                                         List<string> Warnings,
-                                        List<string> Errors)
+                                        List<string> Errors )
         {
             this.EntityRelationshipModel = EntityRelationshipModel;
             this.MongoDBSchema = MongoDBSchema;

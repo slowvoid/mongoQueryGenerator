@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QueryBuilder.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,16 @@ namespace QueryBuilder.Mongo
             DocumentSchema.AddAttribute( Name );
         }
         /// <summary>
+        /// Add an attribute to the document schema
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="OfType"></param>
+        /// <param name="MultiValued"></param>
+        public void AddAttribute( string Name, string OfType, bool MultiValued )
+        {
+            DocumentSchema.AddAttribute( Name, OfType, MultiValued );
+        }
+        /// <summary>
         /// Add a sequence of attributes to the document schema
         /// </summary>
         /// <param name="Names"></param>
@@ -41,6 +52,16 @@ namespace QueryBuilder.Mongo
             {
                 AddAttribute( Name );
             }
+        }
+
+        /// <summary>
+        /// Retrieve an Attribute by its name
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <returns></returns>
+        public DataAttribute GetAttribute( string Name )
+        {
+            return DocumentSchema.Attributes.Find( A => A.Name == Name );
         }
         #endregion
 
