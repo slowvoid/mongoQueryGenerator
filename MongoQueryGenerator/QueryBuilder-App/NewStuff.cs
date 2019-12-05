@@ -26,7 +26,13 @@ namespace QueryBuilderApp
             string query = "from Person p rjoin <Drives d> (Car c)";
             QueryGenerator gen = QueryBuilderParser.ParseQuery( query, map );
 
-            Console.WriteLine( gen.Run() );
+            string mongoQuery = gen.Run();
+
+            Console.WriteLine( mongoQuery );
+
+            QueryRunner runner = new QueryRunner( "mongodb://localhost:27017", "testParser" );
+
+            Console.WriteLine( runner.GetJSON( mongoQuery ) );
 
             Console.Read();
         }

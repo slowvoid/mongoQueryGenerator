@@ -86,13 +86,11 @@ namespace QueryBuilder.Operation
                 PipelineVariables.Add( SourceMatchAttribute, $"${MainSourceRule.GetRuleValueForAttribute( SourceEntity.Element.GetIdentifierAttribute() )}" );
 
                 // Create a Match Operator for the pipeline
-                string whatever = SourceRule.GetRuleValueForAttribute( SourceEntity.Element.GetIdentifierAttribute() );
-
-                DataAttribute Identifier = SourceEntity.Element.GetIdentifierAttribute();
-
                 MatchOperator MatchSourceOp = MatchOperator.CreateLookupMatch( SourceRule.GetRuleValueForAttribute( SourceEntity.Element.GetIdentifierAttribute() ), SourceMatchAttribute );
 
                 PipelineOperators.Add( MatchSourceOp );
+
+                // Store attributes to be removed later
 
                 // Iterate target entities
                 foreach ( QueryableEntity Target in TargetEntities )
@@ -110,12 +108,88 @@ namespace QueryBuilder.Operation
                     {
                         throw new MissingMappingException( $"Target entity {Target.GetName()} must have a main mapping" );
                     }
+
+                    // Retrieve Target rule pointing to the relationship collection
+                    MapRule TargetRule = ModelMap.FindRule( Target.Element, MainRelationshipRule.Target );
+
+                    if ( TargetRule == null )
+                    {
+                        throw new MissingMappingException( $"Target entity {Target.GetName()} must have a mapping that targets {MainRelationshipRule.Target.Name}" );
+                    }
+
+                    // Create look for target 
+                    string LookupTargetAs = $"data_{Target.GetName()}";
+
+                    LookupOperator TargetLookup = new LookupOperator()
+                    {
+                        From = MainTargetRule.Target.Name,
+                        ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                        LocalField = TargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                        As = LookupTargetAs
+                    };
+
+                    // Create operations to bring fields to an upper level
+                    UnwindOperator UnwindTargetOp = new UnwindOperator( LookupTargetAs );
+
+                    // Store Attributes
+                    Dictionary<string, JSCode> TargetAttributes = new Dictionary<string, JSCode>();
+
+                    // Iterate target attributes and bring them one level up
+                    foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                    {
+                        string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
+
+                        // Ignore if no rule is found
+                        if ( RuleValue == null )
+                        {
+                            continue;
+                        }
+
+                        TargetAttributes.Add( $"{Target.GetName()}_{Attribute.Name}", new JSString( $"\"${LookupTargetAs}.{RuleValue}\"" ) );
+                    }
+
+                    // Create AddFields Operation
+                    AddFieldsOperator AddTargetFields = new AddFieldsOperator( TargetAttributes );
+
+                    // Remove joined data (unmapped)
+                    // and other unwanted attributes
+                    List<string> UnwantedAttributes = new List<string>();
+                    UnwantedAttributes.Add( LookupTargetAs );
+                    UnwantedAttributes.Add( SourceRule.GetRuleValueForAttribute( SourceEntity.Element.GetIdentifierAttribute() ) );
+                    UnwantedAttributes.Add( TargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ) );
+
+                    ProjectOperator HideTargetUnmappedOp = ProjectOperator.HideAttributesOperator( UnwantedAttributes );
+
+                    // Add operators to pipeline
+                    PipelineOperators.AddRange( new MongoDBOperator[] { TargetLookup, UnwindTargetOp, AddTargetFields, HideTargetUnmappedOp } );
                 }
 
+                Dictionary<string, JSCode> RelationshipAttributesToAdd = new Dictionary<string, JSCode>();
+
                 // Process Relationship attributes (if any)
+                foreach ( DataAttribute Attribute in Relationship.Attributes )
+                {
+                    string RuleValue = MainRelationshipRule.GetRuleValueForAttribute( Attribute );
+
+                    if ( RuleValue == null )
+                    {
+                        continue;
+                    }
+
+                    RelationshipAttributesToAdd.Add( $"{Relationship.Name}_{Attribute.Name}", new JSString( $"\"${RuleValue}\"" ) );
+                }
+
+                if ( RelationshipAttributesToAdd.Count > 0 )
+                {
+                    // Create Operator
+                    AddFieldsOperator AddRelationshipFieldsOp = new AddFieldsOperator( RelationshipAttributesToAdd );
+
+                    // Add to pipeline
+                    PipelineOperators.Add( AddRelationshipFieldsOp );
+                }
 
                 // Build Lookup Operator
-                LookupOperator LookupOp = new LookupOperator()
+                LookupOperator LookupRelationshipOp = new LookupOperator()
                 {
                     From = MainRelationshipRule.Target.Name,
                     Let = PipelineVariables,
@@ -123,7 +197,8 @@ namespace QueryBuilder.Operation
                     As = $"data_{Relationship.Name}"
                 };
 
-                OperationsToExecute.Add( LookupOp );
+                // Add Relationship Lookup to List of execution
+                OperationsToExecute.Add( LookupRelationshipOp );
             }
 
             // Return operations
