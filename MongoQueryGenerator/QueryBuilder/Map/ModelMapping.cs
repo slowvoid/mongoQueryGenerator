@@ -63,7 +63,7 @@ namespace QueryBuilder.Map
         /// <returns></returns>
         public MapRule FindRule( BaseERElement Source, MongoDBCollection Target )
         {
-            return Rules.First( R => R.Source.Name == Source.Name && R.Target.Name == Target.Name );
+            return Rules.FirstOrDefault( R => R.Source.Name == Source.Name && R.Target.Name == Target.Name );
         }
         /// <summary>
         /// Find the main collection of an er element
@@ -82,6 +82,33 @@ namespace QueryBuilder.Map
         public List<MapRule> FindRules( MongoDBCollection Target )
         {
             return Rules.Where( R => R.Target == Target ).ToList();
+        }
+        /// <summary>
+        /// Find rules that have the given ERElement as source
+        /// </summary>
+        /// <param name="Source"></param>
+        /// <returns></returns>
+        public List<MapRule> FindRules( BaseERElement Source )
+        {
+            return Rules.Where( R => R.Source == Source ).ToList();
+        }
+        /// <summary>
+        /// Find the main mapping for the given ERElement
+        /// </summary>
+        /// <param name="Source"></param>
+        /// <returns></returns>
+        public MapRule FindMainRule( BaseERElement Source )
+        {
+            return Rules.FirstOrDefault( R => R.Source == Source && R.IsMain );
+        }
+        /// <summary>
+        /// Find the main mapping that targets the given collection
+        /// </summary>
+        /// <param name="Target"></param>
+        /// <returns></returns>
+        public MapRule FindMainRule( MongoDBCollection Target )
+        {
+            return Rules.FirstOrDefault( R => R.Target == Target && R.IsMain );
         }
         #endregion
 

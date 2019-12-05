@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using QueryBuilder.ER;
 using QueryBuilder.Mongo;
+using QueryBuilder.Shared;
 
 namespace QueryBuilder.Map
 {
@@ -42,6 +43,15 @@ namespace QueryBuilder.Map
         public void AddRule( string Source, string Target )
         {
             Rules.Add( Source, Target );
+        }
+        /// <summary>
+        /// Retrieve the rule for the given Attribute
+        /// </summary>
+        /// <param name="Attribute"></param>
+        /// <returns></returns>
+        public string GetRuleValueForAttribute( DataAttribute Attribute )
+        {
+            return Rules.FirstOrDefault( R => R.Key == Attribute.Name ).Value;
         }
         #endregion
 

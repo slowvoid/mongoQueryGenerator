@@ -50,6 +50,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Test.qer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestCase1.qer">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

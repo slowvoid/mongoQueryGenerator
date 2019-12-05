@@ -62,6 +62,15 @@ namespace QueryBuilder.ER
 
             return FoundSourceEntity && FoundTargetEntity;
         }
+        /// <summary>
+        /// Checks if the given element is contained in this relationship
+        /// </summary>
+        /// <param name="Element"></param>
+        /// <returns></returns>
+        public bool ContainsElement( Entity Element )
+        {
+            return Ends.Count( E => E.TargetEntity == Element ) > 0;
+        }
         #endregion
 
         #region Constructors

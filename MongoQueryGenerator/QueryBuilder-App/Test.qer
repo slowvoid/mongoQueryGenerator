@@ -1,0 +1,42 @@
+﻿Solution: "Test mapping ideas"
+Description: "Multiple persons drives multiple cars"
+Version: "1.0"
+
+############## ERModel ################
+
+Person {
+	id: int
+	name: string
+	age: int
+}
+
+Car {
+	id: int
+	model: string
+	year: int
+}
+
+Drives (Person, Car) { }
+
+############# MongoDBSchema ##############
+
+Person < Person* >
+{
+	_id: int < Person.id >
+	fName: string < Person.name >
+	fAge: int < Person.age >
+}
+
+Car < Car* >
+{
+	_id: int < Car.id >
+	model: string < Car.model >
+	year: int < Car.year >
+}
+
+Drives < Drives*, Person, Car >
+{
+	_id: int <>
+	fPersonId: int < Person.id >
+	fCarId: int < Car.id >
+}

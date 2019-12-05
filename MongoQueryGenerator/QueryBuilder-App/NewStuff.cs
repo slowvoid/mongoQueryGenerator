@@ -1,6 +1,8 @@
-﻿using QueryBuilder.Parser;
+﻿using QueryBuilder.Map;
+using QueryBuilder.Parser;
 using QueryBuilder.Query;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace QueryBuilderApp
@@ -11,12 +13,20 @@ namespace QueryBuilderApp
         {
             Console.WriteLine( "Running new stuff..." );
 
-            var map = QueryBuilderParser.ParseMapping( new FileStream( "TestCase1.qer", FileMode.Open ) );
+            var map = QueryBuilderParser.ParseMapping( new FileStream( "Test.qer", FileMode.Open ) );
+            foreach ( MapRule Rule in map.ERMongoMapping.Rules )
+            {
+                Console.WriteLine( "Rules for {0} Mapped To {1}", Rule.Source.Name, Rule.Target.Name );
+                foreach ( KeyValuePair<string,string> Attributes in Rule.Rules )
+                {
+                    Console.WriteLine( "Key: {0} | Value: {1}", Attributes.Key, Attributes.Value );
+                }
+            }
 
-            string query = "from Person p rjoin <Insurance i> (Car c, InsuranceCompany ic)";
+            string query = "from Person p rjoin <Drives d> (Car c)";
             QueryGenerator gen = QueryBuilderParser.ParseQuery( query, map );
 
-            //Console.WriteLine( gen.Run() );
+            Console.WriteLine( gen.Run() );
 
             Console.Read();
         }
