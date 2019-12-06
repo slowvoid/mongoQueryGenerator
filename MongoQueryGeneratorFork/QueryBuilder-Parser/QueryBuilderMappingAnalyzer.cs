@@ -16,7 +16,7 @@ namespace QueryBuilder.Parser
     // and C# does not allow "Void" as a generic type parameter
     public class QueryBuilderMappingAnalyzer : QueryBuilderMappingBaseVisitor<bool>
     {
-        const string MULTIVALUED_PREFIX = "_multivalued_";
+        const string MULTIVALUED_POSTFIX = "_multivalued_";
 
         public ERModel EntityRelationshipModel { get; set; }
         public MongoSchema MongoDBSchema { get; set; }
@@ -284,7 +284,7 @@ namespace QueryBuilder.Parser
                 }
                 foreach (FieldContext f in field.fieldType().complexType()._multivaluedFields)
                 {
-                    VisitField(MULTIVALUED_PREFIX + prefixedName + ".", f, collection, mapRules);
+                    VisitField(prefixedName + MULTIVALUED_POSTFIX + ".", f, collection, mapRules);
                 }
             }
         }

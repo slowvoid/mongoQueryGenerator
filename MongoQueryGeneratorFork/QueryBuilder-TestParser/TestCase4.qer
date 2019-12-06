@@ -35,15 +35,17 @@ Repaired (Car, Garage) {
 ############# MongoDBSchema ############## 
 PersonCollection < Person*, Drives*, Car >
 {
-    _id     : string    < Person.id >
-    fName   : string    < Person.name >
-    fSurname: string    < Person.surname >
-    fSalary : double    < Person.salary >
-    cars: [{
-        fId     : string < Car.id >
-        freg_no : int    < Car.reg_no >
-    }]
+    _id     : string    < Person.id >
+    fName   : string    < Person.name >
+    fSurname: string    < Person.surname >
+    fSalary : double    < Person.salary >
+    car: {
+        fId     : [ string ] < Car.id >
+        freg_no : [ int ]    < Car.reg_no >
+        colors  : [ string ]
+    }
 }
+
 CarCollection < Car* >
 {
     _id     : string    < Car.id >
