@@ -180,6 +180,42 @@ public partial class QueryBuilderMappingBaseListener : IQueryBuilderMappingListe
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitField([NotNull] QueryBuilderMappingParser.FieldContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderMappingParser.fieldType"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFieldType([NotNull] QueryBuilderMappingParser.FieldTypeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderMappingParser.fieldType"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFieldType([NotNull] QueryBuilderMappingParser.FieldTypeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderMappingParser.simpleType"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterSimpleType([NotNull] QueryBuilderMappingParser.SimpleTypeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderMappingParser.simpleType"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitSimpleType([NotNull] QueryBuilderMappingParser.SimpleTypeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderMappingParser.complexType"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterComplexType([NotNull] QueryBuilderMappingParser.ComplexTypeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderMappingParser.complexType"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitComplexType([NotNull] QueryBuilderMappingParser.ComplexTypeContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="QueryBuilderMappingParser.erAttributeRef"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

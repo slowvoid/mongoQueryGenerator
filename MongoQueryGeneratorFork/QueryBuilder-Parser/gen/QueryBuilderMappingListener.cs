@@ -152,6 +152,36 @@ public interface IQueryBuilderMappingListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitField([NotNull] QueryBuilderMappingParser.FieldContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderMappingParser.fieldType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFieldType([NotNull] QueryBuilderMappingParser.FieldTypeContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderMappingParser.fieldType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFieldType([NotNull] QueryBuilderMappingParser.FieldTypeContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderMappingParser.simpleType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterSimpleType([NotNull] QueryBuilderMappingParser.SimpleTypeContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderMappingParser.simpleType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitSimpleType([NotNull] QueryBuilderMappingParser.SimpleTypeContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderMappingParser.complexType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterComplexType([NotNull] QueryBuilderMappingParser.ComplexTypeContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderMappingParser.complexType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitComplexType([NotNull] QueryBuilderMappingParser.ComplexTypeContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="QueryBuilderMappingParser.erAttributeRef"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

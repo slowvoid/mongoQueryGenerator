@@ -105,6 +105,24 @@ public interface IQueryBuilderMappingVisitor<Result> : IParseTreeVisitor<Result>
 	/// <return>The visitor result.</return>
 	Result VisitField([NotNull] QueryBuilderMappingParser.FieldContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.fieldType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFieldType([NotNull] QueryBuilderMappingParser.FieldTypeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.simpleType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSimpleType([NotNull] QueryBuilderMappingParser.SimpleTypeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.complexType"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitComplexType([NotNull] QueryBuilderMappingParser.ComplexTypeContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erAttributeRef"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
