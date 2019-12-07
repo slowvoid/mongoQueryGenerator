@@ -19,152 +19,180 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace QueryBuilder.Parser
-{
-    using Antlr4.Runtime.Misc;
-    using Antlr4.Runtime.Tree;
-    using IToken = Antlr4.Runtime.IToken;
-    using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
+namespace QueryBuilder.Parser {
+using Antlr4.Runtime.Misc;
+using Antlr4.Runtime.Tree;
+using IToken = Antlr4.Runtime.IToken;
+using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 
-    /// <summary>
-    /// This class provides an empty implementation of <see cref="IQueryBuilderMappingVisitor{Result}"/>,
-    /// which can be extended to create a visitor which only needs to handle a subset
-    /// of the available methods.
-    /// </summary>
-    /// <typeparam name="Result">The return type of the visit operation.</typeparam>
-    [System.CodeDom.Compiler.GeneratedCode( "ANTLR", "4.7.1" )]
-    [System.CLSCompliant( false )]
-    public partial class QueryBuilderMappingBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IQueryBuilderMappingVisitor<Result>
-    {
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.program"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitProgram( [NotNull] QueryBuilderMappingParser.ProgramContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.ermodel"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitErmodel( [NotNull] QueryBuilderMappingParser.ErmodelContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erelement"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitErelement( [NotNull] QueryBuilderMappingParser.ErelementContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.entity"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitEntity( [NotNull] QueryBuilderMappingParser.EntityContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.relationship"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitRelationship( [NotNull] QueryBuilderMappingParser.RelationshipContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.relationshipEnd"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitRelationshipEnd( [NotNull] QueryBuilderMappingParser.RelationshipEndContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.attribute"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitAttribute( [NotNull] QueryBuilderMappingParser.AttributeContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.mongoschema"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitMongoschema( [NotNull] QueryBuilderMappingParser.MongoschemaContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.collection"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitCollection( [NotNull] QueryBuilderMappingParser.CollectionContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erRefs"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitErRefs( [NotNull] QueryBuilderMappingParser.ErRefsContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erRef"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitErRef( [NotNull] QueryBuilderMappingParser.ErRefContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.field"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitField( [NotNull] QueryBuilderMappingParser.FieldContext context ) { return VisitChildren( context ); }
-        /// <summary>
-        /// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erAttributeRef"/>.
-        /// <para>
-        /// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-        /// on <paramref name="context"/>.
-        /// </para>
-        /// </summary>
-        /// <param name="context">The parse tree.</param>
-        /// <return>The visitor result.</return>
-        public virtual Result VisitErAttributeRef( [NotNull] QueryBuilderMappingParser.ErAttributeRefContext context ) { return VisitChildren( context ); }
-    }
+/// <summary>
+/// This class provides an empty implementation of <see cref="IQueryBuilderMappingVisitor{Result}"/>,
+/// which can be extended to create a visitor which only needs to handle a subset
+/// of the available methods.
+/// </summary>
+/// <typeparam name="Result">The return type of the visit operation.</typeparam>
+[System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.7.1")]
+[System.CLSCompliant(false)]
+public partial class QueryBuilderMappingBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IQueryBuilderMappingVisitor<Result> {
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.program"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitProgram([NotNull] QueryBuilderMappingParser.ProgramContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.ermodel"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitErmodel([NotNull] QueryBuilderMappingParser.ErmodelContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erelement"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitErelement([NotNull] QueryBuilderMappingParser.ErelementContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.entity"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitEntity([NotNull] QueryBuilderMappingParser.EntityContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.relationship"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitRelationship([NotNull] QueryBuilderMappingParser.RelationshipContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.relationshipEnd"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitRelationshipEnd([NotNull] QueryBuilderMappingParser.RelationshipEndContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.attribute"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitAttribute([NotNull] QueryBuilderMappingParser.AttributeContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.mongoschema"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitMongoschema([NotNull] QueryBuilderMappingParser.MongoschemaContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.collection"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitCollection([NotNull] QueryBuilderMappingParser.CollectionContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erRefs"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitErRefs([NotNull] QueryBuilderMappingParser.ErRefsContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erRef"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitErRef([NotNull] QueryBuilderMappingParser.ErRefContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.field"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitField([NotNull] QueryBuilderMappingParser.FieldContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.fieldType"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitFieldType([NotNull] QueryBuilderMappingParser.FieldTypeContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.simpleType"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitSimpleType([NotNull] QueryBuilderMappingParser.SimpleTypeContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.complexType"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitComplexType([NotNull] QueryBuilderMappingParser.ComplexTypeContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderMappingParser.erAttributeRef"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitErAttributeRef([NotNull] QueryBuilderMappingParser.ErAttributeRefContext context) { return VisitChildren(context); }
+}
 } // namespace QueryBuilder.Parser
