@@ -155,12 +155,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QueryBuilder\QueryBuilder.csproj">
-      <Project>{2ba1a345-4d25-4997-953e-e6f0d5b0d0b1}</Project>
-      <Name>QueryBuilder</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="HandcraftedQueries\personCarOneToMany_1.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -248,6 +242,12 @@
     <Content Include="HandcraftedQueries\oneToManyLeftSideEmbedded.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QueryBuilder\QueryBuilder.csproj">
+      <Project>{b679c7cc-f296-4199-a488-16c8339331da}</Project>
+      <Name>QueryBuilder</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

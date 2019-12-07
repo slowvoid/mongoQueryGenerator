@@ -16,7 +16,14 @@ Car {
 	year: int
 }
 
+Insurance {
+	id: int
+	name: string
+}
+
 Drives (Person, Car) { }
+
+HasInsurance (Person, Car, Insurance) { }
 
 ############# MongoDBSchema ##############
 
@@ -34,9 +41,23 @@ Car < Car* >
 	year: int < Car.year >
 }
 
+Insurance < Insurance* >
+{
+	_id: int < Insurance.id >
+	name: string < Insurance.name >
+}
+
 Drives < Drives*, Person, Car >
 {
 	_id: int <>
 	fPersonId: int < Person.id >
 	fCarId: int < Car.id >
+}
+
+HasInsurance < HasInsurance*, Person, Car, Insurance >
+{
+	_id: int <>
+	personId: int < Person.id >
+	carId: int < Car.id >
+	insuranceId: int < Insurance.id >
 }
