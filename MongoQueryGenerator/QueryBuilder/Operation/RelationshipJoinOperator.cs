@@ -90,7 +90,8 @@ namespace QueryBuilder.Operation
 
                 PipelineOperators.Add( MatchSourceOp );
 
-                // Store attributes to be removed later
+                // Store attributes to match with root
+                List<string> FieldsToMergeWithRoot = new List<string>();
 
                 // Iterate target entities
                 foreach ( QueryableEntity Target in TargetEntities )
@@ -155,6 +156,8 @@ namespace QueryBuilder.Operation
                         UnwindOperator UnwindCEOp = new UnwindOperator( CELookupAs );
 
                         PipelineOperators.AddRange( new MongoDBOperator[] { LookupCEOp, UnwindCEOp } );
+
+                        FieldsToMergeWithRoot.Add( CELookupAs );
                     }
                     else
                     {
@@ -258,6 +261,19 @@ namespace QueryBuilder.Operation
                     PipelineOperators.AddRange( new MongoDBOperator[] { AddRelationshipFieldsOp, HideRelationshipAttributes } );
                 }
 
+                // Merge fields with root if any
+                if ( FieldsToMergeWithRoot.Count > 0 )
+                {
+                    FieldsToMergeWithRoot.Add( "$$ROOT" );
+                    MergeObjectsOperator MergeWithRootOp = new MergeObjectsOperator( FieldsToMergeWithRoot );
+                    ReplaceRootOperator ReplaceRootOp = new ReplaceRootOperator( MergeWithRootOp.ToJSCode() );
+                    PipelineOperators.Add( ReplaceRootOp );
+
+                    // Hide merged
+                    ProjectOperator HideMergedOp = ProjectOperator.HideAttributesOperator( FieldsToMergeWithRoot.Where( F => F != "$$ROOT" ) );
+                    PipelineOperators.Add( HideMergedOp );
+                }
+
                 // Build Lookup Operator
                 LookupOperator LookupRelationshipOp = new LookupOperator()
                 {
@@ -287,6 +303,38 @@ namespace QueryBuilder.Operation
 
             // Run it and return the operations
             AlgebraOperatorResult CEResult = CEJoinOperator.Run();
+
+            // Find main rule for source entity
+            MapRule MainTargetRule = ModelMap.FindMainRule( TargetEntity.SourceEntity.Element );
+
+            Dictionary<string, JSCode> RenamedAttributes = new Dictionary<string, JSCode>();
+            Entity TargetSourceEntity = TargetEntity.SourceEntity.GetEntity();
+
+            List<string> AttributesToRemove = new List<string>();
+
+            // Rename source entity attributes
+            foreach ( DataAttribute Attribute in TargetEntity.SourceEntity.Element.Attributes )
+            {
+                string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
+
+                if ( RuleValue == null )
+                {
+                    continue;
+                }
+
+                RenamedAttributes.Add( $"{TargetSourceEntity.Name}_{Attribute.Name}", new JSString( $"\"${RuleValue}\"" ) );
+                AttributesToRemove.Add( RuleValue );
+            }
+
+            if ( RenamedAttributes.Count > 0 )
+            {
+                AddFieldsOperator AddRenamedAttributesOp = new AddFieldsOperator( RenamedAttributes );
+                CEResult.Commands.Add( AddRenamedAttributesOp );
+
+                // Hide old attributes
+                ProjectOperator HideOldOp = ProjectOperator.HideAttributesOperator( AttributesToRemove );
+                CEResult.Commands.Add( HideOldOp );
+            }
 
             return CEResult.Commands;
         }
