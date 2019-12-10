@@ -29,10 +29,9 @@ namespace QueryBuilder.ER
         /// </summary>
         /// <param name="TargetEntity"></param>
         /// <param name="Cardinality"></param>
-        public RelationshipEnd( Entity TargetEntity, RelationshipCardinality Cardinality )
+        public RelationshipEnd( Entity TargetEntity )
         {
             this.TargetEntity = TargetEntity;
-            this.Cardinality = Cardinality;
         }
         /// <summary>
         /// Initialize empty instance

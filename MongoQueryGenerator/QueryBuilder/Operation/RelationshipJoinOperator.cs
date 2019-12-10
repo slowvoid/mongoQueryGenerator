@@ -95,76 +95,141 @@ namespace QueryBuilder.Operation
                 // Iterate target entities
                 foreach ( QueryableEntity Target in TargetEntities )
                 {
-                    // Check if the target is related to the source through the relationship
-                    if ( !Relationship.AreRelated( (Entity)SourceEntity.Element, (Entity)Target.Element ) )
+                    if ( Target.Element is ComputedEntity )
                     {
-                        throw new NotRelatedException( $"Entities {SourceEntity.GetName()} and {Target.GetName()} are not related through {Relationship.Name}" );
-                    }
-
-                    // Check if the target has a main mapping
-                    MapRule MainTargetRule = ModelMap.FindMainRule( Target.Element );
-
-                    if ( MainTargetRule == null )
-                    {
-                        throw new MissingMappingException( $"Target entity {Target.GetName()} must have a main mapping" );
-                    }
-
-                    // Retrieve Target rule pointing to the relationship collection
-                    MapRule TargetRule = ModelMap.FindRule( Target.Element, MainRelationshipRule.Target );
-
-                    if ( TargetRule == null )
-                    {
-                        throw new MissingMappingException( $"Target entity {Target.GetName()} must have a mapping that targets {MainRelationshipRule.Target.Name}" );
-                    }
-
-                    // Create look for target 
-                    string LookupTargetAs = $"data_{Target.GetName()}";
-
-                    LookupOperator TargetLookup = new LookupOperator()
-                    {
-                        From = MainTargetRule.Target.Name,
-                        ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
-                        LocalField = TargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
-                        As = LookupTargetAs
-                    };
-
-                    // Create operations to bring fields to an upper level
-                    UnwindOperator UnwindTargetOp = new UnwindOperator( LookupTargetAs );
-
-                    // Store Attributes
-                    Dictionary<string, JSCode> TargetAttributes = new Dictionary<string, JSCode>();
-
-                    // Iterate target attributes and bring them one level up
-                    foreach ( DataAttribute Attribute in Target.Element.Attributes )
-                    {
-                        string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
-
-                        // Ignore if no rule is found
-                        if ( RuleValue == null )
+                        ComputedEntity TargetComputedEntity = Target.GetComputedEntity();
+                        
+                        // Check if it is related
+                        if ( !Relationship.AreRelated( (Entity)SourceEntity.Element, (Entity)TargetComputedEntity.SourceEntity.Element ) )
                         {
-                            continue;
+                            throw new NotRelatedException( $"Entities {SourceEntity.GetName()} and {TargetComputedEntity.SourceEntity.GetName()} are not related through {Relationship.Name}" );
+                        }
+                        
+                        // In a computed entity we first check if the source entity is related to the operator source
+                        // And in a compute entity the source entity can never be embbeded which means it must have a main mapping
+                        MapRule MainTargetRule = ModelMap.FindMainRule( TargetComputedEntity.SourceEntity.Element );
+
+                        if ( MainTargetRule == null )
+                        {
+                            throw new MissingMappingException( $"Target Entity {TargetComputedEntity.SourceEntity.GetName()}must have a main mapping" );
                         }
 
-                        TargetAttributes.Add( $"{Target.GetName()}_{Attribute.Name}", new JSString( $"\"${LookupTargetAs}.{RuleValue}\"" ) );
+                        // As they can neven be embbeded, a lookup is necessary
+                        // and we'll use a custom pipeline
+                        List<MongoDBOperator> CEPipeline = new List<MongoDBOperator>();
+
+                        // Find mapping between the middle collection and the target entity
+                        MapRule TargetRule = ModelMap.FindRule( TargetComputedEntity.SourceEntity.Element, MainRelationshipRule.Target );
+
+                        if ( TargetRule == null )
+                        {
+                            throw new MissingMappingException( $"Entity {TargetComputedEntity.SourceEntity.GetName()} must have a map that targets {MainRelationshipRule.Target.Name}" );
+                        }
+
+                        string MatchTargetAttribute = $"match_{TargetComputedEntity.SourceEntity.GetName()}";
+                        // Variables
+                        Dictionary<string, string> CEVariables = new Dictionary<string, string>();
+                        CEVariables.Add( MatchTargetAttribute, $"${TargetRule.GetRuleValueForAttribute( TargetComputedEntity.SourceEntity.Element.GetIdentifierAttribute() )}" );
+
+                        MatchOperator MatchTargetOp = MatchOperator.CreateLookupMatch( MainTargetRule.GetRuleValueForAttribute( TargetComputedEntity.SourceEntity.Element.GetIdentifierAttribute() ), MatchTargetAttribute );
+
+                        // Process computed entity
+                        List<MongoDBOperator> CEOperators = ProcessComputedEntity( TargetComputedEntity );
+
+                        // Add operators to list
+                        CEPipeline.Add( MatchTargetOp );
+                        CEPipeline.AddRange( CEOperators );
+
+                        string CELookupAs = $"data_{SourceEntity.GetName()}_{TargetComputedEntity.SourceEntity.GetName()}";
+
+                        // Create lookup
+                        LookupOperator LookupCEOp = new LookupOperator()
+                        {
+                            From = MainTargetRule.Target.Name,
+                            Let = CEVariables,
+                            Pipeline = CEPipeline,
+                            As = CELookupAs
+                        };
+
+                        // Add a unwind op
+                        UnwindOperator UnwindCEOp = new UnwindOperator( CELookupAs );
+
+                        PipelineOperators.AddRange( new MongoDBOperator[] { LookupCEOp, UnwindCEOp } );
                     }
+                    else
+                    {
+                        // Check if the target is related to the source through the relationship
+                        if ( !Relationship.AreRelated( (Entity)SourceEntity.Element, (Entity)Target.Element ) )
+                        {
+                            throw new NotRelatedException( $"Entities {SourceEntity.GetName()} and {Target.GetName()} are not related through {Relationship.Name}" );
+                        }
 
-                    // Create AddFields Operation
-                    AddFieldsOperator AddTargetFields = new AddFieldsOperator( TargetAttributes );
+                        // Check if the target has a main mapping
+                        MapRule MainTargetRule = ModelMap.FindMainRule( Target.Element );
 
-                    // Remove joined data (unmapped)
-                    // and other unwanted attributes
-                    List<string> UnwantedAttributes = new List<string>();
-                    UnwantedAttributes.Add( LookupTargetAs );
-                    UnwantedAttributes.Add( SourceRule.GetRuleValueForAttribute( SourceEntity.Element.GetIdentifierAttribute() ) );
-                    UnwantedAttributes.Add( TargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ) );
+                        if ( MainTargetRule == null )
+                        {
+                            throw new MissingMappingException( $"Target entity {Target.GetName()} must have a main mapping" );
+                        }
 
-                    ProjectOperator HideTargetUnmappedOp = ProjectOperator.HideAttributesOperator( UnwantedAttributes );
+                        // Retrieve Target rule pointing to the relationship collection
+                        MapRule TargetRule = ModelMap.FindRule( Target.Element, MainRelationshipRule.Target );
 
-                    // Add operators to pipeline
-                    PipelineOperators.AddRange( new MongoDBOperator[] { TargetLookup, UnwindTargetOp, AddTargetFields, HideTargetUnmappedOp } );
+                        if ( TargetRule == null )
+                        {
+                            throw new MissingMappingException( $"Target entity {Target.GetName()} must have a mapping that targets {MainRelationshipRule.Target.Name}" );
+                        }
+
+                        // Create look for target 
+                        string LookupTargetAs = $"data_{Target.GetName()}";
+
+                        LookupOperator TargetLookup = new LookupOperator()
+                        {
+                            From = MainTargetRule.Target.Name,
+                            ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                            LocalField = TargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                            As = LookupTargetAs
+                        };
+
+                        // Create operations to bring fields to an upper level
+                        UnwindOperator UnwindTargetOp = new UnwindOperator( LookupTargetAs );
+
+                        // Store Attributes
+                        Dictionary<string, JSCode> TargetAttributes = new Dictionary<string, JSCode>();
+
+                        // Iterate target attributes and bring them one level up
+                        foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                        {
+                            string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
+
+                            // Ignore if no rule is found
+                            if ( RuleValue == null )
+                            {
+                                continue;
+                            }
+
+                            TargetAttributes.Add( $"{Target.GetName()}_{Attribute.Name}", new JSString( $"\"${LookupTargetAs}.{RuleValue}\"" ) );
+                        }
+
+                        // Create AddFields Operation
+                        AddFieldsOperator AddTargetFields = new AddFieldsOperator( TargetAttributes );
+
+                        // Remove joined data (unmapped)
+                        // and other unwanted attributes
+                        List<string> UnwantedAttributes = new List<string>();
+                        UnwantedAttributes.Add( LookupTargetAs );
+                        UnwantedAttributes.Add( SourceRule.GetRuleValueForAttribute( SourceEntity.Element.GetIdentifierAttribute() ) );
+                        UnwantedAttributes.Add( TargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ) );
+
+                        ProjectOperator HideTargetUnmappedOp = ProjectOperator.HideAttributesOperator( UnwantedAttributes );
+
+                        // Add operators to pipeline
+                        PipelineOperators.AddRange( new MongoDBOperator[] { TargetLookup, UnwindTargetOp, AddTargetFields, HideTargetUnmappedOp } );
+                    }
                 }
 
                 Dictionary<string, JSCode> RelationshipAttributesToAdd = new Dictionary<string, JSCode>();
+                List<string> RelationshipAttributesToHide = new List<string>();
 
                 // Process Relationship attributes (if any)
                 foreach ( DataAttribute Attribute in Relationship.Attributes )
@@ -177,6 +242,8 @@ namespace QueryBuilder.Operation
                     }
 
                     RelationshipAttributesToAdd.Add( $"{Relationship.Name}_{Attribute.Name}", new JSString( $"\"${RuleValue}\"" ) );
+                    // Add original attribute to hide list
+                    RelationshipAttributesToHide.Add( RuleValue );
                 }
 
                 if ( RelationshipAttributesToAdd.Count > 0 )
@@ -184,8 +251,11 @@ namespace QueryBuilder.Operation
                     // Create Operator
                     AddFieldsOperator AddRelationshipFieldsOp = new AddFieldsOperator( RelationshipAttributesToAdd );
 
+                    // Also hide original fields
+                    ProjectOperator HideRelationshipAttributes = ProjectOperator.HideAttributesOperator( RelationshipAttributesToHide );
+
                     // Add to pipeline
-                    PipelineOperators.Add( AddRelationshipFieldsOp );
+                    PipelineOperators.AddRange( new MongoDBOperator[] { AddRelationshipFieldsOp, HideRelationshipAttributes } );
                 }
 
                 // Build Lookup Operator
@@ -207,14 +277,18 @@ namespace QueryBuilder.Operation
         /// <summary>
         /// Process a computed entity
         /// </summary>
-        /// <param name="SourceRule"></param>
-        /// <param name="TargetData"></param>
-        /// <param name="TargetEntity"></param>
-        /// <param name="TargetAsCE"></param>
+        /// <param name="TargetEntity">Target entity to process</param>
         /// <returns></returns>
-        private LookupOperator LookupComputedEntity( MapRule SourceRule, RelationshipJoinArgument TargetData, Entity TargetEntity, ComputedEntity TargetAsCE )
+        private List<MongoDBOperator> ProcessComputedEntity( ComputedEntity TargetEntity )
         {
-            throw new NotImplementedException();
+            // Create a new RJOIN operator instance
+            RelationshipJoinOperator CEJoinOperator = new RelationshipJoinOperator( TargetEntity.SourceEntity, TargetEntity.Relationship,
+                TargetEntity.TargetEntities, ModelMap );
+
+            // Run it and return the operations
+            AlgebraOperatorResult CEResult = CEJoinOperator.Run();
+
+            return CEResult.Commands;
         }
         /// <summary>
         /// Computes the virtual map after executing this instance
