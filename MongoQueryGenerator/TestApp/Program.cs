@@ -17,7 +17,10 @@ namespace TestApp
         {
             Console.WriteLine( "Running new stuff..." );
 
-            var map = QueryBuilderParser.ParseMapping( new FileStream( "Test.qer", FileMode.Open ) );
+            var map = QueryBuilderParser.ParseMapping( new FileStream( "TestOneToMany.qer", FileMode.Open ) );
+            // Since parser is throwing an error if no main mapping is set to a relationship, I'll remove it
+            MapRule ToRemove = map.ERMongoMapping.FindMainRule( map.EntityRelationshipModel.FindByName( "Drives" ) );
+            map.ERMongoMapping.Rules.Remove( ToRemove );
             //foreach ( MapRule Rule in map.ERMongoMapping.Rules )
             //{
             //    Console.WriteLine( "Rules for {0} Mapped To {1}", Rule.Source.Name, Rule.Target.Name );
@@ -28,8 +31,6 @@ namespace TestApp
             //}
 
             string query = "from Person p rjoin <Drives d> (Car c)";
-            //string query = "from Person p rjoin <HasInsurance h> (Car c, Insurance i)";
-            //string query = "from Person p rjoin <HasInsurance h> (Car c rjoin <Repaired r> (Garage g))";
             QueryGenerator gen = QueryBuilderParser.ParseQuery( query, map );
 
             string mongoQuery = gen.Run();
@@ -51,7 +52,7 @@ namespace TestApp
 
             Console.WriteLine( mongoQuery );
 
-            QueryRunner runner = new QueryRunner( "mongodb://localhost:27017", "testParser" );
+            QueryRunner runner = new QueryRunner( "mongodb://localhost:27017", "newOneToMany" );
 
             Console.WriteLine( runner.GetJSON( mongoQuery ) );
 

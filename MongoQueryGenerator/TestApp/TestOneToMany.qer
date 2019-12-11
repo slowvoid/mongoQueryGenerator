@@ -1,0 +1,40 @@
+﻿Solution: "Test One To Many relationships"
+Description: ""
+Version: "1.0"
+
+############## ERModel ################
+
+Person {
+	id: int
+	name: string
+	age: int
+}
+
+Car {
+	id: int
+	model: string
+	year: int
+	driverId: int
+}
+
+Drives (Person, Car) { }
+
+############# MongoDBSchema ##############
+
+Person < Person* >
+{
+	_id: int < Person.id >
+	fName: string < Person.name >
+	fAge: int < Person.age >
+}
+
+Car < Car*, Person >
+{
+	_id: int < Car.id >
+	model: string < Car.model >
+	year: int < Car.year >
+	driverId: int < Person.id >
+}
+
+Drives < Drives* >
+{}

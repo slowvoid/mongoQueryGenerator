@@ -72,7 +72,14 @@ namespace QueryBuilder.Map
         /// <returns></returns>
         public MongoDBCollection FindMainCollection( BaseERElement Source )
         {
-            return Rules.Find( R => R.Source == Source && R.IsMain ).Target;
+            MapRule MainRule = FindMainRule( Source );
+
+            if ( MainRule != null )
+            {
+                return MainRule.Target;
+            }
+
+            return null;
         }
         /// <summary>
         /// Find rules that target the given collection

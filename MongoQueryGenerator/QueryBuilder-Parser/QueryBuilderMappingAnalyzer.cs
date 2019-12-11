@@ -74,7 +74,7 @@ namespace QueryBuilder.Parser
                         {
                             DataAttribute da = re.TargetEntity.GetIdentifierAttribute();
                             bool hasMapping = false;
-                            Console.WriteLine($"Searching r {relationship.Name} / {relationshipMainCollection.Name} / re {re.TargetEntity.Name}.id...");
+                            Console.WriteLine( $"Searching r {relationship.Name} / {relationshipMainCollection.Name} / re {re.TargetEntity.Name}.id..." );
                             foreach (MapRule mr in rules)
                             {
                                 Console.WriteLine($"  Rule: {mr.Source.Name} - {mr.Target.Name}");

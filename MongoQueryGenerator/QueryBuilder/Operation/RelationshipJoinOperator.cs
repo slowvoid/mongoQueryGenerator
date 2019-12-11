@@ -54,20 +54,20 @@ namespace QueryBuilder.Operation
             // Retrieve main rule for relationship
             MapRule MainRelationshipRule = ModelMap.FindMainRule( Relationship );
 
+            // Find Source Main rule
+            MapRule MainSourceRule = ModelMap.FindMainRule( SourceEntity.Element );
+
+            if ( MainSourceRule == null )
+            {
+                throw new InvalidMapException( $"Left side entities must have a main mapping [{SourceEntity.GetName()}" );
+            }
+
             // Check if it is present
             if ( MainRelationshipRule != null )
             {
                 // Ok, relationship has a main mapping, it usually means a N:M(:P:...:Z) relationship
                 // this requires a custom lookup pipeline
                 List<MongoDBOperator> PipelineOperators = new List<MongoDBOperator>();
-
-                // Find Source Main rule
-                MapRule MainSourceRule = ModelMap.FindMainRule( SourceEntity.Element );
-
-                if ( MainSourceRule == null )
-                {
-                    throw new InvalidMapException( $"Left side entities must have a main mapping [{SourceEntity.GetName()}" );
-                }
 
                 // In this case we should find a rule for Source Entity that targets the relationship collection
                 MapRule SourceRule = ModelMap.FindRule( SourceEntity.Element, MainRelationshipRule.Target );
@@ -206,7 +206,7 @@ namespace QueryBuilder.Operation
                             string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
 
                             // Ignore if no rule is found
-                            if ( RuleValue == null )
+                            if ( string.IsNullOrWhiteSpace( RuleValue ) )
                             {
                                 continue;
                             }
@@ -239,7 +239,7 @@ namespace QueryBuilder.Operation
                 {
                     string RuleValue = MainRelationshipRule.GetRuleValueForAttribute( Attribute );
 
-                    if ( RuleValue == null )
+                    if ( string.IsNullOrWhiteSpace( RuleValue ) )
                     {
                         continue;
                     }
@@ -285,6 +285,151 @@ namespace QueryBuilder.Operation
 
                 // Add Relationship Lookup to List of execution
                 OperationsToExecute.Add( LookupRelationshipOp );
+            }
+            else
+            {
+                // In this case we have a 1:1 or 1:N relationship
+                // Relationship attributes must be embbeded (on source or target)
+                MapRule RelationshipRule = ModelMap.Rules.FirstOrDefault( R => R.Source == Relationship );
+
+                // Store fields to be merged with root
+                List<string> AttributesToAddUnderRelationshipData = new List<string>();
+
+                // Iterate targets
+                foreach ( QueryableEntity Target in TargetEntities )
+                {
+                    if ( Target.Element is ComputedEntity )
+                    {
+                        // TODO:
+                    }
+                    else
+                    {
+                        // Check if target has a main mapping
+                        MapRule MainTargetRule = ModelMap.FindMainRule( Target.Element );
+
+                        if ( MainTargetRule == null )
+                        {
+                            // Target must be embedded to the source entity
+                            // TODO:
+                        }
+                        else
+                        {
+                            // This basicaly means a 1:N or 1:1 but the target isn't embedded
+                            // Check for 1:N first
+                            MapRule SourceRuleAtTarget = ModelMap.FindRule( SourceEntity.Element, MainTargetRule.Target );
+
+                            if ( SourceRuleAtTarget == null )
+                            {
+                                // Then it should be a 1:1
+                                // Target must have a map pointing at SourceCollection
+                                MapRule TargetRuleAtSource = ModelMap.FindRule( Target.Element, MainSourceRule.Target );
+
+                                if ( TargetRuleAtSource == null )
+                                {
+                                    throw new MissingMappingException( $"Target entity {Target.GetName()} must have a map rule pointing to {MainSourceRule.Target}" );
+                                }
+
+                                // This could still be a 1:N relation if the target is mapped to an array
+                                // but there are several ways to represent this and we should set up some sort of standard mapping
+                                // for this
+
+                                string TargetAs = $"data_{Target.GetName()}";
+
+                                // Assuming 1:1
+                                LookupOperator TargetLookupOp = new LookupOperator()
+                                {
+                                    From = MainTargetRule.Target.Name,
+                                    LocalField = TargetRuleAtSource.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                    ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                    As = TargetAs
+                                };
+
+                                // Unwind joined data
+                                UnwindOperator UnwindTargetOp = new UnwindOperator( TargetAs );
+
+                                // TODO: As a 1:1 we should merge with it relationship attributes
+
+                                // Add to execution list
+                                OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, UnwindTargetOp } );
+                            }
+                            else
+                            {
+                                // This is a 1:N
+                                string TargetAs = $"data_{Target.GetName()}_join";
+
+                                LookupOperator TargetLookupOp = new LookupOperator()
+                                {
+                                    From = MainTargetRule.Target.Name,
+                                    ForeignField = SourceRuleAtTarget.GetRuleValueForAttribute( SourceEntity.Element.GetIdentifierAttribute() ),
+                                    LocalField = MainSourceRule.GetRuleValueForAttribute( SourceEntity.Element.GetIdentifierAttribute() ),
+                                    As = TargetAs
+                                };
+
+                                // Add Lookup to execution list
+                                OperationsToExecute.Add( TargetLookupOp );
+
+                                // Rename attributes
+                                // Use a map expression as it is an array
+                                Dictionary<string, JSCode> RenamedTargetAttributes = new Dictionary<string, JSCode>();
+                                string MapAttributeAs = $"data_{Target.GetName()}";
+
+                                foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                                {
+                                    string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
+                                    if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                    {
+                                        continue;
+                                    }
+
+                                    RenamedTargetAttributes.Add( $"\"{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{RuleValue}\"" ) );
+                                }
+
+                                // Check if there is any relationship attribute here
+                                if ( Relationship.Attributes.Count > 0 )
+                                {
+                                    MapRule RelationshipRuleToTarget = ModelMap.FindRule( Relationship, MainTargetRule.Target );
+
+                                    if ( RelationshipRuleToTarget != null )
+                                    {
+                                        Dictionary<string, JSCode> RelationshipAttributesToAdd = new Dictionary<string, JSCode>();
+
+                                        foreach ( DataAttribute Attribute in Relationship.Attributes )
+                                        {
+                                            string RuleValue = RelationshipRuleToTarget.GetRuleValueForAttribute( Attribute );
+
+                                            if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                            {
+                                                continue;
+                                            }
+
+                                            RelationshipAttributesToAdd.Add( $"\"data_{Relationship.Name}_attributes.{Attribute.Name}\"",
+                                                new JSString( $"$\"{TargetAs}.{RuleValue}\"" ) );
+                                        }
+
+                                        if ( RelationshipAttributesToAdd.Count > 0 )
+                                        {
+                                            AddFieldsOperator AddRelationshipAttributesOp = new AddFieldsOperator( RelationshipAttributesToAdd );
+                                            OperationsToExecute.Add( AddRelationshipAttributesOp );
+                                        }
+                                    }
+                                }
+
+                                MapExpr TargetAttributeMap = new MapExpr( TargetAs, MapAttributeAs, RenamedTargetAttributes );
+                                Dictionary<string, JSCode> AddFieldsDictionary = new Dictionary<string, JSCode>();
+                                AddFieldsDictionary.Add( $"data_{Target.GetName()}", TargetAttributeMap.ToJSCode() );
+
+                                AddFieldsOperator AddRenamedTargetOp = new AddFieldsOperator( AddFieldsDictionary );
+                                ProjectOperator HideOldTargetOp = ProjectOperator.HideAttributesOperator( new string[] { TargetAs } );
+
+                                // Add to merge list
+                                AttributesToAddUnderRelationshipData.Add( $"data_{Target.GetName()}" );
+
+                                // Add operations to list
+                                OperationsToExecute.AddRange( new MongoDBOperator[] { AddRenamedTargetOp, HideOldTargetOp } );
+                            }
+                        }
+                    }
+                }
             }
 
             // Return operations
