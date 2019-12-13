@@ -19,8 +19,8 @@ namespace TestApp
 
             var map = QueryBuilderParser.ParseMapping( new FileStream( "TestOneToMany.qer", FileMode.Open ) );
             // Since parser is throwing an error if no main mapping is set to a relationship, I'll remove it
-            MapRule ToRemove = map.ERMongoMapping.FindMainRule( map.EntityRelationshipModel.FindByName( "Drives" ) );
-            map.ERMongoMapping.Rules.Remove( ToRemove );
+            //MapRule ToRemove = map.ERMongoMapping.FindMainRule( map.EntityRelationshipModel.FindByName( "Drives" ) );
+            //map.ERMongoMapping.Rules.Remove( ToRemove );
             //foreach ( MapRule Rule in map.ERMongoMapping.Rules )
             //{
             //    Console.WriteLine( "Rules for {0} Mapped To {1}", Rule.Source.Name, Rule.Target.Name );

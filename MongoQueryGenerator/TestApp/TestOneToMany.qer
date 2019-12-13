@@ -35,6 +35,3 @@ Car < Car*, Person >
 	year: int < Car.year >
 	driverId: int < Person.id >
 }
-
-Drives < Drives* >
-{}
