@@ -31,9 +31,9 @@ namespace TestApp
             //}
 
             string query = "from Person p rjoin <Drives d> (Car c)";
-            QueryGenerator gen = QueryBuilderParser.ParseQuery( query, map );
+            //QueryGenerator gen = QueryBuilderParser.ParseQuery( query, map );
 
-            string mongoQuery = gen.Run();
+            //string mongoQuery = gen.Run();
 
             //DataContainer Data = ModelData();
 
@@ -50,11 +50,11 @@ namespace TestApp
 
             //string mongoQuery = queryGen.Run();
 
-            Console.WriteLine( mongoQuery );
+            //Console.WriteLine( mongoQuery );
 
-            QueryRunner runner = new QueryRunner( "mongodb://localhost:27017", "newOneToMany" );
+            //QueryRunner runner = new QueryRunner( "mongodb://localhost:27017", "newOneToMany" );
 
-            Console.WriteLine( runner.GetJSON( mongoQuery ) );
+            //Console.WriteLine( runner.GetJSON( mongoQuery ) );
 
             Console.Read();
         }

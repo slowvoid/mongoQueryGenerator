@@ -31,18 +31,18 @@ namespace QueryBuilder.Tests
 
             // User Relationships
             Relationship UserHasManyProducts = new Relationship( "HasManyProducts" );
-            UserHasManyProducts.AddRelationshipEnd( new RelationshipEnd( User, RelationshipCardinality.One ) );
-            UserHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Product, RelationshipCardinality.Many ) );
+            UserHasManyProducts.AddRelationshipEnd( new RelationshipEnd( User ) );
+            UserHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Product ) );
 
             // Store relationships
             Relationship StoreHasManyProducts = new Relationship( "StoreHasManyProducts" );
-            StoreHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Store, RelationshipCardinality.One ) );
-            StoreHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Product, RelationshipCardinality.Many ) );
+            StoreHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Store ) );
+            StoreHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Product ) );
 
             // Category relationships
             Relationship CategoryHasManyProducts = new Relationship( "CategoryHasManyProducts" );
-            CategoryHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Category, RelationshipCardinality.One ) );
-            CategoryHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Product, RelationshipCardinality.Many ) );
+            CategoryHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Category ) );
+            CategoryHasManyProducts.AddRelationshipEnd( new RelationshipEnd( Product ) );
 
             return new ERModel( "CMSModel", new List<BaseERElement>() { User, Store, Category, Product,
                 UserHasManyProducts, StoreHasManyProducts, CategoryHasManyProducts } );
