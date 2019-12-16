@@ -62,7 +62,7 @@ namespace QueryBuilder.Tests
             MapRule CarPersonRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ), false );
             CarPersonRule.AddRule( "carId", "carId" );
 
-            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule } );
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, CarPersonRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
