@@ -400,7 +400,7 @@ namespace QueryBuilder.Tests
             PersonRule.AddRule( "carId", "carId" );
             PersonRule.AddRule( "insuranceId", "insuranceId" );
 
-            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ) );
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ), false );
             CarRule.AddRule( "name", "car.name" );
             CarRule.AddRule( "year", "car.year" );
 

@@ -296,6 +296,7 @@ namespace QueryBuilder.Operation
                 List<string> AttributesToMergeWithRelatioshipData = new List<string>();
                 List<string> AttributesToConcatWithRelationshipData = new List<string>();
                 List<string> AttributesToRemove = new List<string>();
+                bool AreRelationshipAttributesReady = false;
 
                 // Iterate targets
                 foreach ( QueryableEntity Target in TargetEntities )
@@ -327,6 +328,7 @@ namespace QueryBuilder.Operation
                             Dictionary<string, JSCode> AddedTargetAttributes = new Dictionary<string, JSCode>();
 
                             string RootAttribute = TargetRule.GetRootAttribute();
+                            string RelationshipRootAttribute = RelationshipRule.GetRootAttribute();
 
                             if ( RootAttribute == null )
                             {
@@ -377,9 +379,30 @@ namespace QueryBuilder.Operation
                                         MapParams.Add( $"\"{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
                                     }
 
+                                    // Check if relationship attributes are within the target data
+                                    if ( RelationshipRootAttribute == RootAttribute )
+                                    {
+                                        // Then relationship data is located within target attributes
+                                        // Add them to the rename process
+                                        foreach ( DataAttribute Attribute in Relationship.Attributes )
+                                        {
+                                            string RuleValue = RelationshipRule.GetRuleValueForAttribute( Attribute );
+
+                                            if ( string.IsNullOrEmpty( RuleValue ) )
+                                            {
+                                                continue;
+                                            }
+
+                                            string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+
+                                            MapParams.Add( $"\"{Relationship.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
+                                        }
+
+                                        AreRelationshipAttributesReady = true;
+                                    }
+
                                     MapExpr MapTargetExpr = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
                                     AddedTargetAttributes.Add( $"data_{Target.GetName()}", MapTargetExpr.ToJSCode() );
-                                    AttributesToConcatWithRelationshipData.Add( $"data_{Target.GetName()}" );
                                 }
                                 else
                                 {
@@ -456,6 +479,29 @@ namespace QueryBuilder.Operation
                                     AddTargetAttributes.Add( $"\"{TargetData}.{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"${TargetAs}.{RuleValue}\"" ) );
                                 }
 
+                                // Check if relationship attributes are mapped within the target attributes
+                                MapRule RelationshipRuleAtTarget = ModelMap.FindRule( Relationship, MainTargetRule.Target );
+
+                                if ( RelationshipRuleAtTarget != null )
+                                {
+                                    // Iterate attributes and add them to the proper place
+                                    foreach ( DataAttribute Attribute in Relationship.Attributes )
+                                    {
+                                        string RuleValue = RelationshipRuleAtTarget.GetRuleValueForAttribute( Attribute );
+                                        if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                        {
+                                            continue;
+                                        }
+
+                                        AddTargetAttributes.Add( $"\"data_{Relationship.Name}.{Relationship.Name}_{Attribute.Name}\"", new JSString( $"\"${TargetAs}.{RuleValue}\"" ) );
+                                    }
+
+                                    // Add to merge list
+                                    AttributesToMergeWithRelatioshipData.Add( $"data_{Relationship.Name}" );
+                                    AreRelationshipAttributesReady = true;
+                                }
+                                
+
                                 // Add joined data to a proper attribute
                                 AddFieldsOperator AddTargetAtttibutesOp = new AddFieldsOperator( AddTargetAttributes );
 
@@ -517,13 +563,14 @@ namespace QueryBuilder.Operation
                                             }
 
                                             RelationshipAttributesToAdd.Add( $"\"data_{Relationship.Name}_attributes.{Attribute.Name}\"",
-                                                new JSString( $"$\"{TargetAs}.{RuleValue}\"" ) );
+                                                new JSString( $"\"${TargetAs}.{RuleValue}\"" ) );
                                         }
 
                                         if ( RelationshipAttributesToAdd.Count > 0 )
                                         {
                                             AddFieldsOperator AddRelationshipAttributesOp = new AddFieldsOperator( RelationshipAttributesToAdd );
                                             OperationsToExecute.Add( AddRelationshipAttributesOp );
+                                            AreRelationshipAttributesReady = true;
                                         }
                                     }
                                 }
@@ -542,6 +589,49 @@ namespace QueryBuilder.Operation
                                 OperationsToExecute.AddRange( new MongoDBOperator[] { AddRenamedTargetOp, HideOldTargetOp } );
                             }
                         }
+                    }
+                }
+
+                // Check if relationship data was already joined
+                if ( !AreRelationshipAttributesReady )
+                {
+                    // Check if there are any
+                    if ( Relationship.Attributes.Count > 0 )
+                    {
+                        // Fetch them, at this point they must be embedded into the source entity
+                        MapRule RelationshipRuleAtSource = ModelMap.FindRule( Relationship, MainSourceRule.Target );
+                        if ( RelationshipRuleAtSource == null )
+                        {
+                            throw new MissingMappingException( $"Relationship {Relationship.Name} has attributes but they are not mapped to a reachable collection." );
+                        }
+
+                        Dictionary<string, JSCode> RelationshipAttributesToAdd = new Dictionary<string, JSCode>();
+                        List<string> RelationshipFieldsToHide = new List<string>();
+
+                        // Iterate attributes
+                        foreach ( DataAttribute Attribute in Relationship.Attributes )
+                        {
+                            string RuleValue = RelationshipRuleAtSource.GetRuleValueForAttribute( Attribute );
+                            if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                            {
+                                continue;
+                            }
+
+                            RelationshipAttributesToAdd.Add( $"\"data_{Relationship.Name}.{Relationship.Name}_{Attribute.Name}\"", new JSString( $"\"${RuleValue}\"" ) );
+                            RelationshipFieldsToHide.Add( $"\"{RuleValue}\"" );
+                        }
+
+                        // Create add fields operator
+                        AddFieldsOperator AddRelationshipFieldsOp = new AddFieldsOperator( RelationshipAttributesToAdd );
+
+                        // Hide unmapped fields
+                        ProjectOperator HideRelationshipFieldsOp = ProjectOperator.HideAttributesOperator( RelationshipFieldsToHide );
+
+                        // Add to Execution list
+                        OperationsToExecute.AddRange( new MongoDBOperator[] { AddRelationshipFieldsOp, HideRelationshipFieldsOp } );
+
+                        // Add to merge list
+                        AttributesToMergeWithRelatioshipData.Add( $"data_{Relationship.Name}" );
                     }
                 }
 
