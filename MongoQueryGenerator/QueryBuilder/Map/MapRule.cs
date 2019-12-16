@@ -99,7 +99,7 @@ namespace QueryBuilder.Map
             }
             else
             {
-                throw new InvalidOperationException( $"ERElement is not embbeded into another" );
+                return null;
             }
         }
         #endregion

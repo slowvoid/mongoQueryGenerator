@@ -327,55 +327,83 @@ namespace QueryBuilder.Operation
                             Dictionary<string, JSCode> AddedTargetAttributes = new Dictionary<string, JSCode>();
 
                             string RootAttribute = TargetRule.GetRootAttribute();
-                            AttributesToRemove.Add( RootAttribute );
 
-                            if ( IsRootMultivalued )
+                            if ( RootAttribute == null )
                             {
-                                // Use a map expression to rename attributes
-                                // within an add attributes expression
-                                Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
-                                string MapAttributeAs = $"data_{RootAttribute}";
+                                // This is a 1:1 relation with target attributes scattered through source entity
+                                Dictionary<string, JSCode> AddTargetAttributes = new Dictionary<string, JSCode>();
 
                                 foreach ( DataAttribute Attribute in Target.Element.Attributes )
                                 {
                                     string RuleValue = TargetRule.GetRuleValueForAttribute( Attribute );
-
                                     if ( string.IsNullOrWhiteSpace( RuleValue ) )
                                     {
                                         continue;
                                     }
 
-                                    string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+                                    AddTargetAttributes.Add( $"\"data_{Target.GetName()}.{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"${RuleValue}\"" ) );
 
-                                    MapParams.Add( $"\"{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
-                                }
-
-                                MapExpr MapTargetExpr = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
-                                AddedTargetAttributes.Add( $"data_{Target.GetName()}", MapTargetExpr.ToJSCode() );
-                                AttributesToConcatWithRelationshipData.Add( $"data_{Target.GetName()}" );
-                            }
-                            else
-                            {
-                                // Use add attributes
-                                foreach ( DataAttribute Attribute in Target.Element.Attributes )
-                                {
-                                    string RuleValue = TargetRule.GetRuleValueForAttribute( Attribute );
-
-                                    if ( string.IsNullOrWhiteSpace( RuleValue ) )
-                                    {
-                                        continue;
-                                    }
-
-                                    AddedTargetAttributes.Add( $"\"data_{Target.GetName()}.{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"${RuleValue}\"" ) );
+                                    AttributesToRemove.Add( RuleValue );
                                 }
 
                                 AttributesToMergeWithRelatioshipData.Add( $"data_{Target.GetName()}" );
                                 AttributesToRemove.Add( $"data_{Target.GetName()}" );
+
+                                AddFieldsOperator AddTargetFieldsOp = new AddFieldsOperator( AddTargetAttributes );
+                                OperationsToExecute.Add( AddTargetFieldsOp );
                             }
+                            else
+                            {
+                                AttributesToRemove.Add( RootAttribute );
 
-                            AddFieldsOperator AddTargetAttributesOp = new AddFieldsOperator( AddedTargetAttributes );
+                                if ( IsRootMultivalued )
+                                {
+                                    // Use a map expression to rename attributes
+                                    // within an add attributes expression
+                                    Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
+                                    string MapAttributeAs = $"data_{RootAttribute}";
 
-                            OperationsToExecute.Add( AddTargetAttributesOp );
+                                    foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                                    {
+                                        string RuleValue = TargetRule.GetRuleValueForAttribute( Attribute );
+
+                                        if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                        {
+                                            continue;
+                                        }
+
+                                        string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+
+                                        MapParams.Add( $"\"{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
+                                    }
+
+                                    MapExpr MapTargetExpr = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
+                                    AddedTargetAttributes.Add( $"data_{Target.GetName()}", MapTargetExpr.ToJSCode() );
+                                    AttributesToConcatWithRelationshipData.Add( $"data_{Target.GetName()}" );
+                                }
+                                else
+                                {
+                                    // Use add attributes
+                                    foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                                    {
+                                        string RuleValue = TargetRule.GetRuleValueForAttribute( Attribute );
+
+                                        if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                        {
+                                            continue;
+                                        }
+
+                                        AddedTargetAttributes.Add( $"\"data_{Target.GetName()}.{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"${RuleValue}\"" ) );
+                                    }
+
+                                    AttributesToMergeWithRelatioshipData.Add( $"data_{Target.GetName()}" );
+                                    AttributesToRemove.Add( $"data_{Target.GetName()}" );
+                                }
+
+                                AddFieldsOperator AddTargetAttributesOp = new AddFieldsOperator( AddedTargetAttributes );
+
+                                OperationsToExecute.Add( AddTargetAttributesOp );
+                            }
                         }
                         else
                         {
