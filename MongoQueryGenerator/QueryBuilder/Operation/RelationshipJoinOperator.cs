@@ -328,7 +328,11 @@ namespace QueryBuilder.Operation
                             Dictionary<string, JSCode> AddedTargetAttributes = new Dictionary<string, JSCode>();
 
                             string RootAttribute = TargetRule.GetRootAttribute();
-                            string RelationshipRootAttribute = RelationshipRule.GetRootAttribute();
+                            string RelationshipRootAttribute = null;
+                            if ( RelationshipRule != null )
+                            {
+                                RelationshipRootAttribute = RelationshipRule.GetRootAttribute();
+                            }
 
                             if ( RootAttribute == null )
                             {

@@ -340,7 +340,7 @@ namespace QueryBuilder.Tests
             // Check if both results are equal
             Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
         }
-        [TestMethod]
+
         public void OneToOneRelationshipAttributesMultipleRoots()
         {
             // Asserts if the query result for a simple binary join is equal
