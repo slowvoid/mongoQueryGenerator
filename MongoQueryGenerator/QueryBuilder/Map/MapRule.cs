@@ -53,6 +53,55 @@ namespace QueryBuilder.Map
         {
             return Rules.FirstOrDefault( R => R.Key == Attribute.Name ).Value;
         }
+        /// <summary>
+        /// Returns if the source entity is mapped to a multivalued attribute (aka embedded)
+        /// </summary>
+        /// <returns></returns>
+        public bool BelongsToMultivaluedAttribute()
+        {
+            // All attributes in a embedded setting are mapped to the same root
+            // so fetch the first rule and use it
+            string RuleValue = Rules.First().Value;
+
+            string[] AttributeMap = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+
+            if ( AttributeMap.Length > 1 )
+            {
+                if ( AttributeMap[0].Contains("_multivalued_") )
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        /// <summary>
+        /// Returns the name of the root attribute in which data is mapped to
+        /// </summary>
+        /// <returns></returns>
+        public string GetRootAttribute()
+        {
+            // All attributes in a embedded setting are mapped to the same root
+            // so fetch the first rule and use it
+            string RuleValue = Rules.First().Value;
+
+            string[] AttributeMap = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+
+            if ( AttributeMap.Length > 1 )
+            {
+                return AttributeMap[ 0 ];
+            }
+            else
+            {
+                throw new InvalidOperationException( $"ERElement is not embbeded into another" );
+            }
+        }
         #endregion
 
         #region Constructors

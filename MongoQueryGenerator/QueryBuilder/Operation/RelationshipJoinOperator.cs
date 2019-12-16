@@ -293,7 +293,9 @@ namespace QueryBuilder.Operation
                 MapRule RelationshipRule = ModelMap.Rules.FirstOrDefault( R => R.Source == Relationship );
 
                 // Store fields to be merged with root
-                List<string> AttributesToAddUnderRelationshipData = new List<string>();
+                List<string> AttributesToMergeWithRelatioshipData = new List<string>();
+                List<string> AttributesToConcatWithRelationshipData = new List<string>();
+                List<string> AttributesToRemove = new List<string>();
 
                 // Iterate targets
                 foreach ( QueryableEntity Target in TargetEntities )
@@ -310,7 +312,70 @@ namespace QueryBuilder.Operation
                         if ( MainTargetRule == null )
                         {
                             // Target must be embedded to the source entity
-                            // TODO:
+                            // It could be either a 1:1 or 1:N relation, check if the root attribute is multivalued
+                            // Fetch target rule
+                            MapRule TargetRule = ModelMap.FindRule( Target.Element, MainSourceRule.Target );
+
+                            if ( TargetRule == null )
+                            {
+                                throw new MissingMappingException( $"Missing mapping for entity {Target.GetName()}" );
+                            }
+
+                            bool IsRootMultivalued = TargetRule.BelongsToMultivaluedAttribute();
+
+                            // Store fields to be added
+                            Dictionary<string, JSCode> AddedTargetAttributes = new Dictionary<string, JSCode>();
+
+                            string RootAttribute = TargetRule.GetRootAttribute();
+                            AttributesToRemove.Add( RootAttribute );
+
+                            if ( IsRootMultivalued )
+                            {
+                                // Use a map expression to rename attributes
+                                // within an add attributes expression
+                                Dictionary<string, JSCode> MapParams = new Dictionary<string, JSCode>();
+                                string MapAttributeAs = $"data_{RootAttribute}";
+
+                                foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                                {
+                                    string RuleValue = TargetRule.GetRuleValueForAttribute( Attribute );
+
+                                    if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                    {
+                                        continue;
+                                    }
+
+                                    string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+
+                                    MapParams.Add( $"\"{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{string.Join( ".", RulePath.Skip( 1 ) )}\"" ) );
+                                }
+
+                                MapExpr MapTargetExpr = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
+                                AddedTargetAttributes.Add( $"data_{Target.GetName()}", MapTargetExpr.ToJSCode() );
+                                AttributesToConcatWithRelationshipData.Add( $"data_{Target.GetName()}" );
+                            }
+                            else
+                            {
+                                // Use add attributes
+                                foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                                {
+                                    string RuleValue = TargetRule.GetRuleValueForAttribute( Attribute );
+
+                                    if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                    {
+                                        continue;
+                                    }
+
+                                    AddedTargetAttributes.Add( $"\"data_{Target.GetName()}.{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"${RuleValue}\"" ) );
+                                }
+
+                                AttributesToMergeWithRelatioshipData.Add( $"data_{Target.GetName()}" );
+                                AttributesToRemove.Add( $"data_{Target.GetName()}" );
+                            }
+
+                            AddFieldsOperator AddTargetAttributesOp = new AddFieldsOperator( AddedTargetAttributes );
+
+                            OperationsToExecute.Add( AddTargetAttributesOp );
                         }
                         else
                         {
@@ -422,13 +487,33 @@ namespace QueryBuilder.Operation
                                 ProjectOperator HideOldTargetOp = ProjectOperator.HideAttributesOperator( new string[] { TargetAs } );
 
                                 // Add to merge list
-                                AttributesToAddUnderRelationshipData.Add( $"data_{Target.GetName()}" );
+                                AttributesToMergeWithRelatioshipData.Add( $"data_{Target.GetName()}" );
 
                                 // Add operations to list
                                 OperationsToExecute.AddRange( new MongoDBOperator[] { AddRenamedTargetOp, HideOldTargetOp } );
                             }
                         }
                     }
+                }
+
+                // Check if there are any attributes to be merged with relationship data
+                if ( AttributesToMergeWithRelatioshipData.Count > 0 )
+                {
+                    // Include an add fields operator merging them
+                    Dictionary<string, JSCode> AddMergedData = new Dictionary<string, JSCode>();
+                    MergeObjectsOperator MergeFieldsOp = new MergeObjectsOperator( AttributesToMergeWithRelatioshipData );
+                    AddMergedData.Add( $"data_{Relationship.Name}", new JSArray( new List<object> { MergeFieldsOp.ToJSCode() } ) );
+
+                    AddFieldsOperator AddMergedDataOp = new AddFieldsOperator( AddMergedData );
+
+                    OperationsToExecute.Add( AddMergedDataOp );
+                }
+
+                // Check if there are any attributes to remove
+                if ( AttributesToRemove.Count > 0 )
+                {
+                    ProjectOperator HideAttributesOp = ProjectOperator.HideAttributesOperator( AttributesToRemove );
+                    OperationsToExecute.Add( HideAttributesOp );
                 }
             }
 
