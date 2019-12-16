@@ -298,6 +298,7 @@ namespace QueryBuilder.Tests
             Person.AddAttribute( "insuranceId" );
 
             Entity Car = new Entity( "Car" );
+            //Car.AddAttribute( "carId", true );
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
 
@@ -333,7 +334,7 @@ namespace QueryBuilder.Tests
             PersonRule.AddRule( "carId", "carId" );
             PersonRule.AddRule( "insuranceId", "insuranceId" );
 
-            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ) );
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ), false );
             CarRule.AddRule( "name", "car.name" );
             CarRule.AddRule( "year", "car.year" );
 

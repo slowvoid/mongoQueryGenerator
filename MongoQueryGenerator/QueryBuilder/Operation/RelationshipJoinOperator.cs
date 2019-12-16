@@ -426,7 +426,8 @@ namespace QueryBuilder.Operation
                                 // but there are several ways to represent this and we should set up some sort of standard mapping
                                 // for this
 
-                                string TargetAs = $"data_{Target.GetName()}";
+                                string TargetAs = $"data_{Target.GetName()}_join";
+                                string TargetData = $"data_{Target.GetName()}";
 
                                 // Assuming 1:1
                                 LookupOperator TargetLookupOp = new LookupOperator()
@@ -440,10 +441,30 @@ namespace QueryBuilder.Operation
                                 // Unwind joined data
                                 UnwindOperator UnwindTargetOp = new UnwindOperator( TargetAs );
 
-                                // TODO: As a 1:1 we should merge with it relationship attributes
+                                Dictionary<string, JSCode> AddTargetAttributes = new Dictionary<string, JSCode>();
+
+                                // Rename attributes
+                                foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                                {
+                                    string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
+
+                                    if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                    {
+                                        continue;
+                                    }
+
+                                    AddTargetAttributes.Add( $"\"{TargetData}.{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"${TargetAs}.{RuleValue}\"" ) );
+                                }
+
+                                // Add joined data to a proper attribute
+                                AddFieldsOperator AddTargetAtttibutesOp = new AddFieldsOperator( AddTargetAttributes );
+
+                                // As a 1:1 we should merge with it relationship attributes
+                                AttributesToMergeWithRelatioshipData.Add( TargetData );
+                                AttributesToRemove.AddRange( new string[] { TargetData, TargetAs } );
 
                                 // Add to execution list
-                                OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, UnwindTargetOp } );
+                                OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, UnwindTargetOp, AddTargetAtttibutesOp } );
                             }
                             else
                             {

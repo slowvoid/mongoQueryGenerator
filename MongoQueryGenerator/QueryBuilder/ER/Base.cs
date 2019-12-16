@@ -83,7 +83,7 @@ namespace QueryBuilder.ER
         /// <returns></returns>
         public DataAttribute GetIdentifierAttribute()
         {
-            return Attributes.Find( A => A.Name == "id" );
+            return Attributes.Find( A => A.Name == "id" || A.IsIdentifier );
         }
         /// <summary>
         /// Sets the given attribute name the identifier status
