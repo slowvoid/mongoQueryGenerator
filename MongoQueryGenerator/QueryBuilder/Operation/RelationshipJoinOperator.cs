@@ -406,7 +406,9 @@ namespace QueryBuilder.Operation
                                     }
 
                                     MapExpr MapTargetExpr = new MapExpr( RootAttribute, MapAttributeAs, MapParams );
-                                    AddedTargetAttributes.Add( $"data_{Target.GetName()}", MapTargetExpr.ToJSCode() );
+                                    // Using data_RelationshipName because we cant match multiple arrays, if this is a OneToMany relationship
+                                    // we cant combine multiple entities together
+                                    AddedTargetAttributes.Add( $"data_{Relationship.Name}", MapTargetExpr.ToJSCode() );
                                 }
                                 else
                                 {

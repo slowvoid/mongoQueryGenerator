@@ -91,7 +91,7 @@ namespace QueryBuilder.Tests
             MongoDBCollection PersonCollection = new MongoDBCollection( "PersonDrivesCars" );
             PersonCollection.DocumentSchema.AddAttribute( "_id" );
             PersonCollection.DocumentSchema.AddAttribute( "name" );
-            PersonCollection.DocumentSchema.AddAttribute( "cars" );
+            PersonCollection.DocumentSchema.AddAttribute( "cars_multivalued_" );
 
             MongoSchema Schema = new MongoSchema( "PersonCarSchema", new List<MongoDBCollection> { PersonCollection } );
 
@@ -100,9 +100,9 @@ namespace QueryBuilder.Tests
             PersonRule.AddRule( "personId", "_id" );
             PersonRule.AddRule( "name", "name" );
 
-            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "PersonDrivesCars" ) );
-            CarRule.AddRule( "name", "cars.name" );
-            CarRule.AddRule( "year", "cars.year" );
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "PersonDrivesCars" ), false );
+            CarRule.AddRule( "name", "cars_multivalued_.name" );
+            CarRule.AddRule( "year", "cars_multivalued_.year" );
 
             ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule } );
 
