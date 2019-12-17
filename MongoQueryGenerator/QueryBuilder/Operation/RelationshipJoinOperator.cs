@@ -557,8 +557,6 @@ namespace QueryBuilder.Operation
 
                                     if ( RelationshipRuleToTarget != null )
                                     {
-                                        Dictionary<string, JSCode> RelationshipAttributesToAdd = new Dictionary<string, JSCode>();
-
                                         foreach ( DataAttribute Attribute in Relationship.Attributes )
                                         {
                                             string RuleValue = RelationshipRuleToTarget.GetRuleValueForAttribute( Attribute );
@@ -568,16 +566,10 @@ namespace QueryBuilder.Operation
                                                 continue;
                                             }
 
-                                            RelationshipAttributesToAdd.Add( $"\"data_{Relationship.Name}_attributes.{Attribute.Name}\"",
-                                                new JSString( $"\"${TargetAs}.{RuleValue}\"" ) );
+                                            RenamedTargetAttributes.Add( $"\"{Relationship.Name}_{Attribute.Name}\"", new JSString( $"\"$${MapAttributeAs}.{RuleValue}\"" ) );
                                         }
 
-                                        if ( RelationshipAttributesToAdd.Count > 0 )
-                                        {
-                                            AddFieldsOperator AddRelationshipAttributesOp = new AddFieldsOperator( RelationshipAttributesToAdd );
-                                            OperationsToExecute.Add( AddRelationshipAttributesOp );
-                                            AreRelationshipAttributesReady = true;
-                                        }
+                                        AreRelationshipAttributesReady = true;
                                     }
                                 }
 

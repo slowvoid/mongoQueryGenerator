@@ -120,11 +120,11 @@ namespace QueryBuilder.Tests
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
 
             Entity Car = new Entity( "Car" );
-            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carId", true );
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
             Car.AddAttribute( "driverId" );
@@ -161,10 +161,13 @@ namespace QueryBuilder.Tests
             CarRule.AddRule( "year", "year" );
             CarRule.AddRule( "driverId", "driverId" );
 
-            MapRule DrivesRule = new MapRule( Model.FindByName( "Drives" ), Schema.FindByName( "Car" ) );
+            MapRule DrivesRule = new MapRule( Model.FindByName( "Drives" ), Schema.FindByName( "Car" ), false );
             DrivesRule.AddRule( "drivesFor", "drivesFor" );
 
-            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, DrivesRule } );
+            MapRule PersonCarRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "Car" ), false );
+            PersonCarRule.AddRule( "personId", "driverId" );
+
+            ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, DrivesRule, PersonCarRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
