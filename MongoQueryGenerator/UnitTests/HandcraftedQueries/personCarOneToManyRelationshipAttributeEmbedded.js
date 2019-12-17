@@ -4,7 +4,7 @@
             name: true,
             data_Drives: {
                 $map: {
-                    input: '$cars',
+                    input: '$cars_multivalued_',
                     as: 'car_data',
                     in: {
                         Car_name: '$$car_data.name',

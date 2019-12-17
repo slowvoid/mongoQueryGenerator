@@ -180,7 +180,7 @@ namespace QueryBuilder.Tests
         {
             // Create ER Stuff
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
 
             Entity Car = new Entity( "Car" );
@@ -198,7 +198,7 @@ namespace QueryBuilder.Tests
             MongoDBCollection PersonCollection = new MongoDBCollection( "Person" );
             PersonCollection.DocumentSchema.AddAttribute( "_id" );
             PersonCollection.DocumentSchema.AddAttribute( "name" );
-            PersonCollection.DocumentSchema.AddAttribute( "cars" );
+            PersonCollection.DocumentSchema.AddAttribute( "cars_multivalued_" );
 
             MongoSchema Schema = new MongoSchema( "PersonCarSchema", new List<MongoDBCollection> { PersonCollection } );
 
@@ -207,12 +207,12 @@ namespace QueryBuilder.Tests
             PersonRule.AddRule( "personId", "_id" );
             PersonRule.AddRule( "name", "name" );
 
-            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ) );
-            CarRule.AddRule( "name", "cars.name" );
-            CarRule.AddRule( "year", "cars.year" );
+            MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ), false );
+            CarRule.AddRule( "name", "cars_multivalued_.name" );
+            CarRule.AddRule( "year", "cars_multivalued_.year" );
 
-            MapRule RelationshipRule = new MapRule( Model.FindByName( "Drives" ), Schema.FindByName( "Person" ) );
-            RelationshipRule.AddRule( "drivesFor", "cars.drivesFor" );
+            MapRule RelationshipRule = new MapRule( Model.FindByName( "Drives" ), Schema.FindByName( "Person" ), false );
+            RelationshipRule.AddRule( "drivesFor", "cars_multivalued_.drivesFor" );
 
             ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule, CarRule, RelationshipRule } );
 
