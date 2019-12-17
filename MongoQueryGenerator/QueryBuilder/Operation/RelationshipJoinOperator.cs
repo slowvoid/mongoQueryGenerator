@@ -448,7 +448,7 @@ namespace QueryBuilder.Operation
 
                                 if ( TargetRuleAtSource == null )
                                 {
-                                    throw new MissingMappingException( $"Target entity {Target.GetName()} must have a map rule pointing to {MainSourceRule.Target}" );
+                                    throw new MissingMappingException( $"Target entity {Target.GetName()} must have a map rule pointing to {MainSourceRule.Target.Name}" );
                                 }
 
                                 // This could still be a 1:N relation if the target is mapped to an array
@@ -588,8 +588,11 @@ namespace QueryBuilder.Operation
                                 AddFieldsOperator AddRenamedTargetOp = new AddFieldsOperator( AddFieldsDictionary );
                                 ProjectOperator HideOldTargetOp = ProjectOperator.HideAttributesOperator( new string[] { TargetAs } );
 
-                                // Add to merge list
-                                AttributesToMergeWithRelatioshipData.Add( $"data_{Target.GetName()}" );
+                                // Add to concat list
+                                AttributesToConcatWithRelationshipData.Add( $"data_{Target.GetName()}" );
+
+                                // Add to removal list
+                                AttributesToRemove.Add( $"data_{Target.GetName()}" );
 
                                 // Add operations to list
                                 OperationsToExecute.AddRange( new MongoDBOperator[] { AddRenamedTargetOp, HideOldTargetOp } );
@@ -652,6 +655,21 @@ namespace QueryBuilder.Operation
                     AddFieldsOperator AddMergedDataOp = new AddFieldsOperator( AddMergedData );
 
                     OperationsToExecute.Add( AddMergedDataOp );
+                }
+
+                // Check if there are any attributes to concat with relationship data
+                if ( AttributesToConcatWithRelationshipData.Count > 0 )
+                {
+                    // Note that this actually build a weird array of data
+                    // 1:N relationships cannot join multiple entities properly
+                    Dictionary<string, JSCode> ConcatAttributes = new Dictionary<string, JSCode>();
+
+                    ConcatArrayExpr ConcatExpr = new ConcatArrayExpr( AttributesToConcatWithRelationshipData );
+                    ConcatAttributes.Add( $"data_{Relationship.Name}", ConcatExpr.ToJSCode() );
+
+                    AddFieldsOperator ConcatAttributesIntoRelationshipOp = new AddFieldsOperator( ConcatAttributes );
+
+                    OperationsToExecute.Add( ConcatAttributesIntoRelationshipOp );
                 }
 
                 // Check if there are any attributes to remove
