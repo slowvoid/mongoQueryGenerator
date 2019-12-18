@@ -96,16 +96,20 @@ namespace QueryBuilder.Tests
         public static RequiredDataContainer OneToOneComputedEntityMultiple()
         {
             Entity Person = new Entity( "Person" );
-            Person.AddAttributes( "personId", "name", "carId" );
+            Person.AddAttribute( "personId", true );
+            Person.AddAttributes( "name" );
 
             Entity Car = new Entity( "Car" );
-            Car.AddAttributes( "carId", "model", "year" );
+            Car.AddAttribute( "carId", true );
+            Car.AddAttributes( "model", "year" );
 
             Entity Garage = new Entity( "Garage" );
-            Garage.AddAttributes( "garageId", "name" );
+            Garage.AddAttribute( "garageId", true );
+            Garage.AddAttributes( "name" );
 
             Entity Supplier = new Entity( "Supplier" );
-            Supplier.AddAttributes( "supplierId", "name" );
+            Supplier.AddAttribute( "supplierId", true );
+            Supplier.AddAttributes( "name" );
 
             Relationship Drives = new Relationship( "Drives" );
             Drives.AddRelationshipEnd( new RelationshipEnd( Person ) );
@@ -115,7 +119,7 @@ namespace QueryBuilder.Tests
             Repaired.AddRelationshipEnd( new RelationshipEnd( Car ) );
             Repaired.AddRelationshipEnd( new RelationshipEnd( Garage ) );
             Repaired.AddRelationshipEnd( new RelationshipEnd( Supplier ) );
-            Repaired.AddAttributes( "repairedId", "carId", "garageId", "supplierId", "repaired" );
+            Repaired.AddAttributes( "repairedId", "repaired" );
 
             ERModel Model = new ERModel( "ERModel", new List<BaseERElement> { Person, Car, Garage, Drives, Repaired, Supplier } );
 
@@ -141,7 +145,6 @@ namespace QueryBuilder.Tests
             MapRule PersonRule = new MapRule( Person, PersonCol );
             PersonRule.AddRule( "personId", "_id" );
             PersonRule.AddRule( "name", "name" );
-            PersonRule.AddRule( "carId", "carId" );
 
             MapRule CarRule = new MapRule( Car, CarCol );
             CarRule.AddRule( "carId", "_id" );
@@ -158,12 +161,21 @@ namespace QueryBuilder.Tests
 
             MapRule RepairedRule = new MapRule( Repaired, RepairedCol );
             RepairedRule.AddRule( "repairedId", "_id" );
-            RepairedRule.AddRule( "carId", "carId" );
-            RepairedRule.AddRule( "garageId", "garageId" );
-            RepairedRule.AddRule( "supplierId", "supplierId" );
             RepairedRule.AddRule( "repaired", "repaired" );
 
-            ModelMapping Map = new ModelMapping( "Map", new List<MapRule> { PersonRule, CarRule, GarageRule, RepairedRule, SupplierRule } );
+            MapRule CarPersonRule = new MapRule( Car, PersonCol, false );
+            CarPersonRule.AddRule( "carId", "carId" );
+
+            MapRule CarRepairedRule = new MapRule( Car, RepairedCol, false );
+            CarRepairedRule.AddRule( "carId", "carId" );
+
+            MapRule GarageRepairedRule = new MapRule( Garage, RepairedCol, false );
+            GarageRepairedRule.AddRule( "garageId", "garageId" );
+
+            MapRule SupplierRepairedRule = new MapRule( Supplier, RepairedCol, false );
+            SupplierRepairedRule.AddRule( "supplierId", "supplierId" );
+
+            ModelMapping Map = new ModelMapping( "Map", new List<MapRule> { PersonRule, CarRule, GarageRule, RepairedRule, SupplierRule, CarPersonRule, CarRepairedRule, GarageRepairedRule, SupplierRepairedRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
