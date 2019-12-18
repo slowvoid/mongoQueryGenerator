@@ -303,7 +303,68 @@ namespace QueryBuilder.Operation
                 {
                     if ( Target.Element is ComputedEntity )
                     {
-                        // TODO:
+                        ComputedEntity TargetComputedEntity = Target.GetComputedEntity();
+
+                        // As this is a computed entity, the ce source entity cannot be embedded
+                        MapRule MainTargetRule = ModelMap.FindMainRule( TargetComputedEntity.SourceEntity.Element );
+
+                        if ( MainTargetRule == null )
+                        {
+                            throw new MissingMappingException( $"Entity {TargetComputedEntity.SourceEntity.GetName()} must have a main mapping to be the source entity of a computed entity" );
+                        }
+
+                        // This could be a 1:1 or 1:N find
+
+                        // Check for 1:N first
+                        MapRule SourceRuleAtTarget = ModelMap.FindRule( SourceEntity.Element, MainTargetRule.Target );
+
+                        DataAttribute TargetIdentifier = TargetComputedEntity.SourceEntity.Element.GetIdentifierAttribute();
+
+                        if ( SourceRuleAtTarget == null )
+                        {
+                            // It should be a 1:1 relation
+                            MapRule TargetRuleAtSource = ModelMap.FindRule( TargetComputedEntity.SourceEntity.Element, MainSourceRule.Target );
+
+                            if ( TargetRuleAtSource == null )
+                            {
+                                throw new MissingMappingException( $"No suitable mapping found for {TargetComputedEntity.SourceEntity.GetName()}" );
+                            }
+
+                            // As this is a computed entity we need a custom pipeline to properly continue the operation
+                            List<MongoDBOperator> CELookupPipeline = new List<MongoDBOperator>();
+
+                            // Setup pipeline variables
+                            Dictionary<string, string> CELookupVariables = new Dictionary<string, string>();
+                            string VariableMatchValue = TargetRuleAtSource.GetRuleValueForAttribute( TargetIdentifier );
+                            string VariableMatchKey = $"source_{TargetIdentifier.Name}";
+                            CELookupVariables.Add( VariableMatchKey, $"${VariableMatchValue}" );
+
+                            // Create a match operator for the target entity (actually the target ce source entity)
+                            MatchOperator MatchTargetOp = MatchOperator.CreateLookupMatch( MainTargetRule.GetRuleValueForAttribute( TargetIdentifier ), VariableMatchKey );
+                            // Add to pipeline
+                            CELookupPipeline.Add( MatchTargetOp );
+
+                            LookupOperator TargetLookupOp = new LookupOperator()
+                            {
+                                From = MainTargetRule.Target.Name,
+                                Let = CELookupVariables,
+                                Pipeline = CELookupPipeline,
+                                As = $"data_{TargetComputedEntity.SourceEntity.GetName()}"
+                            };
+
+                            UnwindOperator UnwindCELookup = new UnwindOperator( TargetLookupOp.As );
+
+                            // TODO: fetch relationship attributes (if any)
+
+                            // Process ce targets
+                            List<MongoDBOperator> CEOperators = ProcessComputedEntity( TargetComputedEntity );
+                            
+                            CELookupPipeline.AddRange( CEOperators );
+                            OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, UnwindCELookup } );
+
+                            AttributesToMergeWithRelatioshipData.Add( TargetLookupOp.As );
+                            AttributesToRemove.Add( TargetLookupOp.As );
+                        }
                     }
                     else
                     {
