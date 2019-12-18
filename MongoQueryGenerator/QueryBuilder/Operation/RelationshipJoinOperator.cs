@@ -318,10 +318,9 @@ namespace QueryBuilder.Operation
                         // Check for 1:N first
                         MapRule SourceRuleAtTarget = ModelMap.FindRule( SourceEntity.Element, MainTargetRule.Target );
 
-                        DataAttribute TargetIdentifier = TargetComputedEntity.SourceEntity.Element.GetIdentifierAttribute();
-
                         if ( SourceRuleAtTarget == null )
                         {
+                            DataAttribute TargetIdentifier = TargetComputedEntity.SourceEntity.Element.GetIdentifierAttribute();
                             // It should be a 1:1 relation
                             MapRule TargetRuleAtSource = ModelMap.FindRule( TargetComputedEntity.SourceEntity.Element, MainSourceRule.Target );
 
@@ -363,6 +362,67 @@ namespace QueryBuilder.Operation
                             OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, UnwindCELookup } );
 
                             AttributesToMergeWithRelatioshipData.Add( TargetLookupOp.As );
+                            AttributesToRemove.Add( TargetLookupOp.As );
+                        }
+                        else
+                        {
+                            DataAttribute SourceIdentifier = SourceEntity.Element.GetIdentifierAttribute();
+                            // This is a 1:N
+                            // As this is a computed entity we need a custom pipeline to properly continue the operation
+                            List<MongoDBOperator> CELookupPipeline = new List<MongoDBOperator>();
+
+                            // Setup pipeline variables
+                            Dictionary<string, string> CELookupVariables = new Dictionary<string, string>();
+                            string VariableMatchValue = MainSourceRule.GetRuleValueForAttribute( SourceIdentifier );
+                            string VariableMatchKey = $"source_{SourceIdentifier.Name}";
+                            CELookupVariables.Add( VariableMatchKey, $"${VariableMatchValue}" );
+
+                            // Create a match operator for the target entity (actually the target ce source entity)
+                            MatchOperator MatchTargetOp = MatchOperator.CreateLookupMatch( SourceRuleAtTarget.GetRuleValueForAttribute( SourceIdentifier ), VariableMatchKey );
+                            // Add to pipeline
+                            CELookupPipeline.Add( MatchTargetOp );
+
+                            LookupOperator TargetLookupOp = new LookupOperator()
+                            {
+                                From = MainTargetRule.Target.Name,
+                                Let = CELookupVariables,
+                                Pipeline = CELookupPipeline,
+                                As = $"data_{TargetComputedEntity.SourceEntity.GetName()}"
+                            };
+
+                            UnwindOperator UnwindCELookup = new UnwindOperator( TargetLookupOp.As );
+
+                            // TODO: fetch relationship attributes (if any)
+
+
+                            // Hide source attributes mapped to target
+                            // And inject it to incoming CEOperators
+                            List<string> HideSourceAttributesAtTarget = new List<string>();
+                            
+                            foreach ( KeyValuePair<string,string> AttributeRule in SourceRuleAtTarget.Rules )
+                            {
+                                HideSourceAttributesAtTarget.Add( AttributeRule.Value );
+                            }
+
+                            ProjectOperator HideSourceAttributesAtTargetOp = ProjectOperator.HideAttributesOperator( HideSourceAttributesAtTarget );
+
+                            // Process ce targets
+                            List<MongoDBOperator> CEOperators = ProcessComputedEntity( TargetComputedEntity );
+
+                            CEOperators.Add( HideSourceAttributesAtTargetOp );
+
+                            CELookupPipeline.AddRange( CEOperators );
+                            OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp } );
+
+                            // Computed entities are a complex matter, mixing them up with relationships with cardinality such as 1:1 and 1:N require
+                            // some special rules
+                            // Set data_RelationshipName now, if trying to join multiple computed entities at the same time, only the last one will appear
+                            Dictionary<string, JSCode> FinalAttributes = new Dictionary<string, JSCode>();
+                            FinalAttributes.Add( $"data_{Relationship.Name}", new JSString( $"\"${TargetLookupOp.As}\"" ) );
+
+                            AddFieldsOperator FinalCEAttributesOp = new AddFieldsOperator( FinalAttributes );
+                            OperationsToExecute.Add( FinalCEAttributesOp );
+
                             AttributesToRemove.Add( TargetLookupOp.As );
                         }
                     }

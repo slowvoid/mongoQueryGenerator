@@ -46,9 +46,6 @@
                                     Garage_garageId: '$data_Garage._id',
                                     Garage_name: '$data_Garage.name',
                                     Repaired_repairedId: '$_id',
-                                    Repaired_carId: '$carId',
-                                    Repaired_garageId: '$garageId',
-                                    Repaired_supplierId: '$supplierId',
                                     Repaired_repaired: '$repaired'
                                 }
                             },
@@ -58,7 +55,6 @@
                                     carId: false,
                                     garageId: false,
                                     repaired: false,
-                                    supplierId: false,
                                     data_Garage: false
                                 }
                             }
@@ -70,8 +66,7 @@
                     $addFields: {
                         Car_carId: '$_id',
                         Car_model: '$model',
-                        Car_year: '$year',
-                        Car_driverId: '$driverId'
+                        Car_year: '$year'
                     }
                 },
                 {
