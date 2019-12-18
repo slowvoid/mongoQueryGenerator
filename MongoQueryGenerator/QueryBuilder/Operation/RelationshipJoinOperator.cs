@@ -768,7 +768,14 @@ namespace QueryBuilder.Operation
                     continue;
                 }
 
-                RenamedAttributes.Add( $"{TargetSourceEntity.Name}_{Attribute.Name}", new JSString( $"\"${RuleValue}\"" ) );
+                string AttributeKey = $"{TargetSourceEntity.Name}_{Attribute.Name}";
+                // Check if key is already present
+                if ( RenamedAttributes.ContainsKey( AttributeKey ) )
+                {
+                    continue;
+                }
+
+                RenamedAttributes.Add( AttributeKey, new JSString( $"\"${RuleValue}\"" ) );
                 AttributesToRemove.Add( RuleValue );
             }
 
