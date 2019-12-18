@@ -36,18 +36,14 @@
                 },
                 {
                     $addFields: {
-                        Insurance_insuranceId: '$_id',
-                        Insurance_personId: '$personId',
-                        Insurance_carId: '$carId',
-                        Insurance_companyId: '$companyId'
+                        Insurance_insuranceId: '$_id'
                     }
                 },
                 {
                     $project: {
                         _id: false,
                         personId: false,
-                        carId: false,
-                        companyId: false
+                        carId: false
                     }
                 }
             ],

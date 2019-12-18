@@ -22,19 +22,16 @@ namespace QueryBuilder.Tests
         {
             // ER Model
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
 
             Entity Car = new Entity( "Car" );
-            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carId", true );
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
 
             Relationship Insurance = new Relationship( "Insurance" );
             Insurance.AddAttribute( "insuranceId" );
-            Insurance.AddAttribute( "personId" );
-            Insurance.AddAttribute( "carId" );
-            Insurance.AddAttribute( "companyId" );
             Insurance.AddRelationshipEnd( new RelationshipEnd( Person ) );
             Insurance.AddRelationshipEnd( new RelationshipEnd( Car ) );
 
@@ -52,9 +49,6 @@ namespace QueryBuilder.Tests
 
             MongoDBCollection InsuranceCol = new MongoDBCollection( "Insurance" );
             InsuranceCol.DocumentSchema.AddAttribute( "_id" );
-            InsuranceCol.DocumentSchema.AddAttribute( "personId" );
-            InsuranceCol.DocumentSchema.AddAttribute( "carId" );
-            InsuranceCol.DocumentSchema.AddAttribute( "companyId" );
 
             MongoSchema DBSchema = new MongoSchema( "PersonCarSchema",
                 new List<MongoDBCollection> { PersonCol, CarCol, InsuranceCol } );
@@ -71,12 +65,15 @@ namespace QueryBuilder.Tests
 
             MapRule InsuranceRule = new MapRule( Insurance, InsuranceCol );
             InsuranceRule.AddRule( "insuranceId", "_id" );
-            InsuranceRule.AddRule( "personId", "personId" );
-            InsuranceRule.AddRule( "carId", "carId" );
-            InsuranceRule.AddRule( "companyId", "companyId" );
+
+            MapRule PersonInsuranceRule = new MapRule( Person, InsuranceCol, false );
+            PersonInsuranceRule.AddRule( "personId", "personId" );
+
+            MapRule CarInsuranceRule = new MapRule( Car, InsuranceCol, false );
+            CarInsuranceRule.AddRule( "carId", "carId" );
 
             ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule,
-                CarRule, InsuranceRule} );
+                CarRule, InsuranceRule, PersonInsuranceRule, CarInsuranceRule } );
 
             return new RequiredDataContainer( Model, DBSchema, Map );
         }
