@@ -57,9 +57,6 @@
                 {
                     $addFields: {
                         Insurance_insuranceId: '$_id',
-                        Insurance_personId: '$personId',
-                        Insurance_carId: '$carId',
-                        Insurance_companyId: '$companyId',
                         Insurance_insuranceValue: '$insuranceValue',
                         Insurance_aRandomValue: '$aRandomValue'
                     }

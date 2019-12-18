@@ -167,19 +167,16 @@ namespace QueryBuilder.Tests
         {
             // ER Model
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
 
             Entity Car = new Entity( "Car" );
-            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carId", true );
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
 
             Relationship Insurance = new Relationship( "Insurance" );
             Insurance.AddAttribute( "insuranceId" );
-            Insurance.AddAttribute( "personId" );
-            Insurance.AddAttribute( "carId" );
-            Insurance.AddAttribute( "companyId" );
             Insurance.AddAttribute( "insuranceValue" );
             Insurance.AddAttribute( "aRandomValue" );
 
@@ -221,14 +218,17 @@ namespace QueryBuilder.Tests
 
             MapRule InsuranceRule = new MapRule( Insurance, InsuranceCol );
             InsuranceRule.AddRule( "insuranceId", "_id" );
-            InsuranceRule.AddRule( "personId", "personId" );
-            InsuranceRule.AddRule( "carId", "carId" );
-            InsuranceRule.AddRule( "companyId", "companyId" );
             InsuranceRule.AddRule( "insuranceValue", "insuranceValue" );
             InsuranceRule.AddRule( "aRandomValue", "aRandomValue" );
 
+            MapRule PersonInsuranceRule = new MapRule( Person, InsuranceCol, false );
+            PersonInsuranceRule.AddRule( "personId", "personId" );
+
+            MapRule CarInsuranceRule = new MapRule( Car, InsuranceCol, false );
+            CarInsuranceRule.AddRule( "carId", "carId" );
+
             ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule,
-                CarRule, InsuranceRule} );
+                CarRule, InsuranceRule, PersonInsuranceRule, CarInsuranceRule } );
 
             return new RequiredDataContainer( Model, DBSchema, Map );
         }
@@ -240,23 +240,20 @@ namespace QueryBuilder.Tests
         public static RequiredDataContainer ManyToManyRelationshipAttributeMultipleEntities()
         {
             Entity Person = new Entity( "Person" );
-            Person.AddAttribute( "personId" );
+            Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
 
             Entity Car = new Entity( "Car" );
-            Car.AddAttribute( "carId" );
+            Car.AddAttribute( "carId", true );
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
 
             Entity InsCompany = new Entity( "InsCompany" );
-            InsCompany.AddAttribute( "companyId" );
+            InsCompany.AddAttribute( "companyId", true );
             InsCompany.AddAttribute( "name" );
 
             Relationship Insurance = new Relationship( "Insurance" );
             Insurance.AddAttribute( "insuranceId" );
-            Insurance.AddAttribute( "personId" );
-            Insurance.AddAttribute( "carId" );
-            Insurance.AddAttribute( "companyId" );
             Insurance.AddAttribute( "insuranceValue" );
             Insurance.AddAttribute( "aRandomValue" );
             Insurance.AddRelationshipEnd( new RelationshipEnd( Person ) );
@@ -302,9 +299,6 @@ namespace QueryBuilder.Tests
 
             MapRule InsuranceRule = new MapRule( Insurance, InsuranceCol );
             InsuranceRule.AddRule( "insuranceId", "_id" );
-            InsuranceRule.AddRule( "personId", "personId" );
-            InsuranceRule.AddRule( "carId", "carId" );
-            InsuranceRule.AddRule( "companyId", "companyId" );
             InsuranceRule.AddRule( "insuranceValue", "insuranceValue" );
             InsuranceRule.AddRule( "aRandomValue", "aRandomValue" );
 
@@ -312,8 +306,17 @@ namespace QueryBuilder.Tests
             InsCompanyRule.AddRule( "companyId", "_id" );
             InsCompanyRule.AddRule( "name", "name" );
 
+            MapRule PersonInsuranceRule = new MapRule( Person, InsuranceCol, false );
+            PersonInsuranceRule.AddRule( "personId", "personId" );
+
+            MapRule CarInsuranceRule = new MapRule( Car, InsuranceCol, false );
+            CarInsuranceRule.AddRule( "carId", "carId" );
+
+            MapRule InsCompanyInsuranceRule = new MapRule( InsCompany, InsuranceCol, false );
+            InsCompanyInsuranceRule.AddRule( "companyId", "companyId" );
+
             ModelMapping Map = new ModelMapping( "PersonCarMap", new List<MapRule> { PersonRule,
-                CarRule, InsuranceRule, InsCompanyRule } );
+                CarRule, InsuranceRule, InsCompanyRule, PersonInsuranceRule, CarInsuranceRule, InsCompanyInsuranceRule } );
 
             return new RequiredDataContainer( Model, DBSchema, Map );
         }
