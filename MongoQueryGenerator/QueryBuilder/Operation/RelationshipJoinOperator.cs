@@ -871,7 +871,74 @@ namespace QueryBuilder.Operation
         /// <returns></returns>
         public override VirtualMap ComputeVirtualMap( VirtualMap ExistingVirtualMap = null )
         {
-            throw new NotImplementedException();
+            // The virtal map represents the output document after this operator is executed
+            // To generate it we basically need to iterate over all targetted entities
+            // but without the need to dive deep into how the operation is executed.
+            List<VirtualRule> OperatorRules = new List<VirtualRule>();
+            // Only the first entity requires to fetch data from ModelMap
+            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.Element.Name );
+            // The source entity is not renamed, so we add it as is.
+            VirtualRule SourceVirtualRule = new VirtualRule( SourceEntity.Element, SourceEntity.Alias );
+            foreach ( DataAttribute Attribute in SourceEntity.Element.Attributes )
+            {
+                // We only need the ModelMap for the origin entity
+                // all other entities are renamed and bound to this one (through relationships)
+                string AttributeRuleValue = SourceRule.Rules.First( Rule => Rule.Key == Attribute.Name ).Value;
+
+                SourceVirtualRule.AddRule( Attribute.Name, AttributeRuleValue );
+            }
+
+            // Add to rule list
+            OperatorRules.Add( SourceVirtualRule );
+
+            // Map relationship attributes
+            // Attributes here are accesible through 'data_Relationship.Entity_Attribute'
+            // Dot notation is mandatory as MongoDB accepts it as path to an attribute
+            string RootAttribute = $"data_{Relationship.Name}";
+
+            VirtualRule RelationshipVirtualRule = new VirtualRule( Relationship );
+            // Process relationship attributes
+            foreach ( DataAttribute Attribute in Relationship.Attributes )
+            {
+                RelationshipVirtualRule.AddRule( Attribute.Name, $"{RootAttribute}.{Relationship.Name}_{Attribute.Name}" );
+            }
+
+            // Add to list
+            OperatorRules.Add( RelationshipVirtualRule );
+
+            // Iterate each target entity
+            foreach ( QueryableEntity Target in TargetEntities )
+            {
+                // Check if the target entity is computed
+                if ( Target.Element is ComputedEntity TargetAsCE )
+                {
+                    OperatorRules.AddRange( ComputeCEVirtualMap( RootAttribute, TargetAsCE ) );
+                }
+                else
+                {
+                    // Create rule
+                    VirtualRule VirtualEntityRule = new VirtualRule( Target.Element, Target.Alias );
+                    // Parse attributes
+                    foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                    {
+                        VirtualEntityRule.AddRule( Attribute.Name, $"{RootAttribute}.{Target.Element.Name}_{Attribute.Name}" );
+                    }
+
+                    // Add to list
+                    OperatorRules.Add( VirtualEntityRule );
+                }
+            }
+
+            // If ExistingVirtualMap is not null
+            // Append data
+            if ( ExistingVirtualMap != null )
+            {
+                OperatorRules.AddRange( ExistingVirtualMap.Rules );
+            }
+
+            // When done
+            VirtualMap OperatorMap = new VirtualMap( OperatorRules );
+            return OperatorMap;
         }
         /// <summary>
         /// Compute the virtual map of a ComputedEntity
