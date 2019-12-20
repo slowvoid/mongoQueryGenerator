@@ -423,16 +423,16 @@ namespace QueryBuilder.Tests
 
             Entity Insurance = new Entity( "Insurance" );
             Insurance.AddAttributes( "insuranceId", "name", "value" );
-            Insurance.AddAttribute( "insuranceId" );
+            Insurance.SetIdentifier( "insuranceId" );
 
             Relationship Owns = new Relationship( "Owns" );
             Owns.AddRelationshipEnd( new RelationshipEnd( Person ) );
             Owns.AddRelationshipEnd( new RelationshipEnd( Car ) );
             Owns.AddRelationshipEnd( new RelationshipEnd( Insurance ) );
-            Owns.AddAttributes( "ownsId", "personId", "carId", "insuranceId" );
+            Owns.AddAttributes( "ownsId" );
 
             Relationship Repaired = new Relationship( "Repaired" );
-            Repaired.AddAttributes( "repairedId", "carId", "garageId", "supplierId", "repaired" );
+            Repaired.AddAttributes( "repairedId", "repaired" );
             Repaired.AddRelationshipEnd( new RelationshipEnd( Car ) );
             Repaired.AddRelationshipEnd( new RelationshipEnd( Garage ) );
             Repaired.AddRelationshipEnd( new RelationshipEnd( Supplier ) ); ;
@@ -483,9 +483,6 @@ namespace QueryBuilder.Tests
 
             MapRule RepairedRule = new MapRule( Repaired, RepairedCol );
             RepairedRule.AddRule( "repairedId", "_id" );
-            RepairedRule.AddRule( "carId", "carId" );
-            RepairedRule.AddRule( "garageId", "garageId" );
-            RepairedRule.AddRule( "supplierId", "supplierId" );
             RepairedRule.AddRule( "repaired", "repaired" );
 
             MapRule InsuranceRule = new MapRule( Insurance, InsuranceCol );
@@ -495,11 +492,26 @@ namespace QueryBuilder.Tests
 
             MapRule OwnsRule = new MapRule( Owns, OwnsCol );
             OwnsRule.AddRule( "ownsId", "_id" );
-            OwnsRule.AddRule( "personId", "personId" );
-            OwnsRule.AddRule( "carId", "carId" );
-            OwnsRule.AddRule( "insuranceId", "insuranceId" );
 
-            ModelMapping Map = new ModelMapping( "Map", new List<MapRule> { PersonRule, CarRule, GarageRule, RepairedRule, SupplierRule, InsuranceRule, OwnsRule } );
+            MapRule PersonOwnsRule = new MapRule( Person, OwnsCol, false );
+            PersonOwnsRule.AddRule( "personId", "personId" );
+
+            MapRule CarOwnsRule = new MapRule( Car, OwnsCol, false );
+            CarOwnsRule.AddRule( "carId", "carId" );
+
+            MapRule InsuranceOwnsRule = new MapRule( Insurance, OwnsCol, false );
+            InsuranceOwnsRule.AddRule( "insuranceId", "insuranceId" );
+
+            MapRule CarRepairedRule = new MapRule( Car, RepairedCol, false );
+            CarRepairedRule.AddRule( "carId", "carId" );
+
+            MapRule GarageRepairedRule = new MapRule( Garage, RepairedCol, false );
+            GarageRepairedRule.AddRule( "garageId", "garageId" );
+
+            MapRule SupplierRepairedRule = new MapRule( Supplier, RepairedCol, false );
+            SupplierRepairedRule.AddRule( "supplierId", "supplierId" );
+
+            ModelMapping Map = new ModelMapping( "Map", new List<MapRule> { PersonRule, CarRule, GarageRule, RepairedRule, SupplierRule, InsuranceRule, OwnsRule, PersonOwnsRule, CarOwnsRule, InsuranceOwnsRule, CarRepairedRule, GarageRepairedRule, SupplierRepairedRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
         }

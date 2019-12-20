@@ -62,9 +62,6 @@
                                         {
                                             $addFields: {
                                                 Repaired_repairedId: '$_id',
-                                                Repaired_carId: '$carId',
-                                                Repaired_garageId: '$garageId',
-                                                Repaired_supplierId: '$supplierId',
                                                 Repaired_repaired: '$repaired',
                                                 Garage_garageId: '$data_Garage._id',
                                                 Garage_name: '$data_Garage.name',
@@ -104,9 +101,6 @@
                 {
                     $addFields: {
                         Owns_ownsId: '$_id',
-                        Owns_personId: '$personId',
-                        Owns_carId: '$carId',
-                        Owns_insuranceId: '$insuranceId',
                         Car_carId: '$data_Car._id',
                         Car_model: '$data_Car.model',
                         Car_year: '$data_Car.year',

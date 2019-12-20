@@ -113,11 +113,8 @@ namespace QueryBuilder.Operation
                     // Create Operator
                     AddFieldsOperator AddRelationshipFieldsOp = new AddFieldsOperator( RelationshipAttributesToAdd );
 
-                    // Also hide original fields
-                    ProjectOperator HideRelationshipAttributes = ProjectOperator.HideAttributesOperator( RelationshipAttributesToHide );
-
                     // Add to pipeline
-                    PipelineOperators.AddRange( new MongoDBOperator[] { AddRelationshipFieldsOp, HideRelationshipAttributes } );
+                    PipelineOperators.Add( AddRelationshipFieldsOp );
                 }
 
                 // Store attributes to match with root
@@ -188,17 +185,11 @@ namespace QueryBuilder.Operation
                         PipelineOperators.AddRange( new MongoDBOperator[] { LookupCEOp, UnwindCEOp } );
 
                         // Try to hide attributes that are related to the relationship (usually entity identifiers)
-                        List<string> InnerRelationshipAttributesToHide = new List<string>();
+                        // Add them to removal list
 
                         foreach ( DataAttribute Attribute in MainRelationshipRule.Target.DocumentSchema.Attributes )
                         {
-                            InnerRelationshipAttributesToHide.Add( Attribute.Name );
-                        }
-
-                        if ( InnerRelationshipAttributesToHide.Count > 0 )
-                        {
-                            ProjectOperator HideInnerRelationshipAttributesOp = ProjectOperator.HideAttributesOperator( InnerRelationshipAttributesToHide );
-                            PipelineOperators.Add( HideInnerRelationshipAttributesOp );
+                            RelationshipAttributesToHide.Add( Attribute.Name );
                         }
 
                         FieldsToMergeWithRoot.Add( CELookupAs );
@@ -286,6 +277,15 @@ namespace QueryBuilder.Operation
                     // Hide merged
                     ProjectOperator HideMergedOp = ProjectOperator.HideAttributesOperator( FieldsToMergeWithRoot.Where( F => F != "$$ROOT" ) );
                     PipelineOperators.Add( HideMergedOp );
+                }
+
+                // Hide relationship attributes last
+                if ( RelationshipAttributesToAdd.Count > 0 )
+                {
+                    // hide original fields
+                    ProjectOperator HideRelationshipAttributesOp = ProjectOperator.HideAttributesOperator( RelationshipAttributesToHide );
+
+                    PipelineOperators.Add( HideRelationshipAttributesOp );
                 }
 
                 // Build Lookup Operator
