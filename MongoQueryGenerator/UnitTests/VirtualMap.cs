@@ -38,7 +38,7 @@ namespace QueryBuilder.Tests
                 "data_HasPet.Pet_petId",
                 "data_HasPet.Pet_name",
                 "data_HasPet.Pet_type",
-                "data_HasPet.Pet_ownerId"
+                //"data_HasPet.Pet_ownerId"
             };
 
             Assert.IsTrue( !VirtualMapRules.Except( RulesToMatch ).Any() && !RulesToMatch.Except( VirtualMapRules ).Any() );
@@ -101,7 +101,7 @@ namespace QueryBuilder.Tests
             List<ProjectArgument> ProjectArguments = new List<ProjectArgument>();
             ProjectArguments.Add( new ProjectArgument( Person.GetAttribute( "name" ), Person, new BooleanExpr( false ) ) );
             ProjectArguments.Add( new ProjectArgument( Pet.GetAttribute( "type" ), Pet, new BooleanExpr( true ) ) );
-            ProjectArguments.Add( new ProjectArgument( Pet.GetAttribute( "ownerId" ), Pet, new BooleanExpr( true ) ) );
+            //ProjectArguments.Add( new ProjectArgument( Pet.GetAttribute( "ownerId" ), Pet, new BooleanExpr( true ) ) );
 
             ProjectStage ProjectOp = new ProjectStage( ProjectArguments, RJoinVMap );
 
@@ -113,7 +113,7 @@ namespace QueryBuilder.Tests
             List<string> RulesToMatch = new List<string>()
             {
                 "data_HasPet.Pet_type",
-                "data_HasPet.Pet_ownerId"
+                //"data_HasPet.Pet_ownerId"
             };
 
             Assert.IsTrue( !VirtualMapRules.Except( RulesToMatch ).Any() && !RulesToMatch.Except( VirtualMapRules ).Any(), "Virtual maps do not match" );
@@ -141,7 +141,7 @@ namespace QueryBuilder.Tests
                 "data_Pet._id",
                 "data_Pet.name",
                 "data_Pet.type",
-                "data_Pet.ownerId",
+                //"data_Pet.ownerId",
             };
 
             Assert.IsTrue( !VirtualMapRules.Except( RulesToMatch ).Any() && !RulesToMatch.Except( VirtualMapRules ).Any(), "Virtual maps do not match" );

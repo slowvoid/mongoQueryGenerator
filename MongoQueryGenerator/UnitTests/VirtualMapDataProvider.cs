@@ -16,9 +16,11 @@ namespace QueryBuilder.Tests
             // ER Stuff
             Entity Person = new Entity( "Person" );
             Person.AddAttributes( "personId", "name", "age" );
+            Person.SetIdentifier( "personId" );
 
             Entity Pet = new Entity( "Pet" );
-            Pet.AddAttributes( "petId", "name", "type", "ownerId" );
+            Pet.AddAttributes( "petId", "name", "type" );
+            Pet.SetIdentifier( "petId" );
 
             Relationship HasPet = new Relationship( "HasPet" );
             HasPet.AddRelationshipEnd( new RelationshipEnd( Person ) );
@@ -43,9 +45,11 @@ namespace QueryBuilder.Tests
             PetRules.AddRule( "petId", "_id" );
             PetRules.AddRule( "name", "name" );
             PetRules.AddRule( "type", "type" );
-            PetRules.AddRule( "ownerId", "ownerId" );
 
-            ModelMapping Map = new ModelMapping( "Map", new List<MapRule>() { PersonRules, PetRules } );
+            MapRule PersonPetRule = new MapRule( Person, PetCol, false );
+            PersonPetRule.AddRule( "personId", "ownerId" );
+
+            ModelMapping Map = new ModelMapping( "Map", new List<MapRule>() { PersonRules, PetRules, PersonPetRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
