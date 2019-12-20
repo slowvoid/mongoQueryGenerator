@@ -90,6 +90,36 @@ namespace QueryBuilder.Operation
 
                 PipelineOperators.Add( MatchSourceOp );
 
+                Dictionary<string, JSCode> RelationshipAttributesToAdd = new Dictionary<string, JSCode>();
+                List<string> RelationshipAttributesToHide = new List<string>();
+
+                // Process Relationship attributes (if any)
+                foreach ( DataAttribute Attribute in Relationship.Attributes )
+                {
+                    string RuleValue = MainRelationshipRule.GetRuleValueForAttribute( Attribute );
+
+                    if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                    {
+                        continue;
+                    }
+
+                    RelationshipAttributesToAdd.Add( $"{Relationship.Name}_{Attribute.Name}", new JSString( $"\"${RuleValue}\"" ) );
+                    // Add original attribute to hide list
+                    RelationshipAttributesToHide.Add( RuleValue );
+                }
+
+                if ( RelationshipAttributesToAdd.Count > 0 )
+                {
+                    // Create Operator
+                    AddFieldsOperator AddRelationshipFieldsOp = new AddFieldsOperator( RelationshipAttributesToAdd );
+
+                    // Also hide original fields
+                    ProjectOperator HideRelationshipAttributes = ProjectOperator.HideAttributesOperator( RelationshipAttributesToHide );
+
+                    // Add to pipeline
+                    PipelineOperators.AddRange( new MongoDBOperator[] { AddRelationshipFieldsOp, HideRelationshipAttributes } );
+                }
+
                 // Store attributes to match with root
                 List<string> FieldsToMergeWithRoot = new List<string>();
 
@@ -156,6 +186,20 @@ namespace QueryBuilder.Operation
                         UnwindOperator UnwindCEOp = new UnwindOperator( CELookupAs );
 
                         PipelineOperators.AddRange( new MongoDBOperator[] { LookupCEOp, UnwindCEOp } );
+
+                        // Try to hide attributes that are related to the relationship (usually entity identifiers)
+                        List<string> InnerRelationshipAttributesToHide = new List<string>();
+
+                        foreach ( DataAttribute Attribute in MainRelationshipRule.Target.DocumentSchema.Attributes )
+                        {
+                            InnerRelationshipAttributesToHide.Add( Attribute.Name );
+                        }
+
+                        if ( InnerRelationshipAttributesToHide.Count > 0 )
+                        {
+                            ProjectOperator HideInnerRelationshipAttributesOp = ProjectOperator.HideAttributesOperator( InnerRelationshipAttributesToHide );
+                            PipelineOperators.Add( HideInnerRelationshipAttributesOp );
+                        }
 
                         FieldsToMergeWithRoot.Add( CELookupAs );
                     }
@@ -229,36 +273,6 @@ namespace QueryBuilder.Operation
                         // Add operators to pipeline
                         PipelineOperators.AddRange( new MongoDBOperator[] { TargetLookup, UnwindTargetOp, AddTargetFields, HideTargetUnmappedOp } );
                     }
-                }
-
-                Dictionary<string, JSCode> RelationshipAttributesToAdd = new Dictionary<string, JSCode>();
-                List<string> RelationshipAttributesToHide = new List<string>();
-
-                // Process Relationship attributes (if any)
-                foreach ( DataAttribute Attribute in Relationship.Attributes )
-                {
-                    string RuleValue = MainRelationshipRule.GetRuleValueForAttribute( Attribute );
-
-                    if ( string.IsNullOrWhiteSpace( RuleValue ) )
-                    {
-                        continue;
-                    }
-
-                    RelationshipAttributesToAdd.Add( $"{Relationship.Name}_{Attribute.Name}", new JSString( $"\"${RuleValue}\"" ) );
-                    // Add original attribute to hide list
-                    RelationshipAttributesToHide.Add( RuleValue );
-                }
-
-                if ( RelationshipAttributesToAdd.Count > 0 )
-                {
-                    // Create Operator
-                    AddFieldsOperator AddRelationshipFieldsOp = new AddFieldsOperator( RelationshipAttributesToAdd );
-
-                    // Also hide original fields
-                    ProjectOperator HideRelationshipAttributes = ProjectOperator.HideAttributesOperator( RelationshipAttributesToHide );
-
-                    // Add to pipeline
-                    PipelineOperators.AddRange( new MongoDBOperator[] { AddRelationshipFieldsOp, HideRelationshipAttributes } );
                 }
 
                 // Merge fields with root if any

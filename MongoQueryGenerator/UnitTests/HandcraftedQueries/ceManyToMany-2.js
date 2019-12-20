@@ -32,7 +32,6 @@
                         Car_carId: '$_id',
                         Car_model: '$model',
                         Car_year: '$year',
-                        Car_manufacturerId: '$manufacturerId',
                         data_ManufacturedBy: [{
                             Manufacturer_manufacturerId: '$data_Manufacturer._id',
                             Manufacturer_name: '$data_Manufacturer.name'
@@ -42,7 +41,6 @@
                         _id: false,
                         model: false,
                         year: false,
-                        manufacturerId: false,
                         data_Manufacturer: false
                     }}
                 ],
@@ -50,10 +48,7 @@
             }},
             {$unwind: '$data_Car'},
             {$addFields: {
-                Owns_ownsId: '$_id',
-                Owns_personId: '$personId',
-                Owns_carId: '$carId',
-                Owns_insuranceId: '$insuranceId'
+                Owns_ownsId: '$_id'
             }},
             {$replaceRoot: {
                 newRoot: {
