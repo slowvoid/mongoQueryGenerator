@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryBuilder", "QueryBuilde
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{80ABE0FD-7C12-4AD1-A114-7B6E46CD50AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{753E32AD-2D1B-4DC5-9D62-3CF0989627AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{753E32AD-2D1B-4DC5-9D62-3CF0989627AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFaker", "DataFaker\DataFaker.csproj", "{6056882D-1D4C-4EC1-BF37-8F780B63528F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,12 @@ Global
 		{753E32AD-2D1B-4DC5-9D62-3CF0989627AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{753E32AD-2D1B-4DC5-9D62-3CF0989627AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{753E32AD-2D1B-4DC5-9D62-3CF0989627AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6056882D-1D4C-4EC1-BF37-8F780B63528F}.Debug - No Tests|Any CPU.ActiveCfg = Debug|Any CPU
+		{6056882D-1D4C-4EC1-BF37-8F780B63528F}.Debug - No Tests|Any CPU.Build.0 = Debug|Any CPU
+		{6056882D-1D4C-4EC1-BF37-8F780B63528F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6056882D-1D4C-4EC1-BF37-8F780B63528F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6056882D-1D4C-4EC1-BF37-8F780B63528F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6056882D-1D4C-4EC1-BF37-8F780B63528F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

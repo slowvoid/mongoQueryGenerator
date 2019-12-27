@@ -57,7 +57,7 @@ namespace QueryBuilder.Query
         public string GetJSON( string Query )
         {
             BsonDocument QueryResult = _executeQuery( Query );
-
+            
             return QueryResult.GetElement( "retval" ).Value.ToBsonDocument().GetElement( "_batch" ).Value.ToJson();
         }
         #endregion
