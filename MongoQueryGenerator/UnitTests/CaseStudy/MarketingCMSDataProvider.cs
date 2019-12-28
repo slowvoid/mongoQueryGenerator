@@ -252,7 +252,7 @@ namespace QueryBuilder.Tests
             MapRule StoreProductRule = new MapRule( Store, ProductCol, false );
             StoreProductRule.AddRule( "StoreID", "StoreID" );
 
-            ModelMapping Map = new ModelMapping( "CMSMapDuplicates", new List<MapRule>() { UserRulesMain,
+            ModelMapping Map = new ModelMapping( "CMSCategoryDuplicates", new List<MapRule>() { UserRulesMain,
                 ProductRules, CategoryRules, StoreRulesMain, UserProductRule, StoreProductRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
@@ -317,7 +317,7 @@ namespace QueryBuilder.Tests
             MapRule CategoryProductRule = new MapRule( Category, ProductCol, false );
             CategoryProductRule.AddRule( "CategoryID", "CategoryID" );
 
-            ModelMapping Map = new ModelMapping( "CMSMapDuplicates", new List<MapRule>() { UserRulesMain,
+            ModelMapping Map = new ModelMapping( "CMSStoreDuplicates", new List<MapRule>() { UserRulesMain,
                 ProductRules, CategoryRulesMain, StoreRules, UserProductRule, CategoryProductRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );
@@ -383,7 +383,7 @@ namespace QueryBuilder.Tests
             MapRule CategoryProductRule = new MapRule( Category, ProductCol, false );
             CategoryProductRule.AddRule( "CategoryID", "CategoryID" );
 
-            ModelMapping Map = new ModelMapping( "CMSMapDuplicates", new List<MapRule>() { UserRules,
+            ModelMapping Map = new ModelMapping( "CMSUserDuplicates", new List<MapRule>() { UserRules,
                 ProductRules, CategoryRulesMain, StoreRulesMain, StoreProductRule, CategoryProductRule } );
 
             return new RequiredDataContainer( Model, Schema, Map );

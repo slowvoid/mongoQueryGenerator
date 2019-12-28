@@ -7,6 +7,7 @@ using QueryBuilder.Operation.Arguments;
 using QueryBuilder.Query;
 using System.Collections.Generic;
 using FluentAssertions;
+using QueryBuilder.Operation.Exceptions;
 
 namespace QueryBuilder.Tests
 {
@@ -92,6 +93,479 @@ namespace QueryBuilder.Tests
             QueryGenerator QueryGen = new QueryGenerator( FromArg, Operators );
             string Query = QueryGen.Run();
             return Query;
-        } 
+        }
+        /// <summary>
+        /// Get All Stores test
+        /// 
+        /// Query: FROM Store SELECT *
+        /// </summary>
+        [TestMethod]
+        public void GetAllStores()
+        {
+            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            RequiredDataContainer DataMap2 = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            RequiredDataContainer DataMap3 = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            RequiredDataContainer DataMap4 = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            RequiredDataContainer DataMap5 = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+
+            QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
+
+            SortArgument SortArg = new SortArgument( Store, Store.GetAttribute( "StoreID" ), MongoDBSort.Ascending );
+
+            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
+            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMap2.ERMongoMapping );
+            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMap3.ERMongoMapping );
+            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMap4.ERMongoMapping );
+            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMap5.ERMongoMapping );
+
+            FromArgument StartArgMap1 = new FromArgument( Store, DataMap.ERMongoMapping );
+            FromArgument StartArgMap2 = new FromArgument( Store, DataMap2.ERMongoMapping );
+            FromArgument StartArgMap3 = new FromArgument( Store, DataMap3.ERMongoMapping );
+            FromArgument StartArgMap4 = new FromArgument( Store, DataMap4.ERMongoMapping );
+            FromArgument StartArgMap5 = new FromArgument( Store, DataMap5.ERMongoMapping );
+
+            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SortOpMap1 };
+            List<AlgebraOperator> OperatorsMap2 = new List<AlgebraOperator>() { SortOpMap2 };
+            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SortOpMap3 };
+            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { SortOpMap4 };
+            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { SortOpMap5 };
+
+            QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
+            QueryGenerator QueryGenMap2 = new QueryGenerator( StartArgMap2, OperatorsMap2 );
+            QueryGenerator QueryGenMap3 = new QueryGenerator( StartArgMap3, OperatorsMap3 );
+            QueryGenerator QueryGenMap4 = new QueryGenerator( StartArgMap4, OperatorsMap4 );
+            QueryGenerator QueryGenMap5 = new QueryGenerator( StartArgMap5, OperatorsMap5 );
+
+            string QueryStringMap1 = QueryGenMap1.Run();
+            Assert.ThrowsException<ImpossibleOperationException>( QueryGenMap2.Run );
+            string QueryStringMap3 = QueryGenMap3.Run();
+            Assert.ThrowsException<ImpossibleOperationException>( QueryGenMap4.Run );
+            string QueryStringMap5 = QueryGenMap5.Run();
+
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms" );
+            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_category_duplicado" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_user_duplicado" );
+
+            string ResultMap1 = RunnerMap1.GetJSON( QueryStringMap1 );
+            string ResultMap3 = RunnerMap3.GetJSON( QueryStringMap3 );
+            string ResultMap5 = RunnerMap5.GetJSON( QueryStringMap5 );
+
+            Assert.IsNotNull( ResultMap1, "Result [Map1] cannot be null" );
+            Assert.IsNotNull( ResultMap3, "Result [Map3] cannot be null" );
+            Assert.IsNotNull( ResultMap5, "Result [Map5] cannot be null" );
+
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap3 ) ) );
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap5 ) ) );
+        }
+        /// <summary>
+        /// Run GetAllUsers test
+        /// 
+        /// Query: FROM User SELECT *
+        /// </summary>
+        [TestMethod]
+        public void GetAllUsers()
+        {
+            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+
+            QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
+
+            SortArgument SortArg = new SortArgument( User, User.GetAttribute( "UserID" ), MongoDBSort.Ascending );
+
+            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
+            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
+            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
+            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
+            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
+
+            FromArgument StartArgMap1 = new FromArgument( User, DataMap.ERMongoMapping );
+            FromArgument StartArgMap2 = new FromArgument( User, DataMapDuplicates.ERMongoMapping );
+            FromArgument StartArgMap3 = new FromArgument( User, DataMapCategoryDuplicated.ERMongoMapping );
+            FromArgument StartArgMap4 = new FromArgument( User, DataMapStoreDuplicated.ERMongoMapping );
+            FromArgument StartArgMap5 = new FromArgument( User, DataMapUserDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SortOpMap1 };
+            List<AlgebraOperator> OperatorsMap2 = new List<AlgebraOperator>() { SortOpMap2 };
+            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SortOpMap3 };
+            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { SortOpMap4 };
+            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { SortOpMap5 };
+
+            QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
+            QueryGenerator QueryGenMap2 = new QueryGenerator( StartArgMap2, OperatorsMap2 );
+            QueryGenerator QueryGenMap3 = new QueryGenerator( StartArgMap3, OperatorsMap3 );
+            QueryGenerator QueryGenMap4 = new QueryGenerator( StartArgMap4, OperatorsMap4 );
+            QueryGenerator QueryGenMap5 = new QueryGenerator( StartArgMap5, OperatorsMap5 );
+
+            string QueryStringMap1 = QueryGenMap1.Run();
+            Assert.ThrowsException<ImpossibleOperationException>( QueryGenMap2.Run );
+            string QueryStringMap3 = QueryGenMap3.Run();
+            string QueryStringMap4 = QueryGenMap4.Run();
+            Assert.ThrowsException<ImpossibleOperationException>( QueryGenMap5.Run );
+
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms" );
+            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_category_duplicado" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_store_duplicado" );
+
+            string ResultMap1 = RunnerMap1.GetJSON( QueryStringMap1 );
+            string ResultMap3 = RunnerMap3.GetJSON( QueryStringMap3 );
+            string ResultMap4 = RunnerMap4.GetJSON( QueryStringMap4 );
+
+            Assert.IsNotNull( ResultMap1, "Result [Map1] cannot be null" );
+            Assert.IsNotNull( ResultMap3, "Result [Map3] cannot be null" );
+            Assert.IsNotNull( ResultMap4, "Result [Map4] cannot be null" );
+
+            Assert.IsTrue( ResultMap1 != string.Empty, "Result [Map1] cannot be empty" );
+            Assert.IsTrue( ResultMap3 != string.Empty, "Result [Map3] cannot be empty" );
+            Assert.IsTrue( ResultMap4 != string.Empty, "Result [Map4] cannot be empty" );
+
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap3 ) ) );
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap4 ) ) );
+        }
+        /// <summary>
+        /// Run GetAllCategories Test
+        /// 
+        /// QUERY: FROM Category SELECT *
+        /// </summary>
+        [TestMethod]
+        public void GetAllCategories()
+        {
+            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+
+            QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
+
+            SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
+
+            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
+            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
+            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
+            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
+            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
+
+            FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
+            FromArgument StartArgMap2 = new FromArgument( Category, DataMapDuplicates.ERMongoMapping );
+            FromArgument StartArgMap3 = new FromArgument( Category, DataMapCategoryDuplicated.ERMongoMapping );
+            FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
+            FromArgument StartArgMap5 = new FromArgument( Category, DataMapUserDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SortOpMap1 };
+            List<AlgebraOperator> OperatorsMap2 = new List<AlgebraOperator>() { SortOpMap2 };
+            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SortOpMap3 };
+            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { SortOpMap4 };
+            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { SortOpMap5 };
+
+            QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
+            QueryGenerator QueryGenMap2 = new QueryGenerator( StartArgMap2, OperatorsMap2 );
+            QueryGenerator QueryGenMap3 = new QueryGenerator( StartArgMap3, OperatorsMap3 );
+            QueryGenerator QueryGenMap4 = new QueryGenerator( StartArgMap4, OperatorsMap4 );
+            QueryGenerator QueryGenMap5 = new QueryGenerator( StartArgMap5, OperatorsMap5 );
+
+            string QueryStringMap1 = QueryGenMap1.Run();
+            Assert.ThrowsException<ImpossibleOperationException>( QueryGenMap2.Run );
+            Assert.ThrowsException<ImpossibleOperationException>( QueryGenMap3.Run );
+            string QueryStringMap4 = QueryGenMap4.Run();
+            string QueryStringMap5 = QueryGenMap5.Run();
+
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_store_duplicado" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_user_duplicado" );
+
+            string ResultMap1 = RunnerMap1.GetJSON( QueryStringMap1 );;
+            string ResultMap4 = RunnerMap4.GetJSON( QueryStringMap4 );
+            string ResultMap5 = RunnerMap5.GetJSON( QueryStringMap5 );
+
+            Assert.IsNotNull( ResultMap1, "Result [Map1] cannot be null" );
+            Assert.IsNotNull( ResultMap4, "Result [Map4] cannot be null" );
+            Assert.IsNotNull( ResultMap5, "Result [Map5] cannot be null" );
+
+            Assert.IsTrue( ResultMap1 != string.Empty, "Result [Map1] cannot be empty" );
+            Assert.IsTrue( ResultMap4 != string.Empty, "Result [Map4] cannot be empty" );
+            Assert.IsTrue( ResultMap5 != string.Empty, "Result [Map5] cannot be empty" );
+
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap4 ) ) );
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( ResultMap1 ), JToken.Parse( ResultMap5 ) ) );
+        }
+
+        /// <summary>
+        /// Run GetProductsFromStore query
+        /// 
+        /// QUERY: FROM Store 
+        ///        RJOIN (Product, StoreHasProduct)
+        ///        SELECT *
+        /// </summary>
+        [TestMethod]
+        public void GetAllProductsFromStore()
+        {
+            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+
+            QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
+            QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
+
+            RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Product }, DataMap.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapDuplicates.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapCategoryDuplicated.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapStoreDuplicated.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
+
+            SortArgument SortArg = new SortArgument( Store, Store.GetAttribute( "StoreID" ), MongoDBSort.Ascending );
+
+            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
+            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
+            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
+            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
+            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
+            List<AlgebraOperator> OperatorsToExecuteMap2 = new List<AlgebraOperator>() { RJoinOp2, SortOpMap2 };
+            List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3, SortOpMap3 };
+            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, SortOpMap4 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
+
+            FromArgument StartArgMap1 = new FromArgument( Store, DataMap.ERMongoMapping );
+            FromArgument StartArgMap2 = new FromArgument( Store, DataMapDuplicates.ERMongoMapping );
+            FromArgument StartArgMap3 = new FromArgument( Store, DataMapCategoryDuplicated.ERMongoMapping );
+            FromArgument StartArgMap4 = new FromArgument( Store, DataMapStoreDuplicated.ERMongoMapping );
+            FromArgument StartArgMap5 = new FromArgument( Store, DataMapUserDuplicated.ERMongoMapping );
+
+            QueryGenerator GeneratorMap1 = new QueryGenerator( StartArgMap1, OperatorsToExecuteMap1 );
+            QueryGenerator GeneratorMap2 = new QueryGenerator( StartArgMap2, OperatorsToExecuteMap2 );
+            QueryGenerator GeneratorMap3 = new QueryGenerator( StartArgMap3, OperatorsToExecuteMap3 );
+            QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
+            QueryGenerator GeneratorMap5 = new QueryGenerator( StartArgMap5, OperatorsToExecuteMap5 );
+
+            string QueryMap1 = GeneratorMap1.Run();
+            Assert.ThrowsException<ImpossibleOperationException>( GeneratorMap2.Run );
+            string QueryMap3 = GeneratorMap3.Run();
+            Assert.ThrowsException<ImpossibleOperationException>( GeneratorMap4.Run );
+            string QueryMap5 = GeneratorMap5.Run();
+
+            Assert.IsNotNull( QueryMap1, "Query [Map1] cannot be null" );
+            Assert.IsNotNull( QueryMap3, "Query [Map3] cannot be null" );
+            Assert.IsNotNull( QueryMap5, "Query [Map5] cannot be null" );
+
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms" );
+            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_category_duplicado" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_user_duplicado" );
+
+            string ResultMap1 = RunnerMap1.GetJSON( QueryMap1 );
+            string ResultMap3 = RunnerMap3.GetJSON( QueryMap3 );
+            string ResultMap5 = RunnerMap5.GetJSON( QueryMap5 );
+
+            Assert.IsNotNull( ResultMap1, "Result [Map1] cannot be null" );
+            Assert.IsNotNull( ResultMap3, "Result [Map3] cannot be null" );
+            Assert.IsNotNull( ResultMap5, "Result [Map5] cannot be null" );
+
+            Assert.IsTrue( ResultMap1 != string.Empty, "Result [Map1] cannot be empty" );
+            Assert.IsTrue( ResultMap3 != string.Empty, "Result [Map3] cannot be empty" );
+            Assert.IsTrue( ResultMap5 != string.Empty, "Result [Map5] cannot be empty" );
+
+            JToken TokenResult1 = JToken.Parse( ResultMap1 );
+
+            TokenResult1.Should().BeEquivalentTo( JToken.Parse( ResultMap3 ) );
+            TokenResult1.Should().BeEquivalentTo( JToken.Parse( ResultMap5 ) );
+        }
+
+        /// <summary>
+        /// Run GetProductsFromCategory query
+        /// 
+        /// QUERY: FROM Category 
+        ///        RJOIN (Product, StoreHasProduct)
+        ///        SELECT *
+        /// </summary>
+        [TestMethod]
+        public void GetAllProductsFromCategory()
+        {
+            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+
+            QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
+
+            RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { Product }, DataMap.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapDuplicates.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapCategoryDuplicated.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapStoreDuplicated.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
+
+            SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
+
+            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
+            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
+            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
+            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
+            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
+            List<AlgebraOperator> OperatorsToExecuteMap2 = new List<AlgebraOperator>() { RJoinOp2, SortOpMap2 };
+            List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3, SortOpMap3 };
+            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, SortOpMap4 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
+
+            FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
+            FromArgument StartArgMap2 = new FromArgument( Category, DataMapDuplicates.ERMongoMapping );
+            FromArgument StartArgMap3 = new FromArgument( Category, DataMapCategoryDuplicated.ERMongoMapping );
+            FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
+            FromArgument StartArgMap5 = new FromArgument( Category, DataMapUserDuplicated.ERMongoMapping );
+
+            QueryGenerator GeneratorMap1 = new QueryGenerator( StartArgMap1, OperatorsToExecuteMap1 );
+            QueryGenerator GeneratorMap2 = new QueryGenerator( StartArgMap2, OperatorsToExecuteMap2 );
+            QueryGenerator GeneratorMap3 = new QueryGenerator( StartArgMap3, OperatorsToExecuteMap3 );
+            QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
+            QueryGenerator GeneratorMap5 = new QueryGenerator( StartArgMap5, OperatorsToExecuteMap5 );
+
+            string QueryMap1 = GeneratorMap1.Run();
+            Assert.ThrowsException<ImpossibleOperationException>( GeneratorMap2.Run );
+            Assert.ThrowsException<ImpossibleOperationException>( GeneratorMap3.Run );
+            string QueryMap4 = GeneratorMap4.Run();
+            string QueryMap5 = GeneratorMap5.Run();
+
+            Assert.IsNotNull( QueryMap1, "Query [Map1] cannot be null" );
+            Assert.IsNotNull( QueryMap4, "Query [Map4] cannot be null" );
+            Assert.IsNotNull( QueryMap5, "Query [Map5] cannot be null" );
+
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_store_duplicado" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_user_duplicado" );
+
+            string ResultMap1 = RunnerMap1.GetJSON( QueryMap1 );
+            string ResultMap4 = RunnerMap4.GetJSON( QueryMap4 );
+            string ResultMap5 = RunnerMap5.GetJSON( QueryMap5 );
+
+            Assert.IsNotNull( ResultMap1, "Result [Map1] cannot be null" );
+            Assert.IsNotNull( ResultMap4, "Result [Map4] cannot be null" );
+            Assert.IsNotNull( ResultMap5, "Result [Map5] cannot be null" );
+
+            Assert.IsTrue( ResultMap1 != string.Empty, "Result [Map1] cannot be empty" );
+            Assert.IsTrue( ResultMap4 != string.Empty, "Result [Map4] cannot be empty" );
+            Assert.IsTrue( ResultMap5 != string.Empty, "Result [Map5] cannot be empty" );
+
+            JToken TokenResult1 = JToken.Parse( ResultMap1 );
+
+            TokenResult1.Should().BeEquivalentTo( JToken.Parse( ResultMap4 ) );
+            TokenResult1.Should().BeEquivalentTo( JToken.Parse( ResultMap5 ) );
+        }
+
+        /// <summary>
+        /// Run GetProductsFromUser query
+        /// 
+        /// QUERY: FROM Category 
+        ///        RJOIN (Product, StoreHasProduct)
+        ///        SELECT *
+        /// </summary>
+        [TestMethod]
+        public void GetAllProductsFromUser()
+        {
+            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+
+            QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
+            QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
+
+            RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { Product }, DataMap.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapDuplicates.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapCategoryDuplicated.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapStoreDuplicated.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
+
+            SortArgument SortArg = new SortArgument( User, User.GetAttribute( "UserID" ), MongoDBSort.Ascending );
+
+            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
+            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
+            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
+            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
+            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
+            List<AlgebraOperator> OperatorsToExecuteMap2 = new List<AlgebraOperator>() { RJoinOp2, SortOpMap2 };
+            List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3, SortOpMap3 };
+            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, SortOpMap4 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
+
+            FromArgument StartArgMap1 = new FromArgument( User, DataMap.ERMongoMapping );
+            FromArgument StartArgMap2 = new FromArgument( User, DataMapDuplicates.ERMongoMapping );
+            FromArgument StartArgMap3 = new FromArgument( User, DataMapCategoryDuplicated.ERMongoMapping );
+            FromArgument StartArgMap4 = new FromArgument( User, DataMapStoreDuplicated.ERMongoMapping );
+            FromArgument StartArgMap5 = new FromArgument( User, DataMapUserDuplicated.ERMongoMapping );
+
+            QueryGenerator GeneratorMap1 = new QueryGenerator( StartArgMap1, OperatorsToExecuteMap1 );
+            QueryGenerator GeneratorMap2 = new QueryGenerator( StartArgMap2, OperatorsToExecuteMap2 );
+            QueryGenerator GeneratorMap3 = new QueryGenerator( StartArgMap3, OperatorsToExecuteMap3 );
+            QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
+            QueryGenerator GeneratorMap5 = new QueryGenerator( StartArgMap5, OperatorsToExecuteMap5 );
+
+            string QueryMap1 = GeneratorMap1.Run();
+            Assert.ThrowsException<ImpossibleOperationException>( GeneratorMap2.Run );
+            string QueryMap3 = GeneratorMap3.Run();
+            string QueryMap4 = GeneratorMap4.Run();
+            Assert.ThrowsException<ImpossibleOperationException>( GeneratorMap5.Run );
+
+            Assert.IsNotNull( QueryMap1, "Query [Map1] cannot be null" );
+            Assert.IsNotNull( QueryMap3, "Query [Map3] cannot be null" );
+            Assert.IsNotNull( QueryMap4, "Query [Map4] cannot be null" );
+
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms" );
+            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_category_duplicado" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_store_duplicado" );
+
+            string ResultMap1 = RunnerMap1.GetJSON( QueryMap1 );
+            string ResultMap3 = RunnerMap3.GetJSON( QueryMap3 );
+            string ResultMap4 = RunnerMap4.GetJSON( QueryMap4 );
+
+            Assert.IsNotNull( ResultMap1, "Result [Map1] cannot be null" );
+            Assert.IsNotNull( ResultMap3, "Result [Map3] cannot be null" );
+            Assert.IsNotNull( ResultMap4, "Result [Map4] cannot be null" );
+
+            Assert.IsTrue( ResultMap1 != string.Empty, "Result [Map1] cannot be empty" );
+            Assert.IsTrue( ResultMap3 != string.Empty, "Result [Map3] cannot be empty" );
+            Assert.IsTrue( ResultMap4 != string.Empty, "Result [Map4] cannot be empty" );
+
+            JToken TokenResult1 = JToken.Parse( ResultMap1 );
+
+            TokenResult1.Should().BeEquivalentTo( JToken.Parse( ResultMap3 ) );
+            TokenResult1.Should().BeEquivalentTo( JToken.Parse( ResultMap4 ) );
+        }
     }
 }
