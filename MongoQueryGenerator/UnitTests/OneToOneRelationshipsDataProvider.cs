@@ -22,7 +22,6 @@ namespace QueryBuilder.Tests
             Entity Person = new Entity( "Person" );
             Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
-            Person.AddAttribute( "carId" );
 
             Entity Car = new Entity( "Car" );
             Car.AddAttribute( "carId", true );
@@ -39,7 +38,6 @@ namespace QueryBuilder.Tests
             MongoDBCollection PersonCollection = new MongoDBCollection( "Person" );
             PersonCollection.DocumentSchema.AddAttribute( "_id" );
             PersonCollection.DocumentSchema.AddAttribute( "name" );
-            PersonCollection.DocumentSchema.AddAttribute( "carId" );
 
             MongoDBCollection CarCollection = new MongoDBCollection( "Car" );
             CarCollection.DocumentSchema.AddAttribute( "_id" );
@@ -52,7 +50,6 @@ namespace QueryBuilder.Tests
             MapRule PersonRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "Person" ) );
             PersonRule.AddRule( "personId", "_id" );
             PersonRule.AddRule( "name", "name" );
-            PersonRule.AddRule( "carId", "carId" );
 
             MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Car" ) );
             CarRule.AddRule( "carId", "_id" );
@@ -221,8 +218,6 @@ namespace QueryBuilder.Tests
             Entity Person = new Entity( "Person" );
             Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
-            Person.AddAttribute( "carId" );
-            Person.AddAttribute( "insuranceId" );
 
             Entity Car = new Entity( "Car" );
             Car.AddAttribute( "carId", true );
@@ -244,8 +239,6 @@ namespace QueryBuilder.Tests
             MongoDBCollection PersonCollection = new MongoDBCollection( "Person" );
             PersonCollection.DocumentSchema.AddAttribute( "_id" );
             PersonCollection.DocumentSchema.AddAttribute( "name" );
-            PersonCollection.DocumentSchema.AddAttribute( "carId" );
-            PersonCollection.DocumentSchema.AddAttribute( "insuranceId" );
 
             MongoDBCollection CarCollection = new MongoDBCollection( "Car" );
             CarCollection.DocumentSchema.AddAttribute( "_id" );
@@ -262,8 +255,6 @@ namespace QueryBuilder.Tests
             MapRule PersonRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "Person" ) );
             PersonRule.AddRule( "personId", "_id" );
             PersonRule.AddRule( "name", "name" );
-            PersonRule.AddRule( "carId", "carId" );
-            PersonRule.AddRule( "insuranceId", "insuranceId" );
 
             MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Car" ) );
             CarRule.AddRule( "carId", "_id" );
@@ -295,10 +286,8 @@ namespace QueryBuilder.Tests
             Entity Person = new Entity( "Person" );
             Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
-            Person.AddAttribute( "insuranceId" );
 
             Entity Car = new Entity( "Car" );
-            //Car.AddAttribute( "carId", true );
             Car.AddAttribute( "name" );
             Car.AddAttribute( "year" );
 
@@ -331,8 +320,6 @@ namespace QueryBuilder.Tests
             MapRule PersonRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "Person" ) );
             PersonRule.AddRule( "personId", "_id" );
             PersonRule.AddRule( "name", "name" );
-            PersonRule.AddRule( "carId", "carId" );
-            PersonRule.AddRule( "insuranceId", "insuranceId" );
 
             MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ), false );
             CarRule.AddRule( "name", "car.name" );
@@ -360,7 +347,6 @@ namespace QueryBuilder.Tests
             Entity Person = new Entity( "Person" );
             Person.AddAttribute( "personId", true );
             Person.AddAttribute( "name" );
-            Person.AddAttribute( "insuranceId" );
 
             Entity Car = new Entity( "Car" );
             Car.AddAttribute( "name" );
@@ -397,8 +383,6 @@ namespace QueryBuilder.Tests
             MapRule PersonRule = new MapRule( Model.FindByName( "Person" ), Schema.FindByName( "Person" ) );
             PersonRule.AddRule( "personId", "_id" );
             PersonRule.AddRule( "name", "name" );
-            PersonRule.AddRule( "carId", "carId" );
-            PersonRule.AddRule( "insuranceId", "insuranceId" );
 
             MapRule CarRule = new MapRule( Model.FindByName( "Car" ), Schema.FindByName( "Person" ), false );
             CarRule.AddRule( "name", "car.name" );

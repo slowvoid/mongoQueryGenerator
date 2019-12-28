@@ -36,7 +36,8 @@
             car: false,
             data_Car: false,
             data_Insurance: false,
-            data_InsuranceJoin: false
+            data_InsuranceJoin: false,
+            insuranceId: false
         }
     }
 ]).pretty()

@@ -9,7 +9,6 @@
     },
     {
         $project: {
-            carId: true,
             _id: true,
             name: '$name',
             data_Drives: {

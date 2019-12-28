@@ -63,7 +63,9 @@
     {
         "$project": {
             data_MappedCar: false,
-            data_MappedInsurance: false
+            data_MappedInsurance: false,
+            carId: false,
+            insuranceId: false
         }
     }
 ]).pretty()

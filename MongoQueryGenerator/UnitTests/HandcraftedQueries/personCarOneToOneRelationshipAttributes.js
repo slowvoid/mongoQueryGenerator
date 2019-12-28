@@ -53,7 +53,8 @@
             insuranceValue: false,
             data_Car: false,
             data_Insurance: false,
-            data_RelationshipAttributes: false
+            data_RelationshipAttributes: false,
+            insuranceId: false
         }
     }
 ]).pretty()
