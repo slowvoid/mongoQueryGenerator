@@ -84,6 +84,7 @@
         }]
     }},
     {"$project": {
-        data_HasInsuranceJoin: false
+        data_HasInsuranceJoin: false,
+        insuranceId: false
     }}
 ]).pretty()

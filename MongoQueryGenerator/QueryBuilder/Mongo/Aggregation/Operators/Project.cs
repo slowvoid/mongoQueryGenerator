@@ -65,6 +65,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         public ProjectOperator( Dictionary<string, ProjectExpression> Attributes )
         {
             this.Attributes = Attributes;
+            this.ShouldExecuteLast = false;
         }
         #endregion
     }

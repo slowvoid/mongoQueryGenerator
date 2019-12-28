@@ -80,5 +80,9 @@
             ],
             as: 'data_Drives'
         }
-    }
+    },
+    {
+        $project: {
+            insuranceId: false
+        } }
 ]).pretty()

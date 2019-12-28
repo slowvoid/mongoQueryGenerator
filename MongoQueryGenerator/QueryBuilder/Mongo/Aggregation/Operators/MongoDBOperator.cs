@@ -17,6 +17,10 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// Operator name
         /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// Gets/Sets wheter this operator must be moved to the end of the pipeline
+        /// </summary>
+        public bool ShouldExecuteLast { get; set; }
         #endregion
 
         #region Methods

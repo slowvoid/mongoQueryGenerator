@@ -52,6 +52,16 @@ namespace QueryBuilder.Query
                 Result.Commands.AddRange( Op.Run().Commands );
             }
 
+            // Check if there are any commands to be executed last
+            List<MongoDBOperator> MoveToEnd = Result.Commands.FindAll( C => C.ShouldExecuteLast );
+
+            if ( MoveToEnd.Count > 0 )
+            {
+                Result.Commands.RemoveAll( C => C.ShouldExecuteLast );
+                // Add again at the end
+                Result.Commands.AddRange( MoveToEnd );
+            }
+
             // Store command objects
             List<string> AggregatePipeline = new List<string>();
 

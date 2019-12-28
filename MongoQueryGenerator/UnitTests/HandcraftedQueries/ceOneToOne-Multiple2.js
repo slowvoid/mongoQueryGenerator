@@ -117,7 +117,9 @@
     },
     {
         "$project": {
-            data_InsuranceJoin: false
+            data_InsuranceJoin: false,
+            carId: false,
+            insuranceId: false
         }
     }
 ]).pretty()

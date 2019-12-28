@@ -825,6 +825,7 @@ namespace QueryBuilder.Operation
                 if ( AttributesToBeHidden.Count > 0 )
                 {
                     ProjectOperator HideUnrelatedAttributesOp = ProjectOperator.HideAttributesOperator( AttributesToBeHidden.Distinct() );
+                    HideUnrelatedAttributesOp.ShouldExecuteLast = true;
                     OperationsToExecute.Add( HideUnrelatedAttributesOp );
                 }
             }

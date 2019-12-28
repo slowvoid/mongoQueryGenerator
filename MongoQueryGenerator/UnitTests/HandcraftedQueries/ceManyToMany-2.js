@@ -60,7 +60,8 @@
                 personId: false,
                 carId: false,
                 insuranceId: false,
-                data_Car: false
+                data_Car: false,
+                manufacturerId: false
             }}
         ],
         as: 'data_Owns'

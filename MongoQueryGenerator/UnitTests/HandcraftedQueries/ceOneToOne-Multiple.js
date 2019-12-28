@@ -91,5 +91,9 @@
             ],
             as: 'data_Drives'
         }
-    }
+    },
+    {
+        $project: {
+            carId: false
+        } }
 ]).pretty()
