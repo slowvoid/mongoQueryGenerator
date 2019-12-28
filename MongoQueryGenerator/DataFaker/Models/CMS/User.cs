@@ -20,10 +20,10 @@ namespace DataFaker.Models.CMS
         /// <summary>
         /// User name
         /// </summary>
-        public string Name { get; set; }
+        public string UserName { get; set; }
         /// <summary>
         /// User email
         /// </summary>
-        public string Email { get; set; }
+        public string UserEmail { get; set; }
     }
 }

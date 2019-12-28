@@ -21,11 +21,11 @@ namespace DataFaker
 
             Faker<User> testUsers = new Faker<User>("pt_BR")
                 .RuleFor( u => u.UserID, ( f, u ) => ++u.UserID )
-                .RuleFor( u => u.Name, ( f, u ) => f.Name.FullName() )
-                .RuleFor( u => u.Email, ( f, u ) => f.Internet.Email( u.Name ) )
+                .RuleFor( u => u.UserName, ( f, u ) => f.Name.FullName() )
+                .RuleFor( u => u.UserEmail, ( f, u ) => f.Internet.Email( u.UserName ) )
                 .FinishWith( ( f, u ) =>
                 {
-                    Console.WriteLine( "User Created! Name = {0}", u.Name );
+                    Console.WriteLine( "User Created! Name = {0}", u.UserName );
                 } );
 
             int amountOfUsers = 50;
@@ -44,7 +44,7 @@ namespace DataFaker
             {
                 Category cat = new Category()
                 {
-                    Name = categoryNames[ i ]
+                    CategoryName = categoryNames[ i ]
                 };
 
                 categories.Add( cat );
@@ -57,10 +57,10 @@ namespace DataFaker
 
             Faker<Store> testStores = new Faker<Store>( "pt_BR" )
                 .RuleFor( s => s.StoreID, ( f, s ) => ++s.StoreID )
-                .RuleFor( s => s.Name, ( f, s ) => f.Company.CompanyName() )
+                .RuleFor( s => s.StoreName, ( f, s ) => f.Company.CompanyName() )
                 .FinishWith( ( f, s ) =>
                 {
-                    Console.WriteLine( "Store created! Name = {0}", s.Name );
+                    Console.WriteLine( "Store created! Name = {0}", s.StoreName );
                 } );
 
             List<Store> stores = testStores.Generate( 20 );

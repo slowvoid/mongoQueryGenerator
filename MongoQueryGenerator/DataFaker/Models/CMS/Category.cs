@@ -18,6 +18,6 @@ namespace DataFaker.Models.CMS
         /// <summary>
         /// Category name
         /// </summary>
-        public string Name { get; set; }
+        public string CategoryName { get; set; }
     }
 }

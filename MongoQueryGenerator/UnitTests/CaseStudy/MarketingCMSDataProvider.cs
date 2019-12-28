@@ -28,21 +28,20 @@ namespace QueryBuilder.Tests
         public static ERModel CreateERModel()
         {
             Entity User = new Entity( "User" );
-            User.AddAttribute( "user_id", true );
-            User.AddAttributes( "user_name", "user_email", "user_access", "user_newsletter" );
+            User.AddAttribute( "UserID", true );
+            User.AddAttributes( "UserName", "UserEmail" );
 
             Entity Store = new Entity( "Store" );
-            Store.AddAttribute( "store_id", true );
-            Store.AddAttributes( "store_name", "store_logo" );
+            Store.AddAttribute( "StoreID", true );
+            Store.AddAttributes( "StoreName" );
 
             Entity Category = new Entity( "Category" );
-            Category.AddAttribute( "category_id", true );
-            Category.AddAttributes( "category_name" );
+            Category.AddAttribute( "CategoryID", true );
+            Category.AddAttributes( "CategoryName" );
 
             Entity Product = new Entity( "Product" );
-            Product.AddAttribute( "product_id", true );
-            Product.AddAttributes( "product_title", "product_description", "product_short_description", "product_url",
-                "product_category_id", "product_store_id", "product_user_id", "product_published", "product_image" );
+            Product.AddAttribute( "ProductID", true );
+            Product.AddAttributes( "Title", "Description" );
 
             Relationship UserProducts = new Relationship( "UserProducts" );
             UserProducts.AddRelationshipEnd( new RelationshipEnd( User ) );
@@ -66,17 +65,16 @@ namespace QueryBuilder.Tests
         {
             // Create schema
             MongoDBCollection UserCol = new MongoDBCollection( "User" );
-            UserCol.AddAttributes( "_id", "user_name", "user_email", "user_access", "user_newsletter" );
+            UserCol.AddAttributes( "_id", "UserName", "UserEmail" );
 
             MongoDBCollection ProductCol = new MongoDBCollection( "Product" );
-            ProductCol.AddAttributes( "_id", "product_title", "product_description", "product_short_description", "product_url",
-                "product_category_id", "product_store_id", "product_user_id", "product_published", "product_image" );
+            ProductCol.AddAttributes( "_id", "Title", "Description", "CategoryID", "StoreID", "UserID" );
 
             MongoDBCollection CategoryCol = new MongoDBCollection( "Category" );
-            CategoryCol.AddAttributes( "_id", "category_name" );
+            CategoryCol.AddAttributes( "_id", "CategoryName" );
 
             MongoDBCollection StoreCol = new MongoDBCollection( "Store" );
-            StoreCol.AddAttributes( "_id", "store_name", "store_logo" );
+            StoreCol.AddAttributes( "_id", "StoreName" );
 
             MongoSchema Schema = new MongoSchema( "CMSSchema", new List<MongoDBCollection>() { UserCol, ProductCol,
                 StoreCol, CategoryCol } );
@@ -88,44 +86,37 @@ namespace QueryBuilder.Tests
             Entity User = (Entity)Model.FindByName( "User" );
 
             MapRule UserRules = new MapRule( User, UserCol );
-            UserRules.AddRule( "user_id", "_id" );
-            UserRules.AddRule( "user_name", "user_name" );
-            UserRules.AddRule( "user_email", "user_email" );
-            UserRules.AddRule( "user_access", "user_access" );
-            UserRules.AddRule( "user_newsletter", "user_newsletter" );
+            UserRules.AddRule( "UserID", "_id" );
+            UserRules.AddRule( "UserName", "UserName" );
+            UserRules.AddRule( "UserEmail", "UserEmail" );
 
             Entity Product = (Entity)Model.FindByName( "Product" );
 
             MapRule ProductRules = new MapRule( Product, ProductCol );
-            ProductRules.AddRule( "product_id", "_id" );
-            ProductRules.AddRule( "product_title", "product_title" );
-            ProductRules.AddRule( "product_description", "product_description" );
-            ProductRules.AddRule( "product_short_description", "product_short_description" );
-            ProductRules.AddRule( "product_url", "product_url" );
-            ProductRules.AddRule( "product_published", "product_published" );
-            ProductRules.AddRule( "product_image", "product_image" );
+            ProductRules.AddRule( "ProductID", "_id" );
+            ProductRules.AddRule( "Title", "Title" );
+            ProductRules.AddRule( "Description", "Description" );
 
             Entity Category = (Entity)Model.FindByName( "Category" );
 
             MapRule CategoryRules = new MapRule( Category, CategoryCol );
-            CategoryRules.AddRule( "category_id", "_id" );
-            CategoryRules.AddRule( "category_name", "category_name" );
+            CategoryRules.AddRule( "CategoryID", "_id" );
+            CategoryRules.AddRule( "CategoryName", "CategoryName" );
 
             Entity Store = (Entity)Model.FindByName( "Store" );
 
             MapRule StoreRules = new MapRule( Store, StoreCol );
-            StoreRules.AddRule( "store_id", "_id" );
-            StoreRules.AddRule( "store_name", "store_name" );
-            StoreRules.AddRule( "store_logo", "store_logo" );
+            StoreRules.AddRule( "StoreID", "_id" );
+            StoreRules.AddRule( "StoreName", "StoreName" );
 
             MapRule UserProductRule = new MapRule( User, ProductCol, false );
-            UserProductRule.AddRule( "user_id", "product_user_id" );
+            UserProductRule.AddRule( "UserID", "UserID" );
 
             MapRule StoreProductRule = new MapRule( Store, ProductCol, false );
-            StoreProductRule.AddRule( "store_id", "product_store_id" );
+            StoreProductRule.AddRule( "StoreID", "StoreID" );
 
             MapRule CategoryProductRule = new MapRule( Category, ProductCol, false );
-            CategoryProductRule.AddRule( "category_id", "product_category_id" );
+            CategoryProductRule.AddRule( "CategoryID", "CategoryID" );
 
             ModelMapping Map = new ModelMapping( "CMSMap11", new List<MapRule>() { UserRules,
                 ProductRules, CategoryRules, StoreRules, UserProductRule, StoreProductRule, CategoryProductRule } );
@@ -137,20 +128,19 @@ namespace QueryBuilder.Tests
         {
             // Create Schema
             MongoDBCollection ProductCol = new MongoDBCollection( "Product" );
-            ProductCol.AddAttributes( "_id", "product_title", "product_description", "product_short_description", "product_url",
-                "product_category_id", "product_store_id", "product_user_id", "product_published", "product_image",
-                "user._id", "user._name", "user.email", "user.access", "user.newsletter",
+            ProductCol.AddAttributes( "_id", "Title", "Description",
+                "user._id", "user.name", "user.email",
                 "category._id", "category.name",
-                "store._id", "store.name", "store.logo" );
+                "store._id", "store.name" );
 
             MongoDBCollection UserCol = new MongoDBCollection( "User" );
-            UserCol.AddAttributes( "_id", "user_name", "user_email", "user_access", "user_registered_at", "user_newsletter" );
+            UserCol.AddAttributes( "_id", "UserName", "UserEmail" );
 
             MongoDBCollection CategoryCol = new MongoDBCollection( "Category" );
-            CategoryCol.AddAttributes( "_id", "category_name" );
+            CategoryCol.AddAttributes( "_id", "CategoryName" );
 
             MongoDBCollection StoreCol = new MongoDBCollection( "Store" );
-            StoreCol.AddAttributes( "_id", "store_name", "store_logo" );
+            StoreCol.AddAttributes( "_id", "StoreName" );
 
             MongoSchema Schema = new MongoSchema( "CMSSchema", new List<MongoDBCollection>() { ProductCol, UserCol, CategoryCol, StoreCol } );
 
@@ -161,51 +151,41 @@ namespace QueryBuilder.Tests
             Entity User = (Entity)Model.FindByName( "User" );
 
             MapRule UserRules = new MapRule( User, ProductCol, false );
-            UserRules.AddRule( "user_id", "user._id" );
-            UserRules.AddRule( "user_name", "user.name" );
-            UserRules.AddRule( "user_email", "user.email" );
-            UserRules.AddRule( "user_access", "user.access" );
-            UserRules.AddRule( "user_newsletter", "user.newsletter" );
+            UserRules.AddRule( "UserID", "user._id" );
+            UserRules.AddRule( "UserName", "user.name" );
+            UserRules.AddRule( "UserEmail", "user.email" );
 
             MapRule UserRulesMain = new MapRule( User, UserCol );
-            UserRulesMain.AddRule( "user_id", "_id" );
-            UserRulesMain.AddRule( "user_name", "user_name" );
-            UserRulesMain.AddRule( "user_email", "user_email" );
-            UserRulesMain.AddRule( "user_access", "user_access" );
-            UserRulesMain.AddRule( "user_newsletter", "user_newsletter" );
+            UserRulesMain.AddRule( "UserID", "_id" );
+            UserRulesMain.AddRule( "UserName", "UserName" );
+            UserRulesMain.AddRule( "UserEmail", "UserEmail" );
 
             Entity Product = (Entity)Model.FindByName( "Product" );
 
             MapRule ProductRules = new MapRule( Product, ProductCol );
-            ProductRules.AddRule( "product_id", "_id" );
-            ProductRules.AddRule( "product_title", "product_title" );
-            ProductRules.AddRule( "product_description", "product_description" );
-            ProductRules.AddRule( "product_short_description", "product_short_description" );
-            ProductRules.AddRule( "product_url", "product_url" );
-            ProductRules.AddRule( "product_published", "product_published" );
-            ProductRules.AddRule( "product_image", "product_image" );
+            ProductRules.AddRule( "ProductID", "_id" );
+            ProductRules.AddRule( "Title", "Title" );
+            ProductRules.AddRule( "Description", "Description" );
 
             Entity Category = (Entity)Model.FindByName( "Category" );
 
             MapRule CategoryRules = new MapRule( Category, ProductCol, false );
-            CategoryRules.AddRule( "category_id", "category._id" );
-            CategoryRules.AddRule( "category_name", "category.name" );
+            CategoryRules.AddRule( "CategoryID", "category._id" );
+            CategoryRules.AddRule( "CategoryName", "category.name" );
 
             MapRule CategoryRulesMain = new MapRule( Category, CategoryCol );
-            CategoryRulesMain.AddRule( "category_id", "_id" );
-            CategoryRulesMain.AddRule( "category_name", "category_name" );
+            CategoryRulesMain.AddRule( "CategoryID", "_id" );
+            CategoryRulesMain.AddRule( "CategoryName", "CategoryName" );
 
             Entity Store = (Entity)Model.FindByName( "Store" );
 
             MapRule StoreRules = new MapRule( Store, ProductCol, false );
-            StoreRules.AddRule( "store_id", "store._id" );
-            StoreRules.AddRule( "store_name", "store.name" );
-            StoreRules.AddRule( "store_logo", "store.logo" );
+            StoreRules.AddRule( "StoreID", "store._id" );
+            StoreRules.AddRule( "StoreName", "store.name" );
 
             MapRule StoreRulesMain = new MapRule( Store, StoreCol );
-            StoreRulesMain.AddRule( "store_id", "_id" );
-            StoreRulesMain.AddRule( "store_name", "store_name" );
-            StoreRulesMain.AddRule( "store_logo", "store_logo" );
+            StoreRulesMain.AddRule( "StoreID", "_id" );
+            StoreRulesMain.AddRule( "StoreName", "StoreName" );
 
             ModelMapping Map = new ModelMapping( "CMSMapDuplicates", new List<MapRule>() { UserRules,
                 ProductRules, CategoryRules, StoreRules } );
@@ -217,18 +197,18 @@ namespace QueryBuilder.Tests
         {
             // Create Schema
             MongoDBCollection ProductCol = new MongoDBCollection( "Product" );
-            ProductCol.AddAttributes( "_id", "product_title", "product_description", "product_short_description", "product_url",
-                "product_category_id", "product_store_id", "product_user_id", "product_published", "product_image",
+            ProductCol.AddAttributes( "_id", "Title", "Description",
+                "StoreID", "UserID",
                 "category._id", "category.name" );
 
             MongoDBCollection UserCol = new MongoDBCollection( "User" );
-            UserCol.AddAttributes( "_id", "user_name", "user_email", "user_access", "user_newsletter" );
+            UserCol.AddAttributes( "_id", "UserName", "UserEmail" );
 
             MongoDBCollection CategoryCol = new MongoDBCollection( "Category" );
-            CategoryCol.AddAttributes( "_id", "category_name" );
+            CategoryCol.AddAttributes( "_id", "CategoryName" );
 
             MongoDBCollection StoreCol = new MongoDBCollection( "Store" );
-            StoreCol.AddAttributes( "_id", "store_name", "store_logo" );
+            StoreCol.AddAttributes( "_id", "StoreName" );
 
             MongoSchema Schema = new MongoSchema( "CMSSchema", new List<MongoDBCollection>() { ProductCol, UserCol, CategoryCol, StoreCol } );
 
@@ -239,45 +219,38 @@ namespace QueryBuilder.Tests
             Entity User = (Entity)Model.FindByName( "User" );
 
             MapRule UserRulesMain = new MapRule( User, UserCol );
-            UserRulesMain.AddRule( "user_id", "_id" );
-            UserRulesMain.AddRule( "user_name", "user_name" );
-            UserRulesMain.AddRule( "user_email", "user_email" );
-            UserRulesMain.AddRule( "user_access", "user_access" );
-            UserRulesMain.AddRule( "user_newsletter", "user_newsletter" );
+            UserRulesMain.AddRule( "UserID", "_id" );
+            UserRulesMain.AddRule( "UserName", "UserName" );
+            UserRulesMain.AddRule( "UserEmail", "UserEmail" );
 
             Entity Product = (Entity)Model.FindByName( "Product" );
 
             MapRule ProductRules = new MapRule( Product, ProductCol );
-            ProductRules.AddRule( "product_id", "_id" );
-            ProductRules.AddRule( "product_title", "product_title" );
-            ProductRules.AddRule( "product_description", "product_description" );
-            ProductRules.AddRule( "product_short_description", "product_short_description" );
-            ProductRules.AddRule( "product_url", "product_url" );
-            ProductRules.AddRule( "product_published", "product_published" );
-            ProductRules.AddRule( "product_image", "product_image" );
+            ProductRules.AddRule( "ProductID", "_id" );
+            ProductRules.AddRule( "Title", "Title" );
+            ProductRules.AddRule( "Description", "Description" );
 
             Entity Category = (Entity)Model.FindByName( "Category" );
 
             MapRule CategoryRules = new MapRule( Category, ProductCol, false );
-            CategoryRules.AddRule( "category_id", "category._id" );
-            CategoryRules.AddRule( "category_name", "category.name" );
+            CategoryRules.AddRule( "CategoryID", "category._id" );
+            CategoryRules.AddRule( "CategoryName", "category.name" );
 
             MapRule CategoryRulesMain = new MapRule( Category, CategoryCol );
-            CategoryRulesMain.AddRule( "category_id", "_id" );
-            CategoryRulesMain.AddRule( "category_name", "category_name" );
+            CategoryRulesMain.AddRule( "CategoryID", "_id" );
+            CategoryRulesMain.AddRule( "CategoryName", "CategoryName" );
 
             Entity Store = (Entity)Model.FindByName( "Store" );
 
             MapRule StoreRulesMain = new MapRule( Store, StoreCol );
-            StoreRulesMain.AddRule( "store_id", "_id" );
-            StoreRulesMain.AddRule( "store_name", "store_name" );
-            StoreRulesMain.AddRule( "store_logo", "store_logo" );
+            StoreRulesMain.AddRule( "StoreID", "_id" );
+            StoreRulesMain.AddRule( "StoreName", "StoreName" );
 
             MapRule UserProductRule = new MapRule( User, ProductCol, false );
-            UserProductRule.AddRule( "user_id", "product_user_id" );
+            UserProductRule.AddRule( "UserID", "UserID" );
 
             MapRule StoreProductRule = new MapRule( Store, ProductCol, false );
-            StoreProductRule.AddRule( "store_id", "product_store_id" );
+            StoreProductRule.AddRule( "StoreID", "StoreID" );
 
             ModelMapping Map = new ModelMapping( "CMSMapDuplicates", new List<MapRule>() { UserRulesMain,
                 ProductRules, CategoryRules, StoreRulesMain, UserProductRule, StoreProductRule } );
@@ -289,18 +262,18 @@ namespace QueryBuilder.Tests
         {
             // Create Schema
             MongoDBCollection ProductCol = new MongoDBCollection( "Product" );
-            ProductCol.AddAttributes( "_id", "product_title", "product_description", "product_short_description", "product_url",
-                "product_category_id", "product_store_id", "product_user_id", "product_published", "product_image",
-                "store._id", "store.name", "store.logo" );
+            ProductCol.AddAttributes( "_id", "Title", "Description",
+                "CategoryID", "UserID",
+                "store._id", "store.name" );
 
             MongoDBCollection UserCol = new MongoDBCollection( "User" );
-            UserCol.AddAttributes( "_id", "user_name", "user_email", "user_access", "user_newsletter" );
+            UserCol.AddAttributes( "_id", "UserName", "UserEmail" );
 
             MongoDBCollection CategoryCol = new MongoDBCollection( "Category" );
-            CategoryCol.AddAttributes( "_id", "category_name" );
+            CategoryCol.AddAttributes( "_id", "CategoryName" );
 
             MongoDBCollection StoreCol = new MongoDBCollection( "Store" );
-            StoreCol.AddAttributes( "_id", "store_name", "store_logo" );
+            StoreCol.AddAttributes( "_id", "StoreName" );
 
             MongoSchema Schema = new MongoSchema( "CMSSchema", new List<MongoDBCollection>() { ProductCol, UserCol, CategoryCol, StoreCol } );
 
@@ -311,46 +284,38 @@ namespace QueryBuilder.Tests
             Entity User = (Entity)Model.FindByName( "User" );
 
             MapRule UserRulesMain = new MapRule( User, UserCol );
-            UserRulesMain.AddRule( "user_id", "_id" );
-            UserRulesMain.AddRule( "user_name", "user_name" );
-            UserRulesMain.AddRule( "user_email", "user_email" );
-            UserRulesMain.AddRule( "user_access", "user_access" );
-            UserRulesMain.AddRule( "user_newsletter", "user_newsletter" );
+            UserRulesMain.AddRule( "UserID", "_id" );
+            UserRulesMain.AddRule( "UserName", "UserName" );
+            UserRulesMain.AddRule( "UserEmail", "UserEmail" );
 
             Entity Product = (Entity)Model.FindByName( "Product" );
 
             MapRule ProductRules = new MapRule( Product, ProductCol );
-            ProductRules.AddRule( "product_id", "_id" );
-            ProductRules.AddRule( "product_title", "product_title" );
-            ProductRules.AddRule( "product_description", "product_description" );
-            ProductRules.AddRule( "product_short_description", "product_short_description" );
-            ProductRules.AddRule( "product_url", "product_url" );
-            ProductRules.AddRule( "product_published", "product_published" );
-            ProductRules.AddRule( "product_image", "product_image" );
+            ProductRules.AddRule( "ProductID", "_id" );
+            ProductRules.AddRule( "Title", "Title" );
+            ProductRules.AddRule( "Description", "Description" );
 
             Entity Category = (Entity)Model.FindByName( "Category" );
 
             MapRule CategoryRulesMain = new MapRule( Category, CategoryCol );
-            CategoryRulesMain.AddRule( "category_id", "_id" );
-            CategoryRulesMain.AddRule( "category_name", "category_name" );
+            CategoryRulesMain.AddRule( "CategoryID", "_id" );
+            CategoryRulesMain.AddRule( "CategoryName", "CategoryName" );
 
             Entity Store = (Entity)Model.FindByName( "Store" );
 
             MapRule StoreRules = new MapRule( Store, ProductCol, false );
-            StoreRules.AddRule( "store_id", "store._id" );
-            StoreRules.AddRule( "store_name", "store.name" );
-            StoreRules.AddRule( "store_logo", "store.logo" );
+            StoreRules.AddRule( "StoreID", "store._id" );
+            StoreRules.AddRule( "StoreName", "store.name" );
 
             MapRule StoreRulesMain = new MapRule( Store, StoreCol );
-            StoreRulesMain.AddRule( "store_id", "_id" );
-            StoreRulesMain.AddRule( "store_name", "store_name" );
-            StoreRulesMain.AddRule( "store_logo", "store_logo" );
+            StoreRulesMain.AddRule( "StoreID", "_id" );
+            StoreRulesMain.AddRule( "StoreName", "StoreName" );
 
             MapRule UserProductRule = new MapRule( User, ProductCol, false );
-            UserProductRule.AddRule( "user_id", "product_user_id" );
+            UserProductRule.AddRule( "UserID", "UserID" );
 
             MapRule CategoryProductRule = new MapRule( Category, ProductCol, false );
-            CategoryProductRule.AddRule( "category_id", "product_category_id" );
+            CategoryProductRule.AddRule( "CategoryID", "CategoryID" );
 
             ModelMapping Map = new ModelMapping( "CMSMapDuplicates", new List<MapRule>() { UserRulesMain,
                 ProductRules, CategoryRulesMain, StoreRules, UserProductRule, CategoryProductRule } );
@@ -362,18 +327,18 @@ namespace QueryBuilder.Tests
         {
             // Create Schema
             MongoDBCollection ProductCol = new MongoDBCollection( "Product" );
-            ProductCol.AddAttributes( "_id", "product_title", "product_description", "product_short_description", "product_url",
-                "product_category_id", "product_store_id", "product_user_id", "product_published", "product_image",
-                "user._id", "user._name", "user.email", "user.access", "user.newsletter" );
+            ProductCol.AddAttributes( "_id", "Title", "Description",
+                "CategoryID", "StoreID",
+                "user._id", "user.name", "user.email" );
 
             MongoDBCollection UserCol = new MongoDBCollection( "User" );
-            UserCol.AddAttributes( "_id", "user_name", "user_email", "user_access", "user_registered_at", "user_newsletter" );
+            UserCol.AddAttributes( "_id", "UserName", "UserEmail" );
 
             MongoDBCollection CategoryCol = new MongoDBCollection( "Category" );
-            CategoryCol.AddAttributes( "_id", "category_name" );
+            CategoryCol.AddAttributes( "_id", "CategoryName" );
 
             MongoDBCollection StoreCol = new MongoDBCollection( "Store" );
-            StoreCol.AddAttributes( "_id", "store_name", "store_logo" );
+            StoreCol.AddAttributes( "_id", "StoreName" );
 
             MongoSchema Schema = new MongoSchema( "CMSSchema", new List<MongoDBCollection>() { ProductCol, UserCol, CategoryCol, StoreCol } );
 
@@ -384,48 +349,39 @@ namespace QueryBuilder.Tests
             Entity User = (Entity)Model.FindByName( "User" );
 
             MapRule UserRules = new MapRule( User, ProductCol, false );
-            UserRules.AddRule( "user_id", "user._id" );
-            UserRules.AddRule( "user_name", "user.name" );
-            UserRules.AddRule( "user_email", "user.email" );
-            UserRules.AddRule( "user_access", "user.access" );
-            UserRules.AddRule( "user_newsletter", "user.newsletter" );
+            UserRules.AddRule( "UserID", "user._id" );
+            UserRules.AddRule( "UserName", "user.name" );
+            UserRules.AddRule( "UserEmail", "user.email" );
 
             MapRule UserRulesMain = new MapRule( User, UserCol );
-            UserRulesMain.AddRule( "user_id", "_id" );
-            UserRulesMain.AddRule( "user_name", "user_name" );
-            UserRulesMain.AddRule( "user_email", "user_email" );
-            UserRulesMain.AddRule( "user_access", "user_access" );
-            UserRulesMain.AddRule( "user_newsletter", "user_newsletter" );
+            UserRulesMain.AddRule( "UserID", "_id" );
+            UserRulesMain.AddRule( "UserName", "UserName" );
+            UserRulesMain.AddRule( "UserEmail", "UserEmail" );
 
             Entity Product = (Entity)Model.FindByName( "Product" );
 
             MapRule ProductRules = new MapRule( Product, ProductCol );
-            ProductRules.AddRule( "product_id", "_id" );
-            ProductRules.AddRule( "product_title", "product_title" );
-            ProductRules.AddRule( "product_description", "product_description" );
-            ProductRules.AddRule( "product_short_description", "product_short_description" );
-            ProductRules.AddRule( "product_url", "product_url" );
-            ProductRules.AddRule( "product_published", "product_published" );
-            ProductRules.AddRule( "product_image", "product_image" );
+            ProductRules.AddRule( "ProductID", "_id" );
+            ProductRules.AddRule( "Title", "Title" );
+            ProductRules.AddRule( "Description", "Description" );
 
             Entity Category = (Entity)Model.FindByName( "Category" );
 
             MapRule CategoryRulesMain = new MapRule( Category, CategoryCol );
-            CategoryRulesMain.AddRule( "category_id", "_id" );
-            CategoryRulesMain.AddRule( "category_name", "category_name" );
+            CategoryRulesMain.AddRule( "CategoryID", "_id" );
+            CategoryRulesMain.AddRule( "CategoryName", "CategoryName" );
 
             Entity Store = (Entity)Model.FindByName( "Store" );
 
             MapRule StoreRulesMain = new MapRule( Store, StoreCol );
-            StoreRulesMain.AddRule( "store_id", "_id" );
-            StoreRulesMain.AddRule( "store_name", "store_name" );
-            StoreRulesMain.AddRule( "store_logo", "store_logo" );
+            StoreRulesMain.AddRule( "StoreID", "_id" );
+            StoreRulesMain.AddRule( "StoreName", "StoreName" );
 
             MapRule StoreProductRule = new MapRule( Store, ProductCol, false );
-            StoreProductRule.AddRule( "store_id", "product_store_id" );
+            StoreProductRule.AddRule( "StoreID", "StoreID" );
 
             MapRule CategoryProductRule = new MapRule( Category, ProductCol, false );
-            CategoryProductRule.AddRule( "category_id", "product_category_id" );
+            CategoryProductRule.AddRule( "CategoryID", "CategoryID" );
 
             ModelMapping Map = new ModelMapping( "CMSMapDuplicates", new List<MapRule>() { UserRules,
                 ProductRules, CategoryRulesMain, StoreRulesMain, StoreProductRule, CategoryProductRule } );

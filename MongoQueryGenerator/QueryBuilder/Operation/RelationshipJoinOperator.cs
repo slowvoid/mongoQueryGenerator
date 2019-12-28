@@ -807,6 +807,28 @@ namespace QueryBuilder.Operation
                 }
             }
 
+            // Try to hide all attributes related to other entities that are mapped to the source entity
+            List<MapRule> UnrelatedRules = ModelMap.Rules.FindAll( R => R.Target == MainSourceRule.Target && !R.IsMain );
+
+            if ( UnrelatedRules.Count > 0 )
+            {
+                List<string> AttributesToBeHidden = new List<string>();
+                
+                foreach ( MapRule UnrelatedRule in UnrelatedRules )
+                {
+                    foreach ( string RuleValue in UnrelatedRule.Rules.Values )
+                    {
+                        AttributesToBeHidden.Add( $"\"{RuleValue}\"" );
+                    }
+                }
+
+                if ( AttributesToBeHidden.Count > 0 )
+                {
+                    ProjectOperator HideUnrelatedAttributesOp = ProjectOperator.HideAttributesOperator( AttributesToBeHidden.Distinct() );
+                    OperationsToExecute.Add( HideUnrelatedAttributesOp );
+                }
+            }
+
             // Return operations
             return new AlgebraOperatorResult( OperationsToExecute );
         }
