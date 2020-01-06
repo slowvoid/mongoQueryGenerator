@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using QueryBuilder.Operation.Exceptions;
 using QueryBuilder.Mongo.Expressions;
+using QueryBuilder.Map;
 
 namespace QueryBuilder.Tests
 {
@@ -984,6 +985,84 @@ namespace QueryBuilder.Tests
             string QueryMap1 = GeneratorMap1.Run();
             Assert.ThrowsException<ImpossibleOperationException>( GeneratorMap2.Run );
             Assert.ThrowsException<ImpossibleOperationException>( GeneratorMap3.Run );
+            string QueryMap4 = GeneratorMap4.Run();
+            string QueryMap5 = GeneratorMap5.Run();
+
+            Assert.IsNotNull( QueryMap1, "Query [Map1] cannot be null" );
+            Assert.IsNotNull( QueryMap4, "Query [Map4] cannot be null" );
+            Assert.IsNotNull( QueryMap5, "Query [Map5] cannot be null" );
+
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_store_duplicado" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms_user_duplicado" );
+
+            string ResultMap1 = RunnerMap1.GetJSON( QueryMap1 );
+            string ResultMap4 = RunnerMap4.GetJSON( QueryMap4 );
+            string ResultMap5 = RunnerMap5.GetJSON( QueryMap5 );
+
+            Assert.IsNotNull( ResultMap1, "Result [Map1] cannot be null" );
+            Assert.IsNotNull( ResultMap4, "Result [Map4] cannot be null" );
+            Assert.IsNotNull( ResultMap5, "Result [Map5] cannot be null" );
+
+            Assert.IsTrue( ResultMap1 != string.Empty, "Result [Map1] cannot be empty" );
+            Assert.IsTrue( ResultMap4 != string.Empty, "Result [Map4] cannot be empty" );
+            Assert.IsTrue( ResultMap5 != string.Empty, "Result [Map5] cannot be empty" );
+
+            JToken TokenResult1 = JToken.Parse( ResultMap1 );
+
+            TokenResult1.Should().BeEquivalentTo( JToken.Parse( ResultMap4 ) );
+            TokenResult1.Should().BeEquivalentTo( JToken.Parse( ResultMap5 ) );
+        }
+
+        /// <summary>
+        /// Execute GetCategoryThatIsNamedHome
+        /// 
+        /// Query: FROM Category
+        ///        SELECT *
+        ///        WHERE CategoryName = 'Home'
+        /// </summary>
+        [TestMethod]
+        public void GetCategoryThatIsNamedHome()
+        {
+            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+
+            QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
+
+            MapRule CategoryRule01 = DataMap.ERMongoMapping.FindMainRule( Category.Element );
+            SelectArgument SelectArg01 = new SelectArgument( new EqExpr( $"${CategoryRule01.GetRuleValueForAttribute( Category.GetAttribute( "CategoryName" ) )}", "Home" ) );
+            SelectStage SelectOp1 = new SelectStage( SelectArg01, DataMap.ERMongoMapping );
+
+            MapRule CategoryRule04 = DataMapStoreDuplicated.ERMongoMapping.FindMainRule( Category.Element );
+            SelectArgument SelectArg04 = new SelectArgument( new EqExpr( $"${CategoryRule04.GetRuleValueForAttribute( Category.GetAttribute( "CategoryName" ) )}", "Home" ) );
+            SelectStage SelectOp4 = new SelectStage( SelectArg04, DataMap.ERMongoMapping );
+
+            MapRule CategoryRule05 = DataMapUserDuplicated.ERMongoMapping.FindMainRule( Category.Element );
+            SelectArgument SelectArg05 = new SelectArgument( new EqExpr( $"${CategoryRule05.GetRuleValueForAttribute( Category.GetAttribute( "CategoryName" ) )}", "Home" ) );
+            SelectStage SelectOp5 = new SelectStage( SelectArg05, DataMap.ERMongoMapping );
+
+            SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
+
+            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
+            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
+            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
+
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { SelectOp1, SortOpMap1 };
+            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { SelectOp4, SortOpMap4 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { SelectOp5, SortOpMap5 };
+
+            FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
+            FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
+            FromArgument StartArgMap5 = new FromArgument( Category, DataMapUserDuplicated.ERMongoMapping );
+
+            QueryGenerator GeneratorMap1 = new QueryGenerator( StartArgMap1, OperatorsToExecuteMap1 );
+            QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
+            QueryGenerator GeneratorMap5 = new QueryGenerator( StartArgMap5, OperatorsToExecuteMap5 );
+
+            string QueryMap1 = GeneratorMap1.Run();
             string QueryMap4 = GeneratorMap4.Run();
             string QueryMap5 = GeneratorMap5.Run();
 
