@@ -818,7 +818,17 @@ namespace QueryBuilder.Operation
                 {
                     foreach ( string RuleValue in UnrelatedRule.Rules.Values )
                     {
-                        AttributesToBeHidden.Add( $"\"{RuleValue}\"" );
+                        // Check if it is an embedded attribute and add only the root
+                        string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+
+                        if ( RulePath.Count() > 1 )
+                        {
+                            AttributesToBeHidden.Add( $"\"{RulePath.First()}\"" );
+                        }
+                        else
+                        {
+                            AttributesToBeHidden.Add( $"\"{RuleValue}\"" );
+                        }
                     }
                 }
 

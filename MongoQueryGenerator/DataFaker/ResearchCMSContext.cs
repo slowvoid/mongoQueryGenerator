@@ -31,7 +31,7 @@ namespace DataFaker
         /// </summary>
         public DbSet<Category> Categories { get; set; }
         #endregion
-
+            
         public ResearchCMSContext() : base("ResearchContext") { }
         public ResearchCMSContext(DbConnection existingConnection, bool contextOwnsConnection) : base(existingConnection, contextOwnsConnection) { }
     }
