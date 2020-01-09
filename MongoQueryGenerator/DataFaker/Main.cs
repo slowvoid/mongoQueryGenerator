@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using DataFaker.Models.CMS;
+using DataFaker.Models.Prograd;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,6 +118,32 @@ namespace DataFaker
 
             // Truncate tables
             dbContext.Database.ExecuteSqlCommand( "TRUNCATE TABLE cursograd" );
+
+            //Faker<User> testUsers = new Faker<User>( "pt_BR" )
+            //    .RuleFor( u => u.UserID, ( f, u ) => ++u.UserID )
+            //    .RuleFor( u => u.UserName, ( f, u ) => f.Name.FullName() )
+            //    .RuleFor( u => u.UserEmail, ( f, u ) => f.Internet.Email( u.UserName ) )
+            //    .FinishWith( ( f, u ) =>
+            //    {
+            //        Console.WriteLine( "User Created! Name = {0}", u.UserName );
+            //    } );
+
+            //int amountOfUsers = 50;
+
+            //List<User> users = testUsers.Generate( amountOfUsers );
+            //dbCMS.Users.AddRange( users );
+            //dbCMS.SaveChanges();
+
+            Faker<CursoGrad> testCursos = new Faker<CursoGrad>( "pt_BR" )
+                .RuleFor( c => c.codcur_cur, ( f, c ) => ++c.codcur_cur )
+                .RuleFor( c => c.nomecur_cur, ( f, c ) => f.Commerce.Department() )
+                .RuleFor( c => c.sigla_cur, ( f, c ) => c.nomecur_cur.Substring( 0, 3 ) );
+
+            int amountOfCursos = 5;
+
+            List<CursoGrad> cursos = testCursos.Generate( amountOfCursos );
+            dbContext.Cursos.AddRange( cursos );
+            dbContext.SaveChanges();
         }
     }
 }
