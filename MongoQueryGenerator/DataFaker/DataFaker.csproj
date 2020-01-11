@@ -108,7 +108,13 @@
     <Compile Include="Models\CMS\Store.cs" />
     <Compile Include="Models\CMS\User.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Prograd\AlunoGrad.cs" />
     <Compile Include="Models\Prograd\CursoGrad.cs" />
+    <Compile Include="Models\Prograd\DisciplinaGrad.cs" />
+    <Compile Include="Models\Prograd\Endereco.cs" />
+    <Compile Include="Models\Prograd\Enfase.cs" />
+    <Compile Include="Models\Prograd\Grade.cs" />
+    <Compile Include="Models\Prograd\Matricula.cs" />
     <Compile Include="ProgradContext.cs" />
     <Compile Include="ResearchCMSContext.cs" />
   </ItemGroup>

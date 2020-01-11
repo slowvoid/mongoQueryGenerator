@@ -54,7 +54,7 @@ namespace UnitTests.CaseStudy
             Entity EnfaseGrad = new Entity( "EnfaseGrad" );
             EnfaseGrad.AddAttribute( "codenf_enf", true );
             // codcur_enf -> codcur_cur
-            EnfaseGrad.AddAttributes( "nomeenf_enf", "siglaenf_enf", "codcur_enf" );
+            EnfaseGrad.AddAttributes( "nomeenf_enf", "siglaenf_enf" );
 
             Entity CursoGrad = new Entity( "CursoGrad" );
             CursoGrad.AddAttribute( "codcur_cur", true );

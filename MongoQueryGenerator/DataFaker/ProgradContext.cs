@@ -15,6 +15,12 @@ namespace DataFaker
     {
         #region Models
         public DbSet<CursoGrad> Cursos { get; set; }
+        public DbSet<AlunoGrad> Alunos { get; set; }
+        public DbSet<DisciplinaGrad> Disciplinas { get; set; }
+        public DbSet<Endereco> Enderecos { get; set; }
+        public DbSet<Enfase> Enfases { get; set; }
+        public DbSet<Grade> Grades { get; set; }
+        public DbSet<Matricula> Matriculas { get; set; }
         #endregion
 
         #region Constructors
