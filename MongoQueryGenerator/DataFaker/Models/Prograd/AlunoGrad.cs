@@ -15,7 +15,7 @@ namespace DataFaker.Models.Prograd
         public int codalu_alug { get; set; }
 
         public string nomealu_alug { get; set; }
-        public DateTime datanasc_alug { get; set; } 
         public string cpf_alug { get; set; }
+        public int endid_alug { get; set; }
     }
 }
