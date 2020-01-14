@@ -344,5 +344,92 @@ namespace QueryBuilder.Tests
 
             return new RequiredDataContainer( Model, Schema, Map );
         }
+
+        public static RequiredDataContainer MapEntitiesToCollectionsDisciplinaEmbedded()
+        {
+            // MongoDB Schema
+            MongoDBCollection AlunoCol = new MongoDBCollection( "Aluno" );
+            AlunoCol.AddAttributes( "_id", "nomealu_alug", "datanasc_alug", "cpf_alug", "endif_alug" );
+
+            MongoDBCollection CursoCol = new MongoDBCollection( "Curso" );
+            CursoCol.AddAttributes( "_id", "sigla_cur", "nomecur_cur" );
+
+            MongoDBCollection DisciplinaCol = new MongoDBCollection( "Disciplina" );
+            DisciplinaCol.AddAttributes( "_id", "nome_discip" );
+
+            MongoDBCollection EnderecoCol = new MongoDBCollection( "Endereco" );
+            EnderecoCol.AddAttributes( "_id", "logradouro_end", "bairro_end", "compl_end", "cep_end", "codcidade_end" );
+
+            MongoDBCollection EnfaseCol = new MongoDBCollection( "Enfase" );
+            EnfaseCol.AddAttributes( "_id", "nomeenf_enf", "siglaenf_enf", "codcur_enf", "disciplinas_multivalued_" );
+
+            MongoDBCollection GradeCol = new MongoDBCollection( "Grade" );
+            GradeCol.AddAttributes( "_id", "perfil_grd", "userid_grd", "discipgrad_id", "enfgrad_id" );
+
+            MongoDBCollection MatriculaCol = new MongoDBCollection( "Matricula" );
+            MatriculaCol.AddAttributes( "_id", "anoini_matr", "semiini_matr", "codalu_matr", "codenf_matr" );
+
+            MongoSchema Schema = new MongoSchema( "ProgradwebSchema", new List<MongoDBCollection>() { AlunoCol, CursoCol, DisciplinaCol, EnderecoCol, EnfaseCol, GradeCol, MatriculaCol } );
+
+            // Get ER Model
+            ERModel Model = GetERModel();
+
+            MapRule AlunoRule = new MapRule( Model.FindByName( "Aluno" ), AlunoCol );
+            AlunoRule.AddRule( "codalu_alug", "_id" );
+            AlunoRule.AddRule( "nomealu_alug", "nomealug_alug" );
+            AlunoRule.AddRule( "datanasc_alug", "datanasc_alug" );
+            AlunoRule.AddRule( "cpf_alug", "cpf_alug" );
+
+            MapRule CursoRule = new MapRule( Model.FindByName( "Curso" ), CursoCol );
+            CursoRule.AddRule( "codcur_cur", "_id" );
+            CursoRule.AddRule( "sigla_cur", "sigla_cur" );
+            CursoRule.AddRule( "nomecur_cur", "nomecur_cur" );
+
+            MapRule EnderecoRule = new MapRule( Model.FindByName( "Endereco" ), EnderecoCol );
+            EnderecoRule.AddRule( "codend_end", "_id" );
+            EnderecoRule.AddRule( "logradouro_end", "logradouro_end" );
+            EnderecoRule.AddRule( "bairro_end", "bairro_end" );
+            EnderecoRule.AddRule( "compl_end", "compl_end" );
+            EnderecoRule.AddRule( "cep_end", "cep_end" );
+            EnderecoRule.AddRule( "codcidade_end", "codcidade_end" );
+
+            MapRule EnfaseRule = new MapRule( Model.FindByName( "Enfase" ), EnfaseCol );
+            EnfaseRule.AddRule( "codenf_enf", "_id" );
+            EnfaseRule.AddRule( "nomeenf_enf", "nomeenf_enf" );
+            EnfaseRule.AddRule( "siglaenf_enf", "siglaenf_enf" );
+
+            MapRule MatriculaRule = new MapRule( Model.FindByName( "Matricula" ), MatriculaCol );
+            MatriculaRule.AddRule( "codmatr_matr", "_id" );
+            MatriculaRule.AddRule( "anoini_matr", "anoini_matr" );
+            MatriculaRule.AddRule( "semiini_matr", "semiini_matr" );
+
+            MapRule EnderecoAlunoRule = new MapRule( Model.FindByName( "Endereco" ), AlunoCol, false );
+            EnderecoAlunoRule.AddRule( "codend_end", "endid_alug" );
+
+            MapRule CursoEnfaseRule = new MapRule( Model.FindByName( "Curso" ), EnfaseCol, false );
+            CursoEnfaseRule.AddRule( "codcur_cur", "codcur_enf" );
+
+            MapRule EnfaseGradeRule = new MapRule( Model.FindByName( "Enfase" ), GradeCol, false );
+            EnfaseGradeRule.AddRule( "codenf_enf", "enfgrad_id" );
+
+            MapRule AlunoMatriculaRule = new MapRule( Model.FindByName( "Aluno" ), MatriculaCol, false );
+            AlunoMatriculaRule.AddRule( "codalu_alug", "codalu_matr" );
+
+            MapRule EnfaseMatriculaRule = new MapRule( Model.FindByName( "Enfase" ), MatriculaCol, false );
+            EnfaseMatriculaRule.AddRule( "codenf_enf", "codenf_matr" );
+
+            MapRule DisciplinaEnfaseRule = new MapRule( Model.FindByName( "Disciplina" ), EnfaseCol, false );
+            DisciplinaEnfaseRule.AddRule( "coddiscip_discip", "disciplinas_multivalued_.disciplinaId" );
+            DisciplinaEnfaseRule.AddRule( "nome_discip", "disciplinas_multivalued_.nome_discip" );
+
+            MapRule GradeEnfaseRule = new MapRule( Model.FindByName( "Grade" ), EnfaseCol, false );
+            GradeEnfaseRule.AddRule( "gradegrad_id", "disciplinas_multivalued_.gradeId" );
+            GradeEnfaseRule.AddRule( "perfil_grd", "disciplinas_multivalued_.perfil_grd" );
+            GradeEnfaseRule.AddRule( "userid_grd", "disciplinas_multivalued_.userid_grd" );
+
+            ModelMapping Map = new ModelMapping( "ProgradwebMap", new List<MapRule>() { AlunoRule, CursoRule, EnderecoRule, EnfaseRule, MatriculaRule, EnderecoAlunoRule, CursoEnfaseRule, EnfaseGradeRule, AlunoMatriculaRule, EnfaseMatriculaRule, DisciplinaEnfaseRule, GradeEnfaseRule } );
+
+            return new RequiredDataContainer( Model, Schema, Map );
+        }
     }
 }
