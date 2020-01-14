@@ -96,6 +96,7 @@ namespace QueryBuilder.Tests
         {
             RequiredDataContainer Container1 = ProgradWebDataProvider.MapEntitiesToCollections();
             RequiredDataContainer Container2 = ProgradWebDataProvider.MapEntitiesToCollectionsEnderecoEmbedded();
+            RequiredDataContainer Container3 = ProgradWebDataProvider.MapEntitiesToCollectionsCursoEmbedded();
 
             QueryableEntity Aluno = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Aluno" ) );
             QueryableEntity Matricula = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Matricula" ) );
@@ -143,28 +144,51 @@ namespace QueryBuilder.Tests
             List<AlgebraOperator> OperatorList2 = new List<AlgebraOperator>() { RJoinOp2_A, RJoinOp2_B };
             FromArgument FromArg2 = new FromArgument( Aluno, Container2.ERMongoMapping );
 
+            RelationshipJoinOperator RJoinOp3_A = new RelationshipJoinOperator(
+                Aluno,
+                (Relationship)Container3.EntityRelationshipModel.FindByName( "Vinculo" ),
+                new List<QueryableEntity>() { new QueryableEntity( MatriculaEnfaseCE ) },
+                Container3.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp3_B = new RelationshipJoinOperator(
+                Aluno,
+                (Relationship)Container3.EntityRelationshipModel.FindByName( "AlunoMora" ),
+                new List<QueryableEntity>() { Endereco },
+                Container3.ERMongoMapping );
+
+            List<AlgebraOperator> OperatorList3 = new List<AlgebraOperator>() { RJoinOp3_A, RJoinOp3_B };
+            FromArgument FromArg3 = new FromArgument( Aluno, Container3.ERMongoMapping );
+
             QueryGenerator QueryGen1 = new QueryGenerator( FromArg1, OperatorList1 );
             QueryGenerator QueryGen2 = new QueryGenerator( FromArg2, OperatorList2 );
+            QueryGenerator QueryGen3 = new QueryGenerator( FromArg3, OperatorList3 );
 
             string Query1 = QueryGen1.Run();
             string Query2 = QueryGen2.Run();
+            string Query3 = QueryGen3.Run();
 
             Assert.IsNotNull( Query1, "Query1 cannot be null" );
             Assert.IsNotNull( Query2, "Query2 cannot be null" );
+            Assert.IsNotNull( Query3, "Query3 cannot be null" );
 
             QueryRunner QueryRunner1 = new QueryRunner( "mongodb://localhost:27017", "progradweb_1" );
             QueryRunner QueryRunner2 = new QueryRunner( "mongodb://localhost:27017", "progradweb_2" );
+            QueryRunner QueryRunner3 = new QueryRunner( "mongodb://localhost:27017", "progradweb_4" );
 
             string QueryResult1 = QueryRunner1.GetJSON( Query1 );
             string QueryResult2 = QueryRunner2.GetJSON( Query2 );
+            string QueryResult3 = QueryRunner3.GetJSON( Query3 );
 
             Assert.IsNotNull( QueryResult1, "QueryResult1 cannot be null" );
-            Assert.IsNotNull( QueryResult2, "QueryResult1 cannot be null" );
+            Assert.IsNotNull( QueryResult2, "QueryResult2 cannot be null" );
+            Assert.IsNotNull( QueryResult3, "QueryResult3 cannot be null" );
 
             JToken JSONResult1 = JToken.Parse( QueryResult1 );
             JToken JSONResult2 = JToken.Parse( QueryResult2 );
+            JToken JSONResult3 = JToken.Parse( QueryResult3 );
 
             JSONResult1.Should().BeEquivalentTo( JSONResult2 );
+            JSONResult1.Should().BeEquivalentTo( JSONResult3 );
         }
         /// <summary>
         /// Run tests for the following query

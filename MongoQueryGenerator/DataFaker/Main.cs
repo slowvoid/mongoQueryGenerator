@@ -205,14 +205,25 @@ namespace DataFaker
 
             for ( int i = 0; i < dbContext.Alunos.Count(); i++ )
             {
+                int cod_enf = r.Next( 1, dbContext.Enfases.Count() + 1 );
+
+                Matricula model_prev = new Matricula()
+                {
+                    anoini_matr = 2019,
+                    semiini_matr = 2,
+                    codalu_matr = i + 1,
+                    codenf_matr = cod_enf
+                };
+
                 Matricula model = new Matricula()
                 {
                     anoini_matr = 2020,
                     semiini_matr = 1,
                     codalu_matr = i + 1,
-                    codenf_matr = r.Next( 1, dbContext.Enfases.Count() + 1 )
+                    codenf_matr = cod_enf
                 };
 
+                dbContext.Matriculas.Add( model_prev );
                 dbContext.Matriculas.Add( model );
             }
 
