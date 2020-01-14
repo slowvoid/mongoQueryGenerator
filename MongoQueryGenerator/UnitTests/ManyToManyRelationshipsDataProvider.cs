@@ -320,5 +320,58 @@ namespace QueryBuilder.Tests
 
             return new RequiredDataContainer( Model, DBSchema, Map );
         }
+        /// <summary>
+        /// Generates data to test a query in which the target entity is embedded in the middle collection
+        /// </summary>
+        /// <returns></returns>
+        public static RequiredDataContainer ManyToManyEmbeddedTarget()
+        {
+            // ER Model
+            Entity Person = new Entity( "Person" );
+            Person.AddAttribute( "personId", true );
+            Person.AddAttributes( "name", "age" );
+
+            Entity Car = new Entity( "Car" );
+            Car.AddAttribute( "carId", true );
+            Car.AddAttributes( "model", "year" );
+
+            Relationship Drives = new Relationship( "Drives" );
+            Drives.AddAttribute( "something" );
+
+            Drives.AddRelationshipEnd( new RelationshipEnd( Person ) );
+            Drives.AddRelationshipEnd( new RelationshipEnd( Car ) );
+
+            ERModel Model = new ERModel( "Model", new List<BaseERElement>() { Person, Car, Drives } );
+
+            // Mongo Schema
+            MongoDBCollection PersonCol = new MongoDBCollection( "Person" );
+            PersonCol.AddAttributes( "_id", "name", "age" );
+
+            MongoDBCollection DrivesCol = new MongoDBCollection( "Drives" );
+            DrivesCol.AddAttributes( "_id", "something", "car.carId", "car.model", "car.year" );
+
+            MongoSchema Schema = new MongoSchema( "Schema", new List<MongoDBCollection>() { PersonCol, DrivesCol } );
+
+            // Map
+            MapRule PersonRule = new MapRule( Person, PersonCol );
+            PersonRule.AddRule( "personId", "_id" );
+            PersonRule.AddRule( "name", "name" );
+            PersonRule.AddRule( "age", "age" );
+
+            MapRule CarRule = new MapRule( Car, DrivesCol, false );
+            CarRule.AddRule( "carId", "car.carId" );
+            CarRule.AddRule( "model", "car.model" );
+            CarRule.AddRule( "year", "car.year" );
+
+            MapRule DrivesRule = new MapRule( Drives, DrivesCol );
+            DrivesRule.AddRule( "something", "something" );
+
+            MapRule PersonDrivesRule = new MapRule( Person, DrivesCol, false );
+            PersonDrivesRule.AddRule( "personId", "personId" );
+
+            ModelMapping Map = new ModelMapping( "Map", new List<MapRule>() { PersonRule, CarRule, DrivesRule, PersonDrivesRule } );
+
+            return new RequiredDataContainer( Model, Schema, Map );
+        }
     }
 }

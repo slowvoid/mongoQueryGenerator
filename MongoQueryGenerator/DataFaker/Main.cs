@@ -144,7 +144,6 @@ namespace DataFaker
             Faker<AlunoGrad> testAlunos = new Faker<AlunoGrad>( "pt_BR" )
                 .RuleFor( a => a.codalu_alug, ( f, a ) => ++a.codalu_alug )
                 .RuleFor( a => a.nomealu_alug, ( f, a ) => f.Name.FullName() )
-                .RuleFor( a => a.datanasc_alug, ( f, a ) => new DateTime( f.Random.Int( 1970, 2000 ), f.Random.Int( 1, 12 ), f.Random.Int( 1, 28 ) ) )
                 .RuleFor( a => a.cpf_alug, ( f, a ) => f.Random.ReplaceNumbers( "###########" ) )
                 .RuleFor( a => a.endid_alug, ( f, a ) => f.Random.Int( 1, 50 ) );
 

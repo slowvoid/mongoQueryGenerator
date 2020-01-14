@@ -207,62 +207,107 @@ namespace QueryBuilder.Operation
 
                         if ( MainTargetRule == null )
                         {
-                            throw new MissingMappingException( $"Target entity {Target.GetName()} must have a main mapping" );
-                        }
+                            // Check if the target entity is embedded to the intermediate collection
+                            MapRule TargetRelationshipRule = ModelMap.FindRule( Target.Element, MainRelationshipRule.Target );
 
-                        // Retrieve Target rule pointing to the relationship collection
-                        MapRule TargetRule = ModelMap.FindRule( Target.Element, MainRelationshipRule.Target );
-
-                        if ( TargetRule == null )
-                        {
-                            throw new MissingMappingException( $"Target entity {Target.GetName()} must have a mapping that targets {MainRelationshipRule.Target.Name}" );
-                        }
-
-                        // Create look for target 
-                        string LookupTargetAs = $"data_{Target.GetName()}";
-
-                        LookupOperator TargetLookup = new LookupOperator()
-                        {
-                            From = MainTargetRule.Target.Name,
-                            ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
-                            LocalField = TargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
-                            As = LookupTargetAs
-                        };
-
-                        // Create operations to bring fields to an upper level
-                        UnwindOperator UnwindTargetOp = new UnwindOperator( LookupTargetAs );
-
-                        // Store Attributes
-                        Dictionary<string, JSCode> TargetAttributes = new Dictionary<string, JSCode>();
-
-                        // Iterate target attributes and bring them one level up
-                        foreach ( DataAttribute Attribute in Target.Element.Attributes )
-                        {
-                            string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
-
-                            // Ignore if no rule is found
-                            if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                            if ( TargetRelationshipRule == null )
                             {
-                                continue;
+                                throw new MissingMappingException( $"Target entity {Target.GetName()} must have either a main mapping or be embedded into the intermediate collection" );
                             }
 
-                            TargetAttributes.Add( $"{Target.GetName()}_{Attribute.Name}", new JSString( $"\"${LookupTargetAs}.{RuleValue}\"" ) );
+                            Dictionary<string, JSCode> RenamedTargetAttributes = new Dictionary<string, JSCode>();
+                            List<string> TargetAttributesToRemove = new List<string>();
+
+                            // This is a simple thing, just rename the attributes
+                            foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                            {
+                                string RuleValue = TargetRelationshipRule.GetRuleValueForAttribute( Attribute );
+                                if ( RuleValue == null )
+                                {
+                                    continue;
+                                }
+
+                                string[] RulePath = RuleValue.Split( new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries );
+                                if ( RulePath.Length > 1 )
+                                {
+                                    // Add root to removal list
+                                    TargetAttributesToRemove.Add( RulePath.First() );
+                                }
+                                else
+                                {
+                                    TargetAttributesToRemove.Add( RuleValue );
+                                }
+
+                                RenamedTargetAttributes.Add( $"{Target.GetName()}_{Attribute.Name}", new JSString( $"\"${RuleValue}\"" ) );
+                            }
+
+                            if ( RenamedTargetAttributes.Count > 0 )
+                            {
+                                // Hide unwanted attributes from relationship (or already used and renamed)
+                                TargetAttributesToRemove.Add( SourceRule.GetRuleValueForAttribute( SourceEntity.Element.GetIdentifierAttribute() ) );
+
+                                AddFieldsOperator AddTargetFieldsOp = new AddFieldsOperator( RenamedTargetAttributes );
+                                ProjectOperator HideTargetFieldsOp = ProjectOperator.HideAttributesOperator( TargetAttributesToRemove.Distinct() );
+
+                                PipelineOperators.AddRange( new MongoDBOperator[] { AddTargetFieldsOp, HideTargetFieldsOp } );
+                            }
                         }
+                        else
+                        {
+                            // Retrieve Target rule pointing to the relationship collection
+                            MapRule TargetRule = ModelMap.FindRule( Target.Element, MainRelationshipRule.Target );
 
-                        // Create AddFields Operation
-                        AddFieldsOperator AddTargetFields = new AddFieldsOperator( TargetAttributes );
+                            if ( TargetRule == null )
+                            {
+                                throw new MissingMappingException( $"Target entity {Target.GetName()} must have a mapping that targets {MainRelationshipRule.Target.Name}" );
+                            }
 
-                        // Remove joined data (unmapped)
-                        // and other unwanted attributes
-                        List<string> UnwantedAttributes = new List<string>();
-                        UnwantedAttributes.Add( LookupTargetAs );
-                        UnwantedAttributes.Add( SourceRule.GetRuleValueForAttribute( SourceEntity.Element.GetIdentifierAttribute() ) );
-                        UnwantedAttributes.Add( TargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ) );
+                            // Create look for target 
+                            string LookupTargetAs = $"data_{Target.GetName()}";
 
-                        ProjectOperator HideTargetUnmappedOp = ProjectOperator.HideAttributesOperator( UnwantedAttributes );
+                            LookupOperator TargetLookup = new LookupOperator()
+                            {
+                                From = MainTargetRule.Target.Name,
+                                ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                LocalField = TargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                As = LookupTargetAs
+                            };
 
-                        // Add operators to pipeline
-                        PipelineOperators.AddRange( new MongoDBOperator[] { TargetLookup, UnwindTargetOp, AddTargetFields, HideTargetUnmappedOp } );
+                            // Create operations to bring fields to an upper level
+                            UnwindOperator UnwindTargetOp = new UnwindOperator( LookupTargetAs );
+
+                            // Store Attributes
+                            Dictionary<string, JSCode> TargetAttributes = new Dictionary<string, JSCode>();
+
+                            // Iterate target attributes and bring them one level up
+                            foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                            {
+                                string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
+
+                                // Ignore if no rule is found
+                                if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                {
+                                    continue;
+                                }
+
+                                TargetAttributes.Add( $"{Target.GetName()}_{Attribute.Name}", new JSString( $"\"${LookupTargetAs}.{RuleValue}\"" ) );
+                            }
+
+                            // Create AddFields Operation
+                            AddFieldsOperator AddTargetFields = new AddFieldsOperator( TargetAttributes );
+
+                            // Remove joined data (unmapped)
+                            // and other unwanted attributes
+                            List<string> UnwantedAttributes = new List<string>();
+                            UnwantedAttributes.Add( LookupTargetAs );
+                            UnwantedAttributes.Add( SourceRule.GetRuleValueForAttribute( SourceEntity.Element.GetIdentifierAttribute() ) );
+                            UnwantedAttributes.Add( TargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ) );
+
+                            ProjectOperator HideTargetUnmappedOp = ProjectOperator.HideAttributesOperator( UnwantedAttributes );
+
+                            // Add operators to pipeline
+                            PipelineOperators.AddRange( new MongoDBOperator[] { TargetLookup, UnwindTargetOp, AddTargetFields, HideTargetUnmappedOp } );
+                        }   
                     }
                 }
 

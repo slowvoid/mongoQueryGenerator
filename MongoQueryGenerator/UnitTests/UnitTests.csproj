@@ -188,4 +188,10 @@
     <ProjectReference Include="..\QueryBuilder\QueryBuilder.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="HandcraftedQueries\manyToManyEmbedded.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

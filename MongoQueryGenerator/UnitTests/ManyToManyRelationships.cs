@@ -204,5 +204,45 @@ namespace QueryBuilder.Tests
             // Check if both results are equal
             Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
         }
+        [TestMethod]
+        public void ManyToManyTargetEmbedded()
+        {
+            RequiredDataContainer ModelData = ManyToManyRelationshipsDataProvider.ManyToManyEmbeddedTarget();
+
+            // Load handcrafted query
+            string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/manyToManyEmbedded.js" );
+
+            // Assert if the handcrafted query is not null
+            Assert.IsNotNull( HandcraftedQuery );
+
+            QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
+            QueryableEntity Car = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Car" ) );
+
+            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
+                Person,
+                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
+                new List<QueryableEntity>() { Car },
+                ModelData.ERMongoMapping );
+
+            FromArgument FromArg = new FromArgument( Person, ModelData.ERMongoMapping );
+
+            QueryGenerator QueryGen = new QueryGenerator( FromArg, new List<AlgebraOperator>() { RJoinOp } );
+            string GeneratedQuery = QueryGen.Run();
+
+            Assert.IsNotNull( GeneratedQuery );
+
+            // Run Queries
+            QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", "manyToManyEmbedded" );
+
+            string HandcraftedResult = Runner.GetJSON( HandcraftedQuery );
+            string GeneratedResult = Runner.GetJSON( GeneratedQuery );
+
+            // Check if either result is null
+            Assert.IsNotNull( HandcraftedResult );
+            Assert.IsNotNull( GeneratedResult );
+
+            // Check if both results are equal
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
+        }
     }
 }
