@@ -129,7 +129,7 @@ namespace QueryBuilder.Tests
 
             MapRule DisciplinaRule = new MapRule( Model.FindByName( "Disciplina" ), DisciplinaCol );
             DisciplinaRule.AddRule( "coddiscip_discip", "_id" );
-            DisciplinaRule.AddRule( "nome_discip", "nomde_discip" );
+            DisciplinaRule.AddRule( "nome_discip", "nome_discip" );
 
             MapRule EnderecoRule = new MapRule( Model.FindByName( "Endereco" ), EnderecoCol );
             EnderecoRule.AddRule( "codend_end", "_id" );
@@ -216,7 +216,7 @@ namespace QueryBuilder.Tests
 
             MapRule DisciplinaRule = new MapRule( Model.FindByName( "Disciplina" ), DisciplinaCol );
             DisciplinaRule.AddRule( "coddiscip_discip", "_id" );
-            DisciplinaRule.AddRule( "nome_discip", "nomde_discip" );
+            DisciplinaRule.AddRule( "nome_discip", "nome_discip" );
 
             MapRule EnderecoAlunoRule = new MapRule( Model.FindByName( "Endereco" ), AlunoCol, false );
             EnderecoAlunoRule.AddRule( "codend_end", "endereco.enderecoid" );
