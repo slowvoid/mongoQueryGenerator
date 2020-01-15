@@ -469,11 +469,11 @@ namespace QueryBuilder.Tests
         /// 
         /// FROM Aluno a
         /// RJOIN <Mora> ( Endereco e )
-        /// WHERE a.codalu_alug = 10
+        /// WHERE e.bairro_end = 'Buckinghamshire'
         /// SELECT a.nomealu_alug, e.logradouro_end, e.bairro_end, e.cep_end
         /// </summary>
         [TestMethod]
-        public void AlunosWithEnderecoOnlyNameAndBaseAddressWhereAlunoId()
+        public void AlunosWithEnderecoOnlyNameAndBaseAddressWhereBairro()
         {
             RequiredDataContainer Container1 = ProgradWebDataProvider.MapEntitiesToCollections();
             RequiredDataContainer Container2 = ProgradWebDataProvider.MapEntitiesToCollectionsEnderecoEmbedded();
