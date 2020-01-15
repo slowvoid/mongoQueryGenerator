@@ -118,7 +118,7 @@ namespace QueryBuilder.Tests
 
             MapRule AlunoRule = new MapRule( Model.FindByName( "Aluno" ), AlunoCol );
             AlunoRule.AddRule( "codalu_alug", "_id" );
-            AlunoRule.AddRule( "nomealu_alug", "nomealug_alug" );
+            AlunoRule.AddRule( "nomealu_alug", "nomealu_alug" );
             AlunoRule.AddRule( "datanasc_alug", "datanasc_alug" );
             AlunoRule.AddRule( "cpf_alug", "cpf_alug" );
 
@@ -205,7 +205,7 @@ namespace QueryBuilder.Tests
 
             MapRule AlunoRule = new MapRule( Model.FindByName( "Aluno" ), AlunoCol );
             AlunoRule.AddRule( "codalu_alug", "_id" );
-            AlunoRule.AddRule( "nomealu_alug", "nomealug_alug" );
+            AlunoRule.AddRule( "nomealu_alug", "nomealu_alug" );
             AlunoRule.AddRule( "datanasc_alug", "datanasc_alug" );
             AlunoRule.AddRule( "cpf_alug", "cpf_alug" );
 
@@ -289,7 +289,7 @@ namespace QueryBuilder.Tests
 
             MapRule AlunoRule = new MapRule( Model.FindByName( "Aluno" ), AlunoCol );
             AlunoRule.AddRule( "codalu_alug", "_id" );
-            AlunoRule.AddRule( "nomealu_alug", "nomealug_alug" );
+            AlunoRule.AddRule( "nomealu_alug", "nomealu_alug" );
             AlunoRule.AddRule( "datanasc_alug", "datanasc_alug" );
             AlunoRule.AddRule( "cpf_alug", "cpf_alug" );
 
@@ -376,7 +376,7 @@ namespace QueryBuilder.Tests
 
             MapRule AlunoRule = new MapRule( Model.FindByName( "Aluno" ), AlunoCol );
             AlunoRule.AddRule( "codalu_alug", "_id" );
-            AlunoRule.AddRule( "nomealu_alug", "nomealug_alug" );
+            AlunoRule.AddRule( "nomealu_alug", "nomealu_alug" );
             AlunoRule.AddRule( "datanasc_alug", "datanasc_alug" );
             AlunoRule.AddRule( "cpf_alug", "cpf_alug" );
 

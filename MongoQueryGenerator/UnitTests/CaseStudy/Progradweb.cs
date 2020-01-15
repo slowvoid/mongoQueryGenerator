@@ -9,6 +9,7 @@ using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Query;
 using Newtonsoft.Json.Linq;
 using FluentAssertions;
+using QueryBuilder.Mongo.Expressions;
 
 namespace QueryBuilder.Tests
 {
@@ -305,6 +306,7 @@ namespace QueryBuilder.Tests
         /// FROM Enfase e
         /// RJOIN <VinculoCurso> ( Curso c )
         /// RJOIN <Grade> ( Disciplina )
+        /// SELECT *
         /// </summary>
         [TestMethod]
         public void EnfaseWithCursoAndDisciplina()
@@ -392,6 +394,73 @@ namespace QueryBuilder.Tests
 
             JSONQuery1.Should().BeEquivalentTo( JSONQuery2 );
             JSONQuery1.Should().BeEquivalentTo( JSONQuery3 );
+        }
+        /// <summary>
+        /// Run tests for the following query
+        /// 
+        /// FROM Aluno a
+        /// RJOIN <Mora> ( Endereco e )
+        /// SELECT a.nomealu_alug, e.logradouro_end, e.bairro_end, e.cep_end
+        /// </summary>
+        [TestMethod]
+        public void AlunosWithEnderecoOnlyNameAndBaseAddress()
+        {
+            RequiredDataContainer Container1 = ProgradWebDataProvider.MapEntitiesToCollections();
+            RequiredDataContainer Container2 = ProgradWebDataProvider.MapEntitiesToCollectionsEnderecoEmbedded();
+
+            QueryableEntity Aluno = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Aluno" ) );
+            QueryableEntity Endereco = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Endereco" ) );
+
+            List<ProjectArgument> ProjectArgs = new List<ProjectArgument>();
+            ProjectArgs.Add( new ProjectArgument( Aluno.GetAttribute( "nomealu_alug" ), Aluno, new BooleanExpr( true ) ) );
+            ProjectArgs.Add( new ProjectArgument( Endereco.GetAttribute( "logradouro_end" ), Endereco, new BooleanExpr( true ) ) );
+            ProjectArgs.Add( new ProjectArgument( Endereco.GetAttribute( "bairro_end" ), Endereco, new BooleanExpr( true ) ) );
+            ProjectArgs.Add( new ProjectArgument( Endereco.GetAttribute( "cep_end" ), Endereco, new BooleanExpr( true ) ) );
+
+            RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator(
+                Aluno,
+                (Relationship)Container1.EntityRelationshipModel.FindByName( "AlunoMora" ),
+                new List<QueryableEntity>() { Endereco },
+                Container1.ERMongoMapping );
+
+            ProjectStage ProjectOp1 = new ProjectStage( ProjectArgs, RJoinOp1.ComputeVirtualMap() );
+
+            List<AlgebraOperator> OperatorList1 = new List<AlgebraOperator>() { RJoinOp1, ProjectOp1 };
+            FromArgument FromArg1 = new FromArgument( Aluno, Container1.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator(
+                Aluno,
+                (Relationship)Container2.EntityRelationshipModel.FindByName( "AlunoMora" ),
+                new List<QueryableEntity>() { Endereco },
+                Container2.ERMongoMapping );
+
+            ProjectStage ProjectOp2 = new ProjectStage( ProjectArgs, RJoinOp2.ComputeVirtualMap() );
+
+            List<AlgebraOperator> OperatorList2 = new List<AlgebraOperator>() { RJoinOp2, ProjectOp2 };
+            FromArgument FromArg2 = new FromArgument( Aluno, Container2.ERMongoMapping );
+
+            QueryGenerator QueryGen1 = new QueryGenerator( FromArg1, OperatorList1 );
+            QueryGenerator QueryGen2 = new QueryGenerator( FromArg2, OperatorList2 );
+
+            string Query1 = QueryGen1.Run();
+            string Query2 = QueryGen2.Run();
+
+            Assert.IsNotNull( Query1 );
+            Assert.IsNotNull( Query2 );
+
+            QueryRunner QueryRun1 = new QueryRunner( "mongodb://localhost:27017", "progradweb_1" );
+            QueryRunner QueryRun2 = new QueryRunner( "mongodb://localhost:27017", "progradweb_2" );
+
+            string QueryResult1 = QueryRun1.GetJSON( Query1 );
+            string QueryResult2 = QueryRun2.GetJSON( Query2 );
+
+            Assert.IsNotNull( QueryResult1 );
+            Assert.IsNotNull( QueryResult2 );
+
+            JToken JSONResult1 = JToken.Parse( QueryResult1 );
+            JToken JSONResult2 = JToken.Parse( QueryResult2 );
+
+            JSONResult1.Should().BeEquivalentTo( JSONResult2 );
         }
     }
 }
