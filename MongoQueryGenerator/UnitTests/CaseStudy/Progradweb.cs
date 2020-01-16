@@ -551,6 +551,7 @@ namespace QueryBuilder.Tests
         public void EnfaseWithMatriculaAndAlunos()
         {
             RequiredDataContainer Container1 = ProgradWebDataProvider.MapEntitiesToCollections();
+            RequiredDataContainer Container2 = ProgradWebDataProvider.MapEntitiesToCollectionsAlunoEmbedded();
 
             QueryableEntity Enfase = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Enfase" ) );
             QueryableEntity Matricula = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Matricula" ) );
@@ -570,15 +571,32 @@ namespace QueryBuilder.Tests
             FromArgument FromArg1 = new FromArgument( Enfase, Container1.ERMongoMapping );
             List<AlgebraOperator> OperatorList1 = new List<AlgebraOperator>() { RJoinOp1 };
 
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator(
+                Enfase,
+                (Relationship)Container2.EntityRelationshipModel.FindByName( "VinculoEnfase" ),
+                new List<QueryableEntity>() { new QueryableEntity( MatriculaAluno ) },
+                Container2.ERMongoMapping );
+
+            FromArgument FromArg2 = new FromArgument( Enfase, Container2.ERMongoMapping );
+            List<AlgebraOperator> OperatorList2 = new List<AlgebraOperator>() { RJoinOp2 };
+
             QueryGenerator QueryGen1 = new QueryGenerator( FromArg1, OperatorList1 );
+            QueryGenerator QueryGen2 = new QueryGenerator( FromArg2, OperatorList2 );
+
             string Query1 = QueryGen1.Run();
+            string Query2 = QueryGen2.Run();
 
             Assert.IsNotNull( Query1 );
+            Assert.IsNotNull( Query2 );
 
             QueryRunner QueryRun1 = new QueryRunner( "mongodb://localhost:27017", "progradweb_1" );
+            QueryRunner QueryRun2 = new QueryRunner( "mongodb://localhost:27017", "progradweb_6" );
+
             string QueryResult1 = QueryRun1.GetJSON( Query1 );
+            string QueryResult2 = QueryRun2.GetJSON( Query2 );
 
             Assert.IsNotNull( QueryResult1 );
+            Assert.IsNotNull( QueryResult2 );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/Progradweb/EnfaseMatriculaALuno.js" );
 
@@ -591,8 +609,10 @@ namespace QueryBuilder.Tests
 
             JToken JSONResult1 = JToken.Parse( QueryResult1 );
             JToken JSONResult2 = JToken.Parse( QueryResultHandcrafted );
+            JToken JSONResult3 = JToken.Parse( QueryResult2 );
 
             JSONResult1.Should().BeEquivalentTo( JSONResult2 );
+            JSONResult1.Should().BeEquivalentTo( JSONResult3 );
         }
     }
 }
