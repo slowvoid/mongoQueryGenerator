@@ -11,7 +11,7 @@ namespace DataFaker
     {
         public static void Main()
         {
-            Console.Write( "Enter 1 to process CMS data or 2 to process Progradweb: " );
+            Console.Write( "Enter 1 to process CMS data, 2 to process Progradweb or 3 to process Progradweb2: " );
             int dbPicked = Convert.ToInt32( Console.ReadLine() );
 
             switch ( dbPicked )
@@ -21,6 +21,9 @@ namespace DataFaker
                     break;
                 case 2:
                     RunProgradStuff();
+                    break;
+                case 3:
+                    RunProgradStuff2();
                     break;
                 default:
                     Console.WriteLine( "Invalid choice\nPress enter to exit." );
@@ -216,6 +219,128 @@ namespace DataFaker
                 };
 
                 Matricula model = new Matricula()
+                {
+                    anoini_matr = 2020,
+                    semiini_matr = 1,
+                    codalu_matr = i + 1,
+                    codenf_matr = cod_enf
+                };
+
+                dbContext.Matriculas.Add( model_prev );
+                dbContext.Matriculas.Add( model );
+            }
+
+            dbContext.SaveChanges();
+
+            Console.WriteLine( "Finished generating progradweb data" );
+        }
+
+        public static void RunProgradStuff2()
+        {
+            ProgradContext2 dbContext = new ProgradContext2();
+
+            Console.WriteLine( "Processing prograd stuff" );
+
+            // Truncate tables
+            dbContext.Database.ExecuteSqlCommand( "TRUNCATE TABLE cursograd" );
+            dbContext.Database.ExecuteSqlCommand( "TRUNCATE TABLE alunograd" );
+            dbContext.Database.ExecuteSqlCommand( "TRUNCATE TABLE endereco" );
+            dbContext.Database.ExecuteSqlCommand( "TRUNCATE TABLE enfasegrad" );
+            dbContext.Database.ExecuteSqlCommand( "TRUNCATE TABLE gradegrad" );
+            dbContext.Database.ExecuteSqlCommand( "TRUNCATE TABLE matriculagrad" );
+
+            string[] CursoNames = { "Administração", "Ciências Biológicas", "Ciência da Computação", "Enfermagem", "Engenharia Civil", "Engenharia de Computação", "Física", "Letras", "Matemática", "Medicina" };
+
+            foreach ( string Curso in CursoNames )
+            {
+                Models.Prograd2.CursoGrad cursoModel = new Models.Prograd2.CursoGrad()
+                {
+                    nomecur_cur = Curso,
+                    sigla_cur = getSigla( Curso )
+                };
+
+                dbContext.Cursos.Add( cursoModel );
+            }
+
+            dbContext.SaveChanges();
+
+            Console.WriteLine( "Generating alunograd" );
+
+            Faker<Models.Prograd2.AlunoGrad> testAlunos = new Faker<Models.Prograd2.AlunoGrad>( "pt_BR" )
+                .RuleFor( a => a.codalu_alug, ( f, a ) => ++a.codalu_alug )
+                .RuleFor( a => a.nomealu_alug, ( f, a ) => f.Name.FullName() )
+                .RuleFor( a => a.cpf_alug, ( f, a ) => f.Random.ReplaceNumbers( "###########" ) );
+
+            int amountOfAlunos = 20;
+
+            List<Models.Prograd2.AlunoGrad> alunos = testAlunos.Generate( amountOfAlunos );
+            dbContext.Alunos.AddRange( alunos );
+            dbContext.SaveChanges();
+
+            Console.WriteLine( "Generating endereco" );
+
+            Faker<Models.Prograd2.Endereco> testEnderecos = new Faker<Models.Prograd2.Endereco>( "pt_BR" )
+                .RuleFor( e => e.codend_end, ( f, e ) => ++e.codend_end )
+                .RuleFor( e => e.logradouro_end, ( f, e ) => f.Address.StreetName() )
+                .RuleFor( e => e.bairro_end, ( f, e ) => f.Address.County() )
+                .RuleFor( e => e.cep_end, ( f, e ) => f.Address.ZipCode( "########" ) )
+                .RuleFor( e => e.codcidade_end, ( f, e ) => string.Format( "{0}{1}", f.Address.CountryCode(), f.Address.ZipCode() ) )
+                .RuleFor( e => e.aluno_id, ( f, e ) => f.Random.Int( 1, 20 ) );
+
+            int amountOfAddresses = 50;
+
+            List<Models.Prograd2.Endereco> enderecos = testEnderecos.Generate( amountOfAddresses );
+            dbContext.Enderecos.AddRange( enderecos );
+            dbContext.SaveChanges();
+
+            Console.WriteLine( "Generating enfase" );
+
+            Faker<Models.Prograd2.Enfase> testEnfase = new Faker<Models.Prograd2.Enfase>( "pt_BR" )
+                .RuleFor( e => e.codenf_enf, ( f, e ) => ++e.codenf_enf )
+                .RuleFor( e => e.nomeenf_enf, ( f, e ) => f.Lorem.Letter( 10 ) )
+                .RuleFor( e => e.siglaenf_enf, ( f, e ) => getSigla( e.nomeenf_enf ) )
+                .RuleFor( e => e.codcur_enf, ( f, e ) => f.Random.Int( 1, dbContext.Cursos.Count() ) );
+
+            int amountOfEnfases = 10;
+
+            List<Models.Prograd2.Enfase> enfases = testEnfase.Generate( amountOfEnfases );
+            dbContext.Enfases.AddRange( enfases );
+            dbContext.SaveChanges();
+
+            Console.WriteLine( "Generating grade grad" );
+
+            Random r = new Random();
+
+            for ( int i = 0; i < dbContext.Disciplinas.Count(); i++ )
+            {
+                Models.Prograd2.Grade model = new Models.Prograd2.Grade()
+                {
+                    discipgrad_id = i + 1,
+                    enfgrad_id = r.Next( 1, dbContext.Enfases.Count() + 1 ),
+                    perfil_grd = "1",
+                    userid_grd = 1
+                };
+
+                dbContext.Grades.Add( model );
+            }
+
+            dbContext.SaveChanges();
+
+            Console.WriteLine( "Generating matriculas" );
+
+            for ( int i = 0; i < dbContext.Alunos.Count(); i++ )
+            {
+                int cod_enf = r.Next( 1, dbContext.Enfases.Count() + 1 );
+
+                Models.Prograd2.Matricula model_prev = new Models.Prograd2.Matricula()
+                {
+                    anoini_matr = 2019,
+                    semiini_matr = 2,
+                    codalu_matr = i + 1,
+                    codenf_matr = cod_enf
+                };
+
+                Models.Prograd2.Matricula model = new Models.Prograd2.Matricula()
                 {
                     anoini_matr = 2020,
                     semiini_matr = 1,

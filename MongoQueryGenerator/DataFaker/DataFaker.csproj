@@ -108,6 +108,13 @@
     <Compile Include="Models\CMS\Store.cs" />
     <Compile Include="Models\CMS\User.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Prograd2\AlunoGrad.cs" />
+    <Compile Include="Models\Prograd2\CursoGrad.cs" />
+    <Compile Include="Models\Prograd2\DisciplinaGrad.cs" />
+    <Compile Include="Models\Prograd2\Endereco.cs" />
+    <Compile Include="Models\Prograd2\Enfase.cs" />
+    <Compile Include="Models\Prograd2\Grade.cs" />
+    <Compile Include="Models\Prograd2\Matricula.cs" />
     <Compile Include="Models\Prograd\AlunoGrad.cs" />
     <Compile Include="Models\Prograd\CursoGrad.cs" />
     <Compile Include="Models\Prograd\DisciplinaGrad.cs" />
@@ -116,8 +123,10 @@
     <Compile Include="Models\Prograd\Grade.cs" />
     <Compile Include="Models\Prograd\Matricula.cs" />
     <Compile Include="ProgradContext.cs" />
+    <Compile Include="ProgradContext2.cs" />
     <Compile Include="ResearchCMSContext.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
