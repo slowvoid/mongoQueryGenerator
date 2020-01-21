@@ -192,6 +192,9 @@
     <None Update="HandcraftedQueries\manyToManyEmbedded.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="HandcraftedQueries\Progradweb\AlunoMatriculaEnfase.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="HandcraftedQueries\Progradweb\EnfaseMatriculaAluno.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
