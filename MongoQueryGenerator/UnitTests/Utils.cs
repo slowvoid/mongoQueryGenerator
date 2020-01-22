@@ -12,7 +12,7 @@ namespace QueryBuilder.Tests
         /// </summary>
         /// <param name="File">File to read</param>
         /// <returns></returns>
-        public static string ReadQueryFromFile( string File)
+        public static string ReadQueryFromFile( string File )
         {
             string FileContents = string.Empty;
 
@@ -23,6 +23,18 @@ namespace QueryBuilder.Tests
             }
 
             return FileContents;
+        }
+        /// <summary>
+        /// Export a query to a file
+        /// </summary>
+        /// <param name="Query"></param>
+        /// <param name="File"></param>
+        public static void ExportQueryToFile( string Query, string File )
+        {
+            using ( StreamWriter sw = new StreamWriter( File ) )
+            {
+                sw.Write( Query );
+            }
         }
     }
 }
