@@ -74,6 +74,50 @@ namespace QueryBuilder.Query
             // according to the query
             return string.Format( "db.{0}.aggregate([{1}], {{allowDiskUse: true}}).pretty();", CollectionName, string.Join( ",", AggregatePipeline ) );
         }
+        /// <summary>
+        /// Generates the query in explain mode
+        /// </summary>
+        /// <returns></returns>
+        public string Explain()
+        {
+            string CollectionName = StartArgument.GetCollectionName();
+            // Check if collection name is set
+            // otherwise throw error
+            if ( string.IsNullOrWhiteSpace( CollectionName ) )
+            {
+                throw new InvalidOperationException( "CollectionName cannot be empty" );
+            }
+
+            // Setup results
+            AlgebraOperatorResult Result = new AlgebraOperatorResult( new List<MongoDBOperator>() );
+
+            foreach ( AlgebraOperator Op in PipelineOperators )
+            {
+                Result.Commands.AddRange( Op.Run().Commands );
+            }
+
+            // Check if there are any commands to be executed last
+            List<MongoDBOperator> MoveToEnd = Result.Commands.FindAll( C => C.ShouldExecuteLast );
+
+            if ( MoveToEnd.Count > 0 )
+            {
+                Result.Commands.RemoveAll( C => C.ShouldExecuteLast );
+                // Add again at the end
+                Result.Commands.AddRange( MoveToEnd );
+            }
+
+            // Store command objects
+            List<string> AggregatePipeline = new List<string>();
+
+            foreach ( MongoDBOperator Command in Result.Commands )
+            {
+                AggregatePipeline.Add( Command.ToJavaScript() );
+            }
+
+            // TODO: Update this section to generate collection and aggregate
+            // according to the query
+            return string.Format( "db.{0}.explain('executionStats').aggregate([{1}], {{allowDiskUse: true}});", CollectionName, string.Join( ",", AggregatePipeline ) );
+        }
         #endregion
 
         #region Constructors

@@ -15,46 +15,27 @@ namespace TestApp
     {
         static void Main( string[] args )
         {
-            Console.WriteLine( "Running new stuff..." );
+            DataContainer Data = ModelData();
 
-            var map = QueryBuilderParser.ParseMapping( new FileStream( "TestOneToMany.qer", FileMode.Open ) );
-            // Since parser is throwing an error if no main mapping is set to a relationship, I'll remove it
-            //MapRule ToRemove = map.ERMongoMapping.FindMainRule( map.EntityRelationshipModel.FindByName( "Drives" ) );
-            //map.ERMongoMapping.Rules.Remove( ToRemove );
-            //foreach ( MapRule Rule in map.ERMongoMapping.Rules )
-            //{
-            //    Console.WriteLine( "Rules for {0} Mapped To {1}", Rule.Source.Name, Rule.Target.Name );
-            //    foreach ( KeyValuePair<string, string> Attributes in Rule.Rules )
-            //    {
-            //        Console.WriteLine( "Key: {0} | Value: {1}", Attributes.Key, Attributes.Value );
-            //    }
-            //}
+            QueryableEntity Person = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Person" ) );
+            QueryableEntity Car = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Car" ) );
+            QueryableEntity Garage = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Garage" ) );
 
-            string query = "from Person p rjoin <Drives d> (Car c)";
-            //QueryGenerator gen = QueryBuilderParser.ParseQuery( query, map );
-
-            //string mongoQuery = gen.Run();
-
-            //DataContainer Data = ModelData();
-
-            //QueryableEntity Person = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Person" ) );
-            //QueryableEntity Car = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Car" ) );
-            //QueryableEntity Garage = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Garage" ) );
-
-            //ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarRepairedByGarage", Car, (Relationship)Data.EntityRelationshipModel.FindByName( "Repaired" ), new List<QueryableEntity>() { Garage } );
+            ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarRepairedByGarage", Car, (Relationship)Data.EntityRelationshipModel.FindByName( "Repaired" ), new List<QueryableEntity>() { Garage } );
 
 
-            //RelationshipJoinOperator JoinOp = new RelationshipJoinOperator( Person, (Relationship)Data.EntityRelationshipModel.FindByName( "Drives" ), new List<QueryableEntity>() { new QueryableEntity( CarRepairedByGarage ) }, Data.ERMongoMapping );
+            RelationshipJoinOperator JoinOp = new RelationshipJoinOperator( Person, (Relationship)Data.EntityRelationshipModel.FindByName( "Drives" ), new List<QueryableEntity>() { new QueryableEntity( CarRepairedByGarage ) }, Data.ERMongoMapping );
 
-            //QueryGenerator queryGen = new QueryGenerator( new FromArgument( Person, Data.ERMongoMapping ), new List<AlgebraOperator>() { JoinOp } );
+            QueryGenerator queryGen = new QueryGenerator( new FromArgument( Person, Data.ERMongoMapping ), new List<AlgebraOperator>() { JoinOp } );
 
-            //string mongoQuery = queryGen.Run();
+            string mongoQuery = queryGen.Explain();
 
-            //Console.WriteLine( mongoQuery );
+            Console.WriteLine( mongoQuery );
 
-            //QueryRunner runner = new QueryRunner( "mongodb://localhost:27017", "newOneToMany" );
+            QueryRunner runner = new QueryRunner( "mongodb://localhost:27017", "newOneToMany" );
 
-            //Console.WriteLine( runner.GetJSON( mongoQuery ) );
+            QueryStats stats = runner.GetExplainResult( mongoQuery );
+            Console.WriteLine( stats.ToString() );
 
             Console.Read();
         }

@@ -11,7 +11,7 @@ namespace DataFaker
     {
         public static void Main()
         {
-            Console.Write( "Enter 1 to process CMS data, 2 to process Progradweb, 3 to process Progradweb2 or 4 to process Progradweb3: " );
+            Console.Write( "Enter 1 to process CMS data, 2 to process Progradweb, 3 to process Progradweb2, 4 to process Progradweb3 or 5 to process CMS data with a lot of info: " );
             int dbPicked = Convert.ToInt32( Console.ReadLine() );
 
             switch ( dbPicked )
@@ -27,6 +27,9 @@ namespace DataFaker
                     break;
                 case 4:
                     RunProgradStuff3();
+                    break;
+                case 5:
+                    RunCSMStuffPerformance();
                     break;
                 default:
                     Console.WriteLine( "Invalid choice\nPress enter to exit." );
@@ -506,6 +509,85 @@ namespace DataFaker
             Console.WriteLine( "Finished generating progradweb data" );
         }
 
+        public static void RunCSMStuffPerformance()
+        {
+            // Connect to db
+            ResearchCMSContext2 dbCMS = new ResearchCMSContext2();
+
+            // Truncate tables
+            dbCMS.Database.ExecuteSqlCommand( "TRUNCATE TABLE users" );
+            dbCMS.Database.ExecuteSqlCommand( "TRUNCATE TABLE products" );
+            dbCMS.Database.ExecuteSqlCommand( "TRUNCATE TABLE stores" );
+            dbCMS.Database.ExecuteSqlCommand( "TRUNCATE TABLE categories" );
+
+            Faker<User> testUsers = new Faker<User>( "pt_BR" )
+                .RuleFor( u => u.UserID, ( f, u ) => ++u.UserID )
+                .RuleFor( u => u.UserName, ( f, u ) => f.Name.FullName() )
+                .RuleFor( u => u.UserEmail, ( f, u ) => f.Internet.Email( u.UserName ) )
+                .FinishWith( ( f, u ) =>
+                {
+                    Console.WriteLine( "User Created! Name = {0}", u.UserName );
+                } );
+
+            int amountOfUsers = 20000;
+
+            List<User> users = testUsers.Generate( amountOfUsers );
+            dbCMS.Users.AddRange( users );
+            dbCMS.SaveChanges();
+
+            Console.WriteLine( "Done! Current user count: {0}", dbCMS.Users.Count() );
+
+            string[] categoryNames = new Faker( "pt_BR" ).Commerce.Categories( 50 ).Distinct().ToArray();
+            List<Category> categories = new List<Category>();
+            int amountOfCategories = categoryNames.Length;
+
+            for ( int i = 0; i < amountOfCategories; i++ )
+            {
+                Category cat = new Category()
+                {
+                    CategoryName = categoryNames[ i ]
+                };
+
+                categories.Add( cat );
+            }
+
+            dbCMS.Categories.AddRange( categories );
+            dbCMS.SaveChanges();
+
+            Console.WriteLine( "Done! Current category count: {0}", dbCMS.Categories.Count() );
+
+            Faker<Store> testStores = new Faker<Store>( "pt_BR" )
+                .RuleFor( s => s.StoreID, ( f, s ) => ++s.StoreID )
+                .RuleFor( s => s.StoreName, ( f, s ) => f.Company.CompanyName() )
+                .FinishWith( ( f, s ) =>
+                {
+                    Console.WriteLine( "Store created! Name = {0}", s.StoreName );
+                } );
+
+            List<Store> stores = testStores.Generate( 100 );
+            dbCMS.Stores.AddRange( stores );
+            dbCMS.SaveChanges();
+
+            Console.WriteLine( "Done! Current store count: {0}", dbCMS.Stores.Count() );
+
+            Faker<Product> testProducts = new Faker<Product>( "pt_BR" )
+                .RuleFor( p => p.ProductID, ( f, p ) => ++p.ProductID )
+                .RuleFor( p => p.Title, ( f, p ) => f.Commerce.ProductName() )
+                .RuleFor( p => p.Description, ( f, p ) => f.Commerce.ProductAdjective() )
+                .RuleFor( p => p.UserID, ( f, p ) => f.PickRandom( users ).UserID )
+                .RuleFor( p => p.CategoryID, ( f, p ) => f.PickRandom( categories ).CategoryID )
+                .RuleFor( p => p.StoreID, ( f, p ) => f.PickRandom( stores ).StoreID )
+                .FinishWith( ( f, p ) =>
+                {
+                    Console.WriteLine( "Product created! Title = {0}", p.Title );
+                } );
+
+            List<Product> products = testProducts.Generate( 150000 );
+            dbCMS.Products.AddRange( products );
+            dbCMS.SaveChanges();
+
+            Console.WriteLine( "Done! Current product count: {0}", dbCMS.Products.Count() );
+        }
         public static string getSigla(string Source)
         {
             string[] splitted = Source.Split( new string[] { " " }, StringSplitOptions.RemoveEmptyEntries );

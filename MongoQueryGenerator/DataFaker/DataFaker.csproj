@@ -133,6 +133,7 @@
     <Compile Include="ProgradContext.cs" />
     <Compile Include="ProgradContext3 .cs" />
     <Compile Include="ProgradContext2.cs" />
+    <Compile Include="ResearchCMSContext2.cs" />
     <Compile Include="ResearchCMSContext.cs" />
   </ItemGroup>
   <ItemGroup />

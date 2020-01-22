@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>TestApp.JSONTests</StartupObject>
+    <StartupObject>TestApp.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

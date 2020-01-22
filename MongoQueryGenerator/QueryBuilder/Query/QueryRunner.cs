@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +60,18 @@ namespace QueryBuilder.Query
             BsonDocument QueryResult = _executeQuery( Query );
             
             return QueryResult.GetElement( "retval" ).Value.ToBsonDocument().GetElement( "_batch" ).Value.ToJson();
+        }
+
+        public QueryStats GetExplainResult( string ExplainQuery )
+        {
+            BsonDocument QueryExplainResult = _executeQuery( ExplainQuery );
+
+            string resultjson = QueryExplainResult.GetElement( "retval" ).Value.ToBsonDocument()
+                .GetElement( "stages" ).Value.AsBsonArray.First().ToBsonDocument()
+                .GetElement( "$cursor" ).Value.ToBsonDocument()
+                .GetElement( "executionStats" ).Value.ToJson();
+
+            return JsonConvert.DeserializeObject<QueryStats>( resultjson );
         }
         #endregion
 
