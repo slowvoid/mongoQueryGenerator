@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -59,6 +60,43 @@ namespace QueryBuilder.Query
         /// </summary>
         [JsonProperty("executionTimeMillisEstimate")]
         public int EstimatedExecutionTime { get; set; }
+        /// <summary>
+        /// Additional stats
+        /// </summary>
+        [JsonProperty("inputStage")]
+        public QueryInputStage InputStage { get; set; }
         #endregion
+    }
+    /// <summary>
+    /// Addition stats
+    /// </summary>
+    public class QueryInputStage
+    {
+        /// <summary>
+        /// Stage name
+        /// </summary>
+        [JsonProperty("stage")]
+        public string Stage { get; set; }
+        /// <summary>
+        /// Number of documents returned
+        /// </summary>
+        [JsonProperty("nReturned")]
+        public int DocumentsReturn { get; set; }
+        /// <summary>
+        /// Estimated execution time in milliseconds
+        /// </summary>
+        [JsonProperty( "executionTimeMillisEstimate" )]
+        public int EstimatedExecutionTime { get; set; }
+        /// <summary>
+        /// Amount of documents returned or advanced to the parent stage
+        /// </summary>
+        [JsonProperty("advanced")]
+        public int ReturnedOrAdvancedCount { get; set; }
+        /// <summary>
+        /// Additional stats
+        /// </summary>
+        [JsonProperty( "inputStage", NullValueHandling = NullValueHandling.Ignore )]
+        [BsonIgnoreIfNull]
+        public QueryInputStage InputStage { get; set; }
     }
 }

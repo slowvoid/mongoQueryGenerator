@@ -16,6 +16,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFaker", "DataFaker\DataFaker.csproj", "{6056882D-1D4C-4EC1-BF37-8F780B63528F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryAnalyzer", "QueryAnalyzer\QueryAnalyzer.csproj", "{E17863D1-4F01-413B-BF68-8F614016FB55}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B679C7CC-F296-4199-A488-16C8339331DA} = {B679C7CC-F296-4199-A488-16C8339331DA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
