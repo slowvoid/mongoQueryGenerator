@@ -33,8 +33,10 @@ namespace QueryAnalyzer
             Console.WriteLine( "Query: get_all_products_from_store" );
             cms.GetAllProductsFromStore();
 
-            Console.WriteLine( "Query: get_all_products_from_user" );
-            cms.GetAllProductsFromUser();
+            //TODO: RE RUN THIS
+            //BUG: NOT WORKING
+            //Console.WriteLine( "Query: get_all_products_from_user" );
+            //cms.GetAllProductsFromUser();
 
             Console.WriteLine( "Query: get_all_stores" );
             cms.GetAllStores();

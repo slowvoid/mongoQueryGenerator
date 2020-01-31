@@ -107,6 +107,7 @@ namespace DataFaker
                 .RuleFor( p => p.UserID, ( f, p ) => f.PickRandom( users ).UserID )
                 .RuleFor( p => p.CategoryID, ( f, p ) => f.PickRandom( categories ).CategoryID )
                 .RuleFor( p => p.StoreID, ( f, p ) => f.PickRandom( stores ).StoreID )
+                .RuleFor( p => p.Price, ( f, p ) => f.Random.Int( 1, 10000 ) )
                 .FinishWith( ( f, p ) =>
                 {
                     Console.WriteLine( "Product created! Title = {0}", p.Title );
@@ -577,6 +578,7 @@ namespace DataFaker
                 .RuleFor( p => p.UserID, ( f, p ) => f.PickRandom( users ).UserID )
                 .RuleFor( p => p.CategoryID, ( f, p ) => f.PickRandom( categories ).CategoryID )
                 .RuleFor( p => p.StoreID, ( f, p ) => f.PickRandom( stores ).StoreID )
+                .RuleFor( p => p.Price, ( f, p ) => f.Random.Int( 1, 10000 ) )
                 .FinishWith( ( f, p ) =>
                 {
                     Console.WriteLine( "Product created! Title = {0}", p.Title );

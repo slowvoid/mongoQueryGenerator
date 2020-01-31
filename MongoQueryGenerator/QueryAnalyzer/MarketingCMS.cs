@@ -32,11 +32,11 @@ namespace QueryAnalyzer
             string Query4 = _getQueryForTestAllProducts( DataMap4, Product, Store, Category, User );
             string Query5 = _getQueryForTestAllProducts( DataMap5, Product, Store, Category, User );
 
-            QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
+            QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
 
-            // Run each query 10 times
+            // Run each query 100 times
             List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = Runner.GetExplainResult( Query );
                 Stats1.Add( iterationResult );
@@ -47,9 +47,9 @@ namespace QueryAnalyzer
             // Save all
             MongoContext.InsertManyRecords( "get_all_products_query_1", Stats1 );
 
-            QueryRunner Runner2 = new QueryRunner( "mongodb://localhost:27017", "research_performance_3" );
+            QueryRunner Runner2 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_3" );
             List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = Runner2.GetExplainResult( Query2 );
                 Stats2.Add( iterationResult );
@@ -58,9 +58,9 @@ namespace QueryAnalyzer
             MongoContext.DropCollection( "get_all_products_query_2" );
             MongoContext.InsertManyRecords( "get_all_products_query_2", Stats2 );
 
-            QueryRunner Runner3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_2" );
+            QueryRunner Runner3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
             List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = Runner3.GetExplainResult( Query3 );
                 Stats3.Add( iterationResult );
@@ -69,9 +69,9 @@ namespace QueryAnalyzer
             MongoContext.DropCollection( "get_all_products_query_3" );
             MongoContext.InsertManyRecords( "get_all_products_query_3", Stats3 );
 
-            QueryRunner Runner4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
+            QueryRunner Runner4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
             List<QueryStats> Stats4 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = Runner4.GetExplainResult( Query4 );
                 Stats4.Add( iterationResult );
@@ -80,9 +80,9 @@ namespace QueryAnalyzer
             MongoContext.DropCollection( "get_all_products_query_4" );
             MongoContext.InsertManyRecords( "get_all_products_query_4", Stats4 );
 
-            QueryRunner Runner5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
+            QueryRunner Runner5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
             List<QueryStats> Stats5 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = Runner5.GetExplainResult( Query5 );
                 Stats5.Add( iterationResult );
@@ -166,13 +166,13 @@ namespace QueryAnalyzer
             string QueryStringMap3 = QueryGenMap3.Explain();
             string QueryStringMap5 = QueryGenMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_2" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
 
-            // Run each query 10 times
+            // Run each query 100 times
             List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryStringMap1 );
                 Stats1.Add( iterationResult );
@@ -184,7 +184,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_stores_query_1", Stats1 );
 
             List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap3.GetExplainResult( QueryStringMap3 );
                 Stats2.Add( iterationResult );
@@ -196,7 +196,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_stores_query_2", Stats2 );
 
             List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryStringMap5 );
                 Stats3.Add( iterationResult );
@@ -250,12 +250,12 @@ namespace QueryAnalyzer
             string QueryStringMap3 = QueryGenMap3.Explain();
             string QueryStringMap4 = QueryGenMap4.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_2" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
 
             List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryStringMap1 );
                 Stats1.Add( iterationResult );
@@ -267,7 +267,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_users_query_1", Stats1 );
 
             List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap3.GetExplainResult( QueryStringMap3 );
                 Stats2.Add( iterationResult );
@@ -279,7 +279,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_users_query_2", Stats2 );
 
             List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryStringMap4 );
                 Stats3.Add( iterationResult );
@@ -333,12 +333,12 @@ namespace QueryAnalyzer
             string QueryStringMap4 = QueryGenMap4.Explain();
             string QueryStringMap5 = QueryGenMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
 
             List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryStringMap1 );
                 Stats1.Add( iterationResult );
@@ -350,7 +350,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_categories_query_1", Stats1 );
 
             List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryStringMap4 );
                 Stats2.Add( iterationResult );
@@ -362,7 +362,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_categories_query_2", Stats2 );
 
             List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryStringMap5 );
                 Stats3.Add( iterationResult );
@@ -435,12 +435,12 @@ namespace QueryAnalyzer
             string QueryMap3 = GeneratorMap3.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_2" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
 
             List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
                 Stats1.Add( iterationResult );
@@ -452,7 +452,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_products_from_store_query_1", Stats1 );
 
             List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap3.GetExplainResult( QueryMap3 );
                 Stats2.Add( iterationResult );
@@ -464,7 +464,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_products_from_store_query_2", Stats2 );
 
             List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
                 Stats3.Add( iterationResult );
@@ -537,12 +537,12 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
 
             List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
                 Stats1.Add( iterationResult );
@@ -554,7 +554,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_products_from_category_query_1", Stats1 );
 
             List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
                 Stats2.Add( iterationResult );
@@ -566,7 +566,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_products_from_category_query_2", Stats2 );
 
             List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
                 Stats3.Add( iterationResult );
@@ -589,10 +589,8 @@ namespace QueryAnalyzer
         public void GetAllProductsFromUser()
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
             RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
             RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
@@ -600,37 +598,25 @@ namespace QueryAnalyzer
             RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
                 new List<QueryableEntity>() { Product }, DataMap.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapDuplicates.ERMongoMapping );
-
             RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
                 new List<QueryableEntity>() { Product }, DataMapCategoryDuplicated.ERMongoMapping );
 
             RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
                 new List<QueryableEntity>() { Product }, DataMapStoreDuplicated.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
-
             SortArgument SortArg = new SortArgument( User, User.GetAttribute( "UserID" ), MongoDBSort.Ascending );
 
             SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
             SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
             SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
-            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
 
             List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
-            List<AlgebraOperator> OperatorsToExecuteMap2 = new List<AlgebraOperator>() { RJoinOp2, SortOpMap2 };
             List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3, SortOpMap3 };
             List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, SortOpMap4 };
-            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
 
             FromArgument StartArgMap1 = new FromArgument( User, DataMap.ERMongoMapping );
-            FromArgument StartArgMap2 = new FromArgument( User, DataMapDuplicates.ERMongoMapping );
             FromArgument StartArgMap3 = new FromArgument( User, DataMapCategoryDuplicated.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( User, DataMapStoreDuplicated.ERMongoMapping );
-            FromArgument StartArgMap5 = new FromArgument( User, DataMapUserDuplicated.ERMongoMapping );
 
             QueryGenerator GeneratorMap1 = new QueryGenerator( StartArgMap1, OperatorsToExecuteMap1 );
             QueryGenerator GeneratorMap3 = new QueryGenerator( StartArgMap3, OperatorsToExecuteMap3 );
@@ -640,45 +626,45 @@ namespace QueryAnalyzer
             string QueryMap3 = GeneratorMap3.Explain();
             string QueryMap4 = GeneratorMap4.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_2" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
+            //QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            //QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
+            //QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
 
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
-            {
-                QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
-                Stats1.Add( iterationResult );
-            }
+            //List<QueryStats> Stats1 = new List<QueryStats>();
+            //for ( int i = 0; i < 100; i++ )
+            //{
+            //    QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
+            //    Stats1.Add( iterationResult );
+            //}
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_user_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_user_query_1", Stats1 );
+            //// Drop before saving new
+            //MongoContext.DropCollection( "get_all_products_from_user_query_1" );
+            //// Save all
+            //MongoContext.InsertManyRecords( "get_all_products_from_user_query_1", Stats1 );
 
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
-            {
-                QueryStats iterationResult = RunnerMap3.GetExplainResult( QueryMap3 );
-                Stats2.Add( iterationResult );
-            }
+            //List<QueryStats> Stats2 = new List<QueryStats>();
+            //for ( int i = 0; i < 100; i++ )
+            //{
+            //    QueryStats iterationResult = RunnerMap3.GetExplainResult( QueryMap3 );
+            //    Stats2.Add( iterationResult );
+            //}
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_user_query_2" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_user_query_2", Stats2 );
+            //// Drop before saving new
+            //MongoContext.DropCollection( "get_all_products_from_user_query_2" );
+            //// Save all
+            //MongoContext.InsertManyRecords( "get_all_products_from_user_query_2", Stats2 );
 
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
-            {
-                QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
-                Stats3.Add( iterationResult );
-            }
+            //List<QueryStats> Stats3 = new List<QueryStats>();
+            //for ( int i = 0; i < 100; i++ )
+            //{
+            //    QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
+            //    Stats3.Add( iterationResult );
+            //}
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_user_query_3" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_user_query_3", Stats3 );
+            //// Drop before saving new
+            //MongoContext.DropCollection( "get_all_products_from_user_query_3" );
+            //// Save all
+            //MongoContext.InsertManyRecords( "get_all_products_from_user_query_3", Stats3 );
         }
         /// <summary>
         /// Run GetAllProductsFromCategoryWithStore
@@ -751,12 +737,12 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
 
             List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
                 Stats1.Add( iterationResult );
@@ -768,7 +754,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_products_from_category_with_store_query_1", Stats1 );
 
             List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
                 Stats2.Add( iterationResult );
@@ -780,7 +766,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_products_from_category_with_store_query_2", Stats2 );
 
             List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
                 Stats3.Add( iterationResult );
@@ -859,12 +845,12 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
 
             List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
                 Stats1.Add( iterationResult );
@@ -876,7 +862,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_products_from_category_with_user_query_1", Stats1 );
 
             List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
                 Stats2.Add( iterationResult );
@@ -888,7 +874,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_products_from_category_with_user_query_2", Stats2 );
 
             List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
                 Stats3.Add( iterationResult );
@@ -983,14 +969,14 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner RunnerMap2 = new QueryRunner( "mongodb://localhost:27017", "research_performance_3" );
-            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_2" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            QueryRunner RunnerMap2 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_3" );
+            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
 
             List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
                 Stats1.Add( iterationResult );
@@ -1002,7 +988,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_product_title_username_query_1", Stats1 );
 
             List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap2.GetExplainResult( QueryMap2 );
                 Stats2.Add( iterationResult );
@@ -1014,7 +1000,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_product_title_username_query_2", Stats2 );
 
             List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap3.GetExplainResult( QueryMap3 );
                 Stats3.Add( iterationResult );
@@ -1026,7 +1012,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_product_title_username_query_3", Stats3 );
 
             List<QueryStats> Stats4 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
                 Stats4.Add( iterationResult );
@@ -1038,7 +1024,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_product_title_username_query_4", Stats4 );
 
             List<QueryStats> Stats5 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
                 Stats5.Add( iterationResult );
@@ -1132,12 +1118,12 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
 
             List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
                 Stats1.Add( iterationResult );
@@ -1149,7 +1135,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_products_from_category_with_user_select_few_query_1", Stats1 );
 
             List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
                 Stats2.Add( iterationResult );
@@ -1161,7 +1147,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_all_products_from_category_with_user_select_few_query_2", Stats2 );
 
             List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
                 Stats3.Add( iterationResult );
@@ -1224,12 +1210,12 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
+            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
+            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
 
             List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
                 Stats1.Add( iterationResult );
@@ -1241,7 +1227,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_category_named_home_query_1", Stats1 );
 
             List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
                 Stats2.Add( iterationResult );
@@ -1253,7 +1239,7 @@ namespace QueryAnalyzer
             MongoContext.InsertManyRecords( "get_category_named_home_query_2", Stats2 );
 
             List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 10; i++ )
+            for ( int i = 0; i < 100; i++ )
             {
                 QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
                 Stats3.Add( iterationResult );

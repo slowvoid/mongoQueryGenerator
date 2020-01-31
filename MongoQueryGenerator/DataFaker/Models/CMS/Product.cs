@@ -34,8 +34,12 @@ namespace DataFaker.Models.CMS
         /// </summary>
         public int CategoryID { get; set; }
         /// <summary>
-        /// Id of the sotre in which this product belongs to
+        /// Id of the store in which this product belongs to
         /// </summary>
         public int StoreID { get; set; }
+        /// <summary>
+        /// Product price
+        /// </summary>
+        public int Price { get; set; }
     }
 }
