@@ -1,0 +1,20 @@
+db.Product.explain('executionStats').aggregate([
+    {"$lookup": {
+        from: 'Store',
+        foreignField: '_id',
+        localField: 'StoreID',
+        as: 'data_Store'
+    }},
+    {"$lookup": {
+        from: 'Category',
+        foreignField: '_id',
+        localField: 'CategoryID',
+        as: 'data_Category'
+    }},
+    {"$lookup": {
+        from: 'User',
+        foreignField: '_id',
+        localField: 'UserID',
+        as: 'data_User'
+    }}
+])

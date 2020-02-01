@@ -13,4 +13,8 @@
     <ProjectReference Include="..\QueryBuilder\QueryBuilder.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="HandcraftedQueries\" />
+  </ItemGroup>
+
 </Project>

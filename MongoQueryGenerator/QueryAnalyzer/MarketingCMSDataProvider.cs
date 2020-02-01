@@ -41,7 +41,7 @@ namespace QueryAnalyzer
 
             Entity Product = new Entity( "Product" );
             Product.AddAttribute( "ProductID", true );
-            Product.AddAttributes( "Title", "Description" );
+            Product.AddAttributes( "Title", "Description", "Price" );
 
             Relationship UserProducts = new Relationship( "UserProducts" );
             UserProducts.AddRelationshipEnd( new RelationshipEnd( User ) );
@@ -68,7 +68,7 @@ namespace QueryAnalyzer
             UserCol.AddAttributes( "_id", "UserName", "UserEmail" );
 
             MongoDBCollection ProductCol = new MongoDBCollection( "Product" );
-            ProductCol.AddAttributes( "_id", "Title", "Description", "CategoryID", "StoreID", "UserID" );
+            ProductCol.AddAttributes( "_id", "Title", "Description", "CategoryID", "StoreID", "UserID", "Price" );
 
             MongoDBCollection CategoryCol = new MongoDBCollection( "Category" );
             CategoryCol.AddAttributes( "_id", "CategoryName" );
@@ -96,6 +96,7 @@ namespace QueryAnalyzer
             ProductRules.AddRule( "ProductID", "_id" );
             ProductRules.AddRule( "Title", "Title" );
             ProductRules.AddRule( "Description", "Description" );
+            ProductRules.AddRule( "Price", "Price" );
 
             Entity Category = (Entity)Model.FindByName( "Category" );
 
@@ -128,7 +129,7 @@ namespace QueryAnalyzer
         {
             // Create Schema
             MongoDBCollection ProductCol = new MongoDBCollection( "Product" );
-            ProductCol.AddAttributes( "_id", "Title", "Description",
+            ProductCol.AddAttributes( "_id", "Title", "Description", "Price",
                 "user._id", "user.name", "user.email",
                 "category._id", "category.name",
                 "store._id", "store.name" );
@@ -166,6 +167,7 @@ namespace QueryAnalyzer
             ProductRules.AddRule( "ProductID", "_id" );
             ProductRules.AddRule( "Title", "Title" );
             ProductRules.AddRule( "Description", "Description" );
+            ProductRules.AddRule( "Price", "Price" );
 
             Entity Category = (Entity)Model.FindByName( "Category" );
 
@@ -197,7 +199,7 @@ namespace QueryAnalyzer
         {
             // Create Schema
             MongoDBCollection ProductCol = new MongoDBCollection( "Product" );
-            ProductCol.AddAttributes( "_id", "Title", "Description",
+            ProductCol.AddAttributes( "_id", "Title", "Description", "Price",
                 "StoreID", "UserID",
                 "category._id", "category.name" );
 
@@ -229,6 +231,7 @@ namespace QueryAnalyzer
             ProductRules.AddRule( "ProductID", "_id" );
             ProductRules.AddRule( "Title", "Title" );
             ProductRules.AddRule( "Description", "Description" );
+            ProductRules.AddRule( "Price", "Price" );
 
             Entity Category = (Entity)Model.FindByName( "Category" );
 
@@ -262,7 +265,7 @@ namespace QueryAnalyzer
         {
             // Create Schema
             MongoDBCollection ProductCol = new MongoDBCollection( "Product" );
-            ProductCol.AddAttributes( "_id", "Title", "Description",
+            ProductCol.AddAttributes( "_id", "Title", "Description", "Price",
                 "CategoryID", "UserID",
                 "store._id", "store.name" );
 
@@ -294,6 +297,7 @@ namespace QueryAnalyzer
             ProductRules.AddRule( "ProductID", "_id" );
             ProductRules.AddRule( "Title", "Title" );
             ProductRules.AddRule( "Description", "Description" );
+            ProductRules.AddRule( "Price", "Price" );
 
             Entity Category = (Entity)Model.FindByName( "Category" );
 
@@ -327,7 +331,7 @@ namespace QueryAnalyzer
         {
             // Create Schema
             MongoDBCollection ProductCol = new MongoDBCollection( "Product" );
-            ProductCol.AddAttributes( "_id", "Title", "Description",
+            ProductCol.AddAttributes( "_id", "Title", "Description", "Price",
                 "CategoryID", "StoreID",
                 "user._id", "user.name", "user.email" );
 
@@ -364,6 +368,7 @@ namespace QueryAnalyzer
             ProductRules.AddRule( "ProductID", "_id" );
             ProductRules.AddRule( "Title", "Title" );
             ProductRules.AddRule( "Description", "Description" );
+            ProductRules.AddRule( "Price", "Price" );
 
             Entity Category = (Entity)Model.FindByName( "Category" );
 

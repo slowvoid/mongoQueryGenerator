@@ -50,6 +50,9 @@ namespace QueryAnalyzer
             Console.WriteLine( "Query: get_product_title_username" );
             cms.GetProductTitleAndUserName();
 
+            Console.WriteLine( "Query: get_products_prices_less" );
+            cms.GetAllProductsThatCostsLessThan5();
+
             DateTime EndTime = DateTime.Now;
             Console.WriteLine( "Finished" );
             Console.WriteLine( "Finished Time: {0}", EndTime.ToString() );

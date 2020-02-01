@@ -1250,5 +1250,147 @@ namespace QueryAnalyzer
             // Save all
             MongoContext.InsertManyRecords( "get_category_named_home_query_3", Stats3 );
         }
+        /// <summary>
+        /// Execute GetAllProductsThatCostsLessThan5
+        /// 
+        /// Query:
+        /// 
+        /// FROM Product p
+        /// RJOIN <CategoryProducts> ( Category c )
+        /// RJOIN <StoreProducts> ( Store s )
+        /// RJOIN <UserProducts> ( User u )
+        /// WHERE p.Price < 5
+        /// SELECT *
+        /// </summary>
+        public void GetAllProductsThatCostsLessThan5()
+        {
+            RequiredDataContainer DataMap1 = MarketingCMSDataProvider.MapEntitiesToCollections();
+            RequiredDataContainer DataMap2 = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            RequiredDataContainer DataMap3 = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            RequiredDataContainer DataMap4 = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            RequiredDataContainer DataMap5 = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+
+            QueryableEntity Product = new QueryableEntity( DataMap1.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity Store = new QueryableEntity( DataMap1.EntityRelationshipModel.FindByName( "Store" ) );
+            QueryableEntity Category = new QueryableEntity( DataMap1.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity User = new QueryableEntity( DataMap1.EntityRelationshipModel.FindByName( "User" ) );
+
+            List<AlgebraOperator> OperatorList1 = _GetAllProductsLessThan5Operations( DataMap1 );
+            List<AlgebraOperator> OperatorList2 = _GetAllProductsLessThan5Operations( DataMap2 );
+            List<AlgebraOperator> OperatorList3 = _GetAllProductsLessThan5Operations( DataMap3 );
+            List<AlgebraOperator> OperatorList4 = _GetAllProductsLessThan5Operations( DataMap4 );
+            List<AlgebraOperator> OperatorList5 = _GetAllProductsLessThan5Operations( DataMap5 );
+
+            FromArgument StartArg1 = new FromArgument( Product, DataMap1.ERMongoMapping );
+            FromArgument StartArg2 = new FromArgument( Product, DataMap2.ERMongoMapping );
+            FromArgument StartArg3 = new FromArgument( Product, DataMap3.ERMongoMapping );
+            FromArgument StartArg4 = new FromArgument( Product, DataMap4.ERMongoMapping );
+            FromArgument StartArg5 = new FromArgument( Product, DataMap5.ERMongoMapping );
+
+            QueryGenerator QueryGen1 = new QueryGenerator( StartArg1, OperatorList1 );
+            QueryGenerator QueryGen2 = new QueryGenerator( StartArg2, OperatorList2 );
+            QueryGenerator QueryGen3 = new QueryGenerator( StartArg3, OperatorList3 );
+            QueryGenerator QueryGen4 = new QueryGenerator( StartArg4, OperatorList4 );
+            QueryGenerator QueryGen5 = new QueryGenerator( StartArg5, OperatorList5 );
+
+            string Query1 = QueryGen1.Explain();
+            string Query2 = QueryGen2.Explain();
+            string Query3 = QueryGen3.Explain();
+            string Query4 = QueryGen4.Explain();
+            string Query5 = QueryGen5.Explain();
+
+            QueryRunner QueryRunner1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
+            QueryRunner QueryRunner2 = new QueryRunner( "mongodb://localhost:27017", "research_performance_3" );
+            QueryRunner QueryRunner3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_2" );
+            QueryRunner QueryRunner4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
+            QueryRunner QueryRunner5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
+
+            List<QueryStats> Stats1 = new List<QueryStats>();
+            for ( int i = 0; i < 100; i++ )
+            {
+                QueryStats iterationResult = QueryRunner1.GetExplainResult( Query1 );
+                Stats1.Add( iterationResult );
+            }
+
+            MongoContext.DropCollection( "get_all_products_price_less_1" );
+            MongoContext.InsertManyRecords( "get_all_products_price_less_1", Stats1 );
+
+            List<QueryStats> Stats2 = new List<QueryStats>();
+            for ( int i = 0; i < 100; i++ )
+            {
+                QueryStats iterationResult = QueryRunner2.GetExplainResult( Query2 );
+                Stats2.Add( iterationResult );
+            }
+
+            MongoContext.DropCollection( "get_all_products_price_less_2" );
+            MongoContext.InsertManyRecords( "get_all_products_price_less_2", Stats2 );
+
+            List<QueryStats> Stats3 = new List<QueryStats>();
+            for ( int i = 0; i < 100; i++ )
+            {
+                QueryStats iterationResult = QueryRunner3.GetExplainResult( Query3 );
+                Stats3.Add( iterationResult );
+            }
+
+            MongoContext.DropCollection( "get_all_products_price_less_3" );
+            MongoContext.InsertManyRecords( "get_all_products_price_less_3", Stats3 );
+
+            List<QueryStats> Stats4 = new List<QueryStats>();
+            for ( int i = 0; i < 100; i++ )
+            {
+                QueryStats iterationResult = QueryRunner4.GetExplainResult( Query4 );
+                Stats4.Add( iterationResult );
+            }
+
+            MongoContext.DropCollection( "get_all_products_price_less_4" );
+            MongoContext.InsertManyRecords( "get_all_products_price_less_4", Stats4 );
+
+            List<QueryStats> Stats5 = new List<QueryStats>();
+            for ( int i = 0; i < 100; i++ )
+            {
+                QueryStats iterationResult = QueryRunner5.GetExplainResult( Query5 );
+                Stats5.Add( iterationResult );
+            }
+
+            MongoContext.DropCollection( "get_all_products_price_less_5" );
+            MongoContext.InsertManyRecords( "get_all_products_price_less_5", Stats5 );
+        }
+        /// <summary>
+        /// Create a list of operators to execute the query
+        /// </summary>
+        /// <param name="DataMap"></param>
+        /// <returns></returns>
+        public List<AlgebraOperator> _GetAllProductsLessThan5Operations( RequiredDataContainer DataMap )
+        {
+            QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
+            QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
+
+            RelationshipJoinOperator RJoinOpStore = new RelationshipJoinOperator(
+                Product,
+                (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Store },
+                DataMap.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOpCategory = new RelationshipJoinOperator(
+                Product,
+                (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { Category },
+                DataMap.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOpUser = new RelationshipJoinOperator(
+                Product,
+                (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { User },
+                DataMap.ERMongoMapping );
+
+            MapRule ProductRule = DataMap.ERMongoMapping.FindMainRule( Product.Element );
+            SelectArgument SelectArg = new SelectArgument( new LtExpr( ProductRule.GetRuleValueForAttribute( Product.GetAttribute( "Price" ) ), 5 ) );
+
+            SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
+
+            return new List<AlgebraOperator>() { RJoinOpStore, RJoinOpCategory, RJoinOpUser, SelectOp };
+        }
     }
 }

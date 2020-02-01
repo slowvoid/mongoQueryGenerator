@@ -61,7 +61,11 @@ namespace QueryBuilder.Query
             
             return QueryResult.GetElement( "retval" ).Value.ToBsonDocument().GetElement( "_batch" ).Value.ToJson();
         }
-
+        /// <summary>
+        /// Parse explain('executionStats') for aggregate queries
+        /// </summary>
+        /// <param name="ExplainQuery"></param>
+        /// <returns></returns>
         public QueryStats GetExplainResult( string ExplainQuery )
         {
             BsonDocument QueryExplainResult = _executeQuery( ExplainQuery );
@@ -69,6 +73,20 @@ namespace QueryBuilder.Query
             string resultjson = QueryExplainResult.GetElement( "retval" ).Value.ToBsonDocument()
                 .GetElement( "stages" ).Value.AsBsonArray.First().ToBsonDocument()
                 .GetElement( "$cursor" ).Value.ToBsonDocument()
+                .GetElement( "executionStats" ).Value.ToJson();
+
+            return JsonConvert.DeserializeObject<QueryStats>( resultjson );
+        }
+        /// <summary>
+        /// Parse explain('executionStats') for non aggregate queries
+        /// </summary>
+        /// <param name="ExplainQuery"></param>
+        /// <returns></returns>
+        public QueryStats GetExplainResultNonAggregate( string ExplainQuery )
+        {
+            BsonDocument QueryExplainResult = _executeQuery( ExplainQuery );
+
+            string resultjson = QueryExplainResult.GetElement( "retval" ).Value.ToBsonDocument()
                 .GetElement( "executionStats" ).Value.ToJson();
 
             return JsonConvert.DeserializeObject<QueryStats>( resultjson );

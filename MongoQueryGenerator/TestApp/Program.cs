@@ -15,27 +15,33 @@ namespace TestApp
     {
         static void Main( string[] args )
         {
-            DataContainer Data = ModelData();
+            //DataContainer Data = ModelData();
 
-            QueryableEntity Person = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Person" ) );
-            QueryableEntity Car = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Car" ) );
-            QueryableEntity Garage = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Garage" ) );
+            //QueryableEntity Person = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Person" ) );
+            //QueryableEntity Car = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Car" ) );
+            //QueryableEntity Garage = new QueryableEntity( Data.EntityRelationshipModel.FindByName( "Garage" ) );
 
-            ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarRepairedByGarage", Car, (Relationship)Data.EntityRelationshipModel.FindByName( "Repaired" ), new List<QueryableEntity>() { Garage } );
+            //ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarRepairedByGarage", Car, (Relationship)Data.EntityRelationshipModel.FindByName( "Repaired" ), new List<QueryableEntity>() { Garage } );
 
 
-            RelationshipJoinOperator JoinOp = new RelationshipJoinOperator( Person, (Relationship)Data.EntityRelationshipModel.FindByName( "Drives" ), new List<QueryableEntity>() { new QueryableEntity( CarRepairedByGarage ) }, Data.ERMongoMapping );
+            //RelationshipJoinOperator JoinOp = new RelationshipJoinOperator( Person, (Relationship)Data.EntityRelationshipModel.FindByName( "Drives" ), new List<QueryableEntity>() { new QueryableEntity( CarRepairedByGarage ) }, Data.ERMongoMapping );
 
-            QueryGenerator queryGen = new QueryGenerator( new FromArgument( Person, Data.ERMongoMapping ), new List<AlgebraOperator>() { JoinOp } );
+            //QueryGenerator queryGen = new QueryGenerator( new FromArgument( Person, Data.ERMongoMapping ), new List<AlgebraOperator>() { JoinOp } );
 
-            string mongoQuery = queryGen.Explain();
+            //string mongoQuery = queryGen.Explain();
 
-            Console.WriteLine( mongoQuery );
+            //Console.WriteLine( mongoQuery );
 
-            QueryRunner runner = new QueryRunner( "mongodb://localhost:27017", "newOneToMany" );
+            //QueryRunner runner = new QueryRunner( "mongodb://localhost:27017", "newOneToMany" );
 
-            QueryStats stats = runner.GetExplainResult( mongoQuery );
-            Console.WriteLine( stats.ToString() );
+            //QueryStats stats = runner.GetExplainResult( mongoQuery );
+            //Console.WriteLine( stats.ToString() );
+
+            string query = "db.Product.find().explain('executionStats')";
+            QueryRunner runner = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_3" );
+            QueryStats stats = runner.GetExplainResultNonAggregate( query );
+
+            Console.WriteLine( stats );
 
             Console.Read();
         }
