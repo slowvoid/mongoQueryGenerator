@@ -1,0 +1,21 @@
+db.Product.explain('executionStats').aggregate([
+    {$match: {
+        $expr: {
+            $lt: ['$Price', 5]
+        }
+    }},
+    {"$lookup": {
+        from: 'Category',
+        foreignField: '_id',
+        localField: 'CategoryID',
+        as: 'data_Category'
+    }},
+    {"$unwind": '$data_Category'},
+    {"$lookup": {
+        from: 'Store',
+        foreignField: '_id',
+        localField: 'StoreID',
+        as: 'data_Store'
+    }},
+    {"$unwind": '$data_Store'}
+], {allowDiskUse: true})
