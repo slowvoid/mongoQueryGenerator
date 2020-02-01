@@ -1,0 +1,1 @@
+db.Category.find().sort({_id:1}).explain('executionStats')

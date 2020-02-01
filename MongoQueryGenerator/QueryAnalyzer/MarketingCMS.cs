@@ -581,6 +581,8 @@ namespace QueryAnalyzer
         /// <summary>
         /// Run GetProductsFromUser query
         /// 
+        /// IMPORTANT: THIS ONE IS NOT REALLY WORKING (THE QUERY IS FINE, THE EXPLAIN MODE IS NOT)
+        /// 
         /// QUERY: FROM Category 
         ///        RJOIN (Product, StoreHasProduct)
         ///        SELECT *

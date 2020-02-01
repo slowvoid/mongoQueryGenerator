@@ -1,0 +1,33 @@
+db.Category.explain('executionStats').aggregate([
+    {$sort: {
+        _id: 1
+    }},
+    {"$lookup": {
+        from: 'Product',
+        let: {
+            categoryId: '$_id'
+        },
+        as: 'data_Product',
+        pipeline: [
+            {$match: {
+                $expr: {
+                    $eq: ['$CategoryID', '$$categoryId']
+                }
+            }},
+            {$lookup: {
+                from: 'User',
+                foreignField: '_id',
+                localField: 'UserID',
+                as: 'data_User'
+            }},
+            {$unwind: '$data_User'}
+        ]
+    }},
+    {"$project": {
+        _id: false,
+        CategoryName: true,
+        "data_Product.Title": true,
+        "data_Product.data_User.UserName": true,
+        "data_Product.data_User.UserEmail": true
+    }}
+], {allowDiskUse: true})

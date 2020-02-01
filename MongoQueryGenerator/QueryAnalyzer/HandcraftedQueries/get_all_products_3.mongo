@@ -7,13 +7,6 @@ db.Product.explain('executionStats').aggregate([
     }},
     {$unwind: '$data_Store'},
     {"$lookup": {
-        from: 'Category',
-        foreignField: '_id',
-        localField: 'CategoryID',
-        as: 'data_Category'
-    }},
-    {$unwind: '$data_Category'},
-    {"$lookup": {
         from: 'User',
         foreignField: '_id',
         localField: 'UserID',

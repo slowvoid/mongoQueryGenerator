@@ -1,0 +1,11 @@
+db.Category.explain('executionStats').aggregate([
+    {"$lookup": {
+        from: 'Product',
+        foreignField: 'CategoryID',
+        localField: '_id',
+        as: 'data_Product',
+    }},
+    {$sort: {
+        _id: 1
+    }}
+], {allowDiskUse: true})

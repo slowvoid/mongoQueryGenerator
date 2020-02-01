@@ -13,13 +13,6 @@ db.Product.explain('executionStats').aggregate([
         as: 'data_Category'
     }},
     {$unwind: '$data_Category'},
-    {"$lookup": {
-        from: 'User',
-        foreignField: '_id',
-        localField: 'UserID',
-        as: 'data_User'
-    }},
-    {$unwind: '$data_User'},
     {$sort: {
         _id: 1
     }}

@@ -1,0 +1,10 @@
+db.Product.explain('executionStats').aggregate([
+    {$sort: {
+        _id: 1
+    }},
+    {"$project": {
+        _id: false,
+        Title: true,
+        UserName: '$user.name'
+    }}
+], {allowDiskUse: 1})

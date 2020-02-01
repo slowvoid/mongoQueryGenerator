@@ -64,7 +64,12 @@ namespace QueryBuilder.Query
         /// Additional stats
         /// </summary>
         [JsonProperty("inputStage")]
-        public QueryInputStage InputStage { get; set; }
+        public QueryInputStage InputStage { get; set; },
+        /// <summary>
+        /// Filter used
+        /// </summary>
+        [JsonProperty("filter")]
+        public string Filter { get; set; }
         #endregion
     }
     /// <summary>
@@ -92,6 +97,16 @@ namespace QueryBuilder.Query
         /// </summary>
         [JsonProperty("advanced")]
         public int ReturnedOrAdvancedCount { get; set; }
+        /// <summary>
+        /// Name of the index used
+        /// </summary>
+        [JsonProperty("indexName")]
+        public string IndexName { get; set; }
+        /// <summary>
+        /// Index direction
+        /// </summary>
+        [JsonProperty("direction")]
+        public string IndexDirection { get; set; }
         /// <summary>
         /// Additional stats
         /// </summary>
