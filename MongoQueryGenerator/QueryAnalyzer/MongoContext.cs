@@ -8,28 +8,28 @@ namespace QueryAnalyzer
 {
     public class MongoContext
     {
-        public static void InsertRecord( string Collection, QueryStats Model )
+        public static void InsertRecord( string Database, string Collection, QueryStats Model )
         {
             MongoClient client = new MongoClient( "mongodb://localhost:27017" );
-            var db = client.GetDatabase( "research_performance_index_stats" );
+            var db = client.GetDatabase( Database );
             var collection = db.GetCollection<QueryStats>( Collection );
 
-            collection.InsertOneAsync( Model );
+            collection.InsertOne( Model );
         }
 
-        public static void InsertManyRecords( string Collection, IEnumerable<QueryStats> Models )
+        public static void InsertManyRecords( string Database, string Collection, IEnumerable<QueryStats> Models )
         {
             MongoClient client = new MongoClient( "mongodb://localhost:27017" );
-            var db = client.GetDatabase( "research_performance_index_stats" );
+            var db = client.GetDatabase( Database );
             var collection = db.GetCollection<QueryStats>( Collection );
 
-            collection.InsertManyAsync( Models );
+            collection.InsertMany( Models );
         }
 
-        public static void DropCollection( string Collection )
+        public static void DropCollection( string Database, string Collection )
         {
             MongoClient client = new MongoClient( "mongodb://localhost:27017" );
-            var db = client.GetDatabase( "research_performance_index_stats" );
+            var db = client.GetDatabase( Database );
 
             db.DropCollection( Collection );
         }

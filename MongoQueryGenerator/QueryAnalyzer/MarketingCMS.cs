@@ -13,6 +13,54 @@ namespace QueryAnalyzer
 {
     public class MarketingCMS
     {
+        /// <summary>
+        /// Query iterations
+        /// </summary>
+        public int Iterations { get; set; }
+        /// <summary>
+        /// Target database to store results
+        /// </summary>
+        public string TargetDatabase { get; set; }
+
+        public void RunIterationsForQuery(string Database, string Collection, string Query, bool IsNonAggregate = false)
+        {
+            // Init a temp list to store query response
+            List<QueryStats> Stats = new List<QueryStats>();
+
+            // Initialize a query runner for the database and query
+            QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", Database );
+
+            // Run iterations
+            for ( int i = 0; i < this.Iterations; i++ )
+            {
+                QueryStats iterationResult = new QueryStats();
+
+                if ( IsNonAggregate )
+                {
+                    iterationResult = Runner.GetExplainResultNonAggregate( Query );
+                }
+                else
+                {
+                    iterationResult = Runner.GetExplainResult( Query );
+                }
+
+                Stats.Add( iterationResult );
+            }
+
+            MongoContext.DropCollection( this.TargetDatabase, Collection );
+            MongoContext.InsertManyRecords( this.TargetDatabase, Collection, Stats );
+        }
+        /// <summary>
+        /// Run get all products query
+        /// 
+        /// Query:
+        /// 
+        /// FROM Product p
+        /// RJOIN <CategoryProducts> (Category c)
+        /// RJOIN <StoreProducts> (Store s)
+        /// RJOIN <UserProducts> (User u)
+        /// SELECT *
+        /// </summary>
         public void GetAllProducts()
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
@@ -32,64 +80,24 @@ namespace QueryAnalyzer
             string Query4 = _getQueryForTestAllProducts( DataMap4, Product, Store, Category, User );
             string Query5 = _getQueryForTestAllProducts( DataMap5, Product, Store, Category, User );
 
-            QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_1", Query );
+            RunIterationsForQuery( "research_performance_index_3", "get_all_products_2", Query2 );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_products_3", Query3 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_4", Query4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_5", Query5 );
 
-            // Run each query 100 times
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = Runner.GetExplainResult( Query );
-                Stats1.Add( iterationResult );
-            }
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_3.mongo" );
+            string HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_4.mongo" );
+            string HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_5.mongo" );
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_query_1", Stats1 );
-
-            QueryRunner Runner2 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_3" );
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = Runner2.GetExplainResult( Query2 );
-                Stats2.Add( iterationResult );
-            }
-
-            MongoContext.DropCollection( "get_all_products_query_2" );
-            MongoContext.InsertManyRecords( "get_all_products_query_2", Stats2 );
-
-            QueryRunner Runner3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = Runner3.GetExplainResult( Query3 );
-                Stats3.Add( iterationResult );
-            }
-
-            MongoContext.DropCollection( "get_all_products_query_3" );
-            MongoContext.InsertManyRecords( "get_all_products_query_3", Stats3 );
-
-            QueryRunner Runner4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
-            List<QueryStats> Stats4 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = Runner4.GetExplainResult( Query4 );
-                Stats4.Add( iterationResult );
-            }
-
-            MongoContext.DropCollection( "get_all_products_query_4" );
-            MongoContext.InsertManyRecords( "get_all_products_query_4", Stats4 );
-
-            QueryRunner Runner5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
-            List<QueryStats> Stats5 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = Runner5.GetExplainResult( Query5 );
-                Stats5.Add( iterationResult );
-            }
-
-            MongoContext.DropCollection( "get_all_products_query_5" );
-            MongoContext.InsertManyRecords( "get_all_products_query_5", Stats5 );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_index_3", "get_all_products_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_products_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_handcrafted_5", HandcraftedQuery5 );
         }
 
         private static string _getQueryForTestAllProducts( RequiredDataContainer DataMap, QueryableEntity Product, QueryableEntity Store, QueryableEntity Category, QueryableEntity User )
@@ -131,9 +139,7 @@ namespace QueryAnalyzer
         public void GetAllStores()
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMap2 = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
             RequiredDataContainer DataMap3 = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMap4 = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
             RequiredDataContainer DataMap5 = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
@@ -141,21 +147,15 @@ namespace QueryAnalyzer
             SortArgument SortArg = new SortArgument( Store, Store.GetAttribute( "StoreID" ), MongoDBSort.Ascending );
 
             SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMap2.ERMongoMapping );
             SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMap3.ERMongoMapping );
-            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMap4.ERMongoMapping );
             SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMap5.ERMongoMapping );
 
             FromArgument StartArgMap1 = new FromArgument( Store, DataMap.ERMongoMapping );
-            FromArgument StartArgMap2 = new FromArgument( Store, DataMap2.ERMongoMapping );
             FromArgument StartArgMap3 = new FromArgument( Store, DataMap3.ERMongoMapping );
-            FromArgument StartArgMap4 = new FromArgument( Store, DataMap4.ERMongoMapping );
             FromArgument StartArgMap5 = new FromArgument( Store, DataMap5.ERMongoMapping );
 
             List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SortOpMap1 };
-            List<AlgebraOperator> OperatorsMap2 = new List<AlgebraOperator>() { SortOpMap2 };
             List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SortOpMap3 };
-            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { SortOpMap4 };
             List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { SortOpMap5 };
 
             QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
@@ -166,46 +166,18 @@ namespace QueryAnalyzer
             string QueryStringMap3 = QueryGenMap3.Explain();
             string QueryStringMap5 = QueryGenMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
-            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_stores_1", QueryStringMap1 );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_stores_3", QueryStringMap3 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_stores_5", QueryStringMap5 );
 
-            // Run each query 100 times
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryStringMap1 );
-                Stats1.Add( iterationResult );
-            }
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_stores_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_stores_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_stores_3.mongo" );
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_stores_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_stores_query_1", Stats1 );
-
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap3.GetExplainResult( QueryStringMap3 );
-                Stats2.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_stores_query_2" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_stores_query_2", Stats2 );
-
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryStringMap5 );
-                Stats3.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_stores_query_3" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_stores_query_3", Stats3 );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_stores_handcrafted_1", HandcraftedQuery1, true );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_stores_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_stores_handcrafted_3", HandcraftedQuery3, true );
         }
         /// <summary>
         /// Run GetAllUsers test
@@ -215,32 +187,24 @@ namespace QueryAnalyzer
         public void GetAllUsers()
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
             RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
             RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
 
             SortArgument SortArg = new SortArgument( User, User.GetAttribute( "UserID" ), MongoDBSort.Ascending );
 
             SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
             SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
             SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
-            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
 
             FromArgument StartArgMap1 = new FromArgument( User, DataMap.ERMongoMapping );
-            FromArgument StartArgMap2 = new FromArgument( User, DataMapDuplicates.ERMongoMapping );
             FromArgument StartArgMap3 = new FromArgument( User, DataMapCategoryDuplicated.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( User, DataMapStoreDuplicated.ERMongoMapping );
-            FromArgument StartArgMap5 = new FromArgument( User, DataMapUserDuplicated.ERMongoMapping );
 
             List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SortOpMap1 };
-            List<AlgebraOperator> OperatorsMap2 = new List<AlgebraOperator>() { SortOpMap2 };
             List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SortOpMap3 };
             List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { SortOpMap4 };
-            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { SortOpMap5 };
 
             QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
             QueryGenerator QueryGenMap3 = new QueryGenerator( StartArgMap3, OperatorsMap3 );
@@ -250,45 +214,18 @@ namespace QueryAnalyzer
             string QueryStringMap3 = QueryGenMap3.Explain();
             string QueryStringMap4 = QueryGenMap4.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
-            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_users_1", QueryStringMap1 );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_users_2", QueryStringMap3 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_users_3", QueryStringMap4 );
 
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryStringMap1 );
-                Stats1.Add( iterationResult );
-            }
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_users_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_users_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_users_3.mongo" );
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_users_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_users_query_1", Stats1 );
-
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap3.GetExplainResult( QueryStringMap3 );
-                Stats2.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_users_query_2" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_users_query_2", Stats2 );
-
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryStringMap4 );
-                Stats3.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_users_query_3" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_users_query_3", Stats3 );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_users_handcrafted_1", HandcraftedQuery1, true );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_users_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_users_handcrafted_3", HandcraftedQuery3, true );
         }
         /// <summary>
         /// Run GetAllCategories Test
@@ -298,8 +235,6 @@ namespace QueryAnalyzer
         public void GetAllCategories()
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
             RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
             RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
@@ -308,20 +243,14 @@ namespace QueryAnalyzer
             SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
 
             SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
-            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
             SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
             SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
 
             FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
-            FromArgument StartArgMap2 = new FromArgument( Category, DataMapDuplicates.ERMongoMapping );
-            FromArgument StartArgMap3 = new FromArgument( Category, DataMapCategoryDuplicated.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
             FromArgument StartArgMap5 = new FromArgument( Category, DataMapUserDuplicated.ERMongoMapping );
 
             List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SortOpMap1 };
-            List<AlgebraOperator> OperatorsMap2 = new List<AlgebraOperator>() { SortOpMap2 };
-            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SortOpMap3 };
             List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { SortOpMap4 };
             List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { SortOpMap5 };
 
@@ -333,45 +262,18 @@ namespace QueryAnalyzer
             string QueryStringMap4 = QueryGenMap4.Explain();
             string QueryStringMap5 = QueryGenMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_categories_1", QueryStringMap1 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_categories_2", QueryStringMap4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_categories_3", QueryStringMap5 );
 
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryStringMap1 );
-                Stats1.Add( iterationResult );
-            }
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_categories_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_categories_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_categories_3.mongo" );
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_categories_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_categories_query_1", Stats1 );
-
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryStringMap4 );
-                Stats2.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_categories_query_2" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_categories_query_2", Stats2 );
-
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryStringMap5 );
-                Stats3.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_categories_query_3" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_categories_query_3", Stats3 );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_categories_handcrafted_1", HandcraftedQuery1, true );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_categories_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_categories_handcrafted_3", HandcraftedQuery3, true );
         }
 
         /// <summary>
@@ -384,9 +286,7 @@ namespace QueryAnalyzer
         public void GetAllProductsFromStore()
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
             RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
             RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
@@ -395,14 +295,8 @@ namespace QueryAnalyzer
             RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
                 new List<QueryableEntity>() { Product }, DataMap.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapDuplicates.ERMongoMapping );
-
             RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
                 new List<QueryableEntity>() { Product }, DataMapCategoryDuplicated.ERMongoMapping );
-
-            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapStoreDuplicated.ERMongoMapping );
 
             RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
                 new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
@@ -410,21 +304,15 @@ namespace QueryAnalyzer
             SortArgument SortArg = new SortArgument( Store, Store.GetAttribute( "StoreID" ), MongoDBSort.Ascending );
 
             SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
             SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
-            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
             SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
 
             List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
-            List<AlgebraOperator> OperatorsToExecuteMap2 = new List<AlgebraOperator>() { RJoinOp2, SortOpMap2 };
             List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3, SortOpMap3 };
-            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, SortOpMap4 };
             List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
 
             FromArgument StartArgMap1 = new FromArgument( Store, DataMap.ERMongoMapping );
-            FromArgument StartArgMap2 = new FromArgument( Store, DataMapDuplicates.ERMongoMapping );
             FromArgument StartArgMap3 = new FromArgument( Store, DataMapCategoryDuplicated.ERMongoMapping );
-            FromArgument StartArgMap4 = new FromArgument( Store, DataMapStoreDuplicated.ERMongoMapping );
             FromArgument StartArgMap5 = new FromArgument( Store, DataMapUserDuplicated.ERMongoMapping );
 
             QueryGenerator GeneratorMap1 = new QueryGenerator( StartArgMap1, OperatorsToExecuteMap1 );
@@ -435,45 +323,18 @@ namespace QueryAnalyzer
             string QueryMap3 = GeneratorMap3.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
-            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_store_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_products_from_store_2", QueryMap3 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_store_3", QueryMap5 );
 
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
-                Stats1.Add( iterationResult );
-            }
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_store_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_store_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_store_3.mongo" );
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_store_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_store_query_1", Stats1 );
-
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap3.GetExplainResult( QueryMap3 );
-                Stats2.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_store_query_2" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_store_query_2", Stats2 );
-
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
-                Stats3.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_store_query_3" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_store_query_3", Stats3 );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_store_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_products_from_store_handcrafted_2", HandcraftedQuery2 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_store_handcrafted_3", HandcraftedQuery3 );
         }
 
         /// <summary>
@@ -486,8 +347,6 @@ namespace QueryAnalyzer
         public void GetAllProductsFromCategory()
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
             RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
             RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
@@ -496,12 +355,6 @@ namespace QueryAnalyzer
 
             RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { Product }, DataMap.ERMongoMapping );
-
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapDuplicates.ERMongoMapping );
-
-            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapCategoryDuplicated.ERMongoMapping );
 
             RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { Product }, DataMapStoreDuplicated.ERMongoMapping );
@@ -512,20 +365,14 @@ namespace QueryAnalyzer
             SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
 
             SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
-            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
             SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
             SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
 
             List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
-            List<AlgebraOperator> OperatorsToExecuteMap2 = new List<AlgebraOperator>() { RJoinOp2, SortOpMap2 };
-            List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3, SortOpMap3 };
             List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, SortOpMap4 };
             List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
 
             FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
-            FromArgument StartArgMap2 = new FromArgument( Category, DataMapDuplicates.ERMongoMapping );
-            FromArgument StartArgMap3 = new FromArgument( Category, DataMapCategoryDuplicated.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
             FromArgument StartArgMap5 = new FromArgument( Category, DataMapUserDuplicated.ERMongoMapping );
 
@@ -537,45 +384,18 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_2", QueryMap4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_3", QueryMap5 );
 
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
-                Stats1.Add( iterationResult );
-            }
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_3.mongo" );
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_query_1", Stats1 );
-
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
-                Stats2.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_query_2" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_query_2", Stats2 );
-
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
-                Stats3.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_query_3" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_query_3", Stats3 );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_handcrafted_2", HandcraftedQuery2 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_handcrafted_3", HandcraftedQuery3 );
         }
 
         /// <summary>
@@ -677,8 +497,6 @@ namespace QueryAnalyzer
         public void GetAllProductsFromCategoryWithStore()
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
             RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
             RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
@@ -695,14 +513,6 @@ namespace QueryAnalyzer
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithStore ) },
                 DataMap.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithStore ) },
-                DataMapDuplicates.ERMongoMapping );
-
-            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithStore ) },
-                DataMapCategoryDuplicated.ERMongoMapping );
-
             RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithStore ) },
                 DataMapStoreDuplicated.ERMongoMapping );
@@ -714,20 +524,14 @@ namespace QueryAnalyzer
             SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
 
             SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
-            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
             SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
             SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
 
             List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
-            List<AlgebraOperator> OperatorsToExecuteMap2 = new List<AlgebraOperator>() { RJoinOp2, SortOpMap2 };
-            List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3, SortOpMap3 };
             List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, SortOpMap4 };
             List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
 
             FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
-            FromArgument StartArgMap2 = new FromArgument( Category, DataMapDuplicates.ERMongoMapping );
-            FromArgument StartArgMap3 = new FromArgument( Category, DataMapCategoryDuplicated.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
             FromArgument StartArgMap5 = new FromArgument( Category, DataMapUserDuplicated.ERMongoMapping );
 
@@ -739,45 +543,18 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_with_store_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_with_store_2", QueryMap4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_with_store_3", QueryMap5 );
 
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
-                Stats1.Add( iterationResult );
-            }
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_store_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_store_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_store_3.mongo" );
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_with_store_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_with_store_query_1", Stats1 );
-
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
-                Stats2.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_with_store_query_2" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_with_store_query_2", Stats2 );
-
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
-                Stats3.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_with_store_query_3" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_with_store_query_3", Stats3 );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_with_store_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_with_store_handcrafted_2", HandcraftedQuery2 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_with_store_handcrafted_3", HandcraftedQuery3 );
         }
 
         /// <summary>
@@ -789,8 +566,6 @@ namespace QueryAnalyzer
         public void GetAllProductsFromCategoryWithUser()
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
             RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
             RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
@@ -807,14 +582,6 @@ namespace QueryAnalyzer
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
                 DataMap.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
-                DataMapDuplicates.ERMongoMapping );
-
-            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
-                DataMapCategoryDuplicated.ERMongoMapping );
-
             RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
                 DataMapStoreDuplicated.ERMongoMapping );
@@ -826,8 +593,6 @@ namespace QueryAnalyzer
             SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
 
             SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
-            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
             SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
             SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
 
@@ -847,45 +612,18 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_with_user_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_with_user_2", QueryMap4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_with_user_3", QueryMap5 );
 
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
-                Stats1.Add( iterationResult );
-            }
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_user_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_user_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_user_3.mongo" );
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_with_user_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_with_user_query_1", Stats1 );
-
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
-                Stats2.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_with_user_query_2" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_with_user_query_2", Stats2 );
-
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
-                Stats3.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_with_user_query_3" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_with_user_query_3", Stats3 );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_with_user_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_with_user_handcrafted_2", HandcraftedQuery2 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_with_user_handcrafted_3", HandcraftedQuery3 );
         }
         /// <summary>
         /// Run GetProductTitleAndUserName test
@@ -971,71 +709,24 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
-            QueryRunner RunnerMap2 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_3" );
-            QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
+            RunIterationsForQuery( "research_performance_index_1", "get_product_title_and_username_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_index_3", "get_product_title_and_username_2", QueryMap2 );
+            RunIterationsForQuery( "research_performance_index_2", "get_product_title_and_username_3", QueryMap3 );
+            RunIterationsForQuery( "research_performance_index_4", "get_product_title_and_username_4", QueryMap4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_product_title_and_username_5", QueryMap5 );
 
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
-                Stats1.Add( iterationResult );
-            }
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_3.mongo" );
+            string HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_4.mongo" );
+            string HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_5.mongo" );
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_product_title_username_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_product_title_username_query_1", Stats1 );
-
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap2.GetExplainResult( QueryMap2 );
-                Stats2.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_product_title_username_query_2" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_product_title_username_query_2", Stats2 );
-
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap3.GetExplainResult( QueryMap3 );
-                Stats3.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_product_title_username_query_3" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_product_title_username_query_3", Stats3 );
-
-            List<QueryStats> Stats4 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
-                Stats4.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_product_title_username_query_4" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_product_title_username_query_4", Stats4 );
-
-            List<QueryStats> Stats5 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
-                Stats5.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_product_title_username_query_5" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_product_title_username_query_5", Stats5 );
+            RunIterationsForQuery( "research_performance_index_1", "get_product_title_and_username_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_index_3", "get_product_title_and_username_handcrafted_2", HandcraftedQuery2 );
+            RunIterationsForQuery( "research_performance_index_2", "get_product_title_and_username_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_index_4", "get_product_title_and_username_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_product_title_and_username_handcrafted_5", HandcraftedQuery5 );
         }
 
         /// <summary>
@@ -1048,8 +739,6 @@ namespace QueryAnalyzer
         public void GetAllProductsFromCategoryWithUserAndSelectOnlyTitleNameEmailCategoryName()
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
             RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
             RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
@@ -1073,18 +762,6 @@ namespace QueryAnalyzer
                 DataMap.ERMongoMapping );
 
             ProjectStage ProjectOp1 = new ProjectStage( ProjectArgs, RJoinOp1.ComputeVirtualMap() );
-
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
-                DataMapDuplicates.ERMongoMapping );
-
-            ProjectStage ProjectOp2 = new ProjectStage( ProjectArgs, RJoinOp2.ComputeVirtualMap() );
-
-            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
-                DataMapCategoryDuplicated.ERMongoMapping );
-
-            ProjectStage ProjectOp3 = new ProjectStage( ProjectArgs, RJoinOp3.ComputeVirtualMap() );
 
             RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
@@ -1120,45 +797,18 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
+            RunIterationsForQuery( "research_performance_index_1", "get_product_from_category_with_user_project_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_index_4", "get_product_from_category_with_user_project_2", QueryMap4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_product_from_category_with_user_project_3", QueryMap5 );
 
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
-                Stats1.Add( iterationResult );
-            }
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_from_category_with_user_project_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_from_category_with_user_project_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_from_category_with_user_project_3.mongo" );
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_with_user_select_few_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_with_user_select_few_query_1", Stats1 );
-
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
-                Stats2.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_with_user_select_few_query_2" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_with_user_select_few_query_2", Stats2 );
-
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
-                Stats3.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_all_products_from_category_with_user_select_few_query_3" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_all_products_from_category_with_user_select_few_query_3", Stats3 );
+            RunIterationsForQuery( "research_performance_index_1", "get_product_from_category_with_user_project_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_index_4", "get_product_from_category_with_user_project_handcrafted_2", HandcraftedQuery2 );
+            RunIterationsForQuery( "research_performance_index_5", "get_product_from_category_with_user_project_handcrafted_3", HandcraftedQuery3 );
         }
 
         /// <summary>
@@ -1171,8 +821,6 @@ namespace QueryAnalyzer
         public void GetCategoryThatIsNamedHome()
         {
             RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
             RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
             RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
@@ -1212,45 +860,18 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
-            QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_4" );
-            QueryRunner RunnerMap5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_5" );
+            RunIterationsForQuery( "research_performance_index_1", "get_category_named_home_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_index_4", "get_category_named_home_2", QueryMap4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_category_named_home_3", QueryMap5 );
 
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
-                Stats1.Add( iterationResult );
-            }
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_category_named_home_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_category_named_home_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_category_named_home_3.mongo" );
 
-            // Drop before saving new
-            MongoContext.DropCollection( "get_category_named_home_query_1" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_category_named_home_query_1", Stats1 );
-
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
-                Stats2.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_category_named_home_query_2" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_category_named_home_query_2", Stats2 );
-
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = RunnerMap5.GetExplainResult( QueryMap5 );
-                Stats3.Add( iterationResult );
-            }
-
-            // Drop before saving new
-            MongoContext.DropCollection( "get_category_named_home_query_3" );
-            // Save all
-            MongoContext.InsertManyRecords( "get_category_named_home_query_3", Stats3 );
+            RunIterationsForQuery( "research_performance_index_1", "get_category_named_home_handcrafted_1", HandcraftedQuery1, true );
+            RunIterationsForQuery( "research_performance_index_4", "get_category_named_home_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_index_5", "get_category_named_home_handcrafted_3", HandcraftedQuery3, true );
         }
         /// <summary>
         /// Execute GetAllProductsThatCostsLessThan5
@@ -1307,55 +928,24 @@ namespace QueryAnalyzer
             QueryRunner QueryRunner4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
             QueryRunner QueryRunner5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
 
-            List<QueryStats> Stats1 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = QueryRunner1.GetExplainResult( Query1 );
-                Stats1.Add( iterationResult );
-            }
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_that_costs_less5_1", Query1 );
+            RunIterationsForQuery( "research_performance_index_3", "get_all_products_that_costs_less5_2", Query2 );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_products_that_costs_less5_3", Query3 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_that_costs_less5_4", Query4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_that_costs_less5_5", Query5 );
 
-            MongoContext.DropCollection( "get_all_products_price_less_1" );
-            MongoContext.InsertManyRecords( "get_all_products_price_less_1", Stats1 );
+            // Load Handcrafted queries
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_3.mongo" );
+            string HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_4.mongo" );
+            string HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_5.mongo" );
 
-            List<QueryStats> Stats2 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = QueryRunner2.GetExplainResult( Query2 );
-                Stats2.Add( iterationResult );
-            }
-
-            MongoContext.DropCollection( "get_all_products_price_less_2" );
-            MongoContext.InsertManyRecords( "get_all_products_price_less_2", Stats2 );
-
-            List<QueryStats> Stats3 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = QueryRunner3.GetExplainResult( Query3 );
-                Stats3.Add( iterationResult );
-            }
-
-            MongoContext.DropCollection( "get_all_products_price_less_3" );
-            MongoContext.InsertManyRecords( "get_all_products_price_less_3", Stats3 );
-
-            List<QueryStats> Stats4 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = QueryRunner4.GetExplainResult( Query4 );
-                Stats4.Add( iterationResult );
-            }
-
-            MongoContext.DropCollection( "get_all_products_price_less_4" );
-            MongoContext.InsertManyRecords( "get_all_products_price_less_4", Stats4 );
-
-            List<QueryStats> Stats5 = new List<QueryStats>();
-            for ( int i = 0; i < 100; i++ )
-            {
-                QueryStats iterationResult = QueryRunner5.GetExplainResult( Query5 );
-                Stats5.Add( iterationResult );
-            }
-
-            MongoContext.DropCollection( "get_all_products_price_less_5" );
-            MongoContext.InsertManyRecords( "get_all_products_price_less_5", Stats5 );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_that_costs_less5_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_index_3", "get_all_products_that_costs_less5_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_products_that_costs_less5_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_that_costs_less5_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_that_costs_less5_handcrafted_5", HandcraftedQuery5 );
         }
         /// <summary>
         /// Create a list of operators to execute the query

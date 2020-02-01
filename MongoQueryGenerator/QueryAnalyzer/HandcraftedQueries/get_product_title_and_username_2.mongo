@@ -7,4 +7,4 @@ db.Product.explain('executionStats').aggregate([
         Title: true,
         UserName: '$user.name'
     }}
-], {allowDiskUse: 1})
+], {allowDiskUse: true})

@@ -11,6 +11,10 @@ namespace QueryAnalyzer
             Console.WriteLine( "Starting Time: {0}", StartTime.ToString() );
 
             MarketingCMS cms = new MarketingCMS();
+            cms.Iterations = 1;
+            cms.TargetDatabase = "research_performance_stats_index";
+
+            Console.WriteLine( "Iterations to run: {0} | Target database: {1}", cms.Iterations, cms.TargetDatabase );
 
             Console.WriteLine( "Query: get_all_products" );
             cms.GetAllProducts();
@@ -27,7 +31,7 @@ namespace QueryAnalyzer
             Console.WriteLine( "Query: get_all_products_from_category_with_user" );
             cms.GetAllProductsFromCategoryWithUser();
 
-            Console.WriteLine( "Query: get_all_products_from_category_with_user_select_few" );
+            Console.WriteLine( "Query: get_product_from_category_with_user_project" );
             cms.GetAllProductsFromCategoryWithUserAndSelectOnlyTitleNameEmailCategoryName();
 
             Console.WriteLine( "Query: get_all_products_from_store" );
