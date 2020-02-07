@@ -11,8 +11,9 @@ namespace QueryAnalyzer
             Console.WriteLine( "Starting Time: {0}", StartTime.ToString() );
 
             MarketingCMS cms = new MarketingCMS();
-            cms.Iterations = 1;
+            cms.Iterations = 100;
             cms.TargetDatabase = "research_performance_stats_index";
+            cms.ExportQueries = true;
 
             Console.WriteLine( "Iterations to run: {0} | Target database: {1}", cms.Iterations, cms.TargetDatabase );
 

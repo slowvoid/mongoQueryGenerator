@@ -21,6 +21,10 @@ namespace QueryAnalyzer
         /// Target database to store results
         /// </summary>
         public string TargetDatabase { get; set; }
+        /// <summary>
+        /// If true save queries to file, but do not run iterations
+        /// </summary>
+        public bool ExportQueries { get; set; }
 
         public void RunIterationsForQuery(string Database, string Collection, string Query, bool IsNonAggregate = false)
         {
@@ -30,25 +34,32 @@ namespace QueryAnalyzer
             // Initialize a query runner for the database and query
             QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", Database );
 
-            // Run iterations
-            for ( int i = 0; i < this.Iterations; i++ )
+            if ( ExportQueries )
             {
-                QueryStats iterationResult = new QueryStats();
-
-                if ( IsNonAggregate )
-                {
-                    iterationResult = Runner.GetExplainResultNonAggregate( Query );
-                }
-                else
-                {
-                    iterationResult = Runner.GetExplainResult( Query );
-                }
-
-                Stats.Add( iterationResult );
+                Utils.ExportQueryToFile( Query, $@"E:\Mestrado\Pesquisa\test results\queries\{Collection}.mongo" );
             }
+            else
+            {
+                // Run iterations
+                for ( int i = 0; i < this.Iterations; i++ )
+                {
+                    QueryStats iterationResult = new QueryStats();
 
-            MongoContext.DropCollection( this.TargetDatabase, Collection );
-            MongoContext.InsertManyRecords( this.TargetDatabase, Collection, Stats );
+                    if ( IsNonAggregate )
+                    {
+                        iterationResult = Runner.GetExplainResultNonAggregate( Query );
+                    }
+                    else
+                    {
+                        iterationResult = Runner.GetExplainResult( Query );
+                    }
+
+                    Stats.Add( iterationResult );
+                }
+
+                MongoContext.DropCollection( this.TargetDatabase, Collection );
+                MongoContext.InsertManyRecords( this.TargetDatabase, Collection, Stats );
+            }            
         }
         /// <summary>
         /// Run get all products query
@@ -340,8 +351,8 @@ namespace QueryAnalyzer
         /// <summary>
         /// Run GetProductsFromCategory query
         /// 
-        /// QUERY: FROM Category 
-        ///        RJOIN (Product, StoreHasProduct)
+        /// QUERY: FROM Category c
+        ///        RJOIN <CategoryHasProduct> (Product p)
         ///        SELECT *
         /// </summary>
         public void GetAllProductsFromCategory()
@@ -491,8 +502,9 @@ namespace QueryAnalyzer
         /// <summary>
         /// Run GetAllProductsFromCategoryWithStore
         /// 
-        /// QUERY: FROM Category 
-        ///        RJOIN (Product RJOIN [(Store, StoreProduct)], CategoryProduct) 
+        /// QUERY: FROM Category c
+        ///        RJOIN <CategoryHasProduct> (Product p RJOIN <StoreHasProduct> (Store s))
+        ///        SELECT *
         /// </summary>
         public void GetAllProductsFromCategoryWithStore()
         {
@@ -560,8 +572,9 @@ namespace QueryAnalyzer
         /// <summary>
         /// Run GetAllProductsFromCategoryWithUser
         /// 
-        /// QUERY: FROM Category 
-        ///        RJOIN (Product RJOIN [(User, UserProduct)], CategoryProduct) 
+        /// QUERY: FROM Category c
+        ///        RJOIN <CategoryHasProduct> (Product p RJOIN <UserHasProduct> (User u))
+        ///        SELECT *
         /// </summary>
         public void GetAllProductsFromCategoryWithUser()
         {
@@ -732,9 +745,9 @@ namespace QueryAnalyzer
         /// <summary>
         /// Run GetAllProductsFromCategoryWithUserAndSelectOnlyTitleNameEmailCategoryName
         /// 
-        /// QUERY: FROM Category 
-        ///        RJOIN (Product RJOIN [(User, UserProduct)], CategoryProduct)
-        ///        SELECT Category.CategoryName, Product.Title, User.UserName, User.UserEmail
+        /// QUERY: FROM Category c
+        ///        RJOIN <CategoryHasProduct> (Product RJOIN p <UserHasProduct> (User u))
+        ///        SELECT c.CategoryName, p.Title, u.UserName, u.UserEmail
         /// </summary>
         public void GetAllProductsFromCategoryWithUserAndSelectOnlyTitleNameEmailCategoryName()
         {
@@ -894,9 +907,6 @@ namespace QueryAnalyzer
             RequiredDataContainer DataMap5 = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
 
             QueryableEntity Product = new QueryableEntity( DataMap1.EntityRelationshipModel.FindByName( "Product" ) );
-            QueryableEntity Store = new QueryableEntity( DataMap1.EntityRelationshipModel.FindByName( "Store" ) );
-            QueryableEntity Category = new QueryableEntity( DataMap1.EntityRelationshipModel.FindByName( "Category" ) );
-            QueryableEntity User = new QueryableEntity( DataMap1.EntityRelationshipModel.FindByName( "User" ) );
 
             List<AlgebraOperator> OperatorList1 = _GetAllProductsLessThan5Operations( DataMap1 );
             List<AlgebraOperator> OperatorList2 = _GetAllProductsLessThan5Operations( DataMap2 );
@@ -921,12 +931,6 @@ namespace QueryAnalyzer
             string Query3 = QueryGen3.Explain();
             string Query4 = QueryGen4.Explain();
             string Query5 = QueryGen5.Explain();
-
-            QueryRunner QueryRunner1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_1" );
-            QueryRunner QueryRunner2 = new QueryRunner( "mongodb://localhost:27017", "research_performance_3" );
-            QueryRunner QueryRunner3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_2" );
-            QueryRunner QueryRunner4 = new QueryRunner( "mongodb://localhost:27017", "research_performance_4" );
-            QueryRunner QueryRunner5 = new QueryRunner( "mongodb://localhost:27017", "research_performance_5" );
 
             RunIterationsForQuery( "research_performance_index_1", "get_all_products_that_costs_less5_1", Query1 );
             RunIterationsForQuery( "research_performance_index_3", "get_all_products_that_costs_less5_2", Query2 );
