@@ -1,0 +1,100 @@
+db.Product.explain('executionStats').aggregate([ {
+    $match: {
+        $expr: {
+            $lt: ["$Price", 5]
+        }
+    }
+}, {
+    $lookup: {
+        from: "Store",
+        as: "data_Store_join",
+        foreignField: "_id",
+        localField: "StoreID"
+    }
+}, {
+    $unwind: {
+        path: "$data_Store_join",
+        preserveNullAndEmptyArrays: true
+    }
+}, {
+    $addFields: {
+        "data_Store.Store_StoreID": "$data_Store_join._id",
+        "data_Store.Store_StoreName": "$data_Store_join.StoreName"
+    }
+}, {
+    $addFields: {
+        data_StoreProducts: [{
+            $mergeObjects: ["$data_Store"]
+        }]
+    }
+}, {
+    $project: {
+        data_Store: false,
+        data_Store_join: false
+    }
+}, {
+    $addFields: {
+        "data_Category.Category_CategoryID": "$category._id",
+        "data_Category.Category_CategoryName": "$category.name"
+    }
+}, {
+    $addFields: {
+        data_CategoryProducts: [{
+            $mergeObjects: ["$data_Category"]
+        }]
+    }
+}, {
+    $project: {
+        category: false,
+        data_Category: false
+    }
+}, {
+    $lookup: {
+        from: "User",
+        as: "data_User_join",
+        foreignField: "_id",
+        localField: "UserID"
+    }
+}, {
+    $unwind: {
+        path: "$data_User_join",
+        preserveNullAndEmptyArrays: true
+    }
+}, {
+    $addFields: {
+        "data_User.User_UserID": "$data_User_join._id",
+        "data_User.User_UserName": "$data_User_join.UserName",
+        "data_User.User_UserEmail": "$data_User_join.UserEmail"
+    }
+}, {
+    $addFields: {
+        data_UserProducts: [{
+            $mergeObjects: ["$data_User"]
+        }]
+    }
+}, {
+    $project: {
+        data_User: false,
+        data_User_join: false
+    }
+}, {
+    $project: {
+        "category": false,
+        "UserID": false,
+        "StoreID": false
+    }
+}, {
+    $project: {
+        "category": false,
+        "UserID": false,
+        "StoreID": false
+    }
+}, {
+    $project: {
+        "category": false,
+        "UserID": false,
+        "StoreID": false
+    }
+}], {
+    allowDiskUse: true
+});

@@ -1,0 +1,76 @@
+db.Product.explain('executionStats').aggregate([ {
+    $match: {
+        $expr: {
+            $lt: ["$Price", 5]
+        }
+    }
+}, {
+    $addFields: {
+        "data_Store.Store_StoreID": "$store._id",
+        "data_Store.Store_StoreName": "$store.name"
+    }
+}, {
+    $addFields: {
+        data_StoreProducts: [{
+            $mergeObjects: ["$data_Store"]
+        }]
+    }
+}, {
+    $project: {
+        store: false,
+        data_Store: false
+    }
+}, {
+    $addFields: {
+        "data_Category.Category_CategoryID": "$category._id",
+        "data_Category.Category_CategoryName": "$category.name"
+    }
+}, {
+    $addFields: {
+        data_CategoryProducts: [{
+            $mergeObjects: ["$data_Category"]
+        }]
+    }
+}, {
+    $project: {
+        category: false,
+        data_Category: false
+    }
+}, {
+    $addFields: {
+        "data_User.User_UserID": "$user._id",
+        "data_User.User_UserName": "$user.name",
+        "data_User.User_UserEmail": "$user.email"
+    }
+}, {
+    $addFields: {
+        data_UserProducts: [{
+            $mergeObjects: ["$data_User"]
+        }]
+    }
+}, {
+    $project: {
+        user: false,
+        data_User: false
+    }
+}, {
+    $project: {
+        "user": false,
+        "category": false,
+        "store": false
+    }
+}, {
+    $project: {
+        "user": false,
+        "category": false,
+        "store": false
+    }
+}, {
+    $project: {
+        "user": false,
+        "category": false,
+        "store": false
+    }
+}], {
+    allowDiskUse: true
+});

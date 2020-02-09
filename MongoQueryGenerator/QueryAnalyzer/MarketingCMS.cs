@@ -932,24 +932,24 @@ namespace QueryAnalyzer
             string Query4 = QueryGen4.Explain();
             string Query5 = QueryGen5.Explain();
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_that_costs_less5_1", Query1 );
-            RunIterationsForQuery( "research_performance_index_3", "get_all_products_that_costs_less5_2", Query2 );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_products_that_costs_less5_3", Query3 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_that_costs_less5_4", Query4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_that_costs_less5_5", Query5 );
+            RunIterationsForQuery( "research_performance_1", "get_all_products_that_costs_less5_1", Query1 );
+            RunIterationsForQuery( "research_performance_3", "get_all_products_that_costs_less5_2", Query2 );
+            RunIterationsForQuery( "research_performance_2", "get_all_products_that_costs_less5_3", Query3 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_that_costs_less5_4", Query4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_that_costs_less5_5", Query5 );
 
             // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_3.mongo" );
-            string HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_4.mongo" );
-            string HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_5.mongo" );
+            //string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_1.mongo" );
+            //string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_2.mongo" );
+            //string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_3.mongo" );
+            //string HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_4.mongo" );
+            //string HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_5.mongo" );
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_that_costs_less5_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_index_3", "get_all_products_that_costs_less5_handcrafted_2", HandcraftedQuery2, true );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_products_that_costs_less5_handcrafted_3", HandcraftedQuery3 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_that_costs_less5_handcrafted_4", HandcraftedQuery4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_that_costs_less5_handcrafted_5", HandcraftedQuery5 );
+            //RunIterationsForQuery( "research_performance_index_1", "get_all_products_that_costs_less5_handcrafted_1", HandcraftedQuery1 );
+            //RunIterationsForQuery( "research_performance_index_3", "get_all_products_that_costs_less5_handcrafted_2", HandcraftedQuery2, true );
+            //RunIterationsForQuery( "research_performance_index_2", "get_all_products_that_costs_less5_handcrafted_3", HandcraftedQuery3 );
+            //RunIterationsForQuery( "research_performance_index_4", "get_all_products_that_costs_less5_handcrafted_4", HandcraftedQuery4 );
+            //RunIterationsForQuery( "research_performance_index_5", "get_all_products_that_costs_less5_handcrafted_5", HandcraftedQuery5 );
         }
         /// <summary>
         /// Create a list of operators to execute the query
@@ -982,11 +982,26 @@ namespace QueryAnalyzer
                 DataMap.ERMongoMapping );
 
             MapRule ProductRule = DataMap.ERMongoMapping.FindMainRule( Product.Element );
-            SelectArgument SelectArg = new SelectArgument( new LtExpr( ProductRule.GetRuleValueForAttribute( Product.GetAttribute( "Price" ) ), 5 ) );
+            SelectArgument SelectArg = new SelectArgument( new LtExpr( $"${ProductRule.GetRuleValueForAttribute( Product.GetAttribute( "Price" ) )}", 5 ) );
 
             SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
 
             return new List<AlgebraOperator>() { RJoinOpStore, RJoinOpCategory, RJoinOpUser, SelectOp };
+        }
+
+        public void RunCustomQueriesTest()
+        {
+            string CustomQuery1 = Utils.ReadQueryFromFile( "CustomQueries/get_all_products_that_costs_less5_m_1.mongo" );
+            string CustomQuery2 = Utils.ReadQueryFromFile( "CustomQueries/get_all_products_that_costs_less5_m_2.mongo" );
+            string CustomQuery3 = Utils.ReadQueryFromFile( "CustomQueries/get_all_products_that_costs_less5_m_3.mongo" );
+            string CustomQuery4 = Utils.ReadQueryFromFile( "CustomQueries/get_all_products_that_costs_less5_m_4.mongo" );
+            string CustomQuery5 = Utils.ReadQueryFromFile( "CustomQueries/get_all_products_that_costs_less5_m_5.mongo" );
+
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_that_costs_less5_modified_1", CustomQuery1 );
+            RunIterationsForQuery( "research_performance_index_3", "get_all_products_that_costs_less5_modified_2", CustomQuery2 );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_products_that_costs_less5_modified_3", CustomQuery3 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_that_costs_less5_modified_4", CustomQuery4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_that_costs_less5_modified_5", CustomQuery5 );
         }
     }
 }
