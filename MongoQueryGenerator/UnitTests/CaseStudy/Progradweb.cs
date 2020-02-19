@@ -9,6 +9,7 @@ using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Query;
 using Newtonsoft.Json.Linq;
 using FluentAssertions;
+using FluentAssertions.Json;
 using QueryBuilder.Mongo.Expressions;
 using QueryBuilder.Map;
 using QueryBuilder.Javascript;
@@ -315,6 +316,7 @@ namespace QueryBuilder.Tests
             RequiredDataContainer Container1 = ProgradWebDataProvider.MapEntitiesToCollections();
             RequiredDataContainer Container2 = ProgradWebDataProvider.MapEntitiesToCollectionsCursoEmbedded();
             RequiredDataContainer Container3 = ProgradWebDataProvider.MapEntitiesToCollectionsDisciplinaEmbedded();
+            RequiredDataContainer Container4 = ProgradWebDataProvider.MapEntitiesToCollectionsCursoDisciplinaEmbedded();
 
             QueryableEntity Enfase = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Enfase" ) );
             QueryableEntity Curso = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Curso" ) );
@@ -365,36 +367,59 @@ namespace QueryBuilder.Tests
             FromArgument FromArg3 = new FromArgument( Enfase, Container3.ERMongoMapping );
             List<AlgebraOperator> OperatorList3 = new List<AlgebraOperator>() { RJoinOp3_A, RJoinOp3_B };
 
+            RelationshipJoinOperator RJoinOp4_A = new RelationshipJoinOperator(
+                Enfase,
+                (Relationship)Container4.EntityRelationshipModel.FindByName( "VinculoCurso" ),
+                new List<QueryableEntity>() { Curso },
+                Container4.ERMongoMapping );
+
+            RelationshipJoinOperator RJoinOp4_B = new RelationshipJoinOperator(
+                Enfase,
+                (Relationship)Container4.EntityRelationshipModel.FindByName( "Grade" ),
+                new List<QueryableEntity>() { Disciplina },
+                Container4.ERMongoMapping );
+
+            FromArgument FromArg4 = new FromArgument( Enfase, Container4.ERMongoMapping );
+            List<AlgebraOperator> OperatorList4 = new List<AlgebraOperator>() { RJoinOp4_A, RJoinOp4_B };
+
             QueryGenerator QueryGen1 = new QueryGenerator( FromArg1, OperatorList1 );
             QueryGenerator QueryGen2 = new QueryGenerator( FromArg2, OperatorList2 );
             QueryGenerator QueryGen3 = new QueryGenerator( FromArg3, OperatorList3 );
+            QueryGenerator QueryGen4 = new QueryGenerator( FromArg4, OperatorList4 );
 
             string Query1 = QueryGen1.Run();
             string Query2 = QueryGen2.Run();
             string Query3 = QueryGen3.Run();
+            string Query4 = QueryGen4.Run();
 
             Assert.IsNotNull( Query1 );
             Assert.IsNotNull( Query2 );
             Assert.IsNotNull( Query3 );
+            Assert.IsNotNull( Query4 );
 
             QueryRunner QueryRun1 = new QueryRunner( "mongodb://localhost:27017", "progradweb_1" );
             QueryRunner QueryRun2 = new QueryRunner( "mongodb://localhost:27017", "progradweb_4" );
             QueryRunner QueryRun3 = new QueryRunner( "mongodb://localhost:27017", "progradweb_5" );
+            QueryRunner QueryRun4 = new QueryRunner( "mongodb://localhost:27017", "progradweb_10" );
 
             string QueryResult1 = QueryRun1.GetJSON( Query1 );
             string QueryResult2 = QueryRun2.GetJSON( Query2 );
             string QueryResult3 = QueryRun3.GetJSON( Query3 );
+            string QueryResult4 = QueryRun4.GetJSON( Query4 );
 
             Assert.IsNotNull( QueryResult1 );
             Assert.IsNotNull( QueryResult2 );
             Assert.IsNotNull( QueryResult3 );
+            Assert.IsNotNull( QueryResult4 );
 
             JToken JSONQuery1 = JToken.Parse( QueryResult1 );
             JToken JSONQuery2 = JToken.Parse( QueryResult2 );
             JToken JSONQuery3 = JToken.Parse( QueryResult3 );
+            JToken JSONQuery4 = JToken.Parse( QueryResult4 );
 
             JSONQuery1.Should().BeEquivalentTo( JSONQuery2 );
             JSONQuery1.Should().BeEquivalentTo( JSONQuery3 );
+            JSONQuery1.Should().BeEquivalentTo( JSONQuery4 );
         }
         /// <summary>
         /// Run tests for the following query

@@ -1,0 +1,629 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="QueryBuilder.ER.Exceptions.ElementNotFoundException" Collapsed="true">
+    <Position X="35" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ER\Exceptions\ElementNotFoundException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.ER.BaseERElement">
+    <Position X="10.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAICAAAABAAAAAQQAAIAAAIAAABAAAAAAAA=</HashCode>
+      <FileName>ER\Base.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.ER.ComputedEntity">
+    <Position X="9" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAIAgAAA=</HashCode>
+      <FileName>ER\ComputedEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.ER.Entity">
+    <Position X="9" Y="17.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ER\Entity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.ER.ERModel" Collapsed="true">
+    <Position X="14.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAQAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>ER\Model.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.ER.Relationship">
+    <Position X="12.5" Y="17.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAUAAAAAAAAgAAAAAAAAAAACAA=</HashCode>
+      <FileName>ER\Relationship.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.ER.RelationshipConnection" Collapsed="true">
+    <Position X="35" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAwAAAEACAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>ER\RelationshipConnection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.ER.RelationshipEnd">
+    <Position X="14.5" Y="19.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>ER\RelationshipEnd.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Javascript.JSAny" Collapsed="true">
+    <Position X="13.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Javascript\JSAny.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Javascript.JSArray" Collapsed="true">
+    <Position X="4.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Javascript\JSArray.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Javascript.JSBoolean" Collapsed="true">
+    <Position X="6.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Javascript\JSBoolean.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Javascript.JSCode" Collapsed="true">
+    <Position X="9" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Javascript\JSCode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Javascript.JSObject" Collapsed="true">
+    <Position X="9" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Javascript\JSObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Javascript.JSString" Collapsed="true">
+    <Position X="11.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAgAAAAAAA=</HashCode>
+      <FileName>Javascript\JSString.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Map.Exceptions.DuplicatedMapException" Collapsed="true">
+    <Position X="43.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Map\Exceptions\DuplicatedMapException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Map.MapRule">
+    <Position X="22.25" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAgAQAAAAAAAAACAAAAAAAQAAAQCAAAAAgAA=</HashCode>
+      <FileName>Map\MapRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Map.ModelMapping" BaseTypeListCollapsed="true">
+    <Position X="19.25" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAABAAAAAAAAAAAAIQAAAAAAAAAAAQAAAAAAAE=</HashCode>
+      <FileName>Map\ModelMapping.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="QueryBuilder.Map.VirtualMap" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="35" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAECAAAAIAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Map\VirtualMap.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="QueryBuilder.Map.VirtualRule" Collapsed="true">
+    <Position X="36.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAIAAQAEAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Map\VirtualRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Aggregation.Operators.AddFieldsOperator" Collapsed="true">
+    <Position X="7.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Aggregation\Operators\AddFields.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Aggregation.Operators.LimitOperator" Collapsed="true">
+    <Position X="9.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Aggregation\Operators\Limit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Aggregation.Operators.LookupOperator" Collapsed="true">
+    <Position X="11.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAKAABAEIBAAAAAgAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Aggregation\Operators\Lookup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Aggregation.Operators.MatchOperator" Collapsed="true">
+    <Position X="14" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAgAAAABAAAAAAAQAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Aggregation\Operators\Match.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Aggregation.Operators.MongoDBOperator" Collapsed="true">
+    <Position X="12.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAQAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Mongo\Aggregation\Operators\MongoDBOperator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Aggregation.Operators.ProjectOperator" Collapsed="true">
+    <Position X="16.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAQAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Mongo\Aggregation\Operators\Project.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Aggregation.Operators.ReplaceRootOperator" Collapsed="true">
+    <Position X="18.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABBAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Aggregation\Operators\ReplaceRoot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Aggregation.Operators.SortOperator" Collapsed="true">
+    <Position X="20.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Aggregation\Operators\Sort.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Aggregation.Operators.UnwindOperator" Collapsed="true">
+    <Position X="5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAIAAAAAAAgAA=</HashCode>
+      <FileName>Mongo\Aggregation\Operators\Unwind.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Aggregation.Aggregate" Collapsed="true">
+    <Position X="35" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Mongo\Aggregation\Aggregate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.BaseExpression" Collapsed="true">
+    <Position X="19" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\BaseExpression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.BaseLogicalExpression" Collapsed="true">
+    <Position X="16.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\BaseLogicalExpression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.BooleanExpr" Collapsed="true">
+    <Position X="18.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\BooleanExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.ConcatArrayExpr" Collapsed="true">
+    <Position X="21" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Mongo\Expressions\ConcatArrayExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.EqExpr" Collapsed="true">
+    <Position X="19" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\EqExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.Expr" Collapsed="true">
+    <Position X="30.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\Expr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.GteExpr" Collapsed="true">
+    <Position X="23.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\GteExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.GtExpr" Collapsed="true">
+    <Position X="25.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\GtExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.InExpr" Collapsed="true">
+    <Position X="5.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAgAAAAgAA=</HashCode>
+      <FileName>Mongo\Expressions\InExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.InFieldArrayExpr" Collapsed="true">
+    <Position X="7.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAgAAAAgAA=</HashCode>
+      <FileName>Mongo\Expressions\InFieldArrayExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.LogicalExpression" Collapsed="true">
+    <Position X="12.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAIAgAAAAAAAAAIAA=</HashCode>
+      <FileName>Mongo\Expressions\LogicalExpression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.LogicalExpressionGroup" Collapsed="true">
+    <Position X="14.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAIAgAAAAAAAAAIAA=</HashCode>
+      <FileName>Mongo\Expressions\LogicalExpressionGroup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.LteExpr" Collapsed="true">
+    <Position X="16.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\LteExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.LtExpr" Collapsed="true">
+    <Position X="21.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\LtExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.MapExpr" Collapsed="true">
+    <Position X="23.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAEAAAQAAAAAAAAAAAACA=</HashCode>
+      <FileName>Mongo\Expressions\MapExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.MergeObjectsOperator" Collapsed="true">
+    <Position X="32.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\MergeObjects.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.NeqExpr" Collapsed="true">
+    <Position X="28" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\NeqExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.NotInExpr" Collapsed="true">
+    <Position X="5.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\NotInExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.OrExpr" Collapsed="true">
+    <Position X="10" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAABAAIAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Mongo\Expressions\OrExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.ProjectExpression" Collapsed="true">
+    <Position X="19.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\ProjectExpression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Expressions.ValueExpr" Collapsed="true">
+    <Position X="16.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Mongo\Expressions\ValueExpr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.MongoDBCollection">
+    <Position X="25.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAQAAAIAAAIAAABAAAAAAAA=</HashCode>
+      <FileName>Mongo\Collection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.Document">
+    <Position X="27.25" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAQAAAAAAIAAABAAAAAAAA=</HashCode>
+      <FileName>Mongo\Document.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Mongo.MongoSchema">
+    <Position X="25.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAIACAAA=</HashCode>
+      <FileName>Mongo\Schema.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.Arguments.FromArgument" Collapsed="true">
+    <Position X="38.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Operation\Arguments\FromArgument.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.Arguments.QueryableEntity" Collapsed="true">
+    <Position X="35" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAICAAAAAAgBAAAAAAAAAAIAAAAAAAAgBAA=</HashCode>
+      <FileName>Operation\Arguments\JoinableEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.Arguments.ProjectArgument" Collapsed="true">
+    <Position X="43.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAQAAAAAAAQAAA=</HashCode>
+      <FileName>Operation\Arguments\ProjectArgument.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.Arguments.RelationshipJoinArgument" Collapsed="true">
+    <Position X="38.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAABAAAAAAA=</HashCode>
+      <FileName>Operation\Arguments\RelationshipJoinArgument.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.Arguments.SelectArgument" Collapsed="true">
+    <Position X="42" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Operation\Arguments\SelectArgument.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.Arguments.SortArgument" Collapsed="true">
+    <Position X="43.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAACAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operation\Arguments\SortArgument.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.Exceptions.ImpossibleOperationException" Collapsed="true">
+    <Position X="40.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operation\Exceptions\ImpossibleOperationException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.Exceptions.InvalidMapException" Collapsed="true">
+    <Position X="42" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operation\Exceptions\InvalidMapException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.Exceptions.MissingMappingException" Collapsed="true">
+    <Position X="35" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operation\Exceptions\MIssingMappingException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.Exceptions.NotRelatedException" Collapsed="true">
+    <Position X="42" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operation\Exceptions\NotRelatedException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.Exceptions.RuleNotFoundException" Collapsed="true">
+    <Position X="40.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operation\Exceptions\RuleNotFoundException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.AddFieldsOperation" Collapsed="true">
+    <Position X="24.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Operation\AddFieldsOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.AlgebraOperator" Collapsed="true">
+    <Position X="16.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAIAAAAAAQAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Operation\AlgebraOperator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.CartesianProductOperator" Collapsed="true">
+    <Position X="9" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAACAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Operation\CartesianProduct.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.FindOperation" Collapsed="true">
+    <Position X="11.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Operation\FindOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.LimitStage" Collapsed="true">
+    <Position X="13.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Operation\LimitStage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.AlgebraOperatorResult" Collapsed="true">
+    <Position X="36.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operation\OperationResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.ProjectStage" Collapsed="true">
+    <Position X="15.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAQAAAAAIAAAAAAAAAI=</HashCode>
+      <FileName>Operation\ProjectStage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.RelationshipJoinOperator" Collapsed="true">
+    <Position X="18" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAgAAAAAAAAAAAAAEAAAAAAQAAAAAAAABAIAgAAI=</HashCode>
+      <FileName>Operation\RelationshipJoinOperator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.SelectStage" Collapsed="true">
+    <Position X="20.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAI=</HashCode>
+      <FileName>Operation\SelectStage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Operation.SortStage" Collapsed="true">
+    <Position X="22.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAI=</HashCode>
+      <FileName>Operation\SortStage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Query.FindCommand" Collapsed="true">
+    <Position X="4.25" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAIAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Query\FindCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Query.JoinCommand" Collapsed="true">
+    <Position X="6.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAABAEAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Query\JoinCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Query.QueryCommand" Collapsed="true">
+    <Position X="5.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Query\QueryCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Query.QueryGenerator" Collapsed="true">
+    <Position X="38.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAQAAAAAAAAAAABAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Query\QueryGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Query.QueryRunner" Collapsed="true">
+    <Position X="42" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAEAAACAAAQAAAAAAAAAAACAACAAAAAA=</HashCode>
+      <FileName>Query\QueryRunner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Query.QueryStats" Collapsed="true">
+    <Position X="43.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAIAAAAAAAAAAAAIAACAAAAAgIAAAAAAA=</HashCode>
+      <FileName>Query\QueryStats.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Query.QueryExecutionStages" Collapsed="true">
+    <Position X="36.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAEAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Query\QueryStats.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Query.QueryInputStage" Collapsed="true">
+    <Position X="40.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAEAAkAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Query\QueryStats.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Shared.Exceptions.AttributeNotFoundException" Collapsed="true">
+    <Position X="38.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Shared\Exceptions\AttributeNotFoundException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryBuilder.Shared.DataAttribute">
+    <Position X="29.25" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAABAAAAAEQAQAAAAAAAAAAAABAABAAAA=</HashCode>
+      <FileName>Shared\Attribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="QueryBuilder.Map.IModelMap" Collapsed="true">
+    <Position X="35" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Map\IModelMap.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="QueryBuilder.ER.RelationshipCardinality" Collapsed="true">
+    <Position X="40.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAIA=</HashCode>
+      <FileName>ER\Relationship.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="QueryBuilder.Mongo.Aggregation.Operators.MongoDBSort" Collapsed="true">
+    <Position X="38.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mongo\Aggregation\Operators\Sort.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="QueryBuilder.Mongo.Expressions.LogicalOperator" Collapsed="true">
+    <Position X="36.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAACAAAAAAAAEAAAAAAAgIAEACAAIAAAAgAAA=</HashCode>
+      <FileName>Mongo\Expressions\LogicalOperator.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="QueryBuilder.Shared.DataType">
+    <Position X="16" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAABAAAAAgIAAgAAAAAIAAAAAA=</HashCode>
+      <FileName>Shared\DataType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
