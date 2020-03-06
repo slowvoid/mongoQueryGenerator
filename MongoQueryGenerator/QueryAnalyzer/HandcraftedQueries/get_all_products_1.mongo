@@ -19,8 +19,5 @@ db.Product.explain('executionStats').aggregate([
         localField: 'UserID',
         as: 'data_User'
     }},
-    {$unwind: '$data_User'},
-    {$sort: {
-        _id: 1
-    }}
+    {$unwind: '$data_User'}
 ], {allowDiskUse: true})

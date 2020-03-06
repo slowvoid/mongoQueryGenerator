@@ -155,19 +155,13 @@ namespace QueryAnalyzer
 
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
 
-            SortArgument SortArg = new SortArgument( Store, Store.GetAttribute( "StoreID" ), MongoDBSort.Ascending );
-
-            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMap3.ERMongoMapping );
-            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMap5.ERMongoMapping );
-
             FromArgument StartArgMap1 = new FromArgument( Store, DataMap.ERMongoMapping );
             FromArgument StartArgMap3 = new FromArgument( Store, DataMap3.ERMongoMapping );
             FromArgument StartArgMap5 = new FromArgument( Store, DataMap5.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SortOpMap1 };
-            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SortOpMap3 };
-            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { SortOpMap5 };
+            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() {  };
+            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() {  };
+            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() {  };
 
             QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
             QueryGenerator QueryGenMap3 = new QueryGenerator( StartArgMap3, OperatorsMap3 );
@@ -203,19 +197,13 @@ namespace QueryAnalyzer
 
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
 
-            SortArgument SortArg = new SortArgument( User, User.GetAttribute( "UserID" ), MongoDBSort.Ascending );
-
-            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
-            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
-
             FromArgument StartArgMap1 = new FromArgument( User, DataMap.ERMongoMapping );
             FromArgument StartArgMap3 = new FromArgument( User, DataMapCategoryDuplicated.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( User, DataMapStoreDuplicated.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SortOpMap1 };
-            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SortOpMap3 };
-            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { SortOpMap4 };
+            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() {  };
+            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() {  };
+            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() {  };
 
             QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
             QueryGenerator QueryGenMap3 = new QueryGenerator( StartArgMap3, OperatorsMap3 );
@@ -251,19 +239,13 @@ namespace QueryAnalyzer
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
 
-            SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
-
-            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
-            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
-
             FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
             FromArgument StartArgMap5 = new FromArgument( Category, DataMapUserDuplicated.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SortOpMap1 };
-            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { SortOpMap4 };
-            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { SortOpMap5 };
+            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() {  };
+            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() {  };
+            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() {  };
 
             QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
             QueryGenerator QueryGenMap4 = new QueryGenerator( StartArgMap4, OperatorsMap4 );
@@ -312,15 +294,9 @@ namespace QueryAnalyzer
             RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
                 new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
 
-            SortArgument SortArg = new SortArgument( Store, Store.GetAttribute( "StoreID" ), MongoDBSort.Ascending );
-
-            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
-            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
-
-            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
-            List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3, SortOpMap3 };
-            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1 };
+            List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5 };
 
             FromArgument StartArgMap1 = new FromArgument( Store, DataMap.ERMongoMapping );
             FromArgument StartArgMap3 = new FromArgument( Store, DataMapCategoryDuplicated.ERMongoMapping );
@@ -373,15 +349,9 @@ namespace QueryAnalyzer
             RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
 
-            SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
-
-            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
-            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
-
-            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
-            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, SortOpMap4 };
-            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1 };
+            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5 };
 
             FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
@@ -395,18 +365,18 @@ namespace QueryAnalyzer
             string QueryMap4 = GeneratorMap4.Explain();
             string QueryMap5 = GeneratorMap5.Explain();
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_2", QueryMap4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_3", QueryMap5 );
+            RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_2", QueryMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_3", QueryMap5 );
 
             // Load Handcrafted queries
             string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_1.mongo" );
             string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_2.mongo" );
             string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_3.mongo" );
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_handcrafted_2", HandcraftedQuery2 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_handcrafted_2", HandcraftedQuery2 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_handcrafted_3", HandcraftedQuery3 );
         }
 
         /// <summary>
@@ -533,15 +503,9 @@ namespace QueryAnalyzer
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithStore ) },
                 DataMapUserDuplicated.ERMongoMapping );
 
-            SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
-
-            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
-            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
-
-            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
-            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, SortOpMap4 };
-            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1 };
+            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5 };
 
             FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
@@ -603,15 +567,9 @@ namespace QueryAnalyzer
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
                 DataMapUserDuplicated.ERMongoMapping );
 
-            SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
-
-            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
-            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
-
-            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
-            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, SortOpMap4 };
-            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1 };
+            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5 };
 
             FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
@@ -690,19 +648,11 @@ namespace QueryAnalyzer
 
             ProjectStage ProjectOp5 = new ProjectStage( ProjectArgs, RJoinOp5.ComputeVirtualMap() );
 
-            SortArgument SortArg = new SortArgument( Product, Product.GetAttribute( "ProductID" ), MongoDBSort.Ascending );
-
-            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap2 = new SortStage( new List<SortArgument>() { SortArg }, DataMapDuplicates.ERMongoMapping );
-            SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
-            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
-            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
-
-            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, ProjectOp1, SortOpMap1 };
-            List<AlgebraOperator> OperatorsToExecuteMap2 = new List<AlgebraOperator>() { RJoinOp2, ProjectOp2, SortOpMap2 };
-            List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3, ProjectOp3, SortOpMap3 };
-            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, ProjectOp4, SortOpMap4 };
-            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, ProjectOp5, SortOpMap5 };
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, ProjectOp1 };
+            List<AlgebraOperator> OperatorsToExecuteMap2 = new List<AlgebraOperator>() { RJoinOp2, ProjectOp2 };
+            List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3, ProjectOp3 };
+            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, ProjectOp4 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, ProjectOp5 };
 
             FromArgument StartArgMap1 = new FromArgument( Product, DataMap.ERMongoMapping );
             FromArgument StartArgMap2 = new FromArgument( Product, DataMapDuplicates.ERMongoMapping );
@@ -788,15 +738,9 @@ namespace QueryAnalyzer
 
             ProjectStage ProjectOp5 = new ProjectStage( ProjectArgs, RJoinOp5.ComputeVirtualMap() );
 
-            SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
-
-            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
-            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
-
-            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, ProjectOp1, SortOpMap1 };
-            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, ProjectOp4, SortOpMap4 };
-            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, ProjectOp5, SortOpMap5 };
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, ProjectOp1 };
+            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, ProjectOp4 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, ProjectOp5 };
 
             FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
@@ -851,15 +795,9 @@ namespace QueryAnalyzer
             SelectArgument SelectArg05 = new SelectArgument( new EqExpr( $"${CategoryRule05.GetRuleValueForAttribute( Category.GetAttribute( "CategoryName" ) )}", "Home" ) );
             SelectStage SelectOp5 = new SelectStage( SelectArg05, DataMap.ERMongoMapping );
 
-            SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
-
-            SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-            SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
-            SortStage SortOpMap5 = new SortStage( new List<SortArgument>() { SortArg }, DataMapUserDuplicated.ERMongoMapping );
-
-            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { SelectOp1, SortOpMap1 };
-            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { SelectOp4, SortOpMap4 };
-            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { SelectOp5, SortOpMap5 };
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { SelectOp1 };
+            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { SelectOp4 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { SelectOp5 };
 
             FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
@@ -939,17 +877,17 @@ namespace QueryAnalyzer
             RunIterationsForQuery( "research_performance_5", "get_all_products_that_costs_less5_5", Query5 );
 
             // Load Handcrafted queries
-            //string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_1.mongo" );
-            //string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_2.mongo" );
-            //string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_3.mongo" );
-            //string HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_4.mongo" );
-            //string HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_5.mongo" );
+            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_1.mongo" );
+            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_2.mongo" );
+            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_3.mongo" );
+            string HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_4.mongo" );
+            string HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_5.mongo" );
 
-            //RunIterationsForQuery( "research_performance_index_1", "get_all_products_that_costs_less5_handcrafted_1", HandcraftedQuery1 );
-            //RunIterationsForQuery( "research_performance_index_3", "get_all_products_that_costs_less5_handcrafted_2", HandcraftedQuery2, true );
-            //RunIterationsForQuery( "research_performance_index_2", "get_all_products_that_costs_less5_handcrafted_3", HandcraftedQuery3 );
-            //RunIterationsForQuery( "research_performance_index_4", "get_all_products_that_costs_less5_handcrafted_4", HandcraftedQuery4 );
-            //RunIterationsForQuery( "research_performance_index_5", "get_all_products_that_costs_less5_handcrafted_5", HandcraftedQuery5 );
+            RunIterationsForQuery( "research_performance_index_1", "get_all_products_that_costs_less5_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_index_3", "get_all_products_that_costs_less5_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_products_that_costs_less5_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_products_that_costs_less5_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_all_products_that_costs_less5_handcrafted_5", HandcraftedQuery5 );
         }
         /// <summary>
         /// Create a list of operators to execute the query
@@ -997,11 +935,11 @@ namespace QueryAnalyzer
             string CustomQuery4 = Utils.ReadQueryFromFile( "CustomQueries/get_all_products_that_costs_less5_m_4.mongo" );
             string CustomQuery5 = Utils.ReadQueryFromFile( "CustomQueries/get_all_products_that_costs_less5_m_5.mongo" );
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_that_costs_less5_modified_1", CustomQuery1 );
-            RunIterationsForQuery( "research_performance_index_3", "get_all_products_that_costs_less5_modified_2", CustomQuery2 );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_products_that_costs_less5_modified_3", CustomQuery3 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_that_costs_less5_modified_4", CustomQuery4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_that_costs_less5_modified_5", CustomQuery5 );
+            RunIterationsForQuery( "research_performance_1", "get_all_products_that_costs_less5_modified_1", CustomQuery1 );
+            RunIterationsForQuery( "research_performance_3", "get_all_products_that_costs_less5_modified_2", CustomQuery2 );
+            RunIterationsForQuery( "research_performance_2", "get_all_products_that_costs_less5_modified_3", CustomQuery3 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_that_costs_less5_modified_4", CustomQuery4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_that_costs_less5_modified_5", CustomQuery5 );
         }
     }
 }

@@ -1,7 +1,4 @@
 db.Product.explain('executionStats').aggregate([
-    {$sort: {
-        _id: 1
-    }},
     {"$lookup": {
         from: 'User',
         foreignField: '_id',

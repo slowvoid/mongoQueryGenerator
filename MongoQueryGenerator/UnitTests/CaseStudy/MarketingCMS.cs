@@ -16,6 +16,15 @@ namespace QueryBuilder.Tests
     [TestClass]
     public class MarketingCMS
     {
+        /// <summary>
+        /// Query:
+        /// 
+        /// FROM Product p
+        /// RJOIN <UserProducts> (User u)
+        /// RJOIN <StoreProducts> (Store s)
+        /// RJOIN <CategoryProducts> (Category c)
+        /// SELECT *
+        /// </summary>
         [TestMethod]
         public void GetAllProducts()
         {
@@ -297,8 +306,8 @@ namespace QueryBuilder.Tests
         /// <summary>
         /// Run GetProductsFromStore query
         /// 
-        /// QUERY: FROM Store 
-        ///        RJOIN (Product, StoreHasProduct)
+        /// QUERY: FROM Store s 
+        ///        RJOIN <StoreProducts> (Product p)
         ///        SELECT *
         /// </summary>
         [TestMethod]
@@ -389,8 +398,8 @@ namespace QueryBuilder.Tests
         /// <summary>
         /// Run GetProductsFromCategory query
         /// 
-        /// QUERY: FROM Category 
-        ///        RJOIN (Product, StoreHasProduct)
+        /// QUERY: FROM Category c 
+        ///        RJOIN <CategoryProducts> (Product p)
         ///        SELECT *
         /// </summary>
         [TestMethod]
@@ -481,8 +490,8 @@ namespace QueryBuilder.Tests
         /// <summary>
         /// Run GetProductsFromUser query
         /// 
-        /// QUERY: FROM Category 
-        ///        RJOIN (Product, StoreHasProduct)
+        /// QUERY: FROM User u 
+        ///        RJOIN <UserProducts> (Product p)
         ///        SELECT *
         /// </summary>
         [TestMethod]
@@ -572,8 +581,10 @@ namespace QueryBuilder.Tests
         /// <summary>
         /// Run GetAllProductsFromCategoryWithStore
         /// 
-        /// QUERY: FROM Category 
-        ///        RJOIN (Product RJOIN [(Store, StoreProduct)], CategoryProduct) 
+        /// QUERY: FROM Category c
+        ///        RJOIN <CategoryProducts> (Product p 
+        ///                                  RJOIN <StoreProducts> (Store s))
+        ///        SELECT *
         /// </summary>
         [TestMethod]
         public void GetAllProductsFromCategoryWithStore()
@@ -674,8 +685,10 @@ namespace QueryBuilder.Tests
         /// <summary>
         /// Run GetAllProductsFromCategoryWithUser
         /// 
-        /// QUERY: FROM Category 
-        ///        RJOIN (Product RJOIN [(User, UserProduct)], CategoryProduct) 
+        /// QUERY: FROM Category c
+        ///        RJOIN <CategoryProducts> (Product p 
+        ///                                  RJOIN <UserProducts> (User u))
+        ///        SELECT *
         /// </summary>
         [TestMethod]
         public void GetAllProductsFromCategoryWithUser()
@@ -775,8 +788,8 @@ namespace QueryBuilder.Tests
         /// <summary>
         /// Run GetProductTitleAndUserName test
         /// 
-        /// QUERY: FROM Product
-        ///        RJOIN (User, UserProducts)
+        /// QUERY: FROM Product p
+        ///        RJOIN <UserProducts> (User u)
         ///        SELECT Product.Title, User.UserName
         /// </summary>
         [TestMethod]
@@ -898,8 +911,9 @@ namespace QueryBuilder.Tests
         /// <summary>
         /// Run GetAllProductsFromCategoryWithUserAndSelectOnlyTitleNameEmailCategoryName
         /// 
-        /// QUERY: FROM Category 
-        ///        RJOIN (Product RJOIN [(User, UserProduct)], CategoryProduct)
+        /// QUERY: FROM Category c
+        ///        RJOIN <CategoryProducts> (Product p
+        ///                                  RJOIN <UserProducts> (User u))
         ///        SELECT Category.CategoryName, Product.Title, User.UserName, User.UserEmail
         /// </summary>
         [TestMethod]
@@ -1018,8 +1032,8 @@ namespace QueryBuilder.Tests
         /// Execute GetCategoryThatIsNamedHome
         /// 
         /// Query: FROM Category
-        ///        SELECT *
         ///        WHERE CategoryName = 'Home'
+        ///        SELECT *
         /// </summary>
         [TestMethod]
         public void GetCategoryThatIsNamedHome()

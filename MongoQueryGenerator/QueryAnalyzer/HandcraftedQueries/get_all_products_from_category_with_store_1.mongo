@@ -19,8 +19,5 @@ db.Category.explain('executionStats').aggregate([
             }},
             {$unwind: '$data_Store'}
         ]
-    }},
-    {$sort: {
-        _id: 1
     }}
 ], {allowDiskUse: true})

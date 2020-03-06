@@ -1,7 +1,4 @@
 db.Category.explain('executionStats').aggregate([
-    {$sort: {
-        _id: 1
-    }},
     {"$lookup": {
         from: 'Product',
         let: {
@@ -30,4 +27,4 @@ db.Category.explain('executionStats').aggregate([
         "data_Product.data_User.UserName": true,
         "data_Product.data_User.UserEmail": true
     }}
-], {allowDiskUse: true})
+])

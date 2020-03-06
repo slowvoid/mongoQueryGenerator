@@ -568,7 +568,8 @@ namespace QueryBuilder.Tests
         /// Run tests for the following query
         /// 
         /// FROM Enfase e
-        /// RJOIN <VinculoEnfase> ( Matricula m  RJOIN <Vinculo> (Aluno a) )
+        /// RJOIN <VinculoEnfase> ( Matricula m  
+        ///                         RJOIN <Vinculo> (Aluno a) )
         /// SELECT *
         /// </summary>
         [TestMethod]
@@ -642,7 +643,8 @@ namespace QueryBuilder.Tests
         /// Run tests for the following query
         /// But the relationship cardinality is 1:N
         /// 
-        /// FROM Aluno RJOIN <AlunoMora> ( Endereco )
+        /// FROM Aluno 
+        /// RJOIN <AlunoMora> ( Endereco )
         /// SELECT *
         /// </summary>
         [TestMethod]

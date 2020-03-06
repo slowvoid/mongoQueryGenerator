@@ -1,1 +1,1 @@
-db.Store.find().sort({_id: 1}).explain('executionStats')
+db.Store.find().explain('executionStats')

@@ -4,8 +4,5 @@ db.Store.explain('executionStats').aggregate([
         foreignField: 'StoreID',
         localField: '_id',
         as: 'data_Product'
-    }},
-    {$sort: {
-        _id: 1
     }}
 ], {allowDiskUse: true})
