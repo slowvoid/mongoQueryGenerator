@@ -1,12 +1,11 @@
 ﻿using QueryBuilder.ER;
 using QueryBuilder.Map;
 using QueryBuilder.Mongo;
-using QueryBuilder.Tests;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QueryBuilder.Tests
+namespace SampleViewer
 {
     /// <summary>
     /// Provides data for tests related to ProgradWeb

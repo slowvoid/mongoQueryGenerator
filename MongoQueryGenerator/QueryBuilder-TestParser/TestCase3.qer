@@ -26,12 +26,12 @@ Drives (Person, Car) {
 }
 
 ############# MongoDBSchema ############## 
-DocTypePerson < Person*, Car, Drives*, Has >
+DocTypePerson < Person*, Car >
 {
     _id      : string            < Person.id >
     fName    : string            < Person.name >
     fAddress : string            < Person.address >
-    fCarIds  : [ string ]        < Car.id >
+    fCarIds  : string            < Car.id >
 }
 DocTypeCar < Car* >
 {
@@ -39,7 +39,7 @@ DocTypeCar < Car* >
     fName   : string    < Car.name >
     fColor  : string    < Car.color >
 }
-DocTypeInsurance < Insurance*, Car, Person, Has* >
+DocTypeInsurance < Insurance*, Car, Person >
 {
     _id      : string   < Insurance.id >
     fValue   : int      < Insurance.value >
