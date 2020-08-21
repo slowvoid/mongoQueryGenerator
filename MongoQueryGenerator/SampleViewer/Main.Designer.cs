@@ -31,8 +31,8 @@
             this.Map1Btn = new System.Windows.Forms.Button();
             this.Map2Btn = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.queryBox = new System.Windows.Forms.RichTextBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.resultBox = new System.Windows.Forms.RichTextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -68,6 +68,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Código consulta";
             // 
+            // queryBox
+            // 
+            this.queryBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.queryBox.Location = new System.Drawing.Point(3, 16);
+            this.queryBox.Name = "queryBox";
+            this.queryBox.Size = new System.Drawing.Size(408, 613);
+            this.queryBox.TabIndex = 0;
+            this.queryBox.Text = "";
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.resultBox);
@@ -77,15 +86,6 @@
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Resultado";
-            // 
-            // queryBox
-            // 
-            this.queryBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.queryBox.Location = new System.Drawing.Point(3, 16);
-            this.queryBox.Name = "queryBox";
-            this.queryBox.Size = new System.Drawing.Size(408, 613);
-            this.queryBox.TabIndex = 0;
-            this.queryBox.Text = "";
             // 
             // resultBox
             // 
@@ -106,6 +106,7 @@
             this.Controls.Add(this.Map2Btn);
             this.Controls.Add(this.Map1Btn);
             this.Name = "Main";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "QueryGenerator Sample Viewer";
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);

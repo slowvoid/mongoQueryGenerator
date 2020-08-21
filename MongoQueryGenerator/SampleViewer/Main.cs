@@ -30,35 +30,7 @@ namespace SampleViewer
             resultBox.Clear();
 
             RequiredDataContainer Container1 = ProgradWebDataProvider.MapEntitiesToCollections();
-
-            QueryableEntity Aluno = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Aluno" ) );
-            QueryableEntity Endereco = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Endereco" ) );
-
-            RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator(
-                Aluno,
-                (Relationship)Container1.EntityRelationshipModel.FindByName( "AlunoMora" ),
-                new List<QueryableEntity>() { Endereco },
-                Container1.ERMongoMapping );
-
-            SortArgument SortArg1 = new SortArgument( Aluno, Aluno.Element.GetIdentifierAttribute(), MongoDBSort.Ascending );
-            SortStage SortOp1 = new SortStage( new List<SortArgument>() { SortArg1 }, Container1.ERMongoMapping );
-
-            List<AlgebraOperator> OperatorList1 = new List<AlgebraOperator>() { RJoinOp1, SortOp1 };
-
-            FromArgument FromArg1 = new FromArgument( Aluno, Container1.ERMongoMapping );
-
-            QueryGenerator QueryGen1 = new QueryGenerator( FromArg1, OperatorList1 );
-
-            string Query1 = QueryGen1.Run();
-
-            Beautifier jsB = new Beautifier();
-            queryBox.Text = jsB.Beautify( Query1 ); 
-
-            QueryRunner QueryRunner1 = new QueryRunner( "mongodb://localhost:27017", "progradweb_1" );
-
-            string QueryResult1 = QueryRunner1.GetJSON( Query1 );
-
-            resultBox.Text = QueryResult1.PrettyPrintJson();
+            GenerateQuery( Container1, "progradweb_1" );
         }
 
         private void Map2Btn_Click( object sender, EventArgs e )
@@ -66,36 +38,43 @@ namespace SampleViewer
             queryBox.Clear();
             resultBox.Clear();
 
-            RequiredDataContainer Container1 = ProgradWebDataProvider.MapEntitiesToCollections();
             RequiredDataContainer Container2 = ProgradWebDataProvider.MapEntitiesToCollectionsEnderecoEmbedded();
 
-            QueryableEntity Aluno = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Aluno" ) );
-            QueryableEntity Endereco = new QueryableEntity( Container1.EntityRelationshipModel.FindByName( "Endereco" ) );
+            GenerateQuery( Container2, "progradweb_2" );
+        }
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator(
+        private void GenerateQuery( RequiredDataContainer Container, string Database )
+        {
+            QueryableEntity Aluno = new QueryableEntity( Container.EntityRelationshipModel.FindByName( "Aluno" ) );
+            QueryableEntity Endereco = new QueryableEntity( Container.EntityRelationshipModel.FindByName( "Endereco" ) );
+
+            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
                 Aluno,
-                (Relationship)Container2.EntityRelationshipModel.FindByName( "AlunoMora" ),
+                (Relationship)Container.EntityRelationshipModel.FindByName( "AlunoMora" ),
                 new List<QueryableEntity>() { Endereco },
-                Container2.ERMongoMapping );
+                Container.ERMongoMapping );
 
-            SortArgument SortArg2 = new SortArgument( Aluno, Aluno.Element.GetIdentifierAttribute(), MongoDBSort.Ascending );
-            SortStage SortOp2 = new SortStage( new List<SortArgument>() { SortArg2 }, Container2.ERMongoMapping );
+            SortArgument SortArg = new SortArgument( Aluno, Aluno.Element.GetIdentifierAttribute(), MongoDBSort.Ascending );
+            SortStage SortOp = new SortStage( new List<SortArgument>() { SortArg }, Container.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorList2 = new List<AlgebraOperator>() { RJoinOp2, SortOp2 };
+            List<AlgebraOperator> OperatorList = new List<AlgebraOperator>() { RJoinOp, SortOp };
 
-            FromArgument FromArg2 = new FromArgument( Aluno, Container2.ERMongoMapping );
+            FromArgument FromArg = new FromArgument( Aluno, Container.ERMongoMapping );
 
-            QueryGenerator QueryGen2 = new QueryGenerator( FromArg2, OperatorList2 );
+            QueryGenerator QueryGen = new QueryGenerator( FromArg, OperatorList );
 
-            string Query2 = QueryGen2.Run();
+            string Query = QueryGen.Run();
 
             Beautifier jsB = new Beautifier();
-            queryBox.Text = jsB.Beautify( Query2 );
+            queryBox.Text = jsB.Beautify( Query );
 
-            QueryRunner QueryRunner2 = new QueryRunner( "mongodb://localhost:27017", "progradweb_2" );
+            QueryRunner QueryRunner = new QueryRunner( "mongodb://localhost:27017", Database );
 
-            string QueryResult2 = QueryRunner2.GetJSON( Query2 );
-            resultBox.Text = QueryResult2.PrettyPrintJson();
+            string Result = QueryRunner.GetJSON( Query );
+
+            resultBox.Text = Result.PrettyPrintJson();
         }
+
+        
     }
 }
