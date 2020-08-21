@@ -1,0 +1,35 @@
+﻿Solution: "Garage"
+Description: "Person has Driver License"
+Version: "1.0"
+
+############## ERModel ################
+
+Person {
+    id: string
+    name: string
+    surname: string
+    salary: double
+    carId: int
+}
+Car {
+    id: string
+    reg_no: int
+}
+
+Drives (Person, Car) { }
+
+
+############# MongoDBSchema ############## 
+PersonCollection < Person*, Drives >
+{
+    _id     : string    < Person.id >
+    fName   : string    < Person.name >
+    fSurname: string    < Person.surname >
+    fSalary : double    < Person.salary >
+    fCarId  : int       < Car.id >
+}
+CarCollection < Car* >
+{
+    _id     : string    < Car.id >
+    fReg_no : int       < Car.reg_no >
+}
