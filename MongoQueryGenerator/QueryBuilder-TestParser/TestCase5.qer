@@ -20,7 +20,7 @@ Drives (Person, Car) { }
 
 
 ############# MongoDBSchema ############## 
-PersonCollection < Person*, Drives >
+PersonCollection < Person*, Drives, Car >
 {
     _id     : string    < Person.id >
     fName   : string    < Person.name >

@@ -1,0 +1,37 @@
+﻿Solution: "Book and Author"
+Description: "Author has many books and book has many authors"
+Version: "1.0"
+
+############## ERModel ################
+
+Author {
+    id: string
+    name: string
+}
+
+Book {
+    id: string
+    title: string
+}
+
+BookAndAuthor (Author, Book) {}
+
+
+############# MongoDBSchema ############## 
+Author < Author* >
+{
+    _id     : int       < Author.id >
+    name    : string    < Author.name >
+}
+
+Book < Book* >
+{
+    _id     : int       < Book.id >
+    title   : string    < Book.title >
+}
+
+BookAndAuthor < BookAndAuthor*, Author, Book >
+{
+    authorId    : int   < Author.id >
+    bookId      : int   < Book.id >
+}

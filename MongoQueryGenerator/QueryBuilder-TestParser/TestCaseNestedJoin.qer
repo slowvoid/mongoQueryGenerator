@@ -1,0 +1,51 @@
+﻿Solution: "Book and Author"
+Description: "Author has many books and book has many authors and book has publisher"
+Version: "1.0"
+
+############## ERModel ################
+
+Author {
+    id: string
+    name: string
+}
+
+Book {
+    id: string
+    title: string
+}
+
+Publisher {
+    id: string,
+    name: string
+}
+
+BookAndAuthor (Author, Book) {}
+
+PublishedBy (Book, Publisher) {}
+
+
+############# MongoDBSchema ############## 
+Author < Author* >
+{
+    _id     : int       < Author.id >
+    name    : string    < Author.name >
+}
+
+Book < Book*, Publisher >
+{
+    _id             : int       < Book.id >
+    title           : string    < Book.title >
+    publisherId     : int       < Publisher.id >
+}
+
+Publisher < Publisher* >
+{
+    _id     : int       < Publisher.id >
+    name    : string    < Publisher.name >
+}
+
+BookAndAuthor < BookAndAuthor*, Author, Book >
+{
+    authorId    : int   < Author.id >
+    bookId      : int   < Book.id >
+}

@@ -68,6 +68,10 @@ namespace QueryBuilder.Parser
                     try
                     {
                         MongoDBCollection relationshipMainCollection = ERMongoMapping.FindMainCollection(relationship);
+                        if( relationshipMainCollection == null)
+                        {
+                            continue;
+                        }
                         List<MapRule> rules = ERMongoMapping.FindRules(relationshipMainCollection);
 
                         foreach (RelationshipEnd re in relationship.Ends)

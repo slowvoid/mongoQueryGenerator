@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>TestApp.ResearchApp</StartupObject>
+    <StartupObject>TestApp.RelationshipAttributeTest</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
