@@ -1,0 +1,58 @@
+﻿Solution: "One to One relationship with computed entity"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	id: int
+	name: string
+}
+
+Car {
+	id: int
+	model: string
+	year: int
+}
+
+Garage {
+	id: int
+	name: string
+}
+
+Drives (Person, Car) {}
+
+Repaired (Car, Garage) {
+	repairedId: int
+	repaired: string
+}
+
+########## MongoDBSchema ##########
+
+Person < Person*, Car >
+{
+	_id: int < Person.id >
+	name: string < Person.name >
+	carId: int < Car.id >
+}
+
+Car < Car* >
+{
+	_id: int < Car.id >
+	model: string < Car.model >
+	year: int < Car.year >
+}
+
+Garage < Garage* >
+{
+	_id: int < Garage.id >
+	name: string < Garage.name >
+}
+
+Repaired < Repaired*, Car, Garage >
+{
+	_id: int < Repaired.repairedId >
+	repaired: string < Repaired.repaired >
+	carId: int < Car.id >
+	garageId: int < Garage.id >
+}

@@ -1,0 +1,20 @@
+﻿Solution: "Project operation"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+	age: int
+}
+
+########## MongoDBSchema ##########
+
+Person < Person* >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+	age: int < Person.age >
+}

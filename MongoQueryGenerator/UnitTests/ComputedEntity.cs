@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using QueryBuilder.ER;
 using QueryBuilder.Operation;
 using QueryBuilder.Operation.Arguments;
+using QueryBuilder.Parser;
 using QueryBuilder.Query;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a relationship join operation is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = ComputedEntityDataProvider.OneToOneComputedEntity();
+            //RequiredDataContainer ModelData = ComputedEntityDataProvider.OneToOneComputedEntity();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-computed-entity.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/ceOneToOne.js" );
@@ -293,7 +295,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a relationship join operation is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = ComputedEntityDataProvider.ManyToManyComputedEntity();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/many-to-many-computed-entity.mapping" ) );
+            //RequiredDataContainer ModelData = ComputedEntityDataProvider.ManyToManyComputedEntity();
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/ceManyToMany.js" );
