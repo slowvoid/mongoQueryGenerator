@@ -142,7 +142,7 @@ namespace QueryBuilder.Parser
                 Entity entity = new Entity(context.name.Text);
                 foreach (QueryBuilderMappingParser.AttributeContext ac in context.attribute())
                 {
-                    entity.AddAttribute(ac.name.Text, ac.type.Text, ac.mutivalued != null);
+                    entity.AddAttribute(ac.name.Text, ac.type.Text, ac.multivalued != null, ac.primarykey != null);
                 }
                 EntityRelationshipModel.Elements.Add(entity);
             }
@@ -158,7 +158,7 @@ namespace QueryBuilder.Parser
 
                 foreach (QueryBuilderMappingParser.AttributeContext ac in context.attribute())
                 {
-                    relationship.AddAttribute(ac.name.Text, ac.type.Text, ac.mutivalued != null);
+                    relationship.AddAttribute(ac.name.Text, ac.type.Text, ac.multivalued != null, ac.primarykey != null);
                 }
 
 

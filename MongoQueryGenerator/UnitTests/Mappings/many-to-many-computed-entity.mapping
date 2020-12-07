@@ -5,7 +5,7 @@ Version: "1.0"
 ########## ERModel ##########
 
 Person {
-	personId: int
+	> personId: int
 	name: string
 }
 

@@ -23,7 +23,7 @@ relationship:
 
 relationshipEnd: name = ID;
 
-attribute: name = ID ':' type = ID (mutivalued = '[]')?;
+attribute: (primarykey = '>')? name = ID ':' type = ID  (multivalued = '[]')?;
 
 mongoschema: collection*;
 
