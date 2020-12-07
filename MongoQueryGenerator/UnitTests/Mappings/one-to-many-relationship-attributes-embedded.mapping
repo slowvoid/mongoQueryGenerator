@@ -1,0 +1,33 @@
+﻿Solution: "One to many relationship attributes embedded"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+}
+
+Car {
+	carId: int
+	name: string
+	year: int
+}
+
+Drives (Person, Car) {
+	drivesFor: string
+}
+
+########## MongoDBSchema ##########
+
+Person < Person*, Car, Drives >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+	cars_multivalued_ {
+		name: string < Car.name >
+		year: int < Car.year >
+		drivesFor: string < Drives.drivesFor >
+	}
+}

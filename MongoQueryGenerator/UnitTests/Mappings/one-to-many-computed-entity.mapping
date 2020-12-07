@@ -1,0 +1,86 @@
+﻿Solution: "One to Many relationship with computed entity"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+}
+
+Car {
+	carId: int
+	model: string
+	year: int
+}
+
+Garage {
+	garageId: int
+	name: string
+}
+
+Supplier {
+	supplierId: int
+	name: string
+}
+
+Insurance {
+	insuranceId: int
+	name: string
+	value: double
+}
+
+Drives (Person, Car) {}
+
+Repaired (Car, Garage, Supplier) {
+	repairedId: int
+	repaired: string
+}
+
+HasInsurance (Person, Insurance) {}
+
+########## MongoDBSchema ##########
+
+Person < Person*, Insurance >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+	insuranceId: int < Insurance.insuranceId >
+}
+
+Car < Car*, Person >
+{
+	_id: int < Car.carId >
+	model: string < Car.model >
+	year: int < Car.year >
+	driverId: < Person.personId >
+}
+
+Garage < Garage* >
+{
+	_id: int < Garage.garageId >
+	name: string < Garage.name >
+}
+
+Supplier < Supplier* >
+{
+	_id: int < Supplier.supplierId >
+	name: string < Supplier.name >
+}
+
+Insurance < Insurance* >
+{
+	_id: int < Insurance.insuranceId >
+	name: string < Insurance.name >
+	value: double < Insurance.value >
+}
+
+Repaired < Repaired*, Car, Garage, Supplier >
+{
+	_id: int < Repaired.repairedId >
+	repaired: string < Repaired.repaired >
+	carId: int < Car.carId >
+	garageId: int < Garage.garageId >
+	supplierId: int < Supplier.supplierId >
+}

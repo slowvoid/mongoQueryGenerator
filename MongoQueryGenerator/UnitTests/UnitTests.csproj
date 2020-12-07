@@ -202,7 +202,46 @@
     <None Update="Mappings\cartesian.mapping">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Mappings\many-to-many-computed-entity-2.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Mappings\many-to-many-computed-entity.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-embedded-target.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-multiple-entities.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-relationship-attribute-multiple-entities.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-relationship-attribute-single-entity.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-single-entity.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-computed-entity.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-not-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-relationship-attributes-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-relationship-attributes.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-computed-entity-multiple-2.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-computed-entity-multiple.mapping">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Mappings\one-to-one-computed-entity.mapping">

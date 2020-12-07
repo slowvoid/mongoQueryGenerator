@@ -4,6 +4,7 @@ using QueryBuilder.ER;
 using QueryBuilder.Operation;
 using QueryBuilder.Operation.Arguments;
 using QueryBuilder.Operation.Exceptions;
+using QueryBuilder.Parser;
 using QueryBuilder.Query;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToManyRelationshipsDataProvider.OneToManyNotEmbedded();
+            //RequiredDataContainer ModelData = OneToManyRelationshipsDataProvider.OneToManyNotEmbedded();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-many-not-embedded.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarOneToMany_1.js" );
@@ -67,7 +69,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToManyRelationshipsDataProvider.OneToManyEmbedded();
+            //RequiredDataContainer ModelData = OneToManyRelationshipsDataProvider.OneToManyEmbedded();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-many-embedded.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarOneToMany_2.js" );
@@ -113,7 +116,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToManyRelationshipsDataProvider.OneToManyRelationshipAttributes();
+            //RequiredDataContainer ModelData = OneToManyRelationshipsDataProvider.OneToManyRelationshipAttributes();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-many-relationship-attributes.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personDrivesOneToManyRelationshipAttributes.js" );
@@ -159,7 +163,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToManyRelationshipsDataProvider.OneToManyRelationshipAttributesEmbedded();
+            //RequiredDataContainer ModelData = OneToManyRelationshipsDataProvider.OneToManyRelationshipAttributesEmbedded();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-many-relationship-attributes-embedded.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarOneToManyRelationshipAttributeEmbedded.js" );
