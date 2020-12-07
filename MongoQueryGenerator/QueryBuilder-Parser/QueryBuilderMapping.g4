@@ -7,8 +7,8 @@ DIVIDER: '#'+;
 WS: [ \t\r\n]+ -> skip;
 
 program:
-	'Solution' ':' name = STRING 'Description' ':' descritpion = STRING 'Version' ':' version =
-		STRING DIVIDER 'ERModel' DIVIDER ermodel DIVIDER 'MongoDBSchema' DIVIDER mongoschema;
+ 	'__Solution__' ':' name = STRING '__Description__' ':' description = STRING '__Version__' ':' version =
+ 		STRING DIVIDER 'ERModel' DIVIDER ermodel DIVIDER 'MongoDBSchema' DIVIDER mongoschema;
 
 ermodel: erelement*;
 
