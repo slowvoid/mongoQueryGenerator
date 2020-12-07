@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using QueryBuilder.ER;
 using QueryBuilder.Operation;
 using QueryBuilder.Operation.Arguments;
+using QueryBuilder.Parser;
 using QueryBuilder.Query;
 using System.Collections.Generic;
 
@@ -16,7 +17,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a relationship join operation is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = CartesianProductDataProvider.SampleData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/cartesian.mapping" ) );
+            //RequiredDataContainer ModelData = CartesianProductDataProvider.SampleData();
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/cartersianProduct-1.js" );

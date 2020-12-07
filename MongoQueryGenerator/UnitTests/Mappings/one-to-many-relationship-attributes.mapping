@@ -1,0 +1,37 @@
+﻿Solution: "One to many relationship attributes"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+}
+
+Car {
+	carId: int
+	name: string
+	year: int
+}
+
+Drives (Person, Car) {
+	drivesFor: string
+}
+
+########## MongoDBSchema ##########
+
+Person < Person* >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+}
+
+Car < Car*, Person, Drives >
+{
+	_id: int < Car.carId >
+	name: string < Car.name >
+	year: int < Car.year >
+	driverId: int < Person.personId >
+	drivesFor: string < Drives.drivesFor >
+}

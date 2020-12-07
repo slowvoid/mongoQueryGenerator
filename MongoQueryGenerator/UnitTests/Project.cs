@@ -5,6 +5,7 @@ using QueryBuilder.Map;
 using QueryBuilder.Mongo.Expressions;
 using QueryBuilder.Operation;
 using QueryBuilder.Operation.Arguments;
+using QueryBuilder.Parser;
 using QueryBuilder.Query;
 using System.Collections.Generic;
 
@@ -18,7 +19,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a relationship join operation is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = ProjectDataProvider.SimpleModel();
+            //RequiredDataContainer ModelData = ProjectDataProvider.SimpleModel();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/project-simple.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/projectQuerySimple.js" );

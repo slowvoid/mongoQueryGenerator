@@ -1,0 +1,34 @@
+﻿Solution: "One to many not embedded"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+}
+
+Car {
+	carId: int
+	name: string
+	year: int
+}
+
+Drives (Person, Car) {}
+
+########## MongoDBSchema ##########
+
+Person < Person* >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+}
+
+Car < Car*, Person >
+{
+	_id: int < Car.carId >
+	name: string < Car.name >
+	year: int < Car.year >
+	personId: int < Person.personId >
+}

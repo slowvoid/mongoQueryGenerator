@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using QueryBuilder.ER;
 using QueryBuilder.Operation;
 using QueryBuilder.Operation.Arguments;
+using QueryBuilder.Parser;
 using QueryBuilder.Query;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = ManyToManyRelationshipsDataProvider.ManyToManySingleEntity();
+            //RequiredDataContainer ModelData = ManyToManyRelationshipsDataProvider.ManyToManySingleEntity();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/many-to-many-single-entity.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarManyToMany_1.js" );
@@ -66,7 +68,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = ManyToManyRelationshipsDataProvider.ManyToManyMultipleEntities();
+            //RequiredDataContainer ModelData = ManyToManyRelationshipsDataProvider.ManyToManyMultipleEntities();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/many-to-many-multiple-entities.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarInsCompanyManyToMany.js" );
@@ -116,7 +119,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = ManyToManyRelationshipsDataProvider.ManyToManyRelationshipAttributeSingleEntity();
+            //RequiredDataContainer ModelData = ManyToManyRelationshipsDataProvider.ManyToManyRelationshipAttributeSingleEntity();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/many-to-many-relationship-attribute-single-entity.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/manyToManyRelationshipAttributes.js" );
@@ -162,7 +166,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = ManyToManyRelationshipsDataProvider.ManyToManyRelationshipAttributeMultipleEntities();
+            //RequiredDataContainer ModelData = ManyToManyRelationshipsDataProvider.ManyToManyRelationshipAttributeMultipleEntities();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/many-to-many-relationship-attribute-multiple-entities.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/manyToManyRelationshipAttributesMultipleEntities.js" );
@@ -207,7 +212,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void ManyToManyTargetEmbedded()
         {
-            RequiredDataContainer ModelData = ManyToManyRelationshipsDataProvider.ManyToManyEmbeddedTarget();
+            //RequiredDataContainer ModelData = ManyToManyRelationshipsDataProvider.ManyToManyEmbeddedTarget();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/many-to-many-embedded-target.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/manyToManyEmbedded.js" );

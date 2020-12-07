@@ -1,0 +1,29 @@
+﻿Solution: "One to many embedded"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+}
+
+Car {
+	name: string
+	year: int
+}
+
+Drives (Person, Car) {}
+
+########## MongoDBSchema ##########
+
+PersonDrivesCars < Person*, Car >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+	cars_multivalued_ {
+		name: string < Car.name >
+		year: int < Car.year >
+	}
+}

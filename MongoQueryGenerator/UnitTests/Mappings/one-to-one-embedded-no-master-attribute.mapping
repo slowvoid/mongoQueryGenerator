@@ -1,0 +1,29 @@
+﻿Solution: "One to one embedded no master attribute"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+}
+
+Car {
+	carId: int
+	carName: string
+	carYear: int
+}
+
+Drives (Person, Car) {}
+
+########## MongoDBSchema ##########
+
+PersonDrivesCar < Person*, Car >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+	carId: int < Car.carId >
+	carName: string < Car.carName >
+	carYear: int < Car.carYear >
+}

@@ -1,0 +1,58 @@
+﻿Solution: "Many to many relationship attribute multiple entities"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+}
+
+Car {
+	carId: int
+	name: string
+	year: int
+}
+
+InsCompany {
+	companyId: int
+	name: string
+}
+
+Insurance (Person, Car, InsCompany) {
+	insuranceId: int
+	insuranceValue: double
+	aRandomValue: string
+}
+
+########## MongoDBSchema ##########
+
+Person < Person* >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+}
+
+Car < Car* >
+{
+	_id: int < Car.carId >
+	name: string < Car.name >
+	year: int < Car.year >
+}
+
+InsCompany < InsCompany* >
+{
+	_id: int < InsCompany.companyId >
+	name: string
+}
+
+Insurance < Insurance*, Person, Car, InsCompany >
+{
+	_id: int < Insurance.insuranceId >
+	insuranceValue: double < Insurance.insuranceValue >
+	aRandomValue: string < Insurance.aRandomValue >
+	personId: int < Person.personId >
+	carId: int < Car.carId >
+	companyId: int < InsCompany.companyId >
+}

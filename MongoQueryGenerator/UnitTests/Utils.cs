@@ -36,5 +36,14 @@ namespace QueryBuilder.Tests
                 sw.Write( Query );
             }
         }
+        /// <summary>
+        /// Returns a FileStream for the given file path
+        /// </summary>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
+        public static FileStream ReadMappingFile( string FilePath )
+        {
+            return new FileStream(FilePath, FileMode.Open);
+        }
     }
 }

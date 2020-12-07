@@ -5,6 +5,7 @@ using QueryBuilder.Map;
 using QueryBuilder.Mongo.Expressions;
 using QueryBuilder.Operation;
 using QueryBuilder.Operation.Arguments;
+using QueryBuilder.Parser;
 using QueryBuilder.Query;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void Equal()
         {
-            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            //RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/select.mapping" ) );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectEqual.js" );
 
@@ -55,7 +57,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void And()
         {
-            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            //RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/select.mapping" ) );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectAnd.js" );
 
@@ -95,7 +98,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GreaterOrEqualThan()
         {
-            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            //RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/select.mapping" ) );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectGreaterOrEqualThan.js" );
 
@@ -131,7 +135,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GreaterThan()
         {
-            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            //RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/select.mapping" ) );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectGreaterThan.js" );
 
@@ -168,7 +173,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void InArray()
         {
-            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            //RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/select.mapping" ) );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectInArray.js" );
 
@@ -206,7 +212,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void LessOrEqualThan()
         {
-            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            //RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/select.mapping" ) );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectLessOrEqualThan.js" );
 
@@ -243,7 +250,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void LessThan()
         {
-            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            //RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/select.mapping" ) );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectLessThan.js" );
 
@@ -280,7 +288,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void NotEqual()
         {
-            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            //RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/select.mapping" ) );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectNotEqual.js" );
 
@@ -318,7 +327,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void NotInArray()
         {
-            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            //RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/select.mapping" ) );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectNotInArray.js" );
 
@@ -357,7 +367,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void Or()
         {
-            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            //RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/select.mapping" ) );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectOr.js" );
 
@@ -396,7 +407,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void OrMultiple()
         {
-            RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            //RequiredDataContainer ModelData = SelectDataProvider.GetData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/select.mapping" ) );
 
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/selectOrMultiple.js" );
 

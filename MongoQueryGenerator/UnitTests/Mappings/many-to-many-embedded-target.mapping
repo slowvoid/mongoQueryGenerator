@@ -1,0 +1,41 @@
+﻿Solution: "Many to many embedded target"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+	age: int
+}
+
+Car {
+	carId: int
+	model: string
+	year: int
+}
+
+Drives (Person, Car) {
+	something: string
+}
+
+########## MongoDBSchema ##########
+
+Person < Person* >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+	age: int < Person.age >
+}
+
+Drives < Drives*, Person, Car >
+{
+	something: string < Drives.something >
+	personId: int < Person.personId >
+	car {
+		carId: int < Car.carId >
+		model: string < Car.model >
+		year: int < Car.year >
+	}
+}
