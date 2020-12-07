@@ -1,12 +1,13 @@
-﻿Solution: "Many to many relationship with computed entity (nested RJOIN)"
-Description: ""
-Version: "1.0"
+﻿__Solution__: "Many to many relationship with computed entity (nested RJOIN)"
+__Description__: ""
+__Version__: "1.0"
 
 ########## ERModel ##########
 
 Person {
 	> personId: int
 	name: string
+    Description: string
 }
 
 Car {

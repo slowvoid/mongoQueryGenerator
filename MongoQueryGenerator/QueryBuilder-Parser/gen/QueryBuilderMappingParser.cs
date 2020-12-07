@@ -52,7 +52,7 @@ public partial class QueryBuilderMappingParser : Parser {
 	};
 
 	private static readonly string[] _LiteralNames = {
-		null, "'Solution'", "':'", "'Description'", "'Version'", "'ERModel'", 
+		null, "'__Solution__'", "':'", "'__Description__'", "'__Version__'", "'ERModel'", 
 		"'MongoDBSchema'", "'{'", "'}'", "'('", "','", "')'", "'>'", "'[]'", "'<'", 
 		"'*'", "'['", "']'", "'.'"
 	};
@@ -95,7 +95,7 @@ public partial class QueryBuilderMappingParser : Parser {
 
 	public partial class ProgramContext : ParserRuleContext {
 		public IToken name;
-		public IToken descritpion;
+		public IToken description;
 		public IToken version;
 		public ITerminalNode[] DIVIDER() { return GetTokens(QueryBuilderMappingParser.DIVIDER); }
 		public ITerminalNode DIVIDER(int i) {
@@ -143,7 +143,7 @@ public partial class QueryBuilderMappingParser : Parser {
 			State = 34; _localctx.name = Match(STRING);
 			State = 35; Match(T__2);
 			State = 36; Match(T__1);
-			State = 37; _localctx.descritpion = Match(STRING);
+			State = 37; _localctx.description = Match(STRING);
 			State = 38; Match(T__3);
 			State = 39; Match(T__1);
 			State = 40; _localctx.version = Match(STRING);

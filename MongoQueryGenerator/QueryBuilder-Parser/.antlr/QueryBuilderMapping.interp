@@ -1,9 +1,9 @@
 token literal names:
 null
-'Solution'
+'__Solution__'
 ':'
-'Description'
-'Version'
+'__Description__'
+'__Version__'
 'ERModel'
 'MongoDBSchema'
 '{'
