@@ -67,7 +67,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a relationship join operation is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = ProjectDataProvider.ComputedEntityData();
+            //RequiredDataContainer ModelData = ProjectDataProvider.ComputedEntityData();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/project-computed-entity.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/projectQuery.js" );

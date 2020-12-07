@@ -1,0 +1,106 @@
+﻿Solution: "Project computed entity"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+}
+
+Car {
+	carId: int
+	model: string
+	year: int
+}
+
+Garage {
+	garageId: int
+	name: string
+}
+
+Supplier {
+	supplierId: int
+	name: string
+}
+
+Insurance {
+	insuranceId: int
+	name: string
+	value: double
+}
+
+Manufacturer {
+	manufacturerId: int
+	name: string
+}
+
+Owns (Car, Person, Insurance) {
+	ownsId: int
+}
+
+Repaired (Car, Garage, Supplier) {
+	repairedId: int
+	repaired: string
+}
+
+ManufacturedBy (Car, Manufacturer) {}
+
+########## MongoDBSchema ##########
+
+Person < Person* >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+}
+
+Car < Car*, Manufacturer >
+{
+	_id: int < Car.carId >
+	model: string < Car.model >
+	year: int < Car.year >
+	manufacturerId: int < Manufacturer.manufacturerId >
+}
+
+Garage < Garage* >
+{
+	_id: int < Garage.garageId >
+	name: string < Garage.name >
+}
+
+Supplier < Supplier* >
+{
+	_id: int < Supplier.supplierId >
+	name: string < Supplier.name >
+}
+
+Repaired < Repaired*, Car, Garage, Supplier >
+{
+	_id: int < Repaired.repairedId >
+	repaired: string < Repaired.repaired >
+	carId: int < Car.carId >
+	garageId: int < Garage.garageId >
+	supplierId: int < Supplier.supplierId >
+}
+
+Insurance < Insurance* >
+{
+	_id: int < Insurance.insuranceId >
+	name: string < Insurance.name >
+	value: double < Insurance.value >
+}
+
+Owns < Owns*, Person, Car, Insurance >
+{
+	_id: int < Owns.ownsId >
+	personId: int < Person.personId >
+	carId: int < Car.carId >
+	insuranceId: int < Insurance.insuranceId >
+}
+
+Manufacturer < Manufacturer* >
+{
+	_id: int < Manufacturer.manufacturerId >
+	name: string < Manufacturer.name >
+}

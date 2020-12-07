@@ -4,6 +4,7 @@ using QueryBuilder.Map;
 using QueryBuilder.Mongo.Expressions;
 using QueryBuilder.Operation;
 using QueryBuilder.Operation.Arguments;
+using QueryBuilder.Parser;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +16,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void RelationshipJoin()
         {
-            RequiredDataContainer ModelData = VirtualMapDataProvider.VirtualMapModel();
+            //RequiredDataContainer ModelData = VirtualMapDataProvider.VirtualMapModel();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/virtual-map.mapping" ) );
 
             QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
             QueryableEntity Pet = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Pet" ) );
@@ -46,7 +48,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void ProjectStageShowFields()
         {
-            RequiredDataContainer ModelData = VirtualMapDataProvider.VirtualMapModel();
+            //RequiredDataContainer ModelData = VirtualMapDataProvider.VirtualMapModel();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/virtual-map.mapping" ) );
 
             QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
             QueryableEntity Pet = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Pet" ) );
@@ -84,7 +87,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void ProjectStageHideFields()
         {
-            RequiredDataContainer ModelData = VirtualMapDataProvider.VirtualMapModel();
+            //RequiredDataContainer ModelData = VirtualMapDataProvider.VirtualMapModel();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/virtual-map.mapping" ) );
 
             QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
             QueryableEntity Pet = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Pet" ) );
@@ -121,7 +125,8 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void CartesianProduct()
         {
-            RequiredDataContainer ModelData = VirtualMapDataProvider.VirtualMapModel();
+            //RequiredDataContainer ModelData = VirtualMapDataProvider.VirtualMapModel();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/virtual-map.mapping" ) );
 
             QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
             QueryableEntity Pet = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Pet" ) );

@@ -1,0 +1,36 @@
+﻿Solution: "Virtual map"
+Description: "Mapping used to test internal mapping of the result of an operation"
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+	age: int
+}
+
+Pet {
+	petId: int
+	name: string
+	type: string
+}
+
+HasPet (Person, Pet) {}
+
+########## MongoDBSchema ##########
+
+Person < Person* >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+	age: int < Person.age >
+}
+
+Pet < Pet*, Person >
+{
+	_id: int < Pet.petId >
+	name: string < Pet.name >
+	type: string < Pet.type >
+	ownerId: int < Person.personId >
+}
