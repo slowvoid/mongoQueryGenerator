@@ -1,0 +1,31 @@
+﻿Solution: "One to one embedded mixed"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+}
+
+Car {
+	carId: int
+	carName: string
+	carYear: int
+}
+
+Drives (Person, Car) {}
+
+########## MongoDBSchema ##########
+
+PersonDrivesCarMixed < Person*, Car >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+	carId: int < Car.carId >
+	carData {
+		carName: string < Car.carName >
+		carYear: int < Car.carYear >
+	}
+}

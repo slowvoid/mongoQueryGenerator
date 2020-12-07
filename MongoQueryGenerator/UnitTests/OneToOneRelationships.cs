@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using QueryBuilder.ER;
 using QueryBuilder.Operation;
 using QueryBuilder.Operation.Arguments;
+using QueryBuilder.Parser;
 using QueryBuilder.Query;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneNotEmbedded();
+            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneNotEmbedded();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-not-embedded.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarOneToOne_1.js" );
@@ -66,7 +68,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneEmbedded();
+            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneEmbedded();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-embedded.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarOneToOne_2.js" );
@@ -112,7 +115,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneEmbeddedNoMasterAttribute();
+            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneEmbeddedNoMasterAttribute();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-embedded-no-master-attribute.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarOneToOne_3.js" );
@@ -153,12 +157,14 @@ namespace QueryBuilder.Tests
             // Check if both results are equal
             Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
         }
-        
+
         public void OneToOneEmbeddedMixed()
         {
+            //TODO: Check why it isn't working and why it didn't have a TestMethod attribute before
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneEmbeddedMixed();
+            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneEmbeddedMixed();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-embedded-mixed.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarOneToOne_4.js" );
@@ -204,7 +210,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneNotEmbeddedMultipleEntities();
+            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneNotEmbeddedMultipleEntities();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-not-embedded-multiple-entities.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarInsuranceOneToOne.js" );
@@ -251,7 +258,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneMultipleEntitiesMixed();
+            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneMultipleEntitiesMixed();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-multiple-entities-mixed.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarInsuranceOneToOneMultipleMixed.js" );
@@ -298,7 +306,8 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneRelationshipAttributes();
+            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneRelationshipAttributes();
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-relationship-attributes.mapping" ) );
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/personCarOneToOneRelationshipAttributes.js" );

@@ -1,0 +1,46 @@
+﻿Solution: "One to One not embedded multiple entities"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+}
+
+Car {
+	carId: int
+	name: string
+	year: int
+}
+
+Insurance {
+	insuranceId: int
+	name: string
+}
+
+HasInsurance (Person, Car, Insurance) {}
+
+########## MongoDBSchema ##########
+
+Person < Person*, Car, Insurance >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+	carId: int < Car.carId >
+	insuranceId: int < Insurance.insuranceId >
+}
+
+Car < Car* >
+{
+	_id: int < Car.carId >
+	name: string < Car.name >
+	year: int < Car.year >
+}
+
+Insurance < Insurance* >
+{
+	_id: int < Insurance.insuranceId >
+	name: string < Insurance.name >
+}

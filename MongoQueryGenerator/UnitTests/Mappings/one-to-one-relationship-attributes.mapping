@@ -1,0 +1,44 @@
+﻿Solution: "One to one relationship attributes"
+Description: ""
+Version: "1.0"
+
+########## ERModel ##########
+
+Person {
+	personId: int
+	name: string
+}
+
+Car {
+	name: string
+	year: int
+}
+
+Insurance {
+	insuranceId: int
+	name: string
+}
+
+HasInsurance (Person, Car, Insurance) {
+	insuranceValue: double
+}
+
+########## MongoDBSchema ##########
+
+Person < Person*, Car, Insurance, HasInsurance >
+{
+	_id: int < Person.personId >
+	name: string < Person.name >
+	car {
+		name: string < Car.name >
+		year: int < Car.year >
+	}
+	insuranceId: int < Insurance.insuranceId >
+	insuranceValue: double < HasInsurance.insuranceValue >
+}
+
+Insurance < Insurance* >
+{
+	_id: int < Insurance.insuranceId >
+	name: string < Insurance.name >
+}
