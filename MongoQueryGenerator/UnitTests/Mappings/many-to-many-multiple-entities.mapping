@@ -1,22 +1,22 @@
-﻿Solution: "Many to many multiple entities"
-Description: ""
-Version: "1.0"
+﻿__Solution__: "Many to many multiple entities"
+__Description__: ""
+__Version__: "1.0"
 
 ########## ERModel ##########
 
 Person {
-	personId: int
+	> personId: int
 	name: string
 }
 
 Car {
-	carId: int
+	> carId: int
 	name: string
 	year: int
 }
 
 InsCompany {
-	companyId: int
+	> companyId: int
 	name: string
 }
 

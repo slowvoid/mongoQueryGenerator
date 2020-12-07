@@ -1,16 +1,16 @@
-﻿Solution: "Many to many relationship attribute single entity"
-Description: ""
-Version: "1.0"
+﻿__Solution__: "Many to many relationship attribute single entity"
+__Description__: ""
+__Version__: "1.0"
 
 ########## ERModel ##########
 
 Person {
-	personId: int
+	> personId: int
 	name: string
 }
 
 Car {
-	carId: int
+	> carId: int
 	name: string
 	year: int
 }

@@ -1,22 +1,22 @@
-﻿Solution: "One to One relationship with computed entity"
-Description: ""
-Version: "1.0"
+﻿__Solution__: "One to One relationship with computed entity"
+__Description__: ""
+__Version__: "1.0"
 
 ########## ERModel ##########
 
 Person {
-	id: int
+	> personId: int
 	name: string
 }
 
 Car {
-	id: int
+	> carId: int
 	model: string
 	year: int
 }
 
 Garage {
-	id: int
+	> garageId: int
 	name: string
 }
 
@@ -31,21 +31,21 @@ Repaired (Car, Garage) {
 
 Person < Person*, Car >
 {
-	_id: int < Person.id >
+	_id: int < Person.personId >
 	name: string < Person.name >
 	carId: int < Car.id >
 }
 
 Car < Car* >
 {
-	_id: int < Car.id >
+	_id: int < Car.carId >
 	model: string < Car.model >
 	year: int < Car.year >
 }
 
 Garage < Garage* >
 {
-	_id: int < Garage.id >
+	_id: int < Garage.garageId >
 	name: string < Garage.name >
 }
 
@@ -53,6 +53,6 @@ Repaired < Repaired*, Car, Garage >
 {
 	_id: int < Repaired.repairedId >
 	repaired: string < Repaired.repaired >
-	carId: int < Car.id >
-	garageId: int < Garage.id >
+	carId: int < Car.carId >
+	garageId: int < Garage.garageId >
 }

@@ -1,6 +1,6 @@
-﻿Solution: "Many to many relationship with computed entity (nested RJOIN)"
-Description: ""
-Version: "1.0"
+﻿__Solution__: "Many to many relationship with computed entity (nested RJOIN)"
+__Description__: ""
+__Version__: "1.0"
 
 ########## ERModel ##########
 
@@ -10,23 +10,23 @@ Person {
 }
 
 Car {
-	id: int
+	> carId: int
 	model: string
 	year: int
 }
 
 Garage {
-	id: int
+	> garageId: int
 	name: string
 }
 
 Supplier {
-	id: int
+	> supplierId: int
 	name: string
 }
 
 Insurance {
-	id: int
+	> insuranceId: int
 	name: string
 	value: double
 }
@@ -46,31 +46,31 @@ Person < Person*, Insurance >
 {
 	_id: int < Person.personId >
 	name: string < Person.name >
-	insuranceId: int < Insurance.id >
+	insuranceId: int < Insurance.insuranceId >
 }
 
 Car < Car* >
 {
-	_id: int < Car.id >
-	model: string < Car.string >
+	_id: int < Car.carId >
+	model: string < Car.model >
 	year: int < Car.year >
 }
 
 Garage < Garage* >
 {
-	_id: int < Garage.id >
+	_id: int < Garage.garageId >
 	name: string < Garage.name >
 }
 
 Supplier < Supplier* >
 {
-	_id: int < Supplier.id >
+	_id: int < Supplier.supplierId >
 	name: string < Supplier.name >
 }
 
 Insurance < Insurance* >
 {
-	_id: int < Insurance.id >
+	_id: int < Insurance.insuranceId >
 	name: string < Insurance.name >
 	value: double < Insurance.value >
 }
@@ -78,9 +78,9 @@ Insurance < Insurance* >
 Repaired < Repaired*, Car, Garage, Supplier >
 {
 	_id: int < Repaired.repairedId >
-	carId: int < Car.id >
-	garageId: int < Garage.id >
-	supplierId: int < Supplier.id >
+	carId: int < Car.carId >
+	garageId: int < Garage.garageId >
+	supplierId: int < Supplier.supplierId >
 	repaired: string < Repaired.repaired >
 }
 
@@ -88,6 +88,6 @@ Owns < Owns*, Person, Car, Insurance >
 {
 	_id: int < Owns.ownsId >
 	personId: int < Person.personId >
-	carId: int < Car.id >
-	insuranceId: int < Insurance.id >
+	carId: int < Car.carId >
+	insuranceId: int < Insurance.insuranceId >
 }

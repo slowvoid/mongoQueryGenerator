@@ -1,0 +1,61 @@
+﻿__Solution__: "Entities to collections store duplicated"
+__Description__: ""
+__Version__: "1.0"
+
+########## ERModel ##########
+
+User {
+	> UserID: int
+	UserName: string
+	UserEmail: string
+}
+
+Store {
+	> StoreID: int
+	StoreName: string
+}
+
+Category {
+	> CategoryID: int
+	CategoryName: string
+}
+
+Product {
+	> ProductID: int
+	Title: string
+	Description: string
+}
+
+UserProducts (User, Product) {}
+
+StoreProducts (Store, Product) {}
+
+CategoryProducts (Category, Product) {}
+
+########## MongoDBSchema ##########
+
+User < User* >
+{
+	_id: int < User.UserID >
+	UserName: string < User.UserName >
+	UserEmail: string < User.UserEmail >
+}
+
+Product < Product*, User, Category, Store >
+{
+	_id: int < Product.ProductID >
+	Title: string < Product.Title >
+	Description: string < Product.Description >
+	UserID: int < User.UserID >
+	CategoryID: int < Category.CategoryID >
+	store {
+		_id: int < Store.StoreID >
+		name: string < Store.StoreName >
+	}
+}
+
+Category < Category* >
+{
+	_id: int < Category.CategoryID >
+	CategoryName: string < Category.CategoryName >
+}

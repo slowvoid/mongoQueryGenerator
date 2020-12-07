@@ -1,17 +1,17 @@
-﻿Solution: "Many to many embedded target"
-Description: ""
-Version: "1.0"
+﻿__Solution__: "Many to many embedded target"
+__Description__: ""
+__Version__: "1.0"
 
 ########## ERModel ##########
 
 Person {
-	personId: int
+	> personId: int
 	name: string
 	age: int
 }
 
 Car {
-	carId: int
+	> carId: int
 	model: string
 	year: int
 }

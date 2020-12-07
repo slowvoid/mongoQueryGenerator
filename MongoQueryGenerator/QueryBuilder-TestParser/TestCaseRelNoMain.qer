@@ -1,6 +1,6 @@
-﻿Solution: "Book and Author"
-Description: "Author has many books embedded"
-Version: "1.0"
+﻿__Solution__: "Book and Author"
+__Description__: "Author has many books embedded"
+__Version__: "1.0"
 
 ############## ERModel ################
 

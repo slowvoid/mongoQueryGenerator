@@ -1,17 +1,17 @@
-﻿Solution: "Virtual map"
-Description: "Mapping used to test internal mapping of the result of an operation"
-Version: "1.0"
+﻿__Solution__: "Virtual map"
+__Description__: "Mapping used to test internal mapping of the result of an operation"
+__Version__: "1.0"
 
 ########## ERModel ##########
 
 Person {
-	personId: int
+	> personId: int
 	name: string
 	age: int
 }
 
 Pet {
-	petId: int
+	> petId: int
 	name: string
 	type: string
 }

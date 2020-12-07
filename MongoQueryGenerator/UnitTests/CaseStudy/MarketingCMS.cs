@@ -10,6 +10,7 @@ using FluentAssertions;
 using QueryBuilder.Operation.Exceptions;
 using QueryBuilder.Mongo.Expressions;
 using QueryBuilder.Map;
+using QueryBuilder.Parser;
 
 namespace QueryBuilder.Tests
 {
@@ -28,11 +29,16 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetAllProducts()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMap2 = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMap3 = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMap4 = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMap5 = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMap2 = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMap3 = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMap4 = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMap5 = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMap2 = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMap3 = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMap4 = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMap5 = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
@@ -74,7 +80,7 @@ namespace QueryBuilder.Tests
             Assert.IsTrue( JToken.DeepEquals( ResultJson, JToken.Parse( Result5 ) ) );
         }
 
-        private static string _getQueryForTestAllProducts( RequiredDataContainer DataMap, QueryableEntity Product, QueryableEntity Store, QueryableEntity Category, QueryableEntity User )
+        private static string _getQueryForTestAllProducts( QueryBuilderMappingMetadata DataMap, QueryableEntity Product, QueryableEntity Store, QueryableEntity Category, QueryableEntity User )
         {
             RelationshipJoinOperator RJoinProductUser = new RelationshipJoinOperator(
                             Product,

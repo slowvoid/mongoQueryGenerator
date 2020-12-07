@@ -1,6 +1,6 @@
-﻿Solution: "Test mapping ideas"
-Description: "Multiple persons drives multiple cars"
-Version: "1.0"
+﻿__Solution__: "Test mapping ideas"
+__Description__: "Multiple persons drives multiple cars"
+__Version__: "1.0"
 
 ############## ERModel ################
 

@@ -1,22 +1,22 @@
-﻿Solution: "One to One not embedded multiple entities"
-Description: ""
-Version: "1.0"
+﻿__Solution__: "One to One not embedded multiple entities"
+__Description__: ""
+__Version__: "1.0"
 
 ########## ERModel ##########
 
 Person {
-	personId: int
+	> personId: int
 	name: string
 }
 
 Car {
-	carId: int
+	> carId: int
 	name: string
 	year: int
 }
 
 Insurance {
-	insuranceId: int
+	> insuranceId: int
 	name: string
 }
 

@@ -1,38 +1,38 @@
-﻿Solution: "Many to many computed entity 2"
-Description: ""
-Version: "1.0"
+﻿__Solution__: "Many to many computed entity 2"
+__Description__: ""
+__Version__: "1.0"
 
 ########## ERModel ##########
 
 Person {
-	personId: int
+	> personId: int
 	name: string
 }
 
 Car {
-	carId: int
+	> carId: int
 	model: string
 	year: int
 }
 
 Garage {
-	garageId: int
+	> garageId: int
 	name: string
 }
 
 Supplier {
-	supplierId: int
+	> supplierId: int
 	name: string
 }
 
 Insurance {
-	insuranceId: int
+	> insuranceId: int
 	name: string
 	value: double
 }
 
 Manufacturer {
-	manufacturerId: int
+	> manufacturerId: int
 	name: string
 }
 

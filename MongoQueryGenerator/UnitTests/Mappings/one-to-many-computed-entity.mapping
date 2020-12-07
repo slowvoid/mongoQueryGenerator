@@ -1,32 +1,32 @@
-﻿Solution: "One to Many relationship with computed entity"
-Description: ""
-Version: "1.0"
+﻿__Solution__: "One to Many relationship with computed entity"
+__Description__: ""
+__Version__: "1.0"
 
 ########## ERModel ##########
 
 Person {
-	personId: int
+	> personId: int
 	name: string
 }
 
 Car {
-	carId: int
+	> carId: int
 	model: string
 	year: int
 }
 
 Garage {
-	garageId: int
+	> garageId: int
 	name: string
 }
 
 Supplier {
-	supplierId: int
+	> supplierId: int
 	name: string
 }
 
 Insurance {
-	insuranceId: int
+	> insuranceId: int
 	name: string
 	value: double
 }
@@ -54,7 +54,7 @@ Car < Car*, Person >
 	_id: int < Car.carId >
 	model: string < Car.model >
 	year: int < Car.year >
-	driverId: < Person.personId >
+	driverId: int < Person.personId >
 }
 
 Garage < Garage* >

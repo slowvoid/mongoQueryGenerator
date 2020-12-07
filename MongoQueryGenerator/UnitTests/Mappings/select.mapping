@@ -1,11 +1,11 @@
-﻿Solution: "Select operation"
-Description: ""
-Version: "1.0"
+﻿__Solution__: "Select operation"
+__Description__: ""
+__Version__: "1.0"
 
 ########## ERModel ##########
 
 Person {
-	personId: int
+	> personId: int
 	name: string
 	age: int
 }

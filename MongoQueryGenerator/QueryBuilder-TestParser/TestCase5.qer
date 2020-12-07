@@ -1,6 +1,6 @@
-﻿Solution: "Garage"
-Description: "Person has Driver License"
-Version: "1.0"
+﻿__Solution__: "Garage"
+__Description__: "Person has Driver License"
+__Version__: "1.0"
 
 ############## ERModel ################
 

@@ -1,6 +1,6 @@
-﻿Solution: "Cartesian Map test"
-Description: "ER Model, MongoDB Schema and Mapping for Cartesian Product operation tests"
-Version: "1.0"
+﻿__Solution__: "Cartesian Map test"
+__Description__: "ER Model, MongoDB Schema and Mapping for Cartesian Product operation tests"
+__Version__: "1.0"
 
 ########## ERModel ##########
 

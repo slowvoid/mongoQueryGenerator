@@ -223,6 +223,21 @@
     <None Update="Mappings\many-to-many-single-entity.mapping">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Mappings\MarketingCMS\entities-to-collections-category-duplicated.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\MarketingCMS\entities-to-collections-duplicates.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\MarketingCMS\entities-to-collections-store-duplicated.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\MarketingCMS\entities-to-collections-user-duplicated.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\MarketingCMS\entities-to-collections.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Mappings\one-to-many-computed-entity.mapping">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
