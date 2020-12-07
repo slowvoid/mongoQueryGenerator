@@ -6,7 +6,7 @@
 
 * **QueryBuilder**: É o algoritmo de geração de consultas.(biblioteca)
 
-* **QueryBuilder-Parser**: Parser da linguagem de mapemaento - o resultado do parser é um código compatível com o mapeamento utilizado pelo algoritmo. (biblioteca)
+* **QueryBuilder-Parser**: Parser da linguagem de mapeamento - o resultado do parser é um código compatível com o mapeamento utilizado pelo algoritmo. (biblioteca)
 
 * **QueryBuilder-TestParser**: Aplicação para testes do Parser. (executavel)
 
