@@ -13,6 +13,7 @@ Car {
 	> carId: int
 	name: string
 	year: int
+	driverId: int
 }
 
 Drives (Person, Car) {
@@ -32,6 +33,7 @@ Car < Car*, Person, Drives >
 	_id: int < Car.carId >
 	name: string < Car.name >
 	year: int < Car.year >
+	driverId: int < Car.driverId >
 	driverId: int < Person.personId >
 	drivesFor: string < Drives.drivesFor >
 }
