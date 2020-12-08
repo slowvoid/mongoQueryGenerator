@@ -1,0 +1,120 @@
+﻿__Solution__: "entities to collections many endereco"
+__Description__: ""
+__Version__: "1.0"
+
+########## ERModel ##########
+
+Aluno {
+	> codalu_alug: int
+	nomealu_alug: string
+	cpf_alug: string
+}
+
+Endereco {
+	> codend_end: true
+	logradouro_end: string
+	bairro_end: string
+	compl_end: string
+	cep_end: string
+	codcidade_end: string
+}
+
+Matricula {
+	> codmatr_matr: int
+	anoini_matr: string
+	semiini_matr: string
+}
+
+Disciplina {
+	> coddiscip_discip: int
+	nome_discip: string
+}
+
+Enfase {
+	> codenf_enf: int
+	nomeenf_enf: string
+	siglaenf_enf: string
+}
+
+Curso {
+	> codcur_cur: int
+	sigla_cur: string
+	nomecur_cur: string
+}
+
+Matriculado (Aluno, Matricula, Enfase) {
+	> matriculadoId: int
+}
+
+AlunoMora (Aluno, Endereco) {}
+
+Vinculo (Aluno, Matricula) {}
+
+VinculoEnfase (Matricula, Enfase) {}
+
+VinculoCurso (Enfase, Curso) {}
+
+Grade (Disciplina, Enfase) {
+	gradegrad_id: int
+	perfil_grd: int
+	userid_grd: int
+}
+
+########## MongoDBSchema ##########
+
+Aluno < Aluno* >
+{
+	_id: int < Aluno.codalu_alug >
+	nomealu_alug: string < Aluno.nomealu_alug >
+	cpf_alug: string < Aluno.cpf_alug >
+}
+
+Curso < Curso* >
+{
+	_id: int < Curso.codcur_cur >
+	sigla_cur: string < Curso.sigla_cur >
+	nomecur_cur: string < Curso.nomecur_cur >
+}
+
+Disciplina < Disciplina* >
+{
+	_id: int < Disciplina.coddiscip_discip >
+	nome_discip: string < Disciplina.nome_discip >
+}
+
+Endereco < Endereco*, Aluno >
+{
+	_id: int < Endereco.codend_end >
+	logradouro_end: string < Endereco.logradouro_end >
+	bairro_end: string < Endereco.bairro_end >
+	compl_end: string < Endereco.compl_end >
+	cep_end: string < Endereco.cep_end >
+	codcidade_end: string < Endereco.codcidade_end >
+	aluno_id: int < Aluno.codalu_alug >
+}
+
+Enfase < Enfase*, Curso >
+{
+	_id: int < Enfase.codenf_enf >
+	nomeenf_enf: string < Enfase.nomeenf_enf >
+	siglaenf_enf: string < Enfase.siglaenf_enf >
+	codcur_enf: string < Curso.codcur_cur >
+}
+
+Grade < Grade*, Disciplina, Enfase >
+{
+	_id: int < Grade.gradegrad_id >
+	perfil_grd: string < Grade.perfil_grd >
+	userid_grd: string < Grade.userid_grd >
+	discipgrad_id: int < Disciplina.coddiscip_discip >
+	enfgrad_id: int < Enfase.codenf_enf >
+}
+
+Matricula < Matricula*, Aluno, Enfase >
+{
+	_id: int < Matricula.codmatr_matr >
+	anoini_matr: string < Matricula.anoini_matr >
+	semiini_matr: string < Matricula.semiini_matr >
+	codalu_matr: int < Aluno.codalu_alug >
+	codenf_matr: int < Enfase.codenf_enf >
+}
