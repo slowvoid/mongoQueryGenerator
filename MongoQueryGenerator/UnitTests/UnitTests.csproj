@@ -283,6 +283,33 @@
     <None Update="Mappings\one-to-one-relationship-attributes.mapping">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-3.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-aluno-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-curso-disciplina-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-curso-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-disciplina-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-endereco-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-many-endereco-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-many-endereco.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Mappings\project-computed-entity.mapping">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
