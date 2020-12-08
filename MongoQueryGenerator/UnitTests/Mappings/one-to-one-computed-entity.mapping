@@ -33,7 +33,7 @@ Person < Person*, Car >
 {
 	_id: int < Person.personId >
 	name: string < Person.name >
-	carId: int < Car.id >
+	carId: int < Car.carId >
 }
 
 Car < Car* >
