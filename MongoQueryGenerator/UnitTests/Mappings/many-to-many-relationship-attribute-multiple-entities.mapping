@@ -44,7 +44,7 @@ Car < Car* >
 InsCompany < InsCompany* >
 {
 	_id: int < InsCompany.companyId >
-	name: string
+	name: string < InsCompany.name >
 }
 
 Insurance < Insurance*, Person, Car, InsCompany >
