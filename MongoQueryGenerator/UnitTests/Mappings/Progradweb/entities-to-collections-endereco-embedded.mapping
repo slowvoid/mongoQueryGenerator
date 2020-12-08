@@ -64,12 +64,12 @@ Aluno < Aluno*, Endereco >
 	nomealu_alug: string < Aluno.nomealu_alug >
 	cpf_alug: string < Aluno.cpf_alug >
 	endereco {
-		codend_end: int < Endereco.codend_end >
-		logradouro_end: string < Endereco.logradouro_end >
-		bairro_end: string < Endereco.bairro_end >
-		compl_end: string < Endereco.compl_end >
-		cep_end: string < Endereco.cep_end >
-		codcidade_end: string < Endereco.codcidade_end >
+		enderecoid: int < Endereco.codend_end >
+		logradouro: string < Endereco.logradouro_end >
+		bairro: string < Endereco.bairro_end >
+		complemento: string < Endereco.compl_end >
+		cep: string < Endereco.cep_end >
+		codcidade: string < Endereco.codcidade_end >
 	}
 }
 

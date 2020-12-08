@@ -63,7 +63,7 @@ Aluno < Aluno*, Endereco >
 	_id: int < Aluno.codalu_alug >
 	nomealu_alug: string < Aluno.nomealu_alug >
 	cpf_alug: string < Aluno.cpf_alug >
-	endif_alug: int < Endereco.codend_end >
+	endid_alug: int < Endereco.codend_end >
 }
 
 Endereco < Endereco* >
@@ -87,9 +87,9 @@ Enfase < Enfase*, Curso, Disciplina, Grade >
 		nome: string < Curso.nomecur_cur >
 	}
 	disciplinas_multivalued_ {
-		coddiscip_discip: int < Disciplina.coddiscip_discip >
+		disciplinaId: int < Disciplina.coddiscip_discip >
 		nome_discip: string < Disciplina.nome_discip >
-		gradegrad_id: int < Grade.gradegrad_id >
+		gradeId: int < Grade.gradegrad_id >
 		perfil_grd: string < Grade.perfil_grd >
 		userid_grd: string < Grade.userid_grd >
 	}

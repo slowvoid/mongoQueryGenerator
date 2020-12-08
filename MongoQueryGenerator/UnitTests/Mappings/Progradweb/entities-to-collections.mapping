@@ -63,7 +63,7 @@ Aluno < Aluno*, Endereco >
 	_id: int < Aluno.codalu_alug >
 	nomealu_alug: string < Aluno.nomealu_alug >
 	cpf_alug: string < Aluno.cpf_alug >
-	endif_alug: int < Endereco.codend_end >
+	endid_alug: int < Endereco.codend_end >
 }
 
 Curso < Curso* >

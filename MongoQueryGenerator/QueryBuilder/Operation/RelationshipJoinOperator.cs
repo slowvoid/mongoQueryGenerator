@@ -954,7 +954,7 @@ namespace QueryBuilder.Operation
             // but without the need to dive deep into how the operation is executed.
             List<VirtualRule> OperatorRules = new List<VirtualRule>();
             // Only the first entity requires to fetch data from ModelMap
-            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.Element.Name );
+            MapRule SourceRule = ModelMap.Rules.First( Rule => Rule.Source.Name == SourceEntity.Element.Name);
             // The source entity is not renamed, so we add it as is.
             VirtualRule SourceVirtualRule = new VirtualRule( SourceEntity.Element, SourceEntity.Alias );
             foreach ( DataAttribute Attribute in SourceEntity.Element.Attributes )

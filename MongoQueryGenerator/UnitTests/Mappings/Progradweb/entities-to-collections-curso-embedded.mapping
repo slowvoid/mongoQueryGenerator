@@ -63,7 +63,7 @@ Aluno < Aluno*, Endereco >
 	_id: int < Aluno.codalu_alug >
 	nomealu_alug: string < Aluno.nomealu_alug >
 	cpf_alug: string < Aluno.cpf_alug >
-	endif_alug: int < Endereco.codend_end >
+	endid_alug: int < Endereco.codend_end >
 }
 
 Disciplina < Disciplina* >
@@ -88,9 +88,9 @@ Enfase < Enfase*, Curso >
 	nomeenf_enf: string < Enfase.nomeenf_enf >
 	siglaenf_enf: string < Enfase.siglaenf_enf >
 	curso: {
-		codcur_cur: int < Curso.codcur_cur >
-		sigla_cur: string < Curso.sigla_cur >
-		nomecur_cur: string < Curso.nomecur_cur >
+		cursoId: int < Curso.codcur_cur >
+		sigla: string < Curso.sigla_cur >
+		nome: string < Curso.nomecur_cur >
 	}
 }
 
