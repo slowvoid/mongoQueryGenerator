@@ -45,11 +45,31 @@ namespace QueryBuilder.Tests
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
 
+            QueryableEntity Product2 = new QueryableEntity( DataMap2.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity Store2 = new QueryableEntity( DataMap2.EntityRelationshipModel.FindByName( "Store" ) );
+            QueryableEntity Category2 = new QueryableEntity( DataMap2.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity User2 = new QueryableEntity( DataMap2.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Product3 = new QueryableEntity( DataMap3.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity Store3 = new QueryableEntity( DataMap3.EntityRelationshipModel.FindByName( "Store" ) );
+            QueryableEntity Category3 = new QueryableEntity( DataMap3.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity User3 = new QueryableEntity( DataMap3.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Product4 = new QueryableEntity( DataMap4.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity Store4 = new QueryableEntity( DataMap4.EntityRelationshipModel.FindByName( "Store" ) );
+            QueryableEntity Category4 = new QueryableEntity( DataMap4.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity User4 = new QueryableEntity( DataMap4.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Product5 = new QueryableEntity( DataMap5.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity Store5 = new QueryableEntity( DataMap5.EntityRelationshipModel.FindByName( "Store" ) );
+            QueryableEntity Category5 = new QueryableEntity( DataMap5.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity User5 = new QueryableEntity( DataMap5.EntityRelationshipModel.FindByName( "User" ) );
+
             string Query = _getQueryForTestAllProducts( DataMap, Product, Store, Category, User );
-            string Query2 = _getQueryForTestAllProducts( DataMap2, Product, Store, Category, User );
-            string Query3 = _getQueryForTestAllProducts( DataMap3, Product, Store, Category, User );
-            string Query4 = _getQueryForTestAllProducts( DataMap4, Product, Store, Category, User );
-            string Query5 = _getQueryForTestAllProducts( DataMap5, Product, Store, Category, User );
+            string Query2 = _getQueryForTestAllProducts( DataMap2, Product2, Store2, Category2, User2 );
+            string Query3 = _getQueryForTestAllProducts( DataMap3, Product3, Store3, Category3, User3 );
+            string Query4 = _getQueryForTestAllProducts( DataMap4, Product4, Store4, Category4, User4 );
+            string Query5 = _getQueryForTestAllProducts( DataMap5, Product5, Store5, Category5, User5 );
 
             QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", "pesquisa_cms" );
             string Result = Runner.GetJSON( Query );
@@ -119,11 +139,16 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetAllStores()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMap2 = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMap3 = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMap4 = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMap5 = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMap2 = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMap3 = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMap4 = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMap5 = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMap2 = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMap3 = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMap4 = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMap5 = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
 
@@ -182,11 +207,16 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetAllUsers()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMapDuplicates = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMapCategoryDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
 
@@ -249,11 +279,16 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetAllCategories()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMapDuplicates = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMapCategoryDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
 
@@ -319,29 +354,46 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetAllProductsFromStore()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMapDuplicates = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMapCategoryDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
 
+            QueryableEntity Store2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Store" ) );
+            QueryableEntity Product2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Product" ) );
+
+            QueryableEntity Store3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Store" ) );
+            QueryableEntity Product3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+
+            QueryableEntity Store4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Store" ) );
+            QueryableEntity Product4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+
+            QueryableEntity Store5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Store" ) );
+            QueryableEntity Product5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+
             RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
                 new List<QueryableEntity>() { Product }, DataMap.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapDuplicates.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Store2, (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Product2 }, DataMapDuplicates.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapCategoryDuplicated.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Store3, (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Product3 }, DataMapCategoryDuplicated.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapStoreDuplicated.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Store4, (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Product4 }, DataMapStoreDuplicated.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Store5, (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Product5 }, DataMapUserDuplicated.ERMongoMapping );
 
             SortArgument SortArg = new SortArgument( Store, Store.GetAttribute( "StoreID" ), MongoDBSort.Ascending );
 
@@ -358,10 +410,10 @@ namespace QueryBuilder.Tests
             List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, SortOpMap5 };
 
             FromArgument StartArgMap1 = new FromArgument( Store, DataMap.ERMongoMapping );
-            FromArgument StartArgMap2 = new FromArgument( Store, DataMapDuplicates.ERMongoMapping );
-            FromArgument StartArgMap3 = new FromArgument( Store, DataMapCategoryDuplicated.ERMongoMapping );
-            FromArgument StartArgMap4 = new FromArgument( Store, DataMapStoreDuplicated.ERMongoMapping );
-            FromArgument StartArgMap5 = new FromArgument( Store, DataMapUserDuplicated.ERMongoMapping );
+            FromArgument StartArgMap2 = new FromArgument( Store2, DataMapDuplicates.ERMongoMapping );
+            FromArgument StartArgMap3 = new FromArgument( Store3, DataMapCategoryDuplicated.ERMongoMapping );
+            FromArgument StartArgMap4 = new FromArgument( Store4, DataMapStoreDuplicated.ERMongoMapping );
+            FromArgument StartArgMap5 = new FromArgument( Store5, DataMapUserDuplicated.ERMongoMapping );
 
             QueryGenerator GeneratorMap1 = new QueryGenerator( StartArgMap1, OperatorsToExecuteMap1 );
             QueryGenerator GeneratorMap2 = new QueryGenerator( StartArgMap2, OperatorsToExecuteMap2 );
@@ -411,29 +463,46 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetAllProductsFromCategory()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMapDuplicates = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMapCategoryDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
 
+            QueryableEntity Category2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Product" ) );
+
+            QueryableEntity Category3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+
+            QueryableEntity Category4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+
+            QueryableEntity Category5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+
             RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { Product }, DataMap.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapDuplicates.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category2, (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { Product2 }, DataMapDuplicates.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapCategoryDuplicated.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category3, (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { Product3 }, DataMapCategoryDuplicated.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapStoreDuplicated.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category4, (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { Product4 }, DataMapStoreDuplicated.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Category5, (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { Product5 }, DataMapUserDuplicated.ERMongoMapping );
 
             SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
 
@@ -503,29 +572,46 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetAllProductsFromUser()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMapDuplicates = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMapCategoryDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
 
+            QueryableEntity User2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "User" ) );
+            QueryableEntity Product2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Product" ) );
+
+            QueryableEntity User3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "User" ) );
+            QueryableEntity Product3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+
+            QueryableEntity User4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "User" ) );
+            QueryableEntity Product4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+
+            QueryableEntity User5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "User" ) );
+            QueryableEntity Product5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+
             RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
                 new List<QueryableEntity>() { Product }, DataMap.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapDuplicates.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( User2, (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { Product2 }, DataMapDuplicates.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapCategoryDuplicated.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( User3, (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { Product3 }, DataMapCategoryDuplicated.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapStoreDuplicated.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( User4, (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { Product4 }, DataMapStoreDuplicated.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
-                new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
+            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( User5, (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { Product5 }, DataMapUserDuplicated.ERMongoMapping );
 
             SortArgument SortArg = new SortArgument( User, User.GetAttribute( "UserID" ), MongoDBSort.Ascending );
 
@@ -595,39 +681,80 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetAllProductsFromCategoryWithStore()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMapDuplicates = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMapCategoryDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
 
+            QueryableEntity Category2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity Store2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Store" ) );
+
+            QueryableEntity Category3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity Store3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Store" ) );
+
+            QueryableEntity Category4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity Store4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Store" ) );
+
+            QueryableEntity Category5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity Store5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Store" ) );
+
             ComputedEntity ProductWithStore = new ComputedEntity( "ProductWithStore", 
                 Product,
                 (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
                 new List<QueryableEntity>() { Store } );
-           
+
+            ComputedEntity ProductWithStore2 = new ComputedEntity( "ProductWithStore",
+                Product2,
+                (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Store2 } );
+
+            ComputedEntity ProductWithStore3 = new ComputedEntity( "ProductWithStore",
+                Product3,
+                (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Store3 } );
+
+            ComputedEntity ProductWithStore4 = new ComputedEntity( "ProductWithStore",
+                Product4,
+                (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Store4 } );
+
+            ComputedEntity ProductWithStore5 = new ComputedEntity( "ProductWithStore",
+                Product5,
+                (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "StoreProducts" ),
+                new List<QueryableEntity>() { Store5 } );
+
             RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithStore ) },
                 DataMap.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithStore ) },
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category2, (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithStore2 ) },
                 DataMapDuplicates.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithStore ) },
+            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category3, (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithStore3 ) },
                 DataMapCategoryDuplicated.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithStore ) },
+            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category4, (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithStore4 ) },
                 DataMapStoreDuplicated.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithStore ) },
+            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Category5, (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithStore5 ) },
                 DataMapUserDuplicated.ERMongoMapping );
 
             SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
@@ -699,39 +826,80 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetAllProductsFromCategoryWithUser()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMapDuplicates = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMapCategoryDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Category2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Category3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Category4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Category5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "User" ) );
 
             ComputedEntity ProductWithUser = new ComputedEntity( "ProductWithStore",
                 Product,
                 (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
                 new List<QueryableEntity>() { User } );
 
+            ComputedEntity ProductWithUser2 = new ComputedEntity( "ProductWithStore",
+                Product2,
+                (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { User2 } );
+
+            ComputedEntity ProductWithUser3 = new ComputedEntity( "ProductWithStore",
+                Product3,
+                (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { User3 } );
+
+            ComputedEntity ProductWithUser4 = new ComputedEntity( "ProductWithStore",
+                Product4,
+                (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { User4 } );
+
+            ComputedEntity ProductWithUser5 = new ComputedEntity( "ProductWithStore",
+                Product5,
+                (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { User5 } );
+
             RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
                 DataMap.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category2, (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser2 ) },
                 DataMapDuplicates.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
+            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category3, (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser3 ) },
                 DataMapCategoryDuplicated.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
+            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category4, (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser4 ) },
                 DataMapStoreDuplicated.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
+            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Category5, (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser5 ) },
                 DataMapUserDuplicated.ERMongoMapping );
 
             SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
@@ -801,14 +969,31 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetProductTitleAndUserName()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMapDuplicates = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMapCategoryDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Product2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Product3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Product4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Product5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "User" ) );
 
             List<ProjectArgument> ProjectArgs = new List<ProjectArgument>();
             ProjectArgs.Add( new ProjectArgument( Product.GetAttribute( "Title" ), Product, new BooleanExpr( true ) ) );
@@ -820,26 +1005,26 @@ namespace QueryBuilder.Tests
 
             ProjectStage ProjectOp1 = new ProjectStage( ProjectArgs, RJoinOp1.ComputeVirtualMap() );
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Product, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { User },
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Product2, (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { User2 },
                 DataMapDuplicates.ERMongoMapping );
 
             ProjectStage ProjectOp2 = new ProjectStage( ProjectArgs, RJoinOp2.ComputeVirtualMap() );
 
-            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Product, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { User },
+            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Product3, (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { User3 },
                 DataMapCategoryDuplicated.ERMongoMapping );
 
             ProjectStage ProjectOp3 = new ProjectStage( ProjectArgs, RJoinOp3.ComputeVirtualMap() );
 
-            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Product, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { User },
+            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Product4, (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { User4 },
                 DataMapStoreDuplicated.ERMongoMapping );
 
             ProjectStage ProjectOp4 = new ProjectStage( ProjectArgs, RJoinOp4.ComputeVirtualMap() );
 
-            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Product, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { User },
+            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Product5, (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { User5 },
                 DataMapUserDuplicated.ERMongoMapping );
 
             ProjectStage ProjectOp5 = new ProjectStage( ProjectArgs, RJoinOp5.ComputeVirtualMap() );
@@ -859,10 +1044,10 @@ namespace QueryBuilder.Tests
             List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, ProjectOp5, SortOpMap5 };
 
             FromArgument StartArgMap1 = new FromArgument( Product, DataMap.ERMongoMapping );
-            FromArgument StartArgMap2 = new FromArgument( Product, DataMapDuplicates.ERMongoMapping );
-            FromArgument StartArgMap3 = new FromArgument( Product, DataMapCategoryDuplicated.ERMongoMapping );
-            FromArgument StartArgMap4 = new FromArgument( Product, DataMapStoreDuplicated.ERMongoMapping );
-            FromArgument StartArgMap5 = new FromArgument( Product, DataMapUserDuplicated.ERMongoMapping );
+            FromArgument StartArgMap2 = new FromArgument( Product2, DataMapDuplicates.ERMongoMapping );
+            FromArgument StartArgMap3 = new FromArgument( Product3, DataMapCategoryDuplicated.ERMongoMapping );
+            FromArgument StartArgMap4 = new FromArgument( Product4, DataMapStoreDuplicated.ERMongoMapping );
+            FromArgument StartArgMap5 = new FromArgument( Product5, DataMapUserDuplicated.ERMongoMapping );
 
             QueryGenerator GeneratorMap1 = new QueryGenerator( StartArgMap1, OperatorsToExecuteMap1 );
             QueryGenerator GeneratorMap2 = new QueryGenerator( StartArgMap2, OperatorsToExecuteMap2 );
@@ -925,15 +1110,36 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetAllProductsFromCategoryWithUserAndSelectOnlyTitleNameEmailCategoryName()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMapDuplicates = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMapCategoryDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Category2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User2 = new QueryableEntity( DataMapDuplicates.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Category3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User3 = new QueryableEntity( DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Category4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "User" ) );
+
+            QueryableEntity Category5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Product5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Product" ) );
+            QueryableEntity User5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "User" ) );
 
             List<ProjectArgument> ProjectArgs = new List<ProjectArgument>();
             ProjectArgs.Add( new ProjectArgument( Product.GetAttribute( "Title" ), Product, new BooleanExpr( true ) ) );
@@ -946,32 +1152,52 @@ namespace QueryBuilder.Tests
                 (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
                 new List<QueryableEntity>() { User } );
 
+            ComputedEntity ProductWithUser2 = new ComputedEntity( "ProductWithStore",
+                Product2,
+                (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { User2 } );
+
+            ComputedEntity ProductWithUser3 = new ComputedEntity( "ProductWithStore",
+                Product3,
+                (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { User3 } );
+
+            ComputedEntity ProductWithUser4 = new ComputedEntity( "ProductWithStore",
+                Product4,
+                (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { User4 } );
+
+            ComputedEntity ProductWithUser5 = new ComputedEntity( "ProductWithStore",
+                Product5,
+                (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "UserProducts" ),
+                new List<QueryableEntity>() { User5 } );
+
             RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
                 DataMap.ERMongoMapping );
 
             ProjectStage ProjectOp1 = new ProjectStage( ProjectArgs, RJoinOp1.ComputeVirtualMap() );
 
-            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
+            RelationshipJoinOperator RJoinOp2 = new RelationshipJoinOperator( Category2, (Relationship)DataMapDuplicates.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser2 ) },
                 DataMapDuplicates.ERMongoMapping );
 
             ProjectStage ProjectOp2 = new ProjectStage( ProjectArgs, RJoinOp2.ComputeVirtualMap() );
 
-            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
+            RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( Category3, (Relationship)DataMapCategoryDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser3 ) },
                 DataMapCategoryDuplicated.ERMongoMapping );
 
             ProjectStage ProjectOp3 = new ProjectStage( ProjectArgs, RJoinOp3.ComputeVirtualMap() );
 
-            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
+            RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( Category4, (Relationship)DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser4 ) },
                 DataMapStoreDuplicated.ERMongoMapping );
 
             ProjectStage ProjectOp4 = new ProjectStage( ProjectArgs, RJoinOp4.ComputeVirtualMap() );
 
-            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
-                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
+            RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Category5, (Relationship)DataMapUserDuplicated.EntityRelationshipModel.FindByName( "CategoryProducts" ),
+                new List<QueryableEntity>() { new QueryableEntity( ProductWithUser5 ) },
                 DataMapUserDuplicated.ERMongoMapping );
 
             ProjectStage ProjectOp5 = new ProjectStage( ProjectArgs, RJoinOp5.ComputeVirtualMap() );
@@ -991,10 +1217,10 @@ namespace QueryBuilder.Tests
             List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { RJoinOp5, ProjectOp5, SortOpMap5 };
 
             FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
-            FromArgument StartArgMap2 = new FromArgument( Category, DataMapDuplicates.ERMongoMapping );
-            FromArgument StartArgMap3 = new FromArgument( Category, DataMapCategoryDuplicated.ERMongoMapping );
-            FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
-            FromArgument StartArgMap5 = new FromArgument( Category, DataMapUserDuplicated.ERMongoMapping );
+            FromArgument StartArgMap2 = new FromArgument( Category2, DataMapDuplicates.ERMongoMapping );
+            FromArgument StartArgMap3 = new FromArgument( Category3, DataMapCategoryDuplicated.ERMongoMapping );
+            FromArgument StartArgMap4 = new FromArgument( Category4, DataMapStoreDuplicated.ERMongoMapping );
+            FromArgument StartArgMap5 = new FromArgument( Category5, DataMapUserDuplicated.ERMongoMapping );
 
             QueryGenerator GeneratorMap1 = new QueryGenerator( StartArgMap1, OperatorsToExecuteMap1 );
             QueryGenerator GeneratorMap2 = new QueryGenerator( StartArgMap2, OperatorsToExecuteMap2 );
@@ -1044,27 +1270,36 @@ namespace QueryBuilder.Tests
         [TestMethod]
         public void GetCategoryThatIsNamedHome()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            //RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
+            //RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
+            //RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
+            //RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            //RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            var DataMap = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections.mapping" ) );
+            var DataMapDuplicates = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-duplicates.mapping" ) );
+            var DataMapCategoryDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-category-duplicated.mapping" ) );
+            var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
+            var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Category4 = new QueryableEntity( DataMapStoreDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
+            QueryableEntity Category5 = new QueryableEntity( DataMapUserDuplicated.EntityRelationshipModel.FindByName( "Category" ) );
 
             MapRule CategoryRule01 = DataMap.ERMongoMapping.FindMainRule( Category.Element );
             SelectArgument SelectArg01 = new SelectArgument( new EqExpr( $"${CategoryRule01.GetRuleValueForAttribute( Category.GetAttribute( "CategoryName" ) )}", "Home" ) );
             SelectStage SelectOp1 = new SelectStage( SelectArg01, DataMap.ERMongoMapping );
 
-            MapRule CategoryRule04 = DataMapStoreDuplicated.ERMongoMapping.FindMainRule( Category.Element );
-            SelectArgument SelectArg04 = new SelectArgument( new EqExpr( $"${CategoryRule04.GetRuleValueForAttribute( Category.GetAttribute( "CategoryName" ) )}", "Home" ) );
-            SelectStage SelectOp4 = new SelectStage( SelectArg04, DataMap.ERMongoMapping );
+            MapRule CategoryRule04 = DataMapStoreDuplicated.ERMongoMapping.FindMainRule( Category4.Element );
+            SelectArgument SelectArg04 = new SelectArgument( new EqExpr( $"${CategoryRule04.GetRuleValueForAttribute( Category4.GetAttribute( "CategoryName" ) )}", "Home" ) );
+            SelectStage SelectOp4 = new SelectStage( SelectArg04, DataMapStoreDuplicated.ERMongoMapping );
 
-            MapRule CategoryRule05 = DataMapUserDuplicated.ERMongoMapping.FindMainRule( Category.Element );
-            SelectArgument SelectArg05 = new SelectArgument( new EqExpr( $"${CategoryRule05.GetRuleValueForAttribute( Category.GetAttribute( "CategoryName" ) )}", "Home" ) );
-            SelectStage SelectOp5 = new SelectStage( SelectArg05, DataMap.ERMongoMapping );
+            MapRule CategoryRule05 = DataMapUserDuplicated.ERMongoMapping.FindMainRule( Category5.Element );
+            SelectArgument SelectArg05 = new SelectArgument( new EqExpr( $"${CategoryRule05.GetRuleValueForAttribute( Category5.GetAttribute( "CategoryName" ) )}", "Home" ) );
+            SelectStage SelectOp5 = new SelectStage( SelectArg05, DataMapUserDuplicated.ERMongoMapping );
 
             SortArgument SortArg = new SortArgument( Category, Category.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
+            SortArgument SortArg4 = new SortArgument( Category4, Category4.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
+            SortArgument SortArg5 = new SortArgument( Category5, Category5.GetAttribute( "CategoryID" ), MongoDBSort.Ascending );
 
             SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
             SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
