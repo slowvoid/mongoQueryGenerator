@@ -18,7 +18,6 @@ namespace QueryBuilder.Tests
             // Asserts if the query result for a relationship join operation is equal
             // to a handcrafted query
             var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/cartesian.mapping" ) );
-            //RequiredDataContainer ModelData = CartesianProductDataProvider.SampleData();
 
             // Load handcrafted query
             string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/cartersianProduct-1.js" );
@@ -26,20 +25,8 @@ namespace QueryBuilder.Tests
             // Assert if the handcrafted query is not null
             Assert.IsNotNull( HandcraftedQuery );
 
-            // Prepare query generator
-            CartesianProductOperator CartesianOp = new CartesianProductOperator( 
-                new QueryableEntity(ModelData.EntityRelationshipModel.FindByName( "Person" ), "person"),
-                new QueryableEntity(ModelData.EntityRelationshipModel.FindByName( "Car" ), "car"),
-                ModelData.ERMongoMapping );
-
-            CartesianProductOperator CartesianOp2 = new CartesianProductOperator(
-                new QueryableEntity(ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                new QueryableEntity(ModelData.EntityRelationshipModel.FindByName( "Supplier" ), "supplier" ),
-                ModelData.ERMongoMapping );
-
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, new List<AlgebraOperator>() { CartesianOp, CartesianOp2 } );
+            string QueryString = "from Person CARTESIANPRODUCT Car CARTESIANPRODUCT Supplier select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 

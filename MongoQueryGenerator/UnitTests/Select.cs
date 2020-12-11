@@ -26,17 +26,20 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( HandcraftedQuery );
 
-            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
-            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
-            LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.EQUAL, 27 );
+            //MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            //string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            //LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.EQUAL, 27 );
 
-            SelectArgument Arg = new SelectArgument( left );
-            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+            //SelectArgument Arg = new SelectArgument( left );
+            //SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+            //List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+
+            string QueryString = "from Person where Person.age = 27 select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -64,20 +67,23 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( HandcraftedQuery );
 
-            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
-            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
-            string NameMap = PersonRule.Rules.First( R => R.Key == "name" ).Value;
-            LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.EQUAL, 27 );
-            LogicalExpression right = new LogicalExpression( $"${NameMap}", LogicalOperator.EQUAL, "Summer" );
+            //MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            //string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            //string NameMap = PersonRule.Rules.First( R => R.Key == "name" ).Value;
+            //LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.EQUAL, 27 );
+            //LogicalExpression right = new LogicalExpression( $"${NameMap}", LogicalOperator.EQUAL, "Summer" );
 
-            LogicalExpressionGroup expr = new LogicalExpressionGroup( left, LogicalOperator.AND, right );
-            SelectArgument Arg = new SelectArgument( expr );
-            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+            //LogicalExpressionGroup expr = new LogicalExpressionGroup( left, LogicalOperator.AND, right );
+            //SelectArgument Arg = new SelectArgument( expr );
+            //SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+            //List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+
+            string QueryString = "from Person where Person.age = 27 and Person.name = 'Summer' select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -105,16 +111,19 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( HandcraftedQuery );
 
-            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
-            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
-            LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.GREATER_EQUAL_THAN, 27 );
-            SelectArgument Arg = new SelectArgument( left );
-            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+            //MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            //string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            //LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.GREATER_EQUAL_THAN, 27 );
+            //SelectArgument Arg = new SelectArgument( left );
+            //SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+            //List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+
+            string QueryString = "from Person where Person.age >= 27 select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -142,17 +151,20 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( HandcraftedQuery );
 
-            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
-            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
-            LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.GREATER_THAN, 27 );
+            //MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            //string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            //LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.GREATER_THAN, 27 );
 
-            SelectArgument Arg = new SelectArgument( left );
-            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+            //SelectArgument Arg = new SelectArgument( left );
+            //SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+            //List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+
+            string QueryString = "from Person where Person.age > 27 select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -180,18 +192,21 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( HandcraftedQuery );
 
-            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
-            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
-            LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.IN,
-                new JSArray( new List<object>() { 26, 27, 28, 29 } ) );
+            //MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            //string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            //LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.IN,
+            //    new JSArray( new List<object>() { 26, 27, 28, 29 } ) );
 
-            SelectArgument Arg = new SelectArgument( left );
-            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+            //SelectArgument Arg = new SelectArgument( left );
+            //SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+            //List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+
+            string QueryString = "from Person where Person.age in (26,27,28,29) select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -219,17 +234,20 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( HandcraftedQuery );
 
-            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
-            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
-            LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.LESS_EQUAL_THAN, 27 );
+            //MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            //string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            //LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.LESS_EQUAL_THAN, 27 );
 
-            SelectArgument Arg = new SelectArgument( left );
-            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+            //SelectArgument Arg = new SelectArgument( left );
+            //SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+            //List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+
+            string QueryString = "from Person where Person.age <= 27 select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -257,17 +275,20 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( HandcraftedQuery );
 
-            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
-            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
-            LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.LESS_THAN, 27 );
+            //MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            //string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            //LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.LESS_THAN, 27 );
 
-            SelectArgument Arg = new SelectArgument( left );
-            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+            //SelectArgument Arg = new SelectArgument( left );
+            //SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+            //List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+
+            string QueryString = "from Person where Person.age < 27 select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -295,18 +316,21 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( HandcraftedQuery );
 
-            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
-            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            //MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            //string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
 
-            LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.NOT_EQUAL, 27 );
+            //LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.NOT_EQUAL, 27 );
 
-            SelectArgument Arg = new SelectArgument( left );
-            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+            //SelectArgument Arg = new SelectArgument( left );
+            //SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+            //List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+
+            string QueryString = "from Person where Person.age != 27 select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -334,19 +358,22 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( HandcraftedQuery );
 
-            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
-            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            //MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            //string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
 
-            LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.NOT_IN,
-                new JSArray( new List<object>() { 26, 27, 28, 29 } ) );
+            //LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.NOT_IN,
+            //    new JSArray( new List<object>() { 26, 27, 28, 29 } ) );
 
-            SelectArgument Arg = new SelectArgument( left );
-            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+            //SelectArgument Arg = new SelectArgument( left );
+            //SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+            //List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+
+            string QueryString = "from Person where Person.age not in (26,27,28,29) select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -374,19 +401,22 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( HandcraftedQuery );
 
-            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
-            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
-            LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.EQUAL, 26 );
-            LogicalExpression right = new LogicalExpression( $"${AgeMap}", LogicalOperator.EQUAL, 27 );
+            //MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            //string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            //LogicalExpression left = new LogicalExpression( $"${AgeMap}", LogicalOperator.EQUAL, 26 );
+            //LogicalExpression right = new LogicalExpression( $"${AgeMap}", LogicalOperator.EQUAL, 27 );
 
-            LogicalExpressionGroup expr = new LogicalExpressionGroup( left, LogicalOperator.OR, right );
-            SelectArgument Arg = new SelectArgument( expr );
-            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+            //LogicalExpressionGroup expr = new LogicalExpressionGroup( left, LogicalOperator.OR, right );
+            //SelectArgument Arg = new SelectArgument( expr );
+            //SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+            //List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+
+            string QueryString = "from Person where Person.age = 26 or Person.age = 27 select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -414,17 +444,20 @@ namespace QueryBuilder.Tests
 
             Assert.IsNotNull( HandcraftedQuery );
 
-            MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
-            string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
-            OrExpr expr = new OrExpr( $"${AgeMap}", new List<object>() { 18, 21, 36 } );
+            //MapRule PersonRule = ModelData.ERMongoMapping.Rules.First( R => R.Source.Name == "Person" );
+            //string AgeMap = PersonRule.Rules.First( R => R.Key == "age" ).Value;
+            //OrExpr expr = new OrExpr( $"${AgeMap}", new List<object>() { 18, 21, 36 } );
 
-            SelectArgument Arg = new SelectArgument( expr );
-            SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
+            //SelectArgument Arg = new SelectArgument( expr );
+            //SelectStage SelectOp = new SelectStage( Arg, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+            //List<AlgebraOperator> OperatorsToExecute = new List<AlgebraOperator>() { SelectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
+
+            string QueryString = "from Person where Person.age = 18 or Person.age = 21 or Person.age = 36 select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 

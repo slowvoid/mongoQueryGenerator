@@ -21,7 +21,6 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneNotEmbedded();
             var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-not-embedded.mapping" ) );
 
             // Load handcrafted query
@@ -31,19 +30,8 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                 new List<QueryableEntity> {
-                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
-                },
-                ModelData.ERMongoMapping );
-
-            List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
+            string QueryString = "from Person RJOIN <Drives> (Car) select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -68,7 +56,6 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneEmbedded();
             var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-embedded.mapping" ) );
 
             // Load handcrafted query
@@ -78,19 +65,8 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                new List<QueryableEntity> {
-                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
-                },
-                ModelData.ERMongoMapping );
-
-            List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
+            string QueryString = "from Person RJOIN <Drives> (Car) select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -115,7 +91,6 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneEmbeddedNoMasterAttribute();
             var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-embedded-no-master-attribute.mapping" ) );
 
             // Load handcrafted query
@@ -125,19 +100,8 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Drives" ),
-                new List<QueryableEntity> {
-                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" )
-                },
-                ModelData.ERMongoMapping );
-
-            List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
+            string QueryString = "from Person RJOIN <Drives> (Car) select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -210,7 +174,6 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneNotEmbeddedMultipleEntities();
             var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-not-embedded-multiple-entities.mapping" ) );
 
             // Load handcrafted query
@@ -220,20 +183,8 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasInsurance" ),
-                new List<QueryableEntity> {
-                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
-                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ), "insurance" )
-                },
-                ModelData.ERMongoMapping );
-
-            List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
+            string QueryString = "from Person RJOIN <HasInsurance> (Car, Insurance) select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -258,7 +209,6 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneMultipleEntitiesMixed();
             var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-multiple-entities-mixed.mapping" ) );
 
             // Load handcrafted query
@@ -268,20 +218,8 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasInsurance" ),
-                new List<QueryableEntity> {
-                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
-                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ), "insurance" )
-                },
-                ModelData.ERMongoMapping );
-
-            List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
+            string QueryString = "from Person RJOIN <HasInsurance> (Car, Insurance) select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
@@ -306,7 +244,6 @@ namespace QueryBuilder.Tests
         {
             // Asserts if the query result for a simple binary join is equal
             // to a handcrafted query
-            //RequiredDataContainer ModelData = OneToOneRelationshipsDataProvider.OneToOneRelationshipAttributes();
             var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-one-relationship-attributes.mapping" ) );
 
             // Load handcrafted query
@@ -316,20 +253,8 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasInsurance" ),
-                new List<QueryableEntity> {
-                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
-                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Insurance" ), "insurance" )
-                },
-                ModelData.ERMongoMapping );
-
-            List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
-
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
+            string QueryString = "from Person RJOIN <HasInsurance> (Car, Insurance) select *";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 

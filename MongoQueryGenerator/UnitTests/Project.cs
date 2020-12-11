@@ -29,20 +29,23 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
+            //QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
 
-            List<ProjectArgument> Arguments = new List<ProjectArgument>();
-            Arguments.Add( new ProjectArgument( Person.GetAttribute( "personId" ), Person, new BooleanExpr( false ) ) );
-            Arguments.Add( new ProjectArgument( Person.GetAttribute( "name" ), Person, new BooleanExpr( true ) ) );
-            Arguments.Add( new ProjectArgument( Person.GetAttribute( "age" ), Person, new BooleanExpr( true ) ) );
+            //List<ProjectArgument> Arguments = new List<ProjectArgument>();
+            //Arguments.Add( new ProjectArgument( Person.GetAttribute( "personId" ), Person, new BooleanExpr( false ) ) );
+            //Arguments.Add( new ProjectArgument( Person.GetAttribute( "name" ), Person, new BooleanExpr( true ) ) );
+            //Arguments.Add( new ProjectArgument( Person.GetAttribute( "age" ), Person, new BooleanExpr( true ) ) );
 
-            ProjectStage ProjectOp = new ProjectStage( Arguments, ModelData.ERMongoMapping );
+            //ProjectStage ProjectOp = new ProjectStage( Arguments, ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OpList = new List<AlgebraOperator> { ProjectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
+            //List<AlgebraOperator> OpList = new List<AlgebraOperator> { ProjectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
 
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
+
+            string QueryString = "from Person select Person.name, Person.age";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 
