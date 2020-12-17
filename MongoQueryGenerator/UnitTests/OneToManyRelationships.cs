@@ -31,7 +31,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            string QueryString = "from Person RJOIN <Drives> (Car) select *";
+            string QueryString = "from Person rjoin <Drives> (Car) select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
@@ -66,7 +66,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            string QueryString = "from Person RJOIN <Drives> (Car) select *";
+            string QueryString = "from Person rjoin <Drives> (Car) select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
@@ -101,7 +101,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            string QueryString = "from Person RJOIN <Drives> (Car) select *";
+            string QueryString = "from Person rjoin <Drives> (Car) select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
@@ -136,7 +136,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            string QueryString = "from Person RJOIN <Drives> (Car) select *";
+            string QueryString = "from Person rjoin <Drives> (Car) select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
@@ -171,7 +171,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
+            RelationshipJoinOperator rjoinOp = new RelationshipJoinOperator(
                 new QueryableEntity( ( Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
                 (Relationship)ModelData.EntityRelationshipModel.FindByName( "HasInsurance" ),
                 new List<QueryableEntity> {
@@ -179,7 +179,7 @@ namespace QueryBuilder.Tests
                 },
                 ModelData.ERMongoMapping );
 
-            List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp };
+            List<AlgebraOperator> OpList = new List<AlgebraOperator> { rjoinOp };
             FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
                 ModelData.ERMongoMapping );
 

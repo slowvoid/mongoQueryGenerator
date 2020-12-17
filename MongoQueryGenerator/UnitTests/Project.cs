@@ -80,42 +80,45 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarManufacturedBy",
-                new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "ManufacturedBy" ),
-                new List<QueryableEntity> {
-                    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Manufacturer" ), "manufacturer" )
-                } );
+            //ComputedEntity CarRepairedByGarage = new ComputedEntity( "CarManufacturedBy",
+            //    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Car" ), "car" ),
+            //    (Relationship)ModelData.EntityRelationshipModel.FindByName( "ManufacturedBy" ),
+            //    new List<QueryableEntity> {
+            //        new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Manufacturer" ), "manufacturer" )
+            //    } );
 
-            RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
-                new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
-                (Relationship)ModelData.EntityRelationshipModel.FindByName( "Owns" ),
-                new List<QueryableEntity> {
-                    new QueryableEntity( CarRepairedByGarage )
-                },
-                ModelData.ERMongoMapping );
+            //RelationshipJoinOperator RJoinOp = new RelationshipJoinOperator(
+            //    new QueryableEntity( (Entity)ModelData.EntityRelationshipModel.FindByName( "Person" ), "person" ),
+            //    (Relationship)ModelData.EntityRelationshipModel.FindByName( "Owns" ),
+            //    new List<QueryableEntity> {
+            //        new QueryableEntity( CarRepairedByGarage )
+            //    },
+            //    ModelData.ERMongoMapping );
 
-            VirtualMap VMap = RJoinOp.ComputeVirtualMap();
+            //VirtualMap VMap = RJoinOp.ComputeVirtualMap();
 
-            Dictionary<string, ProjectExpression> ProjectPersonAttrs = new Dictionary<string, ProjectExpression>();
+            //Dictionary<string, ProjectExpression> ProjectPersonAttrs = new Dictionary<string, ProjectExpression>();
 
-            QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
-            QueryableEntity Car = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Car" ) );
-            QueryableEntity Manufacturer = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Manufacturer" ) );
+            //QueryableEntity Person = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) );
+            //QueryableEntity Car = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Car" ) );
+            //QueryableEntity Manufacturer = new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Manufacturer" ) );
 
-            List<ProjectArgument> ProjectArguments = new List<ProjectArgument>();
-            ProjectArguments.Add( new ProjectArgument( Person.GetAttribute( "name" ), Person, new BooleanExpr( true ) ) );
-            ProjectArguments.Add( new ProjectArgument( Car.GetAttribute( "model" ), Car, new BooleanExpr( true ) ) );
-            ProjectArguments.Add( new ProjectArgument( Car.GetAttribute( "year" ), Car, new BooleanExpr( true ) ) );
-            ProjectArguments.Add( new ProjectArgument( Manufacturer.GetAttribute( "name" ), Manufacturer, new BooleanExpr( true ) ) );
+            //List<ProjectArgument> ProjectArguments = new List<ProjectArgument>();
+            //ProjectArguments.Add( new ProjectArgument( Person.GetAttribute( "name" ), Person, new BooleanExpr( true ) ) );
+            //ProjectArguments.Add( new ProjectArgument( Car.GetAttribute( "model" ), Car, new BooleanExpr( true ) ) );
+            //ProjectArguments.Add( new ProjectArgument( Car.GetAttribute( "year" ), Car, new BooleanExpr( true ) ) );
+            //ProjectArguments.Add( new ProjectArgument( Manufacturer.GetAttribute( "name" ), Manufacturer, new BooleanExpr( true ) ) );
 
-            ProjectStage ProjectOp = new ProjectStage( ProjectArguments, VMap );
+            //ProjectStage ProjectOp = new ProjectStage( ProjectArguments, VMap );
 
-            List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp, ProjectOp };
-            FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
-                ModelData.ERMongoMapping );
+            //List<AlgebraOperator> OpList = new List<AlgebraOperator> { RJoinOp, ProjectOp };
+            //FromArgument StartArg = new FromArgument( new QueryableEntity( ModelData.EntityRelationshipModel.FindByName( "Person" ) ),
+            //    ModelData.ERMongoMapping );
 
-            QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
+            //QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
+            string QueryString = "from Person rjoin <Owns> (Car rjoin <ManufacturedBy> (Manufacturer)) select Person.name, Car.model, Car.year, Manufacturer.name";
+
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
 

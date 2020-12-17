@@ -30,7 +30,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            string QueryString = "from Person RJOIN <Drives> (Car) select *";
+            string QueryString = "from Person rjoin <Drives> (Car) select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
@@ -65,7 +65,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            string QueryString = "from Person RJOIN <Drives> (Car) select *";
+            string QueryString = "from Person rjoin <Drives> (Car) select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
@@ -100,7 +100,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            string QueryString = "from Person RJOIN <Drives> (Car) select *";
+            string QueryString = "from Person rjoin <Drives> (Car) select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
@@ -183,7 +183,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            string QueryString = "from Person RJOIN <HasInsurance> (Car, Insurance) select *";
+            string QueryString = "from Person rjoin <HasInsurance> (Car, Insurance) select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
@@ -218,7 +218,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            string QueryString = "from Person RJOIN <HasInsurance> (Car, Insurance) select *";
+            string QueryString = "from Person rjoin <HasInsurance> (Car, Insurance) select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
@@ -253,7 +253,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            string QueryString = "from Person RJOIN <HasInsurance> (Car, Insurance) select *";
+            string QueryString = "from Person rjoin <HasInsurance> (Car, Insurance) select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();

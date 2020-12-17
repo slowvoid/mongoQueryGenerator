@@ -21,9 +21,9 @@ namespace QueryBuilder.Tests
         /// Query:
         /// 
         /// FROM Product p
-        /// RJOIN <UserProducts> (User u)
-        /// RJOIN <StoreProducts> (Store s)
-        /// RJOIN <CategoryProducts> (Category c)
+        /// rjoin <UserProducts> (User u)
+        /// rjoin <StoreProducts> (Store s)
+        /// rjoin <CategoryProducts> (Category c)
         /// SELECT *
         /// </summary>
         [TestMethod]
@@ -35,7 +35,7 @@ namespace QueryBuilder.Tests
             var DataMap4 = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
             var DataMap5 = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
-            string QueryString = "from Product RJOIN <UserProducts> (User) RJOIN <StoreProducts> (Store) RJOIN <CategoryProducts> (Category)";
+            string QueryString = "from Product rjoin <UserProducts> (User) rjoin <StoreProducts> (Store) rjoin <CategoryProducts> (Category) select *";
 
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, DataMap );
             QueryGenerator QueryGen2 = QueryBuilderParser.ParseQuery( QueryString, DataMap2 );
@@ -80,19 +80,19 @@ namespace QueryBuilder.Tests
 
         private static string _getQueryForTestAllProducts( QueryBuilderMappingMetadata DataMap, QueryableEntity Product, QueryableEntity Store, QueryableEntity Category, QueryableEntity User )
         {
-            RelationshipJoinOperator RJoinProductUser = new RelationshipJoinOperator(
+            RelationshipJoinOperator rjoinProductUser = new RelationshipJoinOperator(
                             Product,
                             (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
                             new List<QueryableEntity>() { User },
                             DataMap.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinProductStore = new RelationshipJoinOperator(
+            RelationshipJoinOperator rjoinProductStore = new RelationshipJoinOperator(
                 Product,
                 (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
                 new List<QueryableEntity>() { Store },
                 DataMap.ERMongoMapping );
 
-            RelationshipJoinOperator RJoinProductCategory = new RelationshipJoinOperator(
+            RelationshipJoinOperator rjoinProductCategory = new RelationshipJoinOperator(
                 Product,
                 (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { Category },
@@ -101,7 +101,7 @@ namespace QueryBuilder.Tests
             SortArgument SortArg = new SortArgument( Product, Product.GetAttribute( "ProductID" ), MongoDBSort.Ascending );
             SortStage SortOp = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
 
-            List<AlgebraOperator> Operators = new List<AlgebraOperator>() { SortOp, RJoinProductUser, RJoinProductStore, RJoinProductCategory };
+            List<AlgebraOperator> Operators = new List<AlgebraOperator>() { SortOp, rjoinProductUser, rjoinProductStore, rjoinProductCategory };
 
             FromArgument FromArg = new FromArgument( Product, DataMap.ERMongoMapping );
 
@@ -251,7 +251,7 @@ namespace QueryBuilder.Tests
         /// Run GetProductsFromStore query
         /// 
         /// QUERY: FROM Store s 
-        ///        RJOIN <StoreProducts> (Product p)
+        ///        rjoin <StoreProducts> (Product p)
         ///        SELECT *
         /// </summary>
         [TestMethod]
@@ -263,7 +263,7 @@ namespace QueryBuilder.Tests
             var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
             var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
-            string QueryString = "from Store RJOIN <StoreProducts> (Product) select *";
+            string QueryString = "from Store rjoin <StoreProducts> (Product) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
             QueryGenerator GeneratorMap2 = QueryBuilderParser.ParseQuery( QueryString, DataMapDuplicates );
@@ -307,7 +307,7 @@ namespace QueryBuilder.Tests
         /// Run GetProductsFromCategory query
         /// 
         /// QUERY: FROM Category c 
-        ///        RJOIN <CategoryProducts> (Product p)
+        ///        rjoin <CategoryProducts> (Product p)
         ///        SELECT *
         /// </summary>
         [TestMethod]
@@ -319,7 +319,7 @@ namespace QueryBuilder.Tests
             var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
             var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
-            string QueryString = "from Category RJOIN <CategoryProducts> (Product) select *";
+            string QueryString = "from Category rjoin <CategoryProducts> (Product) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
             QueryGenerator GeneratorMap2 = QueryBuilderParser.ParseQuery( QueryString, DataMapDuplicates );
@@ -363,7 +363,7 @@ namespace QueryBuilder.Tests
         /// Run GetProductsFromUser query
         /// 
         /// QUERY: FROM User u 
-        ///        RJOIN <UserProducts> (Product p)
+        ///        rjoin <UserProducts> (Product p)
         ///        SELECT *
         /// </summary>
         [TestMethod]
@@ -375,7 +375,7 @@ namespace QueryBuilder.Tests
             var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
             var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
-            string QueryString = "from User RJOIN <UserProducts> (Product) select *";
+            string QueryString = "from User rjoin <UserProducts> (Product) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
             QueryGenerator GeneratorMap2 = QueryBuilderParser.ParseQuery( QueryString, DataMapDuplicates );
@@ -418,8 +418,8 @@ namespace QueryBuilder.Tests
         /// Run GetAllProductsFromCategoryWithStore
         /// 
         /// QUERY: FROM Category c
-        ///        RJOIN <CategoryProducts> (Product p 
-        ///                                  RJOIN <StoreProducts> (Store s))
+        ///        rjoin <CategoryProducts> (Product p 
+        ///                                  rjoin <StoreProducts> (Store s))
         ///        SELECT *
         /// </summary>
         [TestMethod]
@@ -431,7 +431,7 @@ namespace QueryBuilder.Tests
             var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
             var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
-            string QueryString = "from Category RJOIN <CategoryProducts> (Product RJOIN <StoreProducts> (Store)) select *";
+            string QueryString = "from Category rjoin <CategoryProducts> (Product rjoin <StoreProducts> (Store)) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
             QueryGenerator GeneratorMap2 = QueryBuilderParser.ParseQuery( QueryString, DataMapDuplicates );
@@ -475,8 +475,8 @@ namespace QueryBuilder.Tests
         /// Run GetAllProductsFromCategoryWithUser
         /// 
         /// QUERY: FROM Category c
-        ///        RJOIN <CategoryProducts> (Product p 
-        ///                                  RJOIN <UserProducts> (User u))
+        ///        rjoin <CategoryProducts> (Product p 
+        ///                                  rjoin <UserProducts> (User u))
         ///        SELECT *
         /// </summary>
         [TestMethod]
@@ -488,7 +488,7 @@ namespace QueryBuilder.Tests
             var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
             var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
-            string QueryString = "from Category RJOIN <CategoryProducts> (Product <UserProducts> (User)) select *";
+            string QueryString = "from Category rjoin <CategoryProducts> (Product <UserProducts> (User)) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
             QueryGenerator GeneratorMap2 = QueryBuilderParser.ParseQuery( QueryString, DataMapDuplicates );
@@ -531,7 +531,7 @@ namespace QueryBuilder.Tests
         /// Run GetProductTitleAndUserName test
         /// 
         /// QUERY: FROM Product p
-        ///        RJOIN <UserProducts> (User u)
+        ///        rjoin <UserProducts> (User u)
         ///        SELECT Product.Title, User.UserName
         /// </summary>
         [TestMethod]
@@ -543,7 +543,7 @@ namespace QueryBuilder.Tests
             var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
             var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
-            string QueryString = "from Product RJOIN <UserProducts> (User) select Product.Title, User.UserName";
+            string QueryString = "from Product rjoin <UserProducts> (User) select Product.Title, User.UserName";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
             QueryGenerator GeneratorMap2 = QueryBuilderParser.ParseQuery( QueryString, DataMapDuplicates );
@@ -599,8 +599,8 @@ namespace QueryBuilder.Tests
         /// Run GetAllProductsFromCategoryWithUserAndSelectOnlyTitleNameEmailCategoryName
         /// 
         /// QUERY: FROM Category c
-        ///        RJOIN <CategoryProducts> (Product p
-        ///                                  RJOIN <UserProducts> (User u))
+        ///        rjoin <CategoryProducts> (Product p
+        ///                                  rjoin <UserProducts> (User u))
         ///        SELECT Category.CategoryName, Product.Title, User.UserName, User.UserEmail
         /// </summary>
         [TestMethod]
@@ -612,7 +612,7 @@ namespace QueryBuilder.Tests
             var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
             var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
-            string QueryString = "from Category RJOIN <CategoryProducts> (Category RJOIN <UserProducts> (User)) select Product.Title, User.UserName, User.UserEmail, Category.CategoryName";
+            string QueryString = "from Category rjoin <CategoryProducts> (Category rjoin <UserProducts> (User)) select Product.Title, User.UserName, User.UserEmail, Category.CategoryName";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
             QueryGenerator GeneratorMap2 = QueryBuilderParser.ParseQuery( QueryString, DataMapDuplicates );

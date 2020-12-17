@@ -25,7 +25,7 @@ namespace QueryBuilder.Tests
             // Assert if the handcrafted query is not null
             Assert.IsNotNull( HandcraftedQuery );
 
-            string QueryString = "from Person CARTESIANPRODUCT Car CARTESIANPRODUCT Supplier select *";
+            string QueryString = "from Person cartesianproduct Car cartesianproduct Supplier select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
