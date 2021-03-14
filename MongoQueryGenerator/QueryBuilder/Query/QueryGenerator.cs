@@ -34,7 +34,7 @@ namespace QueryBuilder.Query
         /// Run the query generator
         /// </summary>
         /// <returns></returns>
-        public string Run()
+        public string Run(bool inPrettyPrint = false)
         {
             string CollectionName = StartArgument.GetCollectionName();
             // Check if collection name is set
@@ -70,9 +70,14 @@ namespace QueryBuilder.Query
                 AggregatePipeline.Add( Command.ToJavaScript() );
             }
 
-            // TODO: Update this section to generate collection and aggregate
-            // according to the query
-            return string.Format( "db.{0}.aggregate([{1}], {{allowDiskUse: true}}).pretty();", CollectionName, string.Join( ",", AggregatePipeline ) );
+            if ( inPrettyPrint )
+            {
+                return string.Format( "db.{0}.aggregate([{1}], {{allowDiskUse: true}}).pretty();", CollectionName, string.Join( ",", AggregatePipeline ) );
+            }
+            else
+            {
+                return string.Format( "db.{0}.aggregate([{1}], {{allowDiskUse: true}});", CollectionName, string.Join( ",", AggregatePipeline ) );
+            }
         }
         /// <summary>
         /// Generates the query in explain mode

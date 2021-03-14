@@ -1,0 +1,7 @@
+db.Product.aggregate([
+    {"$project": {
+        _id: false,
+        Title: true,
+        UserName: '$user.name'
+    }}
+], {allowDiskUse: true})

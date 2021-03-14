@@ -25,6 +25,11 @@ namespace QueryAnalyzer
         /// If true save queries to file, but do not run iterations
         /// </summary>
         public bool ExportQueries { get; set; }
+        /// <summary>
+        /// Set to true if it should generate a read query instead of explain
+        /// [DEFAULT: false]
+        /// </summary>
+        public bool UseDefaultQueryInsteadOfExplain { get; set; }
 
         public void RunIterationsForQuery(string Database, string Collection, string Query, bool IsNonAggregate = false)
         {
@@ -36,7 +41,7 @@ namespace QueryAnalyzer
 
             if ( ExportQueries )
             {
-                Utils.ExportQueryToFile( Query, $@"E:\Mestrado\Pesquisa\test results\queries\{Collection}.mongo" );
+                Utils.ExportQueryToFile( Query, $@"D:\Projects\mestrado\test-queries\{Collection}.mongo" );
             }
             else
             {
@@ -91,27 +96,67 @@ namespace QueryAnalyzer
             string Query4 = _getQueryForTestAllProducts( DataMap4, Product, Store, Category, User );
             string Query5 = _getQueryForTestAllProducts( DataMap5, Product, Store, Category, User );
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_1", Query );
-            RunIterationsForQuery( "research_performance_index_3", "get_all_products_2", Query2 );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_products_3", Query3 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_4", Query4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_5", Query5 );
+            RunIterationsForQuery( "research_performance_1", "get_all_products_1", Query );
+            RunIterationsForQuery( "research_performance_3", "get_all_products_2", Query2 );
+            RunIterationsForQuery( "research_performance_2", "get_all_products_3", Query3 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_4", Query4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_5", Query5 );
 
-            // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_3.mongo" );
-            string HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_4.mongo" );
-            string HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_5.mongo" );
+            string HandcraftedQuery1;
+            string HandcraftedQuery2;
+            string HandcraftedQuery3;
+            string HandcraftedQuery4;
+            string HandcraftedQuery5;
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_index_3", "get_all_products_handcrafted_2", HandcraftedQuery2, true );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_products_handcrafted_3", HandcraftedQuery3 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_handcrafted_4", HandcraftedQuery4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_handcrafted_5", HandcraftedQuery5 );
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                YCSBWorkloadFile workload = new YCSBWorkloadFile( "get_all_products_1", "research_performance_1" );
+                workload.ExportToFile();
+                YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_all_products_2", "research_performance_2" );
+                workload2.ExportToFile();
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_3", "research_performance_3" );
+                workload3.ExportToFile();
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_products_4", "research_performance_4" );
+                workload4.ExportToFile();
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_5", "research_performance_5" );
+                workload5.ExportToFile();
+
+                // Load Handcrafted queries
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_1.mongo" );
+                HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_2.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_3.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_4.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_5.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_all_products_handcrafted_2", "research_performance_2" );
+                workloadHandcrafted2.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_handcrafted_3", "research_performance_3" );
+                workloadHandcrafted3.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_products_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.ExportToFile();
+            }
+            else
+            {
+                // Load Handcrafted queries
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_1.mongo" );
+                HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_2.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_3.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_4.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_5.mongo" );
+            }
+
+            RunIterationsForQuery( "research_performance_1", "get_all_products_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_3", "get_all_products_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_2", "get_all_products_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_handcrafted_5", HandcraftedQuery5 );
         }
 
-        private static string _getQueryForTestAllProducts( RequiredDataContainer DataMap, QueryableEntity Product, QueryableEntity Store, QueryableEntity Category, QueryableEntity User )
+        private string _getQueryForTestAllProducts( RequiredDataContainer DataMap, QueryableEntity Product, QueryableEntity Store, QueryableEntity Category, QueryableEntity User )
         {
             RelationshipJoinOperator RJoinProductUser = new RelationshipJoinOperator(
                             Product,
@@ -139,7 +184,15 @@ namespace QueryAnalyzer
             FromArgument FromArg = new FromArgument( Product, DataMap.ERMongoMapping );
 
             QueryGenerator QueryGen = new QueryGenerator( FromArg, Operators );
-            string Query = QueryGen.Explain();
+            string Query;
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                Query = QueryGen.Run();
+            }
+            else
+            {
+                Query = QueryGen.Explain();
+            }
             return Query;
         }
         /// <summary>
@@ -167,22 +220,57 @@ namespace QueryAnalyzer
             QueryGenerator QueryGenMap3 = new QueryGenerator( StartArgMap3, OperatorsMap3 );
             QueryGenerator QueryGenMap5 = new QueryGenerator( StartArgMap5, OperatorsMap5 );
 
-            string QueryStringMap1 = QueryGenMap1.Explain();
-            string QueryStringMap3 = QueryGenMap3.Explain();
-            string QueryStringMap5 = QueryGenMap5.Explain();
-
-            RunIterationsForQuery( "research_performance_index_1", "get_all_stores_1", QueryStringMap1 );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_stores_3", QueryStringMap3 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_stores_5", QueryStringMap5 );
+            string QueryStringMap1;
+            string QueryStringMap3;
+            string QueryStringMap5;
 
             // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_stores_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_stores_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_stores_3.mongo" );
+            string HandcraftedQuery1;
+            string HandcraftedQuery2;
+            string HandcraftedQuery3;
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_stores_handcrafted_1", HandcraftedQuery1, true );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_stores_handcrafted_2", HandcraftedQuery2, true );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_stores_handcrafted_3", HandcraftedQuery3, true );
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                QueryStringMap1 = QueryGenMap1.Run();
+                QueryStringMap3 = QueryGenMap3.Run();
+                QueryStringMap5 = QueryGenMap5.Run();
+
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_stores_1", "research_performance_1");
+                workload1.ExportToFile();
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_stores_3", "research_performance_3");
+                workload3.ExportToFile();
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_stores_5", "research_performance_5");
+                workload5.ExportToFile();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_stores_1.mongo" );
+                HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_stores_2.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_stores_3.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_stores_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_stores_handcrafted_3", "research_performance_3" );
+                workloadHandcrafted3.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_stores_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.ExportToFile();
+            }
+            else
+            {
+                QueryStringMap1 = QueryGenMap1.Explain();
+                QueryStringMap3 = QueryGenMap3.Explain();
+                QueryStringMap5 = QueryGenMap5.Explain();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_stores_1.mongo" );
+                HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_stores_2.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_stores_3.mongo" );
+            }
+
+            RunIterationsForQuery( "research_performance_1", "get_all_stores_1", QueryStringMap1 );
+            RunIterationsForQuery( "research_performance_3", "get_all_stores_3", QueryStringMap3 );
+            RunIterationsForQuery( "research_performance_5", "get_all_stores_5", QueryStringMap5 );
+
+            RunIterationsForQuery( "research_performance_1", "get_all_stores_handcrafted_1", HandcraftedQuery1, true );
+            RunIterationsForQuery( "research_performance_3", "get_all_stores_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_5", "get_all_stores_handcrafted_3", HandcraftedQuery3, true );
         }
         /// <summary>
         /// Run GetAllUsers test
@@ -209,22 +297,58 @@ namespace QueryAnalyzer
             QueryGenerator QueryGenMap3 = new QueryGenerator( StartArgMap3, OperatorsMap3 );
             QueryGenerator QueryGenMap4 = new QueryGenerator( StartArgMap4, OperatorsMap4 );
 
-            string QueryStringMap1 = QueryGenMap1.Explain();
-            string QueryStringMap3 = QueryGenMap3.Explain();
-            string QueryStringMap4 = QueryGenMap4.Explain();
+            string QueryStringMap1;
+            string QueryStringMap3;
+            string QueryStringMap4;
+
+            string HandcraftedQuery1;
+            string HandcraftedQuery3;
+            string HandcraftedQuery4;
+
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                QueryStringMap1 = QueryGenMap1.Run();
+                QueryStringMap3 = QueryGenMap3.Run();
+                QueryStringMap4 = QueryGenMap4.Run();
+
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_users_1", "research_performance_1" );
+                workload1.ExportToFile();
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_users_3", "research_performance_3" );
+                workload3.ExportToFile();
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_users_4", "research_performance_4" );
+                workload4.ExportToFile();
+
+                // Load Handcrafted queries
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_users_1.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_users_2.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_users_3.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_users_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_users_handcrafted_3", "research_performance_3" );
+                workloadHandcrafted3.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_users_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.ExportToFile();
+            }
+            else
+            {
+                QueryStringMap1 = QueryGenMap1.Explain();
+                QueryStringMap3 = QueryGenMap3.Explain();
+                QueryStringMap4 = QueryGenMap4.Explain();
+
+                // Load Handcrafted queries
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_users_1.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_users_2.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_users_3.mongo" );
+            }
 
             RunIterationsForQuery( "research_performance_index_1", "get_all_users_1", QueryStringMap1 );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_users_2", QueryStringMap3 );
+            RunIterationsForQuery( "research_performance_index_3", "get_all_users_2", QueryStringMap3 );
             RunIterationsForQuery( "research_performance_index_4", "get_all_users_3", QueryStringMap4 );
 
-            // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_users_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_users_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_users_3.mongo" );
-
             RunIterationsForQuery( "research_performance_index_1", "get_all_users_handcrafted_1", HandcraftedQuery1, true );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_users_handcrafted_2", HandcraftedQuery2, true );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_users_handcrafted_3", HandcraftedQuery3, true );
+            RunIterationsForQuery( "research_performance_index_2", "get_all_users_handcrafted_2", HandcraftedQuery3, true );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_users_handcrafted_3", HandcraftedQuery4, true );
         }
         /// <summary>
         /// Run GetAllCategories Test
@@ -251,22 +375,58 @@ namespace QueryAnalyzer
             QueryGenerator QueryGenMap4 = new QueryGenerator( StartArgMap4, OperatorsMap4 );
             QueryGenerator QueryGenMap5 = new QueryGenerator( StartArgMap5, OperatorsMap5 );
 
-            string QueryStringMap1 = QueryGenMap1.Explain();
-            string QueryStringMap4 = QueryGenMap4.Explain();
-            string QueryStringMap5 = QueryGenMap5.Explain();
+            string QueryStringMap1;
+            string QueryStringMap4;
+            string QueryStringMap5;
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_categories_1", QueryStringMap1 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_categories_2", QueryStringMap4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_categories_3", QueryStringMap5 );
+            string HandcraftedQuery1;
+            string HandcraftedQuery2;
+            string HandcraftedQuery3;
 
-            // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_categories_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_categories_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_categories_3.mongo" );
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                QueryStringMap1 = QueryGenMap1.Run();
+                QueryStringMap4 = QueryGenMap4.Run();
+                QueryStringMap5 = QueryGenMap5.Run();
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_categories_handcrafted_1", HandcraftedQuery1, true );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_categories_handcrafted_2", HandcraftedQuery2, true );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_categories_handcrafted_3", HandcraftedQuery3, true );
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_categories_1", "research_performance_1" );
+                workload1.ExportToFile();
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_categories_4", "research_performance_4" );
+                workload4.ExportToFile();
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_categories_5", "research_performance_5" );
+                workload5.ExportToFile();
+
+                // Load Handcrafted queries
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_categories_1.mongo" );
+                HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_categories_2.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_categories_3.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_categories_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_categories_handcrafted_4", "research_performance_1" );
+                workloadHandcrafted4.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_categories_handcrafted_5", "research_performance_1" );
+                workloadHandcrafted5.ExportToFile();
+            }
+            else
+            {
+                QueryStringMap1 = QueryGenMap1.Explain();
+                QueryStringMap4 = QueryGenMap4.Explain();
+                QueryStringMap5 = QueryGenMap5.Explain();
+
+                // Load Handcrafted queries
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_categories_1.mongo" );
+                HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_categories_2.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_categories_3.mongo" );
+            }
+
+            RunIterationsForQuery( "research_performance_1", "get_all_categories_1", QueryStringMap1 );
+            RunIterationsForQuery( "research_performance_4", "get_all_categories_2", QueryStringMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_categories_3", QueryStringMap5 );
+
+            RunIterationsForQuery( "research_performance_1", "get_all_categories_handcrafted_1", HandcraftedQuery1, true );
+            RunIterationsForQuery( "research_performance_4", "get_all_categories_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_5", "get_all_categories_handcrafted_3", HandcraftedQuery3, true );
         }
 
         /// <summary>
@@ -306,22 +466,58 @@ namespace QueryAnalyzer
             QueryGenerator GeneratorMap3 = new QueryGenerator( StartArgMap3, OperatorsToExecuteMap3 );
             QueryGenerator GeneratorMap5 = new QueryGenerator( StartArgMap5, OperatorsToExecuteMap5 );
 
-            string QueryMap1 = GeneratorMap1.Explain();
-            string QueryMap3 = GeneratorMap3.Explain();
-            string QueryMap5 = GeneratorMap5.Explain();
+            string QueryMap1;
+            string QueryMap3;
+            string QueryMap5;
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_store_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_products_from_store_2", QueryMap3 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_store_3", QueryMap5 );
+            string HandcraftedQuery1;
+            string HandcraftedQuery3;
+            string HandcraftedQuery5;
 
-            // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_store_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_store_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_store_3.mongo" );
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                QueryMap1 = GeneratorMap1.Run();
+                QueryMap3 = GeneratorMap3.Run();
+                QueryMap5 = GeneratorMap5.Run();
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_store_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_products_from_store_handcrafted_2", HandcraftedQuery2 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_store_handcrafted_3", HandcraftedQuery3 );
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_products_from_store_1", "research_performance_1" );
+                workload1.ExportToFile();
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_from_store_3", "research_performance_3" );
+                workload3.ExportToFile();
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_from_store_5", "research_performance_5" );
+                workload5.ExportToFile();
+
+                // Load Handcrafted queries
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_store_1.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_store_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_store_3.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_from_store_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_from_store_handcrafted_3", "research_performance_3" );
+                workloadHandcrafted3.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_from_store_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.ExportToFile();
+            }
+            else
+            {
+                QueryMap1 = GeneratorMap1.Explain();
+                QueryMap3 = GeneratorMap3.Explain();
+                QueryMap5 = GeneratorMap5.Explain();
+
+                // Load Handcrafted queries
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_store_1.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_store_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_store_3.mongo" );
+            }
+
+            RunIterationsForQuery( "research_performance_1", "get_all_products_from_store_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_3", "get_all_products_from_store_2", QueryMap3 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_store_3", QueryMap5 );
+
+            RunIterationsForQuery( "research_performance_1", "get_all_products_from_store_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_3", "get_all_products_from_store_handcrafted_2", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_store_handcrafted_3", HandcraftedQuery5 );
         }
 
         /// <summary>
@@ -361,22 +557,56 @@ namespace QueryAnalyzer
             QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
             QueryGenerator GeneratorMap5 = new QueryGenerator( StartArgMap5, OperatorsToExecuteMap5 );
 
-            string QueryMap1 = GeneratorMap1.Explain();
-            string QueryMap4 = GeneratorMap4.Explain();
-            string QueryMap5 = GeneratorMap5.Explain();
+            string QueryMap1;
+            string QueryMap4;
+            string QueryMap5;
+
+            string HandcraftedQuery1;
+            string HandcraftedQuery4;
+            string HandcraftedQuery5;
+
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                QueryMap1 = GeneratorMap1.Run();
+                QueryMap4 = GeneratorMap4.Run();
+                QueryMap5 = GeneratorMap5.Run();
+
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_products_from_category_1", "research_performance_1" );
+                workload1.ExportToFile();
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_products_from_category_4", "research_performance_4" );
+                workload4.ExportToFile();
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_from_category_5", "research_performance_5" );
+                workload5.ExportToFile();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_1.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_3.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_from_category_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_products_from_category_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_from_category_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.ExportToFile();
+            }
+            else
+            {
+                QueryMap1 = GeneratorMap1.Explain();
+                QueryMap4 = GeneratorMap4.Explain();
+                QueryMap5 = GeneratorMap5.Explain();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_1.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_3.mongo" );
+            }
 
             RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_1", QueryMap1 );
             RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_2", QueryMap4 );
             RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_3", QueryMap5 );
 
-            // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_3.mongo" );
-
             RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_handcrafted_2", HandcraftedQuery2 );
-            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_handcrafted_2", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_handcrafted_3", HandcraftedQuery5 );
         }
 
         /// <summary>
@@ -425,9 +655,22 @@ namespace QueryAnalyzer
             QueryGenerator GeneratorMap3 = new QueryGenerator( StartArgMap3, OperatorsToExecuteMap3 );
             QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
 
-            string QueryMap1 = GeneratorMap1.Explain();
-            string QueryMap3 = GeneratorMap3.Explain();
-            string QueryMap4 = GeneratorMap4.Explain();
+            string QueryMap1;
+            string QueryMap3;
+            string QueryMap4;
+
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                QueryMap1 = GeneratorMap1.Run();
+                QueryMap3 = GeneratorMap3.Run();
+                QueryMap4 = GeneratorMap4.Run();
+            }
+            else
+            {
+                QueryMap1 = GeneratorMap1.Explain();
+                QueryMap3 = GeneratorMap3.Explain();
+                QueryMap4 = GeneratorMap4.Explain();
+            }
 
             //QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_1" );
             //QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "research_performance_index_2" );
@@ -515,22 +758,58 @@ namespace QueryAnalyzer
             QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
             QueryGenerator GeneratorMap5 = new QueryGenerator( StartArgMap5, OperatorsToExecuteMap5 );
 
-            string QueryMap1 = GeneratorMap1.Explain();
-            string QueryMap4 = GeneratorMap4.Explain();
-            string QueryMap5 = GeneratorMap5.Explain();
+            string QueryMap1;
+            string QueryMap4;
+            string QueryMap5;
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_with_store_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_with_store_2", QueryMap4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_with_store_3", QueryMap5 );
+            string HandcraftedQuery1;
+            string HandcraftedQuery4;
+            string HandcraftedQuery5;
 
-            // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_store_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_store_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_store_3.mongo" );
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                QueryMap1 = GeneratorMap1.Run();
+                QueryMap4 = GeneratorMap4.Run();
+                QueryMap5 = GeneratorMap5.Run();
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_with_store_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_with_store_handcrafted_2", HandcraftedQuery2 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_with_store_handcrafted_3", HandcraftedQuery3 );
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_1", "research_performance_1" );
+                workload1.ExportToFile();
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_4", "research_performance_4" );
+                workload4.ExportToFile();
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_5", "research_performance_5" );
+                workload5.ExportToFile();
+
+                // Load Handcrafted queries
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_store_1.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_store_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_store_3.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.ExportToFile();
+            }
+            else
+            {
+                QueryMap1 = GeneratorMap1.Explain();
+                QueryMap4 = GeneratorMap4.Explain();
+                QueryMap5 = GeneratorMap5.Explain();
+
+                // Load Handcrafted queries
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_store_1.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_store_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_store_3.mongo" );
+            }
+
+            RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_with_store_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_store_2", QueryMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_store_3", QueryMap5 );
+
+            RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_with_store_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_store_handcrafted_2", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_store_handcrafted_3", HandcraftedQuery5 );
         }
 
         /// <summary>
@@ -579,22 +858,56 @@ namespace QueryAnalyzer
             QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
             QueryGenerator GeneratorMap5 = new QueryGenerator( StartArgMap5, OperatorsToExecuteMap5 );
 
-            string QueryMap1 = GeneratorMap1.Explain();
-            string QueryMap4 = GeneratorMap4.Explain();
-            string QueryMap5 = GeneratorMap5.Explain();
+            string QueryMap1;
+            string QueryMap4;
+            string QueryMap5;
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_with_user_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_with_user_2", QueryMap4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_with_user_3", QueryMap5 );
+            string HandcraftedQuery1;
+            string HandcraftedQuery4;
+            string HandcraftedQuery5;
 
-            // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_user_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_user_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_user_3.mongo" );
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                QueryMap1 = GeneratorMap1.Run();
+                QueryMap4 = GeneratorMap4.Run();
+                QueryMap5 = GeneratorMap5.Run();
 
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_from_category_with_user_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_from_category_with_user_handcrafted_2", HandcraftedQuery2 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_from_category_with_user_handcrafted_3", HandcraftedQuery3 );
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_1", "research_performance_1" );
+                workload1.ExportToFile();
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_4", "research_performance_1" );
+                workload4.ExportToFile();
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_5", "research_performance_1" );
+                workload5.ExportToFile();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_user_1.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_user_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_user_3.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.ExportToFile();
+            }
+            else
+            {
+                QueryMap1 = GeneratorMap1.Explain();
+                QueryMap4 = GeneratorMap4.Explain();
+                QueryMap5 = GeneratorMap5.Explain();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_user_1.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_user_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_from_category_with_user_3.mongo" );
+            }
+
+            RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_with_user_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_user_2", QueryMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_user_3", QueryMap5 );
+
+            RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_with_user_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_user_handcrafted_2", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_user_handcrafted_3", HandcraftedQuery5 );
         }
         /// <summary>
         /// Run GetProductTitleAndUserName test
@@ -666,30 +979,80 @@ namespace QueryAnalyzer
             QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
             QueryGenerator GeneratorMap5 = new QueryGenerator( StartArgMap5, OperatorsToExecuteMap5 );
 
-            string QueryMap1 = GeneratorMap1.Explain();
-            string QueryMap2 = GeneratorMap2.Explain();
-            string QueryMap3 = GeneratorMap3.Explain();
-            string QueryMap4 = GeneratorMap4.Explain();
-            string QueryMap5 = GeneratorMap5.Explain();
+            string QueryMap1;
+            string QueryMap2;
+            string QueryMap3;
+            string QueryMap4;
+            string QueryMap5;
 
-            RunIterationsForQuery( "research_performance_index_1", "get_product_title_and_username_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_index_3", "get_product_title_and_username_2", QueryMap2 );
-            RunIterationsForQuery( "research_performance_index_2", "get_product_title_and_username_3", QueryMap3 );
-            RunIterationsForQuery( "research_performance_index_4", "get_product_title_and_username_4", QueryMap4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_product_title_and_username_5", QueryMap5 );
+            string HandcraftedQuery1;
+            string HandcraftedQuery2;
+            string HandcraftedQuery3;
+            string HandcraftedQuery4;
+            string HandcraftedQuery5;
 
-            // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_3.mongo" );
-            string HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_4.mongo" );
-            string HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_5.mongo" );
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                QueryMap1 = GeneratorMap1.Run();
+                QueryMap2 = GeneratorMap2.Run();
+                QueryMap3 = GeneratorMap3.Run();
+                QueryMap4 = GeneratorMap4.Run();
+                QueryMap5 = GeneratorMap5.Run();
 
-            RunIterationsForQuery( "research_performance_index_1", "get_product_title_and_username_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_index_3", "get_product_title_and_username_handcrafted_2", HandcraftedQuery2 );
-            RunIterationsForQuery( "research_performance_index_2", "get_product_title_and_username_handcrafted_3", HandcraftedQuery3 );
-            RunIterationsForQuery( "research_performance_index_4", "get_product_title_and_username_handcrafted_4", HandcraftedQuery4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_product_title_and_username_handcrafted_5", HandcraftedQuery5 );
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_product_title_and_username_1", "research_performance_1" );
+                workload1.ExportToFile();
+                YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_product_title_and_username_2", "research_performance_2" );
+                workload2.ExportToFile();
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_product_title_and_username_3", "research_performance_3" );
+                workload3.ExportToFile();
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_product_title_and_username_4", "research_performance_4" );
+                workload4.ExportToFile();
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_product_title_and_username_5", "research_performance_5" );
+                workload5.ExportToFile();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_title_and_username_1.mongo" );
+                HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_title_and_username_2.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_title_and_username_3.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_title_and_username_4.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_title_and_username_5.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_2", "research_performance_2" );
+                workloadHandcrafted2.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_3", "research_performance_3" );
+                workloadHandcrafted3.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.ExportToFile();
+            }
+            else
+            {
+                QueryMap1 = GeneratorMap1.Explain();
+                QueryMap2 = GeneratorMap2.Explain();
+                QueryMap3 = GeneratorMap3.Explain();
+                QueryMap4 = GeneratorMap4.Explain();
+                QueryMap5 = GeneratorMap5.Explain();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_1.mongo" );
+                HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_2.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_3.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_4.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_title_and_username_5.mongo" );
+            }
+
+            RunIterationsForQuery( "research_performance_1", "get_product_title_and_username_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_3", "get_product_title_and_username_2", QueryMap2 );
+            RunIterationsForQuery( "research_performance_2", "get_product_title_and_username_3", QueryMap3 );
+            RunIterationsForQuery( "research_performance_4", "get_product_title_and_username_4", QueryMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_product_title_and_username_5", QueryMap5 );
+
+            RunIterationsForQuery( "research_performance_1", "get_product_title_and_username_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_3", "get_product_title_and_username_handcrafted_2", HandcraftedQuery2 );
+            RunIterationsForQuery( "research_performance_2", "get_product_title_and_username_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_4", "get_product_title_and_username_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_5", "get_product_title_and_username_handcrafted_5", HandcraftedQuery5 );
         }
 
         /// <summary>
@@ -750,22 +1113,56 @@ namespace QueryAnalyzer
             QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
             QueryGenerator GeneratorMap5 = new QueryGenerator( StartArgMap5, OperatorsToExecuteMap5 );
 
-            string QueryMap1 = GeneratorMap1.Explain();
-            string QueryMap4 = GeneratorMap4.Explain();
-            string QueryMap5 = GeneratorMap5.Explain();
+            string QueryMap1;
+            string QueryMap4;
+            string QueryMap5;
 
-            RunIterationsForQuery( "research_performance_index_1", "get_product_from_category_with_user_project_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_index_4", "get_product_from_category_with_user_project_2", QueryMap4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_product_from_category_with_user_project_3", QueryMap5 );
+            string HandcraftedQuery1;
+            string HandcraftedQuery4;
+            string HandcraftedQuery5;
 
-            // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_from_category_with_user_project_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_from_category_with_user_project_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_from_category_with_user_project_3.mongo" );
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                QueryMap1 = GeneratorMap1.Run();
+                QueryMap4 = GeneratorMap4.Run();
+                QueryMap5 = GeneratorMap5.Run();
+
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_product_from_category_with_user_1", "research_performance_1" );
+                workload1.ExportToFile();
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_product_from_category_with_user_4", "research_performance_4" );
+                workload4.ExportToFile();
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_product_from_category_with_user_5", "research_performance_5" );
+                workload5.ExportToFile();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_from_category_with_user_project_1.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_from_category_with_user_project_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_from_category_with_user_project_3.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_product_from_category_with_user_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_product_from_category_with_user_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_product_from_category_with_user_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.ExportToFile();
+            }
+            else
+            {
+                QueryMap1 = GeneratorMap1.Explain();
+                QueryMap4 = GeneratorMap4.Explain();
+                QueryMap5 = GeneratorMap5.Explain();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_from_category_with_user_project_1.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_from_category_with_user_project_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_product_from_category_with_user_project_3.mongo" );
+            }
+
+            RunIterationsForQuery( "research_performance_1", "get_product_from_category_with_user_project_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_4", "get_product_from_category_with_user_project_2", QueryMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_product_from_category_with_user_project_3", QueryMap5 );
 
             RunIterationsForQuery( "research_performance_index_1", "get_product_from_category_with_user_project_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_index_4", "get_product_from_category_with_user_project_handcrafted_2", HandcraftedQuery2 );
-            RunIterationsForQuery( "research_performance_index_5", "get_product_from_category_with_user_project_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_index_4", "get_product_from_category_with_user_project_handcrafted_2", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_product_from_category_with_user_project_handcrafted_3", HandcraftedQuery5 );
         }
 
         /// <summary>
@@ -807,22 +1204,56 @@ namespace QueryAnalyzer
             QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
             QueryGenerator GeneratorMap5 = new QueryGenerator( StartArgMap5, OperatorsToExecuteMap5 );
 
-            string QueryMap1 = GeneratorMap1.Explain();
-            string QueryMap4 = GeneratorMap4.Explain();
-            string QueryMap5 = GeneratorMap5.Explain();
+            string QueryMap1;
+            string QueryMap4;
+            string QueryMap5;
 
-            RunIterationsForQuery( "research_performance_index_1", "get_category_named_home_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_index_4", "get_category_named_home_2", QueryMap4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_category_named_home_3", QueryMap5 );
+            string HandcraftedQuery1;
+            string HandcraftedQuery4;
+            string HandcraftedQuery5;
 
-            // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_category_named_home_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_category_named_home_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_category_named_home_3.mongo" );
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                QueryMap1 = GeneratorMap1.Run();
+                QueryMap4 = GeneratorMap4.Run();
+                QueryMap5 = GeneratorMap5.Run();
+
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_category_named_home_1", "research_performance_1" );
+                workload1.ExportToFile();
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_category_named_home_4", "research_performance_4" );
+                workload4.ExportToFile();
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_category_named_home_5", "research_performance_5" );
+                workload5.ExportToFile();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_category_named_home_1.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_category_named_home_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_category_named_home_3.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_category_named_home_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_category_named_home_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_category_named_home_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.ExportToFile();
+            }
+            else
+            {
+                QueryMap1 = GeneratorMap1.Explain();
+                QueryMap4 = GeneratorMap4.Explain();
+                QueryMap5 = GeneratorMap5.Explain();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_category_named_home_1.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_category_named_home_2.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_category_named_home_3.mongo" );
+            }
+
+            RunIterationsForQuery( "research_performance_1", "get_category_named_home_1", QueryMap1 );
+            RunIterationsForQuery( "research_performance_4", "get_category_named_home_2", QueryMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_category_named_home_3", QueryMap5 );
 
             RunIterationsForQuery( "research_performance_index_1", "get_category_named_home_handcrafted_1", HandcraftedQuery1, true );
-            RunIterationsForQuery( "research_performance_index_4", "get_category_named_home_handcrafted_2", HandcraftedQuery2, true );
-            RunIterationsForQuery( "research_performance_index_5", "get_category_named_home_handcrafted_3", HandcraftedQuery3, true );
+            RunIterationsForQuery( "research_performance_index_4", "get_category_named_home_handcrafted_2", HandcraftedQuery4, true );
+            RunIterationsForQuery( "research_performance_index_5", "get_category_named_home_handcrafted_3", HandcraftedQuery5, true );
         }
         /// <summary>
         /// Execute GetAllProductsThatCostsLessThan5
@@ -864,11 +1295,68 @@ namespace QueryAnalyzer
             QueryGenerator QueryGen4 = new QueryGenerator( StartArg4, OperatorList4 );
             QueryGenerator QueryGen5 = new QueryGenerator( StartArg5, OperatorList5 );
 
-            string Query1 = QueryGen1.Explain();
-            string Query2 = QueryGen2.Explain();
-            string Query3 = QueryGen3.Explain();
-            string Query4 = QueryGen4.Explain();
-            string Query5 = QueryGen5.Explain();
+            string Query1;
+            string Query2;
+            string Query3;
+            string Query4;
+            string Query5;
+
+            string HandcraftedQuery1;
+            string HandcraftedQuery2;
+            string HandcraftedQuery3;
+            string HandcraftedQuery4;
+            string HandcraftedQuery5;
+
+            if ( UseDefaultQueryInsteadOfExplain )
+            {
+                Query1 = QueryGen1.Run();
+                Query2 = QueryGen2.Run();
+                Query3 = QueryGen3.Run();
+                Query4 = QueryGen4.Run();
+                Query5 = QueryGen5.Run();
+
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_1", "research_performance_1" );
+                workload1.ExportToFile();
+                YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_2", "research_performance_2" );
+                workload2.ExportToFile();
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_3", "research_performance_3" );
+                workload3.ExportToFile();
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_4", "research_performance_4" );
+                workload4.ExportToFile();
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_5", "research_performance_5" );
+                workload5.ExportToFile();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_that_costs_less5_1.mongo" );
+                HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_that_costs_less5_2.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_that_costs_less5_3.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_that_costs_less5_4.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_that_costs_less5_5.mongo" );
+
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_2", "research_performance_2" );
+                workloadHandcrafted2.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_3", "research_performance_3" );
+                workloadHandcrafted3.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.ExportToFile();
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.ExportToFile();
+            }
+            else
+            {
+                Query1 = QueryGen1.Explain();
+                Query2 = QueryGen2.Explain();
+                Query3 = QueryGen3.Explain();
+                Query4 = QueryGen4.Explain();
+                Query5 = QueryGen5.Explain();
+
+                HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_1.mongo" );
+                HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_2.mongo" );
+                HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_3.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_4.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_5.mongo" );
+            }
 
             RunIterationsForQuery( "research_performance_1", "get_all_products_that_costs_less5_1", Query1 );
             RunIterationsForQuery( "research_performance_3", "get_all_products_that_costs_less5_2", Query2 );
@@ -876,18 +1364,11 @@ namespace QueryAnalyzer
             RunIterationsForQuery( "research_performance_4", "get_all_products_that_costs_less5_4", Query4 );
             RunIterationsForQuery( "research_performance_5", "get_all_products_that_costs_less5_5", Query5 );
 
-            // Load Handcrafted queries
-            string HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_1.mongo" );
-            string HandcraftedQuery2 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_2.mongo" );
-            string HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_3.mongo" );
-            string HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_4.mongo" );
-            string HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/get_all_products_that_costs_less5_5.mongo" );
-
-            RunIterationsForQuery( "research_performance_index_1", "get_all_products_that_costs_less5_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_index_3", "get_all_products_that_costs_less5_handcrafted_2", HandcraftedQuery2, true );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_products_that_costs_less5_handcrafted_3", HandcraftedQuery3 );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_products_that_costs_less5_handcrafted_4", HandcraftedQuery4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_all_products_that_costs_less5_handcrafted_5", HandcraftedQuery5 );
+            RunIterationsForQuery( "research_performance_1", "get_all_products_that_costs_less5_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( "research_performance_3", "get_all_products_that_costs_less5_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_2", "get_all_products_that_costs_less5_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_that_costs_less5_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_that_costs_less5_handcrafted_5", HandcraftedQuery5 );
         }
         /// <summary>
         /// Create a list of operators to execute the query

@@ -1,0 +1,8 @@
+db.Category.aggregate([
+    {"$lookup": {
+        from: 'Product',
+        foreignField: 'CategoryID',
+        localField: '_id',
+        as: 'data_Product',
+    }}
+], {allowDiskUse: true})

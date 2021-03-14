@@ -14,6 +14,7 @@ namespace QueryAnalyzer
             cms.Iterations = 100;
             cms.TargetDatabase = "research_performance_stats_nosort";
             cms.ExportQueries = true;
+            cms.UseDefaultQueryInsteadOfExplain = true;
 
             Console.WriteLine( "Iterations to run: {0} | Target database: {1}", cms.Iterations, cms.TargetDatabase );
 
