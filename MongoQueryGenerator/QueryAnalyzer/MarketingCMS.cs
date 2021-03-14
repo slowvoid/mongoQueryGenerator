@@ -179,7 +179,7 @@ namespace QueryAnalyzer
             SortArgument SortArg = new SortArgument( Product, Product.GetAttribute( "ProductID" ), MongoDBSort.Ascending );
             SortStage SortOp = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
 
-            List<AlgebraOperator> Operators = new List<AlgebraOperator>() { SortOp, RJoinProductUser, RJoinProductStore, RJoinProductCategory };
+            List<AlgebraOperator> Operators = new List<AlgebraOperator>() { RJoinProductUser, RJoinProductStore, RJoinProductCategory };
 
             FromArgument FromArg = new FromArgument( Product, DataMap.ERMongoMapping );
 

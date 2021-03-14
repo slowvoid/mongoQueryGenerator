@@ -53,6 +53,7 @@ namespace QueryAnalyzer
             Props.Add( "readproportion", 1 );
             Props.Add( "mongodb.url", $"mongodb://localhost:27017/{inDatabaseName}" );
             Props.Add( "operationcount", 1000 );
+            Props.Add( "recordcount", 100 );
         }
         #endregion
     }
