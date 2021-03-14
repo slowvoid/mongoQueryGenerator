@@ -17,6 +17,10 @@ namespace QueryAnalyzer
         /// Workload name
         /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// Workload file path
+        /// </summary>
+        public string FileName { get; set; }
         #endregion
 
         #region Methods
@@ -25,9 +29,7 @@ namespace QueryAnalyzer
         /// </summary>
         public void ExportToFile()
         {
-            string FileDestination = $@"D:\Projects\mestrado\test-queries\{Name}_workload";
-
-            using ( StreamWriter sw = new StreamWriter( FileDestination, false ) )
+            using ( StreamWriter sw = new StreamWriter( FileName, false ) )
             {
                 foreach ( KeyValuePair<string, object> prop in Props )
                 {
@@ -35,6 +37,28 @@ namespace QueryAnalyzer
                 }
 
                 sw.Close();
+            }
+        }
+
+        /// <summary>
+        /// Set/Override value for property
+        /// </summary>
+        /// <param name="PropertyName"></param>
+        /// <param name="PropertyValue"></param>
+        public void SetProperty(string PropertyName, object PropertyValue)
+        {
+            if ( Props == null )
+            {
+                return;
+            }
+
+            if ( Props.ContainsKey( PropertyName ) )
+            {
+                Props[ PropertyName ] = PropertyValue;
+            }
+            else
+            {
+                Props.Add( PropertyName, PropertyValue );
             }
         }
         #endregion
@@ -46,6 +70,7 @@ namespace QueryAnalyzer
         public YCSBWorkloadFile( string inName, string inDatabaseName )
         {
             Name = inName;
+            FileName = $@"D:\Projects\mestrado\test-queries\{Name}_workload";
             Props = new Dictionary<string, object>();
 
             // Default values
@@ -53,7 +78,7 @@ namespace QueryAnalyzer
             Props.Add( "readproportion", 1 );
             Props.Add( "mongodb.url", $"mongodb://localhost:27017/{inDatabaseName}" );
             Props.Add( "operationcount", 1000 );
-            Props.Add( "recordcount", 100 );
+            Props.Add( "queryfile", $"{FileName.Replace("_workload", "")}.mongo" );
         }
         #endregion
     }

@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using QueryBuilder.Query;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,14 @@ namespace QueryAnalyzer
             var db = client.GetDatabase( Database );
 
             db.DropCollection( Collection );
+        }
+
+        public static long GetCollectionDocumentCount( string inDatabase, string inCollectionName )
+        {
+            MongoClient client = new MongoClient( "mongodb://localhost:27017" );
+            IMongoDatabase db = client.GetDatabase( inDatabase );
+
+            return db.GetCollection<BsonDocument>( inCollectionName ).CountDocuments(new BsonDocument());
         }
     }
 }

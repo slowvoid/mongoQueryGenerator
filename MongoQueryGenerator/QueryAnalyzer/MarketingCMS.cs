@@ -30,6 +30,10 @@ namespace QueryAnalyzer
         /// [DEFAULT: false]
         /// </summary>
         public bool UseDefaultQueryInsteadOfExplain { get; set; }
+        /// <summary>
+        /// Document count for each collection
+        /// </summary>
+        public Dictionary<string, long> CollectionDocumentCount { get; set; }
 
         public void RunIterationsForQuery(string Database, string Collection, string Query, bool IsNonAggregate = false)
         {
@@ -111,14 +115,19 @@ namespace QueryAnalyzer
             if ( UseDefaultQueryInsteadOfExplain )
             {
                 YCSBWorkloadFile workload = new YCSBWorkloadFile( "get_all_products_1", "research_performance_1" );
+                workload.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload.ExportToFile();
                 YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_all_products_2", "research_performance_2" );
+                workload2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload2.ExportToFile();
                 YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_3", "research_performance_3" );
+                workload3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload3.ExportToFile();
                 YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_products_4", "research_performance_4" );
+                workload4.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload4.ExportToFile();
                 YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_5", "research_performance_5" );
+                workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload5.ExportToFile();
 
                 // Load Handcrafted queries
@@ -129,14 +138,19 @@ namespace QueryAnalyzer
                 HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_5.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted1.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_all_products_handcrafted_2", "research_performance_2" );
+                workloadHandcrafted2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted2.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_handcrafted_3", "research_performance_3" );
+                workloadHandcrafted3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted3.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_products_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted4.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted5.ExportToFile();
             }
             else
@@ -236,10 +250,13 @@ namespace QueryAnalyzer
                 QueryStringMap5 = QueryGenMap5.Run();
 
                 YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_stores_1", "research_performance_1");
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workload1.ExportToFile();
                 YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_stores_3", "research_performance_3");
+                workload3.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workload3.ExportToFile();
                 YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_stores_5", "research_performance_5");
+                workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workload5.ExportToFile();
 
                 HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_stores_1.mongo" );
@@ -247,10 +264,13 @@ namespace QueryAnalyzer
                 HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_stores_3.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_stores_handcrafted_1", "research_performance_1" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workloadHandcrafted1.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_stores_handcrafted_3", "research_performance_3" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workloadHandcrafted3.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_stores_handcrafted_5", "research_performance_5" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workloadHandcrafted5.ExportToFile();
             }
             else
@@ -269,8 +289,8 @@ namespace QueryAnalyzer
             RunIterationsForQuery( "research_performance_5", "get_all_stores_5", QueryStringMap5 );
 
             RunIterationsForQuery( "research_performance_1", "get_all_stores_handcrafted_1", HandcraftedQuery1, true );
-            RunIterationsForQuery( "research_performance_3", "get_all_stores_handcrafted_2", HandcraftedQuery2, true );
-            RunIterationsForQuery( "research_performance_5", "get_all_stores_handcrafted_3", HandcraftedQuery3, true );
+            RunIterationsForQuery( "research_performance_3", "get_all_stores_handcrafted_3", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_5", "get_all_stores_handcrafted_5", HandcraftedQuery3, true );
         }
         /// <summary>
         /// Run GetAllUsers test
@@ -312,10 +332,13 @@ namespace QueryAnalyzer
                 QueryStringMap4 = QueryGenMap4.Run();
 
                 YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_users_1", "research_performance_1" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "User" ] );
                 workload1.ExportToFile();
                 YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_users_3", "research_performance_3" );
+                workload3.SetProperty( "recordcount", CollectionDocumentCount[ "User" ] );
                 workload3.ExportToFile();
                 YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_users_4", "research_performance_4" );
+                workload4.SetProperty( "recordcount", CollectionDocumentCount[ "User" ] );
                 workload4.ExportToFile();
 
                 // Load Handcrafted queries
@@ -324,10 +347,13 @@ namespace QueryAnalyzer
                 HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_users_3.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_users_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "User" ] );
                 workloadHandcrafted1.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_users_handcrafted_3", "research_performance_3" );
+                workloadHandcrafted3.SetProperty( "recordcount", CollectionDocumentCount[ "User" ] );
                 workloadHandcrafted3.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_users_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.SetProperty( "recordcount", CollectionDocumentCount[ "User" ] );
                 workloadHandcrafted4.ExportToFile();
             }
             else
@@ -347,8 +373,8 @@ namespace QueryAnalyzer
             RunIterationsForQuery( "research_performance_index_4", "get_all_users_3", QueryStringMap4 );
 
             RunIterationsForQuery( "research_performance_index_1", "get_all_users_handcrafted_1", HandcraftedQuery1, true );
-            RunIterationsForQuery( "research_performance_index_2", "get_all_users_handcrafted_2", HandcraftedQuery3, true );
-            RunIterationsForQuery( "research_performance_index_4", "get_all_users_handcrafted_3", HandcraftedQuery4, true );
+            RunIterationsForQuery( "research_performance_index_3", "get_all_users_handcrafted_3", HandcraftedQuery3, true );
+            RunIterationsForQuery( "research_performance_index_4", "get_all_users_handcrafted_4", HandcraftedQuery4, true );
         }
         /// <summary>
         /// Run GetAllCategories Test
@@ -390,10 +416,13 @@ namespace QueryAnalyzer
                 QueryStringMap5 = QueryGenMap5.Run();
 
                 YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_categories_1", "research_performance_1" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload1.ExportToFile();
                 YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_categories_4", "research_performance_4" );
+                workload4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload4.ExportToFile();
                 YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_categories_5", "research_performance_5" );
+                workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload5.ExportToFile();
 
                 // Load Handcrafted queries
@@ -402,10 +431,13 @@ namespace QueryAnalyzer
                 HandcraftedQuery3 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_categories_3.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_categories_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted1.ExportToFile();
-                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_categories_handcrafted_4", "research_performance_1" );
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_categories_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted4.ExportToFile();
-                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_categories_handcrafted_5", "research_performance_1" );
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_categories_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted5.ExportToFile();
             }
             else
@@ -421,12 +453,12 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( "research_performance_1", "get_all_categories_1", QueryStringMap1 );
-            RunIterationsForQuery( "research_performance_4", "get_all_categories_2", QueryStringMap4 );
-            RunIterationsForQuery( "research_performance_5", "get_all_categories_3", QueryStringMap5 );
+            RunIterationsForQuery( "research_performance_4", "get_all_categories_4", QueryStringMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_categories_5", QueryStringMap5 );
 
             RunIterationsForQuery( "research_performance_1", "get_all_categories_handcrafted_1", HandcraftedQuery1, true );
-            RunIterationsForQuery( "research_performance_4", "get_all_categories_handcrafted_2", HandcraftedQuery2, true );
-            RunIterationsForQuery( "research_performance_5", "get_all_categories_handcrafted_3", HandcraftedQuery3, true );
+            RunIterationsForQuery( "research_performance_4", "get_all_categories_handcrafted_4", HandcraftedQuery2, true );
+            RunIterationsForQuery( "research_performance_5", "get_all_categories_handcrafted_5", HandcraftedQuery3, true );
         }
 
         /// <summary>
@@ -481,10 +513,13 @@ namespace QueryAnalyzer
                 QueryMap5 = GeneratorMap5.Run();
 
                 YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_products_from_store_1", "research_performance_1" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workload1.ExportToFile();
                 YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_from_store_3", "research_performance_3" );
+                workload3.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workload3.ExportToFile();
                 YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_from_store_5", "research_performance_5" );
+                workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workload5.ExportToFile();
 
                 // Load Handcrafted queries
@@ -493,10 +528,13 @@ namespace QueryAnalyzer
                 HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_store_3.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_from_store_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workloadHandcrafted1.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_from_store_handcrafted_3", "research_performance_3" );
+                workloadHandcrafted3.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workloadHandcrafted3.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_from_store_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workloadHandcrafted5.ExportToFile();
             }
             else
@@ -512,12 +550,12 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( "research_performance_1", "get_all_products_from_store_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_3", "get_all_products_from_store_2", QueryMap3 );
-            RunIterationsForQuery( "research_performance_5", "get_all_products_from_store_3", QueryMap5 );
+            RunIterationsForQuery( "research_performance_3", "get_all_products_from_store_3", QueryMap3 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_store_5", QueryMap5 );
 
             RunIterationsForQuery( "research_performance_1", "get_all_products_from_store_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_3", "get_all_products_from_store_handcrafted_2", HandcraftedQuery3 );
-            RunIterationsForQuery( "research_performance_5", "get_all_products_from_store_handcrafted_3", HandcraftedQuery5 );
+            RunIterationsForQuery( "research_performance_3", "get_all_products_from_store_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_store_handcrafted_5", HandcraftedQuery5 );
         }
 
         /// <summary>
@@ -572,10 +610,13 @@ namespace QueryAnalyzer
                 QueryMap5 = GeneratorMap5.Run();
 
                 YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_products_from_category_1", "research_performance_1" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload1.ExportToFile();
                 YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_products_from_category_4", "research_performance_4" );
+                workload4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload4.ExportToFile();
                 YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_from_category_5", "research_performance_5" );
+                workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload5.ExportToFile();
 
                 HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_1.mongo" );
@@ -583,10 +624,13 @@ namespace QueryAnalyzer
                 HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_3.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_from_category_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted1.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_products_from_category_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted4.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_from_category_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted5.ExportToFile();
             }
             else
@@ -601,12 +645,12 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_2", QueryMap4 );
-            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_3", QueryMap5 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_4", QueryMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_5", QueryMap5 );
 
             RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_handcrafted_2", HandcraftedQuery4 );
-            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_handcrafted_3", HandcraftedQuery5 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_handcrafted_5", HandcraftedQuery5 );
         }
 
         /// <summary>
@@ -773,10 +817,13 @@ namespace QueryAnalyzer
                 QueryMap5 = GeneratorMap5.Run();
 
                 YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_1", "research_performance_1" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload1.ExportToFile();
                 YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_4", "research_performance_4" );
+                workload4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload4.ExportToFile();
                 YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_5", "research_performance_5" );
+                workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload5.ExportToFile();
 
                 // Load Handcrafted queries
@@ -785,10 +832,13 @@ namespace QueryAnalyzer
                 HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_store_3.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted1.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted4.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_from_category_with_store_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted5.ExportToFile();
             }
             else
@@ -804,12 +854,12 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_with_store_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_store_2", QueryMap4 );
-            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_store_3", QueryMap5 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_store_4", QueryMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_store_5", QueryMap5 );
 
             RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_with_store_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_store_handcrafted_2", HandcraftedQuery4 );
-            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_store_handcrafted_3", HandcraftedQuery5 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_store_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_store_handcrafted_5", HandcraftedQuery5 );
         }
 
         /// <summary>
@@ -873,10 +923,13 @@ namespace QueryAnalyzer
                 QueryMap5 = GeneratorMap5.Run();
 
                 YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_1", "research_performance_1" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload1.ExportToFile();
-                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_4", "research_performance_1" );
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_4", "research_performance_4" );
+                workload4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload4.ExportToFile();
-                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_5", "research_performance_1" );
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_5", "research_performance_5" );
+                workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload5.ExportToFile();
 
                 HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_user_1.mongo" );
@@ -884,10 +937,13 @@ namespace QueryAnalyzer
                 HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_user_3.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted1.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted4.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted5.ExportToFile();
             }
             else
@@ -902,12 +958,12 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_with_user_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_user_2", QueryMap4 );
-            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_user_3", QueryMap5 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_user_4", QueryMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_user_5", QueryMap5 );
 
             RunIterationsForQuery( "research_performance_1", "get_all_products_from_category_with_user_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_user_handcrafted_2", HandcraftedQuery4 );
-            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_user_handcrafted_3", HandcraftedQuery5 );
+            RunIterationsForQuery( "research_performance_4", "get_all_products_from_category_with_user_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_5", "get_all_products_from_category_with_user_handcrafted_5", HandcraftedQuery5 );
         }
         /// <summary>
         /// Run GetProductTitleAndUserName test
@@ -1000,14 +1056,19 @@ namespace QueryAnalyzer
                 QueryMap5 = GeneratorMap5.Run();
 
                 YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_product_title_and_username_1", "research_performance_1" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload1.ExportToFile();
                 YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_product_title_and_username_2", "research_performance_2" );
+                workload2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload2.ExportToFile();
                 YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_product_title_and_username_3", "research_performance_3" );
+                workload3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload3.ExportToFile();
                 YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_product_title_and_username_4", "research_performance_4" );
+                workload4.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload4.ExportToFile();
                 YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_product_title_and_username_5", "research_performance_5" );
+                workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload5.ExportToFile();
 
                 HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_title_and_username_1.mongo" );
@@ -1017,14 +1078,19 @@ namespace QueryAnalyzer
                 HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_title_and_username_5.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted1.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_2", "research_performance_2" );
+                workloadHandcrafted2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted2.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_3", "research_performance_3" );
+                workloadHandcrafted3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted3.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted4.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted5.ExportToFile();
             }
             else
@@ -1128,10 +1194,13 @@ namespace QueryAnalyzer
                 QueryMap5 = GeneratorMap5.Run();
 
                 YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_product_from_category_with_user_1", "research_performance_1" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload1.ExportToFile();
                 YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_product_from_category_with_user_4", "research_performance_4" );
+                workload4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload4.ExportToFile();
                 YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_product_from_category_with_user_5", "research_performance_5" );
+                workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload5.ExportToFile();
 
                 HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_from_category_with_user_project_1.mongo" );
@@ -1139,10 +1208,13 @@ namespace QueryAnalyzer
                 HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_from_category_with_user_project_3.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_product_from_category_with_user_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted1.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_product_from_category_with_user_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted4.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_product_from_category_with_user_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted5.ExportToFile();
             }
             else
@@ -1157,12 +1229,12 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( "research_performance_1", "get_product_from_category_with_user_project_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_4", "get_product_from_category_with_user_project_2", QueryMap4 );
-            RunIterationsForQuery( "research_performance_5", "get_product_from_category_with_user_project_3", QueryMap5 );
+            RunIterationsForQuery( "research_performance_4", "get_product_from_category_with_user_project_4", QueryMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_product_from_category_with_user_project_5", QueryMap5 );
 
             RunIterationsForQuery( "research_performance_index_1", "get_product_from_category_with_user_project_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( "research_performance_index_4", "get_product_from_category_with_user_project_handcrafted_2", HandcraftedQuery4 );
-            RunIterationsForQuery( "research_performance_index_5", "get_product_from_category_with_user_project_handcrafted_3", HandcraftedQuery5 );
+            RunIterationsForQuery( "research_performance_index_4", "get_product_from_category_with_user_project_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( "research_performance_index_5", "get_product_from_category_with_user_project_handcrafted_5", HandcraftedQuery5 );
         }
 
         /// <summary>
@@ -1219,10 +1291,13 @@ namespace QueryAnalyzer
                 QueryMap5 = GeneratorMap5.Run();
 
                 YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_category_named_home_1", "research_performance_1" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload1.ExportToFile();
                 YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_category_named_home_4", "research_performance_4" );
+                workload4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload4.ExportToFile();
                 YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_category_named_home_5", "research_performance_5" );
+                workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload5.ExportToFile();
 
                 HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_category_named_home_1.mongo" );
@@ -1230,10 +1305,13 @@ namespace QueryAnalyzer
                 HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_category_named_home_3.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_category_named_home_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted1.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_category_named_home_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted4.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_category_named_home_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted5.ExportToFile();
             }
             else
@@ -1248,12 +1326,12 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( "research_performance_1", "get_category_named_home_1", QueryMap1 );
-            RunIterationsForQuery( "research_performance_4", "get_category_named_home_2", QueryMap4 );
-            RunIterationsForQuery( "research_performance_5", "get_category_named_home_3", QueryMap5 );
+            RunIterationsForQuery( "research_performance_4", "get_category_named_home_4", QueryMap4 );
+            RunIterationsForQuery( "research_performance_5", "get_category_named_home_5", QueryMap5 );
 
             RunIterationsForQuery( "research_performance_index_1", "get_category_named_home_handcrafted_1", HandcraftedQuery1, true );
-            RunIterationsForQuery( "research_performance_index_4", "get_category_named_home_handcrafted_2", HandcraftedQuery4, true );
-            RunIterationsForQuery( "research_performance_index_5", "get_category_named_home_handcrafted_3", HandcraftedQuery5, true );
+            RunIterationsForQuery( "research_performance_index_4", "get_category_named_home_handcrafted_4", HandcraftedQuery4, true );
+            RunIterationsForQuery( "research_performance_index_5", "get_category_named_home_handcrafted_5", HandcraftedQuery5, true );
         }
         /// <summary>
         /// Execute GetAllProductsThatCostsLessThan5
@@ -1316,14 +1394,19 @@ namespace QueryAnalyzer
                 Query5 = QueryGen5.Run();
 
                 YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_1", "research_performance_1" );
+                workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload1.ExportToFile();
                 YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_2", "research_performance_2" );
+                workload2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload2.ExportToFile();
                 YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_3", "research_performance_3" );
+                workload3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload3.ExportToFile();
                 YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_4", "research_performance_4" );
+                workload4.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload4.ExportToFile();
                 YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_5", "research_performance_5" );
+                workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload5.ExportToFile();
 
                 HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_that_costs_less5_1.mongo" );
@@ -1333,14 +1416,19 @@ namespace QueryAnalyzer
                 HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_that_costs_less5_5.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_1", "research_performance_1" );
+                workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted1.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_2", "research_performance_2" );
+                workloadHandcrafted2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted2.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_3", "research_performance_3" );
+                workloadHandcrafted3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted3.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_4", "research_performance_4" );
+                workloadHandcrafted4.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted4.ExportToFile();
                 YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_5", "research_performance_5" );
+                workloadHandcrafted5.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted5.ExportToFile();
             }
             else
@@ -1421,6 +1509,27 @@ namespace QueryAnalyzer
             RunIterationsForQuery( "research_performance_2", "get_all_products_that_costs_less5_modified_3", CustomQuery3 );
             RunIterationsForQuery( "research_performance_4", "get_all_products_that_costs_less5_modified_4", CustomQuery4 );
             RunIterationsForQuery( "research_performance_5", "get_all_products_that_costs_less5_modified_5", CustomQuery5 );
+        }
+
+        public MarketingCMS()
+        {
+            CollectionDocumentCount = new Dictionary<string, long>();
+
+            // Load document count
+            long CategoryCount = MongoContext.GetCollectionDocumentCount( "research_performance_1", "Category" );
+            long ProductCount = MongoContext.GetCollectionDocumentCount( "research_performance_1", "Product" );
+            long StoreCount = MongoContext.GetCollectionDocumentCount( "research_performance_1", "Store" );
+            long UserCount = MongoContext.GetCollectionDocumentCount( "research_performance_1", "User" );
+
+            CollectionDocumentCount.Add( "Category", CategoryCount );
+            CollectionDocumentCount.Add( "Product", ProductCount );
+            CollectionDocumentCount.Add( "Store", StoreCount );
+            CollectionDocumentCount.Add( "User", UserCount );
+
+            System.Console.WriteLine( $"Category: {CategoryCount}" );
+            System.Console.WriteLine( $"Product: {ProductCount}" );
+            System.Console.WriteLine( $"Store: {StoreCount}" );
+            System.Console.WriteLine( $"User: {UserCount}" );
         }
     }
 }
