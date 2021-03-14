@@ -62,6 +62,8 @@ namespace QueryAnalyzer
             //Console.WriteLine( "Query: Running custom test" );
             //cms.RunCustomQueriesTest();
 
+            cms.ExportCommandsToFile();
+
             DateTime EndTime = DateTime.Now;
             Console.WriteLine( "Finished" );
             Console.WriteLine( "Finished Time: {0}", EndTime.ToString() );

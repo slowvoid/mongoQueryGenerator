@@ -1,1 +1,6 @@
-db.User.find({_id: "%DB_KEY%"})
+db.runCommand({
+	find: "User",
+	filter: {
+		_id: "%DB_KEY%"
+	}
+})

@@ -1,1 +1,6 @@
-db.Category.find({_id: "%DB_KEY%"})
+db.runCommand({
+	find: "Category",
+	filter: {
+		_id: "%DB_KEY%"
+	}
+})

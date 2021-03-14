@@ -1,1 +1,6 @@
-db.Product.find({_id: "%DB_KEY%"})
+db.runCommand({
+	find: "Product",
+	filter: {
+		_id: "%DB_KEY%"
+	}
+})
