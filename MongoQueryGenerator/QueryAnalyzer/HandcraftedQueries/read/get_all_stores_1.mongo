@@ -1,1 +1,1 @@
-db.Store.find()
+db.Store.find({_id: "%DB_KEY%"})

@@ -1,4 +1,9 @@
 db.Store.aggregate([
+    {"$match": {
+        $expr: {
+            $eq: ["$_id", "%DB_KEY%"]
+        }
+    },
     {$lookup: {
         from: 'Product',
         foreignField: 'StoreID',

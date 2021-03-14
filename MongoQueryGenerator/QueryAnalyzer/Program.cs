@@ -50,14 +50,14 @@ namespace QueryAnalyzer
             Console.WriteLine( "Query: get_all_users" );
             cms.GetAllUsers();
 
-            Console.WriteLine( "Query: get_category_named_home" );
-            cms.GetCategoryThatIsNamedHome();
+            //Console.WriteLine( "Query: get_category_named_home" );
+            //cms.GetCategoryThatIsNamedHome();
 
             Console.WriteLine( "Query: get_product_title_username" );
             cms.GetProductTitleAndUserName();
 
-            Console.WriteLine( "Query: get_products_prices_less" );
-            cms.GetAllProductsThatCostsLessThan5();
+            //Console.WriteLine( "Query: get_products_prices_less" );
+            //cms.GetAllProductsThatCostsLessThan5();
 
             //Console.WriteLine( "Query: Running custom test" );
             //cms.RunCustomQueriesTest();

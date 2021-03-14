@@ -1,4 +1,9 @@
 db.Product.aggregate([
+    {"$match": {
+        $expr: {
+            $eq: ["$_id", "%DB_KEY%"]
+        }
+    },
     {"$project": {
         _id: false,
         Title: true,
