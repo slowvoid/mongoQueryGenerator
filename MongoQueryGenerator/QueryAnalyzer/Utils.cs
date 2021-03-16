@@ -36,5 +36,16 @@ namespace QueryAnalyzer
                 sw.Write( Query );
             }
         }
+        /// <summary>
+        /// Return the full path for the given relative path file
+        /// </summary>
+        /// <param name="inRelativePath"></param>
+        /// <returns></returns>
+        public static string GetFileFulPath( string inRelativePath )
+        {
+            FileInfo info = new FileInfo( inRelativePath );
+
+            return info.FullName;
+        }
     }
 }

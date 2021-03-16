@@ -3,7 +3,7 @@ db.Category.aggregate([
         $expr: {
             $eq: ["$_id", "%DB_KEY%"]
         }
-    },
+    }},
     {"$lookup": {
         from: 'Product',
         let: {

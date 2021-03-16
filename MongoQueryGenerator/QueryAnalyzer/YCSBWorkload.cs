@@ -71,8 +71,8 @@ namespace QueryAnalyzer
         {
             Name = inName;
             FileName = $@"D:\\Projects\\mestrado\\YCSB\\workloads\\{Name}_workload";
-            Props = new Dictionary<string, object>();
 
+            Props = new Dictionary<string, object>();
             // Default values
             Props.Add( "workload", "site.ycsb.db.MongoDBWorkload" );
             Props.Add( "readproportion", 1 );

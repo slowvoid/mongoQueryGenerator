@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="HandcraftedQueries\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="CustomQueries\get_all_products_that_costs_less5_m_1.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -120,10 +116,10 @@
     <None Update="HandcraftedQueries\get_all_users_1.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HandcraftedQueries\get_all_users_2.mongo">
+    <None Update="HandcraftedQueries\get_all_users_3.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HandcraftedQueries\get_all_users_3.mongo">
+    <None Update="HandcraftedQueries\get_all_users_4.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="HandcraftedQueries\get_category_named_home_1.mongo">
@@ -237,7 +233,7 @@
     <None Update="HandcraftedQueries\read\get_all_stores_1.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HandcraftedQueries\read\get_all_stores_2.mongo">
+    <None Update="HandcraftedQueries\read\get_all_stores_5.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="HandcraftedQueries\read\get_all_stores_3.mongo">
@@ -246,7 +242,7 @@
     <None Update="HandcraftedQueries\read\get_all_users_1.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HandcraftedQueries\read\get_all_users_2.mongo">
+    <None Update="HandcraftedQueries\read\get_all_users_4.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="HandcraftedQueries\read\get_all_users_3.mongo">

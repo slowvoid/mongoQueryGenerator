@@ -3,7 +3,7 @@ db.Product.aggregate([
         $expr: {
             $eq: ["$_id", "%DB_KEY%"]
         }
-    },
+    }},
     {"$project": {
         _id: false,
         Title: true,
