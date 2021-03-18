@@ -200,10 +200,10 @@
     <None Update="HandcraftedQueries\read\get_all_products_from_category_with_user_1.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HandcraftedQueries\read\get_all_products_from_category_with_user_2.mongo">
+    <None Update="HandcraftedQueries\read\get_all_products_from_category_with_user_5.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HandcraftedQueries\read\get_all_products_from_category_with_user_3.mongo">
+    <None Update="HandcraftedQueries\read\get_all_products_from_category_with_user_4.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="HandcraftedQueries\read\get_all_products_from_store_1.mongo">
@@ -260,10 +260,10 @@
     <None Update="HandcraftedQueries\read\get_product_from_category_with_user_project_1.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HandcraftedQueries\read\get_product_from_category_with_user_project_2.mongo">
+    <None Update="HandcraftedQueries\read\get_product_from_category_with_user_project_4.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HandcraftedQueries\read\get_product_from_category_with_user_project_3.mongo">
+    <None Update="HandcraftedQueries\read\get_product_from_category_with_user_project_5.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="HandcraftedQueries\read\get_product_title_and_username_1.mongo">

@@ -413,7 +413,7 @@ namespace QueryAnalyzer
 
             RunIterationsForQuery( "research_performance_1", "get_all_users_1", QueryStringMap1 );
             RunIterationsForQuery( "research_performance_2", "get_all_users_3", QueryStringMap3 );
-            RunIterationsForQuery( "research_performance_4", "get_all_users_3", QueryStringMap4 );
+            RunIterationsForQuery( "research_performance_4", "get_all_users_4", QueryStringMap4 );
 
             RunIterationsForQuery( "research_performance_1", "get_all_users_handcrafted_1", HandcraftedQuery1, true );
             RunIterationsForQuery( "research_performance_3", "get_all_users_handcrafted_3", HandcraftedQuery3, true );
@@ -1021,8 +1021,8 @@ namespace QueryAnalyzer
                 AddCommandFromWorkloadFile( workload5 );
 
                 HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_user_1.mongo" );
-                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_user_2.mongo" );
-                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_user_3.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_user_4.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_all_products_from_category_with_user_5.mongo" );
 
                 YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_all_products_from_category_with_user_handcrafted_1", "research_performance_1" );
                 workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
@@ -1300,32 +1300,32 @@ namespace QueryAnalyzer
                 QueryMap4 = GeneratorMap4.Run();
                 QueryMap5 = GeneratorMap5.Run();
 
-                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_product_from_category_with_user_1", "research_performance_1" );
+                YCSBWorkloadFile workload1 = new YCSBWorkloadFile( "get_product_from_category_with_user_project_1", "research_performance_1" );
                 workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload1.ExportToFile();
                 AddCommandFromWorkloadFile( workload1 );
-                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_product_from_category_with_user_4", "research_performance_4" );
+                YCSBWorkloadFile workload4 = new YCSBWorkloadFile( "get_product_from_category_with_user_project_4", "research_performance_4" );
                 workload4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload4.ExportToFile();
                 AddCommandFromWorkloadFile( workload4 );
-                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_product_from_category_with_user_5", "research_performance_5" );
+                YCSBWorkloadFile workload5 = new YCSBWorkloadFile( "get_product_from_category_with_user_project_5", "research_performance_5" );
                 workload5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workload5.ExportToFile();
                 AddCommandFromWorkloadFile( workload5 );
 
                 HandcraftedQuery1 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_from_category_with_user_project_1.mongo" );
-                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_from_category_with_user_project_2.mongo" );
-                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_from_category_with_user_project_3.mongo" );
+                HandcraftedQuery4 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_from_category_with_user_project_4.mongo" );
+                HandcraftedQuery5 = Utils.ReadQueryFromFile( "HandcraftedQueries/read/get_product_from_category_with_user_project_5.mongo" );
 
-                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_product_from_category_with_user_handcrafted_1", "research_performance_1" );
+                YCSBWorkloadFile workloadHandcrafted1 = new YCSBWorkloadFile( "get_product_from_category_with_user_project_handcrafted_1", "research_performance_1" );
                 workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted1.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted1 );
-                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_product_from_category_with_user_handcrafted_4", "research_performance_4" );
+                YCSBWorkloadFile workloadHandcrafted4 = new YCSBWorkloadFile( "get_product_from_category_with_user_project_handcrafted_4", "research_performance_4" );
                 workloadHandcrafted4.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted4.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted4 );
-                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_product_from_category_with_user_handcrafted_5", "research_performance_5" );
+                YCSBWorkloadFile workloadHandcrafted5 = new YCSBWorkloadFile( "get_product_from_category_with_user_project_handcrafted_5", "research_performance_5" );
                 workloadHandcrafted5.SetProperty( "recordcount", CollectionDocumentCount[ "Category" ] );
                 workloadHandcrafted5.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted5 );
@@ -1657,6 +1657,11 @@ namespace QueryAnalyzer
         /// </summary>
         public void ExportCommandsToFile()
         {
+            // Add Command to compute total processing time
+            TerminalCommands.Add( "$EndDate=(GET-DATE);" );
+            TerminalCommands.Add( "Write-OutPut \"Processing ended at $EndDate;\"" );
+            TerminalCommands.Add( "NEW-TIMESPAN -Start $StartDate -End $EndDate;" );
+
             using ( StreamWriter sw = new StreamWriter( @"D:\Projects\mestrado\YCSB\benchmark-commands.ps1", false ) )
             {
                 foreach ( string command in TerminalCommands )
@@ -1672,6 +1677,10 @@ namespace QueryAnalyzer
         {
             CollectionDocumentCount = new Dictionary<string, long>();
             TerminalCommands = new List<string>();
+
+            // Add Command to compute total processing time
+            TerminalCommands.Add( "$StartDate=(GET-DATE);" );
+            TerminalCommands.Add( "Write-OutPut \"Processing started at $StartDate;\"" );
 
             // Add Command to rebuild mongodb-binding
             TerminalCommands.Add( @"Write-OutPut ""Deleting MongoDB binding [YCSB will rebuild this]."";del .\mongodb\target\mongodb-binding-0.18.0-SNAPSHOT.jar;" );
