@@ -1,8 +1,6 @@
 db.Category.aggregate([
     {"$match": {
-        $expr: {
-            $eq: ["$_id", "%DB_KEY%"]
-        }
+        _id: "%DB_KEY%"
     }},
     {$lookup: {
         from: 'Product',

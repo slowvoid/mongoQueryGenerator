@@ -209,8 +209,9 @@ namespace QueryAnalyzer
             SortArgument SortArg = new SortArgument( Product, Product.GetAttribute( "ProductID" ), MongoDBSort.Ascending );
             SortStage SortOp = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
 
-            SelectArgument SelectArg = new SelectArgument( new LogicalExpression( "$_id", LogicalOperator.EQUAL, "%DB_KEY%" ) );
-            SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
+            Dictionary<string, object> benchmarkMatch = new Dictionary<string, object>();
+            benchmarkMatch.Add( "_id", "%DB_KEY%" );
+            SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
             List<AlgebraOperator> Operators = new List<AlgebraOperator>() { SelectOp, RJoinProductUser, RJoinProductStore, RJoinProductCategory };
 
@@ -245,8 +246,9 @@ namespace QueryAnalyzer
             FromArgument StartArgMap3 = new FromArgument( Store, DataMap3.ERMongoMapping );
             FromArgument StartArgMap5 = new FromArgument( Store, DataMap5.ERMongoMapping );
 
-            SelectArgument SelectArg = new SelectArgument( new LogicalExpression( "$_id", LogicalOperator.EQUAL, "%DB_KEY%" ) );
-            SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
+            Dictionary<string, object> benchmarkMatch = new Dictionary<string, object>();
+            benchmarkMatch.Add( "_id", "%DB_KEY%" );
+            SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
             List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SelectOp };
             List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SelectOp };
@@ -340,8 +342,9 @@ namespace QueryAnalyzer
             FromArgument StartArgMap3 = new FromArgument( User, DataMapCategoryDuplicated.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( User, DataMapStoreDuplicated.ERMongoMapping );
 
-            SelectArgument SelectArg = new SelectArgument( new LogicalExpression( "$_id", LogicalOperator.EQUAL, "%DB_KEY%" ) );
-            SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
+            Dictionary<string, object> benchmarkMatch = new Dictionary<string, object>();
+            benchmarkMatch.Add( "_id", "%DB_KEY%" );
+            SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
             List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SelectOp };
             List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SelectOp };
@@ -436,8 +439,9 @@ namespace QueryAnalyzer
             FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
             FromArgument StartArgMap5 = new FromArgument( Category, DataMapUserDuplicated.ERMongoMapping );
 
-            SelectArgument SelectArg = new SelectArgument( new LogicalExpression( "$_id", LogicalOperator.EQUAL, "%DB_KEY%" ) );
-            SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
+            Dictionary<string, object> benchmarkMatch = new Dictionary<string, object>();
+            benchmarkMatch.Add( "_id", "%DB_KEY%" );
+            SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
             List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SelectOp };
             List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { SelectOp };
@@ -541,8 +545,9 @@ namespace QueryAnalyzer
             RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Store, (Relationship)DataMap.EntityRelationshipModel.FindByName( "StoreProducts" ),
                 new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
 
-            SelectArgument SelectArg = new SelectArgument( new LogicalExpression( "$_id", LogicalOperator.EQUAL, "%DB_KEY%" ) );
-            SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
+            Dictionary<string, object> benchmarkMatch = new Dictionary<string, object>();
+            benchmarkMatch.Add( "_id", "%DB_KEY%" );
+            SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
             List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { SelectOp, RJoinOp1 };
             List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { SelectOp, RJoinOp3 };
@@ -647,8 +652,9 @@ namespace QueryAnalyzer
             RelationshipJoinOperator RJoinOp5 = new RelationshipJoinOperator( Category, (Relationship)DataMap.EntityRelationshipModel.FindByName( "CategoryProducts" ),
                 new List<QueryableEntity>() { Product }, DataMapUserDuplicated.ERMongoMapping );
 
-            SelectArgument SelectArg = new SelectArgument( new LogicalExpression( "$_id", LogicalOperator.EQUAL, "%DB_KEY%" ) );
-            SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
+            Dictionary<string, object> benchmarkMatch = new Dictionary<string, object>();
+            benchmarkMatch.Add( "_id", "%DB_KEY%" );
+            SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
             List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { SelectOp, RJoinOp1 };
             List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { SelectOp, RJoinOp4 };
@@ -863,8 +869,9 @@ namespace QueryAnalyzer
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithStore ) },
                 DataMapUserDuplicated.ERMongoMapping );
 
-            SelectArgument SelectArg = new SelectArgument( new LogicalExpression( "$_id", LogicalOperator.EQUAL, "%DB_KEY%" ) );
-            SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
+            Dictionary<string, object> benchmarkMatch = new Dictionary<string, object>();
+            benchmarkMatch.Add( "_id", "%DB_KEY%" );
+            SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
             List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { SelectOp, RJoinOp1 };
             List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { SelectOp, RJoinOp4 };
@@ -978,8 +985,9 @@ namespace QueryAnalyzer
                 new List<QueryableEntity>() { new QueryableEntity( ProductWithUser ) },
                 DataMapUserDuplicated.ERMongoMapping );
 
-            SelectArgument SelectArg = new SelectArgument( new LogicalExpression( "$_id", LogicalOperator.EQUAL, "%DB_KEY%" ) );
-            SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
+            Dictionary<string, object> benchmarkMatch = new Dictionary<string, object>();
+            benchmarkMatch.Add( "_id", "%DB_KEY%" );
+            SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
             List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { SelectOp, RJoinOp1 };
             List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { SelectOp, RJoinOp4 };
@@ -1108,8 +1116,9 @@ namespace QueryAnalyzer
 
             ProjectStage ProjectOp5 = new ProjectStage( ProjectArgs, RJoinOp5.ComputeVirtualMap() );
 
-            SelectArgument SelectArg = new SelectArgument( new LogicalExpression( "$_id", LogicalOperator.EQUAL, "%DB_KEY%" ) );
-            SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
+            Dictionary<string, object> benchmarkMatch = new Dictionary<string, object>();
+            benchmarkMatch.Add( "_id", "%DB_KEY%" );
+            SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
             List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { SelectOp, RJoinOp1, ProjectOp1 };
             List<AlgebraOperator> OperatorsToExecuteMap2 = new List<AlgebraOperator>() { SelectOp, RJoinOp2, ProjectOp2 };
@@ -1271,8 +1280,9 @@ namespace QueryAnalyzer
 
             ProjectStage ProjectOp5 = new ProjectStage( ProjectArgs, RJoinOp5.ComputeVirtualMap() );
 
-            SelectArgument SelectArg = new SelectArgument( new LogicalExpression( "$_id", LogicalOperator.EQUAL, "%DB_KEY%" ) );
-            SelectStage SelectOp = new SelectStage( SelectArg, DataMap.ERMongoMapping );
+            Dictionary<string, object> benchmarkMatch = new Dictionary<string, object>();
+            benchmarkMatch.Add( "_id", "%DB_KEY%" );
+            SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
             List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { SelectOp, RJoinOp1, ProjectOp1 };
             List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { SelectOp, RJoinOp4, ProjectOp4 };

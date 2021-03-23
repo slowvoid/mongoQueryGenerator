@@ -25,6 +25,14 @@ namespace QueryBuilder.Operation
         /// Mapping between ER model and Mongo schema
         /// </summary>
         public IModelMap Map { get; set; }
+        /// <summary>
+        /// Matching key pairs
+        /// </summary>
+        public Dictionary<string, object> KeyPairs { get; set; }
+        /// <summary>
+        /// Get/Sets whether to use simpler match stage
+        /// </summary>
+        public bool UseSimplerMatch { get; set; }
         #endregion
 
         #region Methods
@@ -34,7 +42,16 @@ namespace QueryBuilder.Operation
         /// <returns></returns>
         public override AlgebraOperatorResult Run()
         {
-            MatchOperator MatchOp = new MatchOperator( new Expr( Argument.Expression ) );
+            MatchOperator MatchOp;
+
+            if ( UseSimplerMatch )
+            {
+                MatchOp = new MatchOperator( KeyPairs );
+            }
+            else
+            {
+                MatchOp = new MatchOperator( new Expr( Argument.Expression ) );
+            }
 
             return new AlgebraOperatorResult( new List<MongoDBOperator>() { MatchOp } );
         }
@@ -50,6 +67,20 @@ namespace QueryBuilder.Operation
         {
             this.Argument = Argument;
             this.Map = Map;
+
+            KeyPairs = new Dictionary<string, object>();
+            UseSimplerMatch = false;
+        }
+        /// <summary>
+        /// Initialize a new instance of SelectStage class
+        /// This resuls in a simpler $match stage using direct attribute matching $match: { key: value }
+        /// </summary>
+        /// <param name="inKeyPairs"></param>
+        public SelectStage( Dictionary<string, object> inKeyPairs )
+        {
+            KeyPairs = inKeyPairs;
+
+            UseSimplerMatch = true;
         }
         #endregion
     }

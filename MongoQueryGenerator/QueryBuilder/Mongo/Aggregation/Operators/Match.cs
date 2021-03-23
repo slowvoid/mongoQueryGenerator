@@ -47,7 +47,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
             }
             else
             {
-                MatchAttrs.Add( "$match", new JSObject( FieldsToMatch ).ToString() );
+                MatchAttrs.Add( "$match", new JSObject( FieldsToMatch ) );
             }
 
             return new JSObject( MatchAttrs );

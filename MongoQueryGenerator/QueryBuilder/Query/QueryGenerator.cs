@@ -27,14 +27,26 @@ namespace QueryBuilder.Query
         /// Data acting as start point
         /// </summary>
         public FromArgument StartArgument { get; set; }
+        /// <summary>
+        /// Whether final query should append pretty()
+        /// </summary>
+        public bool PrettyPrint { get; set; }
         #endregion
 
         #region Methods
         /// <summary>
+        /// Sets pretty print prop
+        /// </summary>
+        /// <param name="inValue"></param>
+        public void SetPrettyPrint(bool inValue)
+        {
+            PrettyPrint = inValue;
+        }
+        /// <summary>
         /// Run the query generator
         /// </summary>
         /// <returns></returns>
-        public string Run(bool inPrettyPrint = false)
+        public string Run()
         {
             string CollectionName = StartArgument.GetCollectionName();
             // Check if collection name is set
@@ -70,7 +82,7 @@ namespace QueryBuilder.Query
                 AggregatePipeline.Add( Command.ToJavaScript() );
             }
 
-            if ( inPrettyPrint )
+            if ( PrettyPrint )
             {
                 return string.Format( "db.{0}.aggregate([{1}], {{allowDiskUse: true}}).pretty();", CollectionName, string.Join( ",", AggregatePipeline ) );
             }
@@ -134,6 +146,8 @@ namespace QueryBuilder.Query
         {
             this.StartArgument = StartArgument;
             this.PipelineOperators = PipelineOperators;
+
+            PrettyPrint = false;
         }
         #endregion
     }
