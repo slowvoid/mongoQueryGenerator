@@ -11,10 +11,11 @@ namespace QueryAnalyzer
             Console.WriteLine( "Starting Time: {0}", StartTime.ToString() );
 
             MarketingCMS cms = new MarketingCMS();
-            cms.Iterations = 100;
+            cms.Iterations = 1000;
             cms.TargetDatabase = "research_performance_stats_nosort";
             cms.ExportQueries = true;
             cms.UseDefaultQueryInsteadOfExplain = true;
+            cms.GenerateKeys();
 
             Console.WriteLine( "Iterations to run: {0} | Target database: {1}", cms.Iterations, cms.TargetDatabase );
 

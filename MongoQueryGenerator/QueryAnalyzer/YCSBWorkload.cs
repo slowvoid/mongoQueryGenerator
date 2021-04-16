@@ -79,6 +79,7 @@ namespace QueryAnalyzer
             Props.Add( "mongodb.url", $"mongodb://localhost:27017/{inDatabaseName}" );
             Props.Add( "operationcount", 1000 );
             Props.Add( "queryfile", $"{FileName.Replace("_workload", "")}.mongo" );
+            Props.Add( "queryname", inName );
         }
         #endregion
     }
