@@ -34,6 +34,7 @@ namespace QueryAnalyzer
             using ( StreamWriter sw = new StreamWriter( File ) )
             {
                 sw.Write( Query );
+                sw.Close();
             }
         }
         /// <summary>
