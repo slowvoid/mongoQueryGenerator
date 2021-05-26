@@ -28,6 +28,11 @@ namespace QueryBuilder.Operation.Arguments
         #endregion
 
         #region Methods
+
+        public string SummarizeToString()
+        {
+            return "From "+Entity.GetName()+"\n";
+        }
         /// <summary>
         /// Retrieve the collection based on the map rules
         /// </summary>

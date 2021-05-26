@@ -30,6 +30,22 @@ namespace QueryBuilder.Query
         #endregion
 
         #region Methods
+        public string SummarizeToString()
+        {
+            string Ret = "";
+
+            Ret += StartArgument.SummarizeToString();
+
+            int i = 1;
+
+            foreach ( AlgebraOperator Op in PipelineOperators )
+            {
+                Ret += (i++)+":"+Op.SummarizeToString();
+            }
+
+            return Ret;
+        }
+
         /// <summary>
         /// Run the query generator
         /// </summary>

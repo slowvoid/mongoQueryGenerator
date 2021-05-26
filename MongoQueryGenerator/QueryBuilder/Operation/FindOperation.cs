@@ -28,6 +28,15 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
+
+
+
+        override public string SummarizeToString()
+        {
+            string Ret = "FindOperation";
+
+            return Ret;
+        }
         public override AlgebraOperatorResult Run()
         {
             return new AlgebraOperatorResult( new List<MongoDBOperator>() );

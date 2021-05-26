@@ -20,6 +20,15 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
+
+
+        override public string SummarizeToString()
+        {
+            string Ret = "LimitStage";
+
+            return Ret;
+        }
+
         /// <summary>
         /// Generate the stage query
         /// </summary>

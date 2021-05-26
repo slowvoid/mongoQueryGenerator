@@ -3,6 +3,7 @@ using System.IO;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using QueryBuilder.Query;
+using QueryBuilder.ER;
 
 namespace QueryBuilder.Parser
 {

@@ -12,9 +12,9 @@ query: 'from' entity;
 
 entity
 	returns[ QueryBuilder.Operation.Arguments.QueryableEntity qEntity ]:
-	simpleEntityName = NAME simpleEntityAlias = NAME # simpleEntity
+	simpleEntityName = NAME (simpleEntityAlias = NAME)? # simpleEntity
 	| computedEntityLeft = entity 'rjoin' '<' computedEntityRelationshipName = NAME
-		computedEntityRelationshipAlias = NAME '>' '(' computedEntityRight += entity
+		(computedEntityRelationshipAlias = NAME)? '>' '(' computedEntityRight += entity
 		(',' computedEntityRight += entity)* ')' # computedEntity
 	| '(' entity ')' # parenthesisEntity;
 

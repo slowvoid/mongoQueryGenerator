@@ -31,6 +31,15 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
+
+        override public string SummarizeToString()
+        {
+            string Ret = "ProjectStage";
+
+            return Ret;
+        }
+
+
         /// <summary>
         /// Run the operation adding MongoDB operators to the pipeline
         /// </summary>

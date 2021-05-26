@@ -29,7 +29,7 @@ Person < Person*, Car, Insurance, HasInsurance >
 {
 	_id: int < Person.personId >
 	name: string < Person.name >
-	car {
+	car: {
 		name: string < Car.name >
 		year: int < Car.year >
 	}

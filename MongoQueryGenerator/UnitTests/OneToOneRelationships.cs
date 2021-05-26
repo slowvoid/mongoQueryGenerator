@@ -184,6 +184,10 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             string QueryString = "from Person rjoin <HasInsurance> (Car, Insurance) select *";
+            // FIXED?
+            // Consulta: from Person rjoin <HasInsurance> (Car, Insurance) select *
+            // Problema: Parser considera que Insurance é um alias de Car e não a inclui como parte da junção.
+            // Solução: Incluir Insurance na lista de entidades 'alvo' do rjoin.
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
@@ -219,6 +223,10 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             string QueryString = "from Person rjoin <HasInsurance> (Car, Insurance) select *";
+            // FIXED?
+            // Consulta: from Person rjoin <HasInsurance> (Car, Insurance) select *
+            // Problema: Parser considera que Insurance é um alias de Car e não a inclui como parte da junção.
+            // Solução: Incluir Insurance na lista de entidades 'alvo' do rjoin.
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();
@@ -254,6 +262,10 @@ namespace QueryBuilder.Tests
 
             // Prepare query generator
             string QueryString = "from Person rjoin <HasInsurance> (Car, Insurance) select *";
+            // FIXED?
+            // Consulta: from Person rjoin <HasInsurance> (Car, Insurance) select *
+            // Problema: Parser considera que Insurance é um alias de Car e não a inclui como parte da junção.
+            // Solução: Incluir Insurance na lista de entidades 'alvo' do rjoin.
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();

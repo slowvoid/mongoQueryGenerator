@@ -35,6 +35,21 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
+
+
+        override public string SummarizeToString()
+        {
+            string Ret = "RelationshipJoinOperator ";
+
+            Ret += "<"+Relationship.Name+"> ";
+            Ret += "Source="+SourceEntity.SummarizeToString()+" ";
+            Ret += "Target={ ";
+            TargetEntities.ForEach(te => Ret += te.SummarizeToString()+" ");
+            Ret += "}\n";
+
+            return Ret;
+        }
+
         /// <summary>
         /// Run the algorithm
         /// </summary>

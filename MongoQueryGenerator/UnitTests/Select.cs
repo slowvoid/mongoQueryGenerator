@@ -39,6 +39,10 @@ namespace QueryBuilder.Tests
             //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
             string QueryString = "from Person where Person.age = 27 select *";
+            // FIXME
+            // Consulta: from Person where Person.age = 27 select *
+            // Problema: Parser não gerou operação de seleção.
+
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();

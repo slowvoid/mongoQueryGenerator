@@ -23,6 +23,12 @@ namespace QueryBuilder.ER
         public RelationshipCardinality Cardinality { get; set; }
         #endregion
 
+        public string SummarizeToString()
+        {
+            return "RelationshipEnd[ "+TargetEntity.SummarizeToString()+" ]";
+        }
+
+
         #region Constructor
         /// <summary>
         /// Initialize a new instance of RelationshipEnd
