@@ -5,7 +5,7 @@ using Antlr4.Runtime.Misc;
 using QueryBuilder.ER;
 using QueryBuilder.Operation;
 using QueryBuilder.Operation.Arguments;
-using QueryBuilder.Mongo.Expressions;
+using QueryBuilder.Mongo.Expressions2;
 
 namespace QueryBuilder.Parser
 {
@@ -38,10 +38,14 @@ namespace QueryBuilder.Parser
             List<RelationshipJoinOperator> rjoinOps = getRelationshipJoinOperators(qEntity);
             rjoinOps.ForEach(rjo => PipelineOperators.Add(rjo));
 
-            if(ProjectOp != null)
+            if (ProjectOp != null)
             {
                 PipelineOperators.Add(ProjectOp);
             }
+
+            SelectStage2 SelectOp = new SelectStage2();
+            SelectOp.LogicalExpression = getLogicalExpression(context.where().logicalExpression());
+            PipelineOperators.Add(SelectOp);
         }
 
         private FromArgument getStartArg(QueryableEntity qEntity)
@@ -90,8 +94,116 @@ namespace QueryBuilder.Parser
                 ComputedEntity ce = qEntity.Element as ComputedEntity;
                 return getFirstEntityOnly(ce.SourceEntity);
             }
-            else {
+            else
+            {
                 throw new InvalidOperationException("There should not be another element type here!");
+            }
+        }
+
+        private LogicalExpression getLogicalExpression(QueryBuilderQueriesParser.LogicalExpressionContext context)
+        {
+            var ret = new LogicalExpression();
+
+            context.logicalTerm().ToList().ForEach(lt => ret.LogicalTerms.Add(getLogicalTerm(lt)));
+            context.logicalOperator().ToList().ForEach(lo =>
+            {
+                switch (lo.GetText())
+                {
+                    case "and":
+                        ret.LogicalOperators.Add(LogicalOperator.AND);
+                        break;
+                    case "or":
+                        ret.LogicalOperators.Add(LogicalOperator.OR);
+                        break;
+                }
+            });
+
+            return ret;
+        }
+
+        private LogicalTerm getLogicalTerm(QueryBuilderQueriesParser.LogicalTermContext context)
+        {
+            if (context.relationalOperator() != null)
+            {
+                var ret = new RelationalLogicalTerm();
+                SimpleAttribute sa = new SimpleAttribute();
+                sa.Element = metadata.EntityRelationshipModel.FindByName(context.simpleAttribute().elementName.Text);
+                sa.Attribute = sa.Element.GetAttribute(context.simpleAttribute().attribute.Text);
+                ret.SimpleAttribute = sa;
+                ret.Value = context.value().GetText();
+
+                switch (context.relationalOperator().GetText())
+                {
+                    case "=":
+                        ret.RelationalOperator = RelationalOperator.EQUAL;
+                        break;
+                    case "<>":
+                        ret.RelationalOperator = RelationalOperator.NOT_EQUAL;
+                        break;
+                    case ">=":
+                        ret.RelationalOperator = RelationalOperator.GREATER_EQUAL;
+                        break;
+                    case "<=":
+                        ret.RelationalOperator = RelationalOperator.LESS_EQUAL;
+                        break;
+                    case ">":
+                        ret.RelationalOperator = RelationalOperator.GREATER;
+                        break;
+                    case "<":
+                        ret.RelationalOperator = RelationalOperator.LESS;
+                        break;
+                    case "like":
+                        ret.RelationalOperator = RelationalOperator.LIKE;
+                        break;
+                    case "is":
+                        ret.RelationalOperator = RelationalOperator.IS;
+                        break;
+                }
+
+                return ret;
+            }
+            else if (context.rangeOperator() != null)
+            {
+                var ret = new RangeLogicalTerm();
+                SimpleAttribute sa = new SimpleAttribute();
+                sa.Element = metadata.EntityRelationshipModel.FindByName(context.simpleAttribute().elementName.Text);
+                sa.Attribute = sa.Element.GetAttribute(context.simpleAttribute().attribute.Text);
+                ret.SimpleAttribute = sa;
+
+                switch (context.rangeOperator().type)
+                {
+                    case "BETWEEN":
+                        ret.RangeOperator = RangeOperator.BETWEEN;
+                        context.rangeOperator().value().ToList().ForEach(v => ret.Values.Add(v.GetText()));
+                        break;
+                    case "NOT_IN_QUERY":
+                        ret.RangeOperator = RangeOperator.NOT_IN_QUERY;
+                        break;
+                    case "NOT_IN_VALUES":
+                        ret.RangeOperator = RangeOperator.NOT_IN_VALUES;
+                        context.rangeOperator().value().ToList().ForEach(v => ret.Values.Add(v.GetText()));
+                        break;
+                    case "IN_QUERY":
+                        ret.RangeOperator = RangeOperator.IN_QUERY;
+                        break;
+                    case "IN_VALUES":
+                        ret.RangeOperator = RangeOperator.IN_VALUES;
+                        context.rangeOperator().value().ToList().ForEach(v => ret.Values.Add(v.GetText()));
+                        break;
+                    case "NOT_EXISTS_QUERY":
+                        ret.RangeOperator = RangeOperator.NOT_EXISTS_QUERY;
+                        break;
+                    case "EXISTS_QUERY":
+                        ret.RangeOperator = RangeOperator.EXISTS_QUERY;
+                        break;
+                }
+                return ret;
+            }
+            else
+            {
+                var ret = new ParenthesisLogicalTerm();
+                ret.LogicalExpression = getLogicalExpression(context.logicalExpression());
+                return ret;
             }
         }
 
@@ -148,10 +260,10 @@ namespace QueryBuilder.Parser
             foreach (var selectAttribute in context.attributeOrFunction().Where(af => af.simpleAttribute() != null))
             {
                 var sa = selectAttribute.simpleAttribute();
-                QueryableEntity qElement = new QueryableEntity(metadata.EntityRelationshipModel.FindByName(sa.entityName.Text));
-                Arguments.Add(new ProjectArgument(qElement.GetAttribute(sa.attribute.Text), qElement, new BooleanExpr(true)));
+                QueryableEntity qElement = new QueryableEntity(metadata.EntityRelationshipModel.FindByName(sa.elementName.Text));
+                Arguments.Add(new ProjectArgument(qElement.GetAttribute(sa.attribute.Text), qElement, new QueryBuilder.Mongo.Expressions.BooleanExpr(true)));
             }
-            ProjectOp = new ProjectStage( Arguments, metadata.ERMongoMapping );
+            ProjectOp = new ProjectStage(Arguments, metadata.ERMongoMapping);
         }
     }
 }

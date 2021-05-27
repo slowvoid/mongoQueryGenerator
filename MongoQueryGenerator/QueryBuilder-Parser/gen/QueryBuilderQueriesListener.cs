@@ -224,36 +224,6 @@ public interface IQueryBuilderQueriesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitWhere([NotNull] QueryBuilderQueriesParser.WhereContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.expressionList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterExpressionList([NotNull] QueryBuilderQueriesParser.ExpressionListContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.expressionList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitExpressionList([NotNull] QueryBuilderQueriesParser.ExpressionListContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.arithmeticExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterArithmeticExpression([NotNull] QueryBuilderQueriesParser.ArithmeticExpressionContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.arithmeticExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitArithmeticExpression([NotNull] QueryBuilderQueriesParser.ArithmeticExpressionContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.otherExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOtherExpression([NotNull] QueryBuilderQueriesParser.OtherExpressionContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.otherExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOtherExpression([NotNull] QueryBuilderQueriesParser.OtherExpressionContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -263,6 +233,56 @@ public interface IQueryBuilderQueriesListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitLogicalExpression([NotNull] QueryBuilderQueriesParser.LogicalExpressionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalTerm"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLogicalTerm([NotNull] QueryBuilderQueriesParser.LogicalTermContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalTerm"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLogicalTerm([NotNull] QueryBuilderQueriesParser.LogicalTermContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.value"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterValue([NotNull] QueryBuilderQueriesParser.ValueContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.value"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitValue([NotNull] QueryBuilderQueriesParser.ValueContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.relationalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterRelationalOperator([NotNull] QueryBuilderQueriesParser.RelationalOperatorContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.relationalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitRelationalOperator([NotNull] QueryBuilderQueriesParser.RelationalOperatorContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.rangeOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterRangeOperator([NotNull] QueryBuilderQueriesParser.RangeOperatorContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.rangeOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitRangeOperator([NotNull] QueryBuilderQueriesParser.RangeOperatorContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLogicalOperator([NotNull] QueryBuilderQueriesParser.LogicalOperatorContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLogicalOperator([NotNull] QueryBuilderQueriesParser.LogicalOperatorContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.groupby"/>.
 	/// </summary>

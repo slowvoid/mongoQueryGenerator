@@ -77,6 +77,47 @@ namespace QueryBuilder.Tests
                 Console.WriteLine(q.query);
                 Console.WriteLine(QueryGen.SummarizeToString());
             }
-        }        
+        }
+
+        [TestMethod]
+        public void TestSelect()
+        {
+
+            (string query, string mapping)[] queries = {
+                 ( "from Person select * where Person.age = 27",
+                   "Mappings/select.mapping" ),
+                 ( "from Person select * where Person.age between 10 and 20",
+                   "Mappings/select.mapping" ),
+                 ( "from Person select * where Person.age = 27 and Person.name = 'Summer'",
+                   "Mappings/select.mapping" ),
+                 ( "from Person select * where Person.age >= 27",
+                   "Mappings/select.mapping" ),
+                 ( "from Person select * where Person.age > 27",
+                   "Mappings/select.mapping" ),
+                 ( "from Person select * where Person.age in (26,27,28,29)",
+                   "Mappings/select.mapping" ),
+                 ( "from Person select * where Person.age <= 27",
+                   "Mappings/select.mapping" ),
+                 ( "from Person select * where Person.age < 27",
+                   "Mappings/select.mapping" ),
+                 ( "from Person select * where Person.age <> 27",
+                   "Mappings/select.mapping" ),
+                 ( "from Person select * where Person.age not in (26,27,28,29)",
+                   "Mappings/select.mapping" ),
+                 ( "from Person select * where Person.age = 26 or Person.age = 27",
+                   "Mappings/select.mapping" ),
+                 ( "from Person select * where Person.age = 18 or Person.age = 21 or Person.age = 36",
+                   "Mappings/select.mapping" )
+            };
+
+            foreach ((string query, string mapping) q in queries)
+            {
+                Console.Error.WriteLine("");
+                Console.Error.WriteLine(q.query);
+                var ModelData = QueryBuilderParser.ParseMapping(Utils.ReadMappingFile(q.mapping));
+                QueryGenerator QueryGen = QueryBuilderParser.ParseQuery(q.query, ModelData);
+                Console.Error.WriteLine(QueryGen.SummarizeToString());
+            }
+        }
     }
 }

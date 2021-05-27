@@ -2,8 +2,8 @@ grammar QueryBuilderQueries;
 
 NAME: [a-zA-Z_][a-zA-Z0-9_]*;
 INTEGER: [0-9]+;
-VALUE: NAME;
-NUMERIC: INTEGER;
+REAL: INTEGER '.' INTEGER;
+STRING: '\'' (~["\\\r\n])* '\'';
 WS: (' ' | '\t' | '\n' | '\r') -> skip;
 
 query: 'from' entity 
@@ -33,8 +33,7 @@ listOfAttributes:
 	simpleAttribute (',' simpleAttribute)*;
 
 simpleAttribute:
-	entityName = NAME '.' attribute = NAME
-	| relationshipName = NAME '.' attribute = NAME;
+	elementName = NAME '.' attribute = NAME;
 
 alias: description = NAME;
 
@@ -47,18 +46,30 @@ aggregationFunction:
 	| 'count' '(*)' alias? # countAllFunction
     ;
 
-where: expressionList;
+where: logicalExpression;
 
-expressionList:
-	simpleAttribute arithmeticExpression VALUE? NUMERIC? (
-		logicalExpression expressionList
-	)*
-	| '(' simpleAttribute otherExpression ')' (
-		logicalExpression expressionList
-	)*
-	| otherExpression (logicalExpression expressionList)*;
+logicalExpression:
+    logicalTerm (logicalOperator logicalTerm)*;
 
-arithmeticExpression:
+logicalTerm:
+    simpleAttribute relationalOperator value
+    |  simpleAttribute rangeOperator
+    | '(' logicalExpression ')'
+    ;
+
+value:
+    STRING | INTEGER | REAL | 'not' 'null' | 'null';
+
+// expressionList:
+// 	simpleAttribute arithmeticExpression VALUE? NUMERIC? (
+// 		logicalExpression expressionList
+// 	)*
+// 	| '(' simpleAttribute otherExpression ')' (
+// 		logicalExpression expressionList
+// 	)*
+// 	| otherExpression (logicalExpression expressionList)*;
+
+relationalOperator:
 	'='
 	| '<>'
 	| '>='
@@ -66,23 +77,24 @@ arithmeticExpression:
 	| '>'
 	| '<'
 	| 'like'
-	| 'is not null'
-	| 'is null';
-otherExpression:
-	'between' NUMERIC 'and' NUMERIC
-	| 'not in' '(' query ')'
-	| 'not in' '(' NUMERIC (',' NUMERIC)* ')'
-	| 'not in' '(' VALUE (',' VALUE)* ')'
-	| 'in' '(' query ')'
-	| 'in' '(' NUMERIC (',' NUMERIC)* ')'
-	| 'in' '(' VALUE (',' VALUE)* ')'
-	| 'not exists' '(' query ')'
-	| 'exists' '(' query ')';
-logicalExpression: 'and' | 'or';
+	| 'is'
+    ;
+rangeOperator returns [ string type ]:
+	'between' value 'and' value { $type = "BETWEEN"; }
+	| 'not' 'in' '(' query ')' { $type = "NOT_IN_QUERY"; }
+	| 'not' 'in' '(' value (',' value)* ')' { $type = "NOT_IN_VALUES"; }
+	| 'in' '(' query ')' { $type = "IN_QUERY"; }
+	| 'in' '(' value (',' value)* ')' { $type = "IN_VALUES"; }
+	| 'not' 'exists' '(' query ')' { $type = "NOT_EXISTS_QUERY"; }
+	| 'exists' '(' query ')' { $type = "EXISTS_QUERY"; }
+    ;
+
+logicalOperator: 'and' | 'or';
+
 groupby: listOfAttributes;
 having:
-	aggregationFunction arithmeticExpression NUMERIC
-	| expressionList;
+	aggregationFunction relationalOperator value
+	| logicalExpression;
 orderby:
 	listOfAttributes 'asc' (',' orderby)*
 	| listOfAttributes 'desc' (',' orderby)*;

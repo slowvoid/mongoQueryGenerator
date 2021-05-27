@@ -33,12 +33,11 @@ T__31=32
 T__32=33
 T__33=34
 T__34=35
-T__35=36
-NAME=37
-INTEGER=38
-VALUE=39
-NUMERIC=40
-WS=41
+NAME=36
+INTEGER=37
+REAL=38
+STRING=39
+WS=40
 'from'=1
 'select'=2
 'where'=3
@@ -59,19 +58,18 @@ WS=41
 'sum'=18
 'count'=19
 '(*)'=20
-'='=21
-'<>'=22
-'>='=23
-'<='=24
-'like'=25
-'is not null'=26
-'is null'=27
-'between'=28
-'and'=29
-'not in'=30
+'not'=21
+'null'=22
+'='=23
+'<>'=24
+'>='=25
+'<='=26
+'like'=27
+'is'=28
+'between'=29
+'and'=30
 'in'=31
-'not exists'=32
-'exists'=33
-'or'=34
-'asc'=35
-'desc'=36
+'exists'=32
+'or'=33
+'asc'=34
+'desc'=35

@@ -146,29 +146,41 @@ public interface IQueryBuilderQueriesVisitor<Result> : IParseTreeVisitor<Result>
 	/// <return>The visitor result.</return>
 	Result VisitWhere([NotNull] QueryBuilderQueriesParser.WhereContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.expressionList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitExpressionList([NotNull] QueryBuilderQueriesParser.ExpressionListContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.arithmeticExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitArithmeticExpression([NotNull] QueryBuilderQueriesParser.ArithmeticExpressionContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.otherExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitOtherExpression([NotNull] QueryBuilderQueriesParser.OtherExpressionContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitLogicalExpression([NotNull] QueryBuilderQueriesParser.LogicalExpressionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalTerm"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLogicalTerm([NotNull] QueryBuilderQueriesParser.LogicalTermContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.value"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitValue([NotNull] QueryBuilderQueriesParser.ValueContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.relationalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRelationalOperator([NotNull] QueryBuilderQueriesParser.RelationalOperatorContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.rangeOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRangeOperator([NotNull] QueryBuilderQueriesParser.RangeOperatorContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLogicalOperator([NotNull] QueryBuilderQueriesParser.LogicalOperatorContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.groupby"/>.
 	/// </summary>
