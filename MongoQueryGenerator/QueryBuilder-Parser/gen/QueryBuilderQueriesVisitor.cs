@@ -60,17 +60,25 @@ public interface IQueryBuilderQueriesVisitor<Result> : IParseTreeVisitor<Result>
 	/// <return>The visitor result.</return>
 	Result VisitParenthesisEntity([NotNull] QueryBuilderQueriesParser.ParenthesisEntityContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.select"/>.
+	/// Visit a parse tree produced by the <c>selectAll</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.select"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSelect([NotNull] QueryBuilderQueriesParser.SelectContext context);
+	Result VisitSelectAll([NotNull] QueryBuilderQueriesParser.SelectAllContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.simpleAttribute"/>.
+	/// Visit a parse tree produced by the <c>selectAttributeOrFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.select"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSimpleAttribute([NotNull] QueryBuilderQueriesParser.SimpleAttributeContext context);
+	Result VisitSelectAttributeOrFunction([NotNull] QueryBuilderQueriesParser.SelectAttributeOrFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.attributeOrFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAttributeOrFunction([NotNull] QueryBuilderQueriesParser.AttributeOrFunctionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.listOfAttributes"/>.
 	/// </summary>
@@ -78,17 +86,59 @@ public interface IQueryBuilderQueriesVisitor<Result> : IParseTreeVisitor<Result>
 	/// <return>The visitor result.</return>
 	Result VisitListOfAttributes([NotNull] QueryBuilderQueriesParser.ListOfAttributesContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.simpleAttribute"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSimpleAttribute([NotNull] QueryBuilderQueriesParser.SimpleAttributeContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.alias"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitAlias([NotNull] QueryBuilderQueriesParser.AliasContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// Visit a parse tree produced by the <c>averageFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitAggregationFunction([NotNull] QueryBuilderQueriesParser.AggregationFunctionContext context);
+	Result VisitAverageFunction([NotNull] QueryBuilderQueriesParser.AverageFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>maxFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitMaxFunction([NotNull] QueryBuilderQueriesParser.MaxFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>minFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitMinFunction([NotNull] QueryBuilderQueriesParser.MinFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>sumFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSumFunction([NotNull] QueryBuilderQueriesParser.SumFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>countFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCountFunction([NotNull] QueryBuilderQueriesParser.CountFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>countAllFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCountAllFunction([NotNull] QueryBuilderQueriesParser.CountAllFunctionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.where"/>.
 	/// </summary>

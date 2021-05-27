@@ -31,7 +31,7 @@ namespace QueryBuilder.Operation.Arguments
 
         public string SummarizeToString()
         {
-            return "From "+Entity.GetName()+"\n";
+            return "From "+Entity.GetName();
         }
         /// <summary>
         /// Retrieve the collection based on the map rules

@@ -49,9 +49,34 @@ namespace QueryBuilder.Tests
             {
                 var ModelData = QueryBuilderParser.ParseMapping(Utils.ReadMappingFile(q.mapping));
                 QueryGenerator QueryGen = QueryBuilderParser.ParseQuery(q.query, ModelData);
+                Console.WriteLine("");
                 Console.WriteLine(q.query);
                 Console.WriteLine(QueryGen.SummarizeToString());
             }
         }
+
+        [TestMethod]
+        public void TestProject()
+        {
+
+            (string query, string mapping)[] queries = {
+                 ( "from Person select Person.name, Person.age",
+                   "Mappings/project-simple.mapping"),
+                 ( "from Person rjoin <Drives> (Car,Garage) select Person.name, Car.model, Car.year, Garage.name",
+                   "Mappings/one-to-one-computed-entity.mapping"),
+                 ( "from Person rjoin <Drives> (Car rjoin <Repaired> (Garage, Supplier)) rjoin <HasInsurance> (Insurance) select Insurance.name, Insurance.value, Supplier.name, Person.personId",
+                   "Mappings/one-to-one-computed-entity-multiple-2.mapping"),
+                 ( "from Person rjoin <Owns> (Car rjoin <ManufacturedBy> (Manufacturer)) select Person.name, Car.model, Car.year, Manufacturer.name",
+                   "Mappings/project-computed-entity.mapping") };
+
+            foreach ((string query, string mapping) q in queries)
+            {
+                var ModelData = QueryBuilderParser.ParseMapping(Utils.ReadMappingFile(q.mapping));
+                QueryGenerator QueryGen = QueryBuilderParser.ParseQuery(q.query, ModelData);
+                Console.WriteLine("");
+                Console.WriteLine(q.query);
+                Console.WriteLine(QueryGen.SummarizeToString());
+            }
+        }        
     }
 }

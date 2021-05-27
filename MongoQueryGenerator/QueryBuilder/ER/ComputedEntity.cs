@@ -34,7 +34,7 @@ namespace QueryBuilder.ER
 
         public override string SummarizeToString()
         {
-            string Ret = "ComputedEntity[ "+SourceEntity.SummarizeToString()+" x { ";
+            string Ret = "ComputedEntity("+Name+") [ "+SourceEntity.SummarizeToString()+" x { ";
             TargetEntities.ForEach(te => Ret += te.SummarizeToString()+" ");
             Ret += "}";
             return Ret;

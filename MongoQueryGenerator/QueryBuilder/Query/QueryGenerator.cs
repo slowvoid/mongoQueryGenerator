@@ -32,15 +32,13 @@ namespace QueryBuilder.Query
         #region Methods
         public string SummarizeToString()
         {
-            string Ret = "";
-
-            Ret += StartArgument.SummarizeToString();
+            string Ret = "S: " + StartArgument.SummarizeToString()+"\n";
 
             int i = 1;
 
             foreach ( AlgebraOperator Op in PipelineOperators )
             {
-                Ret += (i++)+":"+Op.SummarizeToString();
+                Ret += (i++)+": "+Op.SummarizeToString()+"\n";
             }
 
             return Ret;

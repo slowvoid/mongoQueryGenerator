@@ -6,9 +6,12 @@ VALUE: NAME;
 NUMERIC: INTEGER;
 WS: (' ' | '\t' | '\n' | '\r') -> skip;
 
-query: 'from' entity;
-// 'select' select ('where' where)? ( 'group by' groupby )? ('having' having)? ('order by'
-// orderby)?;
+query: 'from' entity 
+        'select' select
+        ('where' where)? 
+        ('group by' groupby)? 
+        ('having' having)? 
+        ('order by' orderby)?;
 
 entity
 	returns[ QueryBuilder.Operation.Arguments.QueryableEntity qEntity ]:
@@ -19,28 +22,30 @@ entity
 	| '(' entity ')' # parenthesisEntity;
 
 select:
-	simpleAttribute
-	| listOfAttributes
-	| aggregationFunction (',' aggregationFunction)*
-	| listOfAttributes (',' aggregationFunction)*;
+    '*' # selectAll
+    | attributeOrFunction (',' attributeOrFunction)* # selectAttributeOrFunction
+    ;
+
+attributeOrFunction:
+    simpleAttribute | aggregationFunction;
+    
+listOfAttributes:
+	simpleAttribute (',' simpleAttribute)*;
 
 simpleAttribute:
 	entityName = NAME '.' attribute = NAME
 	| relationshipName = NAME '.' attribute = NAME;
 
-listOfAttributes:
-	simpleAttribute
-	| simpleAttribute ',' listOfAttributes;
-
 alias: description = NAME;
 
 aggregationFunction:
-	'avg' '(' simpleAttribute ')' alias?
-	| 'max' '(' simpleAttribute ')' alias?
-	| 'min' '(' simpleAttribute ')' alias?
-	| 'sum' '(' simpleAttribute ')' alias?
-	| 'count' '(' simpleAttribute ')' alias?
-	| 'count' '(*)' alias?;
+	'avg' '(' simpleAttribute ')' alias? # averageFunction
+	| 'max' '(' simpleAttribute ')' alias? # maxFunction
+	| 'min' '(' simpleAttribute ')' alias? # minFunction
+	| 'sum' '(' simpleAttribute ')' alias? # sumFunction
+	| 'count' '(' simpleAttribute ')' alias? # countFunction
+	| 'count' '(*)' alias? # countAllFunction
+    ;
 
 where: expressionList;
 

@@ -43,9 +43,7 @@ namespace QueryBuilder.Operation
 
             Ret += "<"+Relationship.Name+"> ";
             Ret += "Source="+SourceEntity.SummarizeToString()+" ";
-            Ret += "Target={ ";
-            TargetEntities.ForEach(te => Ret += te.SummarizeToString()+" ");
-            Ret += "}\n";
+            Ret += "Target={ "+ string.Join(", ", TargetEntities.Select(te => te.SummarizeToString())) + " }";
 
             return Ret;
         }

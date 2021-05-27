@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Antlr4.Runtime.Misc;
 using QueryBuilder.ER;
 using QueryBuilder.Operation;
 using QueryBuilder.Operation.Arguments;
+using QueryBuilder.Mongo.Expressions;
 
 namespace QueryBuilder.Parser
 {
@@ -17,6 +19,8 @@ namespace QueryBuilder.Parser
         public List<AlgebraOperator> PipelineOperators { set; get; }
 
         private QueryBuilderMappingMetadata metadata;
+
+        private ProjectStage ProjectOp;
 
         public QueryBuilderQueryGenerator(QueryBuilderMappingMetadata metadata)
         {
@@ -33,6 +37,11 @@ namespace QueryBuilder.Parser
 
             List<RelationshipJoinOperator> rjoinOps = getRelationshipJoinOperators(qEntity);
             rjoinOps.ForEach(rjo => PipelineOperators.Add(rjo));
+
+            if(ProjectOp != null)
+            {
+                PipelineOperators.Add(ProjectOp);
+            }
         }
 
         private FromArgument getStartArg(QueryableEntity qEntity)
@@ -88,7 +97,6 @@ namespace QueryBuilder.Parser
 
         override public void ExitSimpleEntity(QueryBuilderQueriesParser.SimpleEntityContext context)
         {
-            // Simple Entity
             string simpleEntityAlias = null;
             if (context.simpleEntityAlias != null)
             {
@@ -100,15 +108,10 @@ namespace QueryBuilder.Parser
                 throw new Exception($"Element {qEntity.Element.Name} is not an Entity!");
             }
             context.qEntity = qEntity;
-            // if ( StartArg == null )
-            // {
-            //     StartArg = new FromArgument( context.qEntity, metadata.ERMongoMapping );
-            // }
         }
 
         override public void ExitComputedEntity(QueryBuilderQueriesParser.ComputedEntityContext context)
         {
-            // Computed Entity
             var computedEntityRight = new List<QueryBuilderQueriesParser.EntityContext>(context._computedEntityRight);
             var qRelationship = metadata.EntityRelationshipModel.FindByName(context.computedEntityRelationshipName.Text);
             if (qRelationship.GetType() != typeof(Relationship))
@@ -131,26 +134,24 @@ namespace QueryBuilder.Parser
                                                         computedEntityRelationshipAlias,
                                                         computedEntityRight.ConvertAll(cer => cer.qEntity));
             context.qEntity = new QueryableEntity(cEntity, cEntityAlias);
-
-            // relationshipJoinOperator = new RelationshipJoinOperator( cEntity.SourceEntity,
-            //                                                     cEntity.Relationship,
-            //                                                     cEntity.RelationshipAlias,
-            //                                                     cEntity.TargetEntities,
-            //                                                     metadata.ERMongoMapping );
-            // if ( StartArg == null )
-            // {
-            //     StartArg = new FromArgument( context.qEntity, metadata.ERMongoMapping );
-            // }
         }
 
 
         override public void ExitParenthesisEntity(QueryBuilderQueriesParser.ParenthesisEntityContext context)
         {
             context.qEntity = context.entity().qEntity;
-            // if ( StartArg == null )
-            // {
-            //     StartArg = new FromArgument( context.qEntity, metadata.ERMongoMapping );
-            // }
+        }
+
+        public override void ExitSelectAttributeOrFunction([NotNull] QueryBuilderQueriesParser.SelectAttributeOrFunctionContext context)
+        {
+            List<ProjectArgument> Arguments = new List<ProjectArgument>();
+            foreach (var selectAttribute in context.attributeOrFunction().Where(af => af.simpleAttribute() != null))
+            {
+                var sa = selectAttribute.simpleAttribute();
+                QueryableEntity qElement = new QueryableEntity(metadata.EntityRelationshipModel.FindByName(sa.entityName.Text));
+                Arguments.Add(new ProjectArgument(qElement.GetAttribute(sa.attribute.Text), qElement, new BooleanExpr(true)));
+            }
+            ProjectOp = new ProjectStage( Arguments, metadata.ERMongoMapping );
         }
     }
 }

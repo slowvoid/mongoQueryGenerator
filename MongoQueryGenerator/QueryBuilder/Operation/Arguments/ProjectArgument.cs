@@ -28,6 +28,14 @@ namespace QueryBuilder.Operation.Arguments
         public ProjectExpression Expression { get; set; }
         #endregion
 
+        public string SummarizeToString()
+        {
+            string Ret = "";
+            Ret += ParentEntity.GetName() + "." + Attribute.Name;
+
+            return Ret;
+        }
+
         #region Constructor
         /// <summary>
         /// Initialize a new instance of ProjectArgument

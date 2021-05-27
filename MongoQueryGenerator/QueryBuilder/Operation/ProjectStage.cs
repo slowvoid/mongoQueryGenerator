@@ -34,9 +34,9 @@ namespace QueryBuilder.Operation
 
         override public string SummarizeToString()
         {
-            string Ret = "ProjectStage";
-
-            return Ret;
+            return "ProjectStage (" + 
+            string.Join(", ", Arguments.ToList().Select(arg => arg.SummarizeToString()))
+            +")";
         }
 
 

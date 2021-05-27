@@ -45,7 +45,7 @@ namespace QueryBuilder.Tests
             //QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
 
             string QueryString = "from Person select Person.name, Person.age";
-            // FIXME
+            // FIXED?
             // Consulta: from Person select Person.name, Person.age
             // Problema: Parser não gerou operação de projeção.            
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
@@ -120,6 +120,7 @@ namespace QueryBuilder.Tests
 
             //QueryGenerator QueryGen = new QueryGenerator( StartArg, OpList );
             string QueryString = "from Person rjoin <Owns> (Car rjoin <ManufacturedBy> (Manufacturer)) select Person.name, Car.model, Car.year, Manufacturer.name";
+            // FIXED?
 
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
