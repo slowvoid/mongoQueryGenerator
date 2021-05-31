@@ -43,9 +43,13 @@ namespace QueryBuilder.Parser
                 PipelineOperators.Add(ProjectOp);
             }
 
-            SelectStage2 SelectOp = new SelectStage2();
-            SelectOp.LogicalExpression = getLogicalExpression(context.where().logicalExpression());
-            PipelineOperators.Add(SelectOp);
+            if (context.where() != null)
+            {
+                SelectStage2 SelectOp = new SelectStage2();
+                SelectOp.LogicalExpression = getLogicalExpression(context.where().logicalExpression());
+                PipelineOperators.Add(SelectOp);
+            }
+
         }
 
         private FromArgument getStartArg(QueryableEntity qEntity)
@@ -126,10 +130,14 @@ namespace QueryBuilder.Parser
             if (context.relationalOperator() != null)
             {
                 var ret = new RelationalLogicalTerm();
-                SimpleAttribute sa = new SimpleAttribute();
-                sa.Element = metadata.EntityRelationshipModel.FindByName(context.simpleAttribute().elementName.Text);
-                sa.Attribute = sa.Element.GetAttribute(context.simpleAttribute().attribute.Text);
-                ret.SimpleAttribute = sa;
+                
+                var Element = metadata.EntityRelationshipModel.FindByName(context.simpleAttribute().elementName.Text);
+                var Attribute = Element.GetAttribute(context.simpleAttribute().attribute.Text);
+
+                Map.MapRule ElementRule = metadata.ERMongoMapping.Rules.First( R => R.Source.Name == Element.Name );
+                string AttributeMap = ElementRule.Rules.First( R => R.Key == Attribute.Name ).Value;
+
+                ret.SimpleAttribute = new SimpleAttribute($"${AttributeMap}");
                 ret.Value = context.value().GetText();
 
                 switch (context.relationalOperator().GetText())
@@ -165,10 +173,12 @@ namespace QueryBuilder.Parser
             else if (context.rangeOperator() != null)
             {
                 var ret = new RangeLogicalTerm();
-                SimpleAttribute sa = new SimpleAttribute();
-                sa.Element = metadata.EntityRelationshipModel.FindByName(context.simpleAttribute().elementName.Text);
-                sa.Attribute = sa.Element.GetAttribute(context.simpleAttribute().attribute.Text);
-                ret.SimpleAttribute = sa;
+                var Element = metadata.EntityRelationshipModel.FindByName(context.simpleAttribute().elementName.Text);
+                var Attribute = Element.GetAttribute(context.simpleAttribute().attribute.Text);
+                Map.MapRule ElementRule = metadata.ERMongoMapping.Rules.First( R => R.Source.Name == Element.Name );
+                string AttributeMap = ElementRule.Rules.First( R => R.Key == Attribute.Name ).Value;
+
+                ret.SimpleAttribute = new SimpleAttribute($"${AttributeMap}");
 
                 switch (context.rangeOperator().type)
                 {

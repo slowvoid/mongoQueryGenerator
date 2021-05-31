@@ -157,12 +157,15 @@ namespace QueryBuilder.Mongo.Expressions2
 
     public class SimpleAttribute
     {
-        public BaseERElement Element { get; set; }
-        public DataAttribute Attribute { get; set; }
 
+        public SimpleAttribute(string value)
+        {
+            this.value = value;
+        }
+        private string value;
         public string GetJavaScript()
         {
-            return Element.Name + "." + Attribute.Name;
+            return value;
         }
 
     }
