@@ -28,6 +28,9 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
+
+        public abstract string SummarizeToString();
+
         /// <summary>
         /// Run operation
         /// </summary>

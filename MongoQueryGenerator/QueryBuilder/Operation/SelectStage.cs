@@ -36,6 +36,15 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
+
+
+        override public string SummarizeToString()
+        {
+            string Ret = "SelectStage";
+
+            return Ret;
+        }
+
         /// <summary>
         /// Generate stage code
         /// </summary>

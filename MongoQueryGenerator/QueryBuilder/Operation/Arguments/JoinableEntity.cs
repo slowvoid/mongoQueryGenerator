@@ -25,6 +25,11 @@ namespace QueryBuilder.Operation.Arguments
         #endregion
 
         #region Methods
+
+        public string SummarizeToString()
+        {
+            return Element.SummarizeToString();
+        }
         /// <summary>
         /// Returns the Element name
         /// </summary>

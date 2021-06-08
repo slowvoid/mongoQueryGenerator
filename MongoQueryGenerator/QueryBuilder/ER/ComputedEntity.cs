@@ -32,6 +32,15 @@ namespace QueryBuilder.ER
         public string RelationshipAlias { get; set; }
         #endregion
 
+        public override string SummarizeToString()
+        {
+            string Ret = "ComputedEntity("+Name+") [ "+SourceEntity.SummarizeToString()+" x { ";
+            TargetEntities.ForEach(te => Ret += te.SummarizeToString()+" ");
+            Ret += "}";
+            return Ret;
+        }
+
+
         #region Constructor
         /// <summary>
         /// Initialize a new ComputedEntity instance

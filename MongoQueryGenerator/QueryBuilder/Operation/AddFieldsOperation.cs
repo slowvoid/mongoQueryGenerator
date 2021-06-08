@@ -22,6 +22,14 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
+
+        override public string SummarizeToString()
+        {
+            string Ret = "AddFieldsOperation";
+
+            return Ret;
+        }
+
         /// <summary>
         /// Run the operation
         /// </summary>

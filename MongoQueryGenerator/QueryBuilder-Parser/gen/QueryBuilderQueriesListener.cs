@@ -19,6 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
+namespace QueryBuilder.Parser {
 using Antlr4.Runtime.Misc;
 using IParseTreeListener = Antlr4.Runtime.Tree.IParseTreeListener;
 using IToken = Antlr4.Runtime.IToken;
@@ -77,25 +78,39 @@ public interface IQueryBuilderQueriesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitParenthesisEntity([NotNull] QueryBuilderQueriesParser.ParenthesisEntityContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.select"/>.
+	/// Enter a parse tree produced by the <c>selectAll</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.select"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterSelect([NotNull] QueryBuilderQueriesParser.SelectContext context);
+	void EnterSelectAll([NotNull] QueryBuilderQueriesParser.SelectAllContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.select"/>.
+	/// Exit a parse tree produced by the <c>selectAll</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.select"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitSelect([NotNull] QueryBuilderQueriesParser.SelectContext context);
+	void ExitSelectAll([NotNull] QueryBuilderQueriesParser.SelectAllContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.simpleAttribute"/>.
+	/// Enter a parse tree produced by the <c>selectAttributeOrFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.select"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterSimpleAttribute([NotNull] QueryBuilderQueriesParser.SimpleAttributeContext context);
+	void EnterSelectAttributeOrFunction([NotNull] QueryBuilderQueriesParser.SelectAttributeOrFunctionContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.simpleAttribute"/>.
+	/// Exit a parse tree produced by the <c>selectAttributeOrFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.select"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitSimpleAttribute([NotNull] QueryBuilderQueriesParser.SimpleAttributeContext context);
+	void ExitSelectAttributeOrFunction([NotNull] QueryBuilderQueriesParser.SelectAttributeOrFunctionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.attributeOrFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAttributeOrFunction([NotNull] QueryBuilderQueriesParser.AttributeOrFunctionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.attributeOrFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAttributeOrFunction([NotNull] QueryBuilderQueriesParser.AttributeOrFunctionContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.listOfAttributes"/>.
 	/// </summary>
@@ -107,6 +122,16 @@ public interface IQueryBuilderQueriesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitListOfAttributes([NotNull] QueryBuilderQueriesParser.ListOfAttributesContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.simpleAttribute"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterSimpleAttribute([NotNull] QueryBuilderQueriesParser.SimpleAttributeContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.simpleAttribute"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitSimpleAttribute([NotNull] QueryBuilderQueriesParser.SimpleAttributeContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.alias"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -117,15 +142,77 @@ public interface IQueryBuilderQueriesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAlias([NotNull] QueryBuilderQueriesParser.AliasContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// Enter a parse tree produced by the <c>averageFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterAggregationFunction([NotNull] QueryBuilderQueriesParser.AggregationFunctionContext context);
+	void EnterAverageFunction([NotNull] QueryBuilderQueriesParser.AverageFunctionContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// Exit a parse tree produced by the <c>averageFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitAggregationFunction([NotNull] QueryBuilderQueriesParser.AggregationFunctionContext context);
+	void ExitAverageFunction([NotNull] QueryBuilderQueriesParser.AverageFunctionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>maxFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterMaxFunction([NotNull] QueryBuilderQueriesParser.MaxFunctionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>maxFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitMaxFunction([NotNull] QueryBuilderQueriesParser.MaxFunctionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>minFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterMinFunction([NotNull] QueryBuilderQueriesParser.MinFunctionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>minFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitMinFunction([NotNull] QueryBuilderQueriesParser.MinFunctionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>sumFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterSumFunction([NotNull] QueryBuilderQueriesParser.SumFunctionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>sumFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitSumFunction([NotNull] QueryBuilderQueriesParser.SumFunctionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>countFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterCountFunction([NotNull] QueryBuilderQueriesParser.CountFunctionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>countFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitCountFunction([NotNull] QueryBuilderQueriesParser.CountFunctionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>countAllFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterCountAllFunction([NotNull] QueryBuilderQueriesParser.CountAllFunctionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>countAllFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitCountAllFunction([NotNull] QueryBuilderQueriesParser.CountAllFunctionContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.where"/>.
 	/// </summary>
@@ -137,36 +224,6 @@ public interface IQueryBuilderQueriesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitWhere([NotNull] QueryBuilderQueriesParser.WhereContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.expressionList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterExpressionList([NotNull] QueryBuilderQueriesParser.ExpressionListContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.expressionList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitExpressionList([NotNull] QueryBuilderQueriesParser.ExpressionListContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.arithmeticExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterArithmeticExpression([NotNull] QueryBuilderQueriesParser.ArithmeticExpressionContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.arithmeticExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitArithmeticExpression([NotNull] QueryBuilderQueriesParser.ArithmeticExpressionContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.otherExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOtherExpression([NotNull] QueryBuilderQueriesParser.OtherExpressionContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.otherExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOtherExpression([NotNull] QueryBuilderQueriesParser.OtherExpressionContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -176,6 +233,56 @@ public interface IQueryBuilderQueriesListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitLogicalExpression([NotNull] QueryBuilderQueriesParser.LogicalExpressionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalTerm"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLogicalTerm([NotNull] QueryBuilderQueriesParser.LogicalTermContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalTerm"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLogicalTerm([NotNull] QueryBuilderQueriesParser.LogicalTermContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.value"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterValue([NotNull] QueryBuilderQueriesParser.ValueContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.value"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitValue([NotNull] QueryBuilderQueriesParser.ValueContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.relationalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterRelationalOperator([NotNull] QueryBuilderQueriesParser.RelationalOperatorContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.relationalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitRelationalOperator([NotNull] QueryBuilderQueriesParser.RelationalOperatorContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.rangeOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterRangeOperator([NotNull] QueryBuilderQueriesParser.RangeOperatorContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.rangeOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitRangeOperator([NotNull] QueryBuilderQueriesParser.RangeOperatorContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLogicalOperator([NotNull] QueryBuilderQueriesParser.LogicalOperatorContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLogicalOperator([NotNull] QueryBuilderQueriesParser.LogicalOperatorContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="QueryBuilderQueriesParser.groupby"/>.
 	/// </summary>
@@ -207,3 +314,4 @@ public interface IQueryBuilderQueriesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitOrderby([NotNull] QueryBuilderQueriesParser.OrderbyContext context);
 }
+} // namespace QueryBuilder.Parser

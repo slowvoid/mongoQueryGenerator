@@ -29,6 +29,15 @@ namespace QueryBuilder.ER
         #endregion
 
         #region Methods
+
+        public override string SummarizeToString()
+        {
+            string Ret = "Relationship[ ";
+            Ends.ForEach(e => Ret += e.SummarizeToString()+" ");
+            Ret += "]";
+            return Ret;
+        }
+
         /// <summary>
         /// Add a new End to the relationship
         /// </summary>

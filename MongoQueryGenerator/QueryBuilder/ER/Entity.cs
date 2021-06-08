@@ -13,6 +13,11 @@ namespace QueryBuilder.ER
     /// </summary>
     public class Entity : BaseERElement
     {
+        public override string SummarizeToString()
+        {
+            return "Entity[ "+Name+" ]";
+        }
+
         #region Constructors
         /// <summary>
         /// Initialize a new Entity instance

@@ -27,6 +27,15 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
+
+
+        override public string SummarizeToString()
+        {
+            string Ret = "SortStage";
+
+            return Ret;
+        }
+
         /// <summary>
         /// Process stage and generates the corresponding commands
         /// </summary>

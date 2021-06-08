@@ -29,6 +29,8 @@ namespace QueryBuilder.ER
         #endregion
 
         #region Methods
+
+        public abstract string SummarizeToString();
         /// <summary>
         /// Add a new attribute 
         /// </summary>

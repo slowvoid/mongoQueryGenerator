@@ -78,13 +78,13 @@ namespace QueryBuilder.Parser
                         {
                             DataAttribute da = re.TargetEntity.GetIdentifierAttribute();
                             bool hasMapping = false;
-                            Console.WriteLine( $"Searching r {relationship.Name} / {relationshipMainCollection.Name} / re {re.TargetEntity.Name}.id..." );
+//                            Console.WriteLine( $"Searching r {relationship.Name} / {relationshipMainCollection.Name} / re {re.TargetEntity.Name}.id..." );
                             foreach (MapRule mr in rules)
                             {
-                                Console.WriteLine($"  Rule: {mr.Source.Name} - {mr.Target.Name}");
+//                                Console.WriteLine($"  Rule: {mr.Source.Name} - {mr.Target.Name}");
                                 foreach (var i in mr.Rules)
                                 {
-                                    Console.WriteLine($"  Subrule: {i.Key} - {i.Value}");
+//                                    Console.WriteLine($"  Subrule: {i.Key} - {i.Value}");
                                 }
 
                                 if (mr.Source == re.TargetEntity && mr.Rules.ContainsKey(da.Name))
@@ -92,7 +92,7 @@ namespace QueryBuilder.Parser
                                     hasMapping = true;
                                 }
                             }
-                            Console.WriteLine($"Has Mapping = {hasMapping}");
+//                            Console.WriteLine($"Has Mapping = {hasMapping}");
                             if (!hasMapping)
                             {
                                 Errors.Add($"Error 001: the main collection {relationshipMainCollection.Name} for " +

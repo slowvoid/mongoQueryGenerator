@@ -34,6 +34,20 @@ namespace QueryBuilder.Query
         #endregion
 
         #region Methods
+        public string SummarizeToString()
+        {
+            string Ret = "S: " + StartArgument.SummarizeToString()+"\n";
+
+            int i = 1;
+
+            foreach ( AlgebraOperator Op in PipelineOperators )
+            {
+                Ret += (i++)+": "+Op.SummarizeToString()+"\n";
+            }
+
+            return Ret;
+        }
+
         /// <summary>
         /// Sets pretty print prop
         /// </summary>

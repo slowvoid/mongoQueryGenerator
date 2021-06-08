@@ -19,6 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
+namespace QueryBuilder.Parser {
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IToken = Antlr4.Runtime.IToken;
@@ -59,17 +60,25 @@ public interface IQueryBuilderQueriesVisitor<Result> : IParseTreeVisitor<Result>
 	/// <return>The visitor result.</return>
 	Result VisitParenthesisEntity([NotNull] QueryBuilderQueriesParser.ParenthesisEntityContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.select"/>.
+	/// Visit a parse tree produced by the <c>selectAll</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.select"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSelect([NotNull] QueryBuilderQueriesParser.SelectContext context);
+	Result VisitSelectAll([NotNull] QueryBuilderQueriesParser.SelectAllContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.simpleAttribute"/>.
+	/// Visit a parse tree produced by the <c>selectAttributeOrFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.select"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSimpleAttribute([NotNull] QueryBuilderQueriesParser.SimpleAttributeContext context);
+	Result VisitSelectAttributeOrFunction([NotNull] QueryBuilderQueriesParser.SelectAttributeOrFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.attributeOrFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAttributeOrFunction([NotNull] QueryBuilderQueriesParser.AttributeOrFunctionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.listOfAttributes"/>.
 	/// </summary>
@@ -77,17 +86,59 @@ public interface IQueryBuilderQueriesVisitor<Result> : IParseTreeVisitor<Result>
 	/// <return>The visitor result.</return>
 	Result VisitListOfAttributes([NotNull] QueryBuilderQueriesParser.ListOfAttributesContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.simpleAttribute"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSimpleAttribute([NotNull] QueryBuilderQueriesParser.SimpleAttributeContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.alias"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitAlias([NotNull] QueryBuilderQueriesParser.AliasContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// Visit a parse tree produced by the <c>averageFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitAggregationFunction([NotNull] QueryBuilderQueriesParser.AggregationFunctionContext context);
+	Result VisitAverageFunction([NotNull] QueryBuilderQueriesParser.AverageFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>maxFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitMaxFunction([NotNull] QueryBuilderQueriesParser.MaxFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>minFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitMinFunction([NotNull] QueryBuilderQueriesParser.MinFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>sumFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSumFunction([NotNull] QueryBuilderQueriesParser.SumFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>countFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCountFunction([NotNull] QueryBuilderQueriesParser.CountFunctionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>countAllFunction</c>
+	/// labeled alternative in <see cref="QueryBuilderQueriesParser.aggregationFunction"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCountAllFunction([NotNull] QueryBuilderQueriesParser.CountAllFunctionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.where"/>.
 	/// </summary>
@@ -95,29 +146,41 @@ public interface IQueryBuilderQueriesVisitor<Result> : IParseTreeVisitor<Result>
 	/// <return>The visitor result.</return>
 	Result VisitWhere([NotNull] QueryBuilderQueriesParser.WhereContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.expressionList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitExpressionList([NotNull] QueryBuilderQueriesParser.ExpressionListContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.arithmeticExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitArithmeticExpression([NotNull] QueryBuilderQueriesParser.ArithmeticExpressionContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.otherExpression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitOtherExpression([NotNull] QueryBuilderQueriesParser.OtherExpressionContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitLogicalExpression([NotNull] QueryBuilderQueriesParser.LogicalExpressionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalTerm"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLogicalTerm([NotNull] QueryBuilderQueriesParser.LogicalTermContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.value"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitValue([NotNull] QueryBuilderQueriesParser.ValueContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.relationalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRelationalOperator([NotNull] QueryBuilderQueriesParser.RelationalOperatorContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.rangeOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRangeOperator([NotNull] QueryBuilderQueriesParser.RangeOperatorContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.logicalOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLogicalOperator([NotNull] QueryBuilderQueriesParser.LogicalOperatorContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="QueryBuilderQueriesParser.groupby"/>.
 	/// </summary>
@@ -137,3 +200,4 @@ public interface IQueryBuilderQueriesVisitor<Result> : IParseTreeVisitor<Result>
 	/// <return>The visitor result.</return>
 	Result VisitOrderby([NotNull] QueryBuilderQueriesParser.OrderbyContext context);
 }
+} // namespace QueryBuilder.Parser

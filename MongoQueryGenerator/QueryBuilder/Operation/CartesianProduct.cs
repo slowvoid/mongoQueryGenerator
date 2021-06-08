@@ -29,6 +29,15 @@ namespace QueryBuilder.Operation
         #endregion
 
         #region Methods
+
+
+        override public string SummarizeToString()
+        {
+            string Ret = "CartesianProduct";
+
+            return Ret;
+        }
+
         /// <summary>
         /// Run operator
         /// </summary>
