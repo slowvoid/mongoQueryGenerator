@@ -1,7 +1,9 @@
 ﻿using QueryBuilder.ER;
 using QueryBuilder.Map;
 using QueryBuilder.Mongo;
+using QueryBuilder.Parser;
 using System.Collections.Generic;
+using System.IO;
 
 namespace QueryAnalyzer
 {

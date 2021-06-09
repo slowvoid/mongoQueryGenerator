@@ -78,7 +78,7 @@ namespace QueryBuilder.ER
         /// <returns></returns>
         public bool ContainsElement( Entity Element )
         {
-            return Ends.Count( E => E.TargetEntity == Element ) > 0;
+            return Ends.Count( E => E.TargetEntity.Name == Element.Name ) > 0;
         }
         #endregion
 

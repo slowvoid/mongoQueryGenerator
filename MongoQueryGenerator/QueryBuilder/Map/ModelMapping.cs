@@ -106,7 +106,7 @@ namespace QueryBuilder.Map
         /// <returns></returns>
         public MapRule FindMainRule( BaseERElement Source )
         {
-            return Rules.FirstOrDefault( R => R.Source == Source && R.IsMain );
+            return Rules.FirstOrDefault( R => R.Source.Name == Source.Name && R.IsMain );
         }
         /// <summary>
         /// Find the main mapping that targets the given collection

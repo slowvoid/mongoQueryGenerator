@@ -10,10 +10,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\QueryBuilder-Parser\QueryBuilder-Parser.csproj" />
     <ProjectReference Include="..\QueryBuilder\QueryBuilder.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="CMS_1.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="CMS_2.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="CMS_3.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="CMS_4.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="CMS_5.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="CustomQueries\get_all_products_that_costs_less5_m_1.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -10,6 +10,7 @@ using QueryBuilder.Mongo.Expressions;
 using QueryBuilder.Map;
 using System.IO;
 using System;
+using QueryBuilder.Parser;
 
 namespace QueryAnalyzer
 {
@@ -133,11 +134,11 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetAllProducts()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMap2 = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMap3 = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMap4 = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMap5 = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMap2 = Utils.GetMapping( "CMS_2.mapping" );
+            QueryBuilderMappingMetadata DataMap3 = Utils.GetMapping( "CMS_3.mapping" );
+            QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
@@ -241,7 +242,7 @@ namespace QueryAnalyzer
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_all_products_handcrafted_5", HandcraftedQuery5 );
         }
 
-        private string _getQueryForTestAllProducts( RequiredDataContainer DataMap, QueryableEntity Product, QueryableEntity Store, QueryableEntity Category, QueryableEntity User )
+        private string _getQueryForTestAllProducts( QueryBuilderMappingMetadata DataMap, QueryableEntity Product, QueryableEntity Store, QueryableEntity Category, QueryableEntity User )
         {
             RelationshipJoinOperator RJoinProductUser = new RelationshipJoinOperator(
                             Product,
@@ -291,9 +292,9 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetAllStores()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMap3 = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMap5 = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMap3 = Utils.GetMapping( "CMS_3.mapping" );
+            QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
 
@@ -305,9 +306,9 @@ namespace QueryAnalyzer
             benchmarkMatch.Add( "_id", "%DB_KEY%" );
             SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
-            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { /*SelectOp*/ };
-            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { /*SelectOp*/ };
-            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { /*SelectOp*/ };
+            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SelectOp };
+            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SelectOp };
+            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { SelectOp };
 
             QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
             QueryGenerator QueryGenMap3 = new QueryGenerator( StartArgMap3, OperatorsMap3 );
@@ -393,9 +394,9 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetAllUsers()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMapCategoryDuplicated = Utils.GetMapping( "CMS_3.mapping" );
+            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
 
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
 
@@ -407,9 +408,9 @@ namespace QueryAnalyzer
             benchmarkMatch.Add( "_id", "%DB_KEY%" );
             SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
-            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { /*SelectOp*/ };
-            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { /*SelectOp*/ };
-            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { /*SelectOp*/ };
+            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SelectOp };
+            List<AlgebraOperator> OperatorsMap3 = new List<AlgebraOperator>() { SelectOp };
+            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { SelectOp };
 
             QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
             QueryGenerator QueryGenMap3 = new QueryGenerator( StartArgMap3, OperatorsMap3 );
@@ -496,9 +497,9 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetAllCategories()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
 
@@ -510,9 +511,9 @@ namespace QueryAnalyzer
             benchmarkMatch.Add( "_id", "%DB_KEY%" );
             SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
-            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { /*SelectOp*/ };
-            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { /*SelectOp*/ };
-            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { /*SelectOp*/ };
+            List<AlgebraOperator> OperatorsMap1 = new List<AlgebraOperator>() { SelectOp };
+            List<AlgebraOperator> OperatorsMap4 = new List<AlgebraOperator>() { SelectOp };
+            List<AlgebraOperator> OperatorsMap5 = new List<AlgebraOperator>() { SelectOp };
 
             QueryGenerator QueryGenMap1 = new QueryGenerator( StartArgMap1, OperatorsMap1 );
             QueryGenerator QueryGenMap4 = new QueryGenerator( StartArgMap4, OperatorsMap4 );
@@ -602,9 +603,9 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetAllProductsFromStore()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMapCategoryDuplicated = Utils.GetMapping( "CMS_3.mapping" );
+            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
@@ -622,9 +623,9 @@ namespace QueryAnalyzer
             benchmarkMatch.Add( "_id", "%DB_KEY%" );
             SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
-            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { /*SelectOp,*/ RJoinOp1 };
-            List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { /*SelectOp,*/ RJoinOp3 };
-            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { /*SelectOp,*/ RJoinOp5 };
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { SelectOp, RJoinOp1 };
+            List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { SelectOp, RJoinOp3 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { SelectOp, RJoinOp5 };
 
             FromArgument StartArgMap1 = new FromArgument( Store, DataMap.ERMongoMapping );
             FromArgument StartArgMap3 = new FromArgument( Store, DataMapCategoryDuplicated.ERMongoMapping );
@@ -715,9 +716,9 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetAllProductsFromCategory()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
@@ -735,9 +736,9 @@ namespace QueryAnalyzer
             benchmarkMatch.Add( "_id", "%DB_KEY%" );
             SelectStage SelectOp = new SelectStage( benchmarkMatch );
 
-            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { /*SelectOp,*/ RJoinOp1 };
-            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { /*SelectOp,*/ RJoinOp4 };
-            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { /*SelectOp,*/ RJoinOp5 };
+            List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { SelectOp, RJoinOp1 };
+            List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { SelectOp, RJoinOp4 };
+            List<AlgebraOperator> OperatorsToExecuteMap5 = new List<AlgebraOperator>() { SelectOp, RJoinOp5 };
 
             FromArgument StartArgMap1 = new FromArgument( Category, DataMap.ERMongoMapping );
             FromArgument StartArgMap4 = new FromArgument( Category, DataMapStoreDuplicated.ERMongoMapping );
@@ -829,9 +830,9 @@ namespace QueryAnalyzer
  
         public void GetAllProductsFromUser()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMapCategoryDuplicated = Utils.GetMapping( "CMS_3.mapping" );
+            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
 
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
@@ -929,9 +930,9 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetAllProductsFromCategoryWithStore()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
@@ -1051,9 +1052,9 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetAllProductsFromCategoryWithUser()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
@@ -1170,11 +1171,11 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetProductTitleAndUserName()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapDuplicates = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMapCategoryDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMapDuplicates = Utils.GetMapping( "CMS_2.mapping" );
+            QueryBuilderMappingMetadata DataMapCategoryDuplicated = Utils.GetMapping( "CMS_3.mapping" );
+            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
             QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
@@ -1350,9 +1351,9 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetAllProductsFromCategoryWithUserAndSelectOnlyTitleNameEmailCategoryName()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
@@ -1482,9 +1483,9 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetCategoryThatIsNamedHome()
         {
-            RequiredDataContainer DataMap = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMapStoreDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMapUserDuplicated = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
             QueryableEntity Category = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Category" ) );
 
@@ -1589,11 +1590,11 @@ namespace QueryAnalyzer
         /// </summary>
         public void GetAllProductsThatCostsLessThan5()
         {
-            RequiredDataContainer DataMap1 = MarketingCMSDataProvider.MapEntitiesToCollections();
-            RequiredDataContainer DataMap2 = MarketingCMSDataProvider.MapEntitiesToCollectionDuplicates();
-            RequiredDataContainer DataMap3 = MarketingCMSDataProvider.MapEntitiesToCollectionCategoryDuplicated();
-            RequiredDataContainer DataMap4 = MarketingCMSDataProvider.MapEntitiesToCollectionsStoreDuplicated();
-            RequiredDataContainer DataMap5 = MarketingCMSDataProvider.MapEntitiesToCollectionsUserDuplicated();
+            QueryBuilderMappingMetadata DataMap1 = Utils.GetMapping( "CMS_1.mapping" );
+            QueryBuilderMappingMetadata DataMap2 = Utils.GetMapping( "CMS_2.mapping" );
+            QueryBuilderMappingMetadata DataMap3 = Utils.GetMapping( "CMS_3.mapping" );
+            QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
             QueryableEntity Product = new QueryableEntity( DataMap1.EntityRelationshipModel.FindByName( "Product" ) );
 
@@ -1715,7 +1716,7 @@ namespace QueryAnalyzer
         /// </summary>
         /// <param name="DataMap"></param>
         /// <returns></returns>
-        public List<AlgebraOperator> _GetAllProductsLessThan5Operations( RequiredDataContainer DataMap )
+        public List<AlgebraOperator> _GetAllProductsLessThan5Operations( QueryBuilderMappingMetadata DataMap )
         {
             QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
             QueryableEntity Store = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Store" ) );

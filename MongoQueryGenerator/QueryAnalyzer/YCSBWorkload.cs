@@ -77,7 +77,7 @@ namespace QueryAnalyzer
             Props.Add( "workload", "site.ycsb.db.MongoDBWorkload" );
             Props.Add( "readproportion", 1 );
             Props.Add( "mongodb.url", $"mongodb://localhost:27017/{inDatabaseName}" );
-            Props.Add( "operationcount", 100 );
+            Props.Add( "operationcount", 5 );
             Props.Add( "queryfile", $"{FileName.Replace("_workload", "")}.mongo" );
             Props.Add( "queryname", inName );
             Props.Add( "hdrhistogram.percentiles", "1,5,95,99" );

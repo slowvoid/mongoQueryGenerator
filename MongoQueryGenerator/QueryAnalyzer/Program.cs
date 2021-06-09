@@ -11,7 +11,7 @@ namespace QueryAnalyzer
             Console.WriteLine( "Starting Time: {0}", StartTime.ToString() );
 
             MarketingCMS cms = new MarketingCMS( "research_performance_index" );
-            cms.Iterations = 1000;
+            cms.Iterations = 5;
             cms.TargetDatabase = "research_performance_stats_nosort";
             cms.ExportQueries = true;
             cms.UseDefaultQueryInsteadOfExplain = true;
