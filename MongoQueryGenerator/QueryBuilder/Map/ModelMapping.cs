@@ -39,11 +39,11 @@ namespace QueryBuilder.Map
 
             if ( IsMain )
             {
-                Rule = Rules.First( R => R.Source.Name == NameOrAlias && IsMain );
+                Rule = Rules.First( R => R.Source.Name == NameOrAlias && R.Rules.ContainsKey( AttributeName ) && IsMain );
             }
             else
             {
-                Rule = Rules.First( R => R.Source.Name == NameOrAlias );
+                Rule = Rules.First( R => R.Source.Name == NameOrAlias && R.Rules.ContainsKey( AttributeName ) );
             }
             
             if ( Rule != null )
