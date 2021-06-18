@@ -38,7 +38,7 @@ namespace QueryBuilder.Tests
             //    ModelData.ERMongoMapping );
             //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
-            string QueryString = "from Person where Person.age = 27 select *";
+            string QueryString = "from Person select * where Person.age = 27";
             // FIXME
             // Consulta: from Person where Person.age = 27 select *
             // Problema: Parser não gerou operação de seleção.
@@ -86,7 +86,7 @@ namespace QueryBuilder.Tests
             //    ModelData.ERMongoMapping );
             //QueryGenerator QueryGen = new QueryGenerator( StartArg, OperatorsToExecute );
 
-            string QueryString = "from Person where Person.age = 27 and Person.name = 'Summer' select *";
+            string QueryString = "from Person select * where Person.age = 27 and Person.name = 'Summer'";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();

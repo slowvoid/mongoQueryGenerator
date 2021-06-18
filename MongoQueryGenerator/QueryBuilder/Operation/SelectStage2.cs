@@ -1,3 +1,4 @@
+using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Mongo.Expressions2;
 
 namespace QueryBuilder.Operation
@@ -18,5 +19,11 @@ namespace QueryBuilder.Operation
             return Ret;
         }
 
+        //public override AlgebraOperatorResult Run()
+        //{
+        //    MatchOperator MatchOp = new MatchOperator();
+
+            
+        //}
     }
 }
