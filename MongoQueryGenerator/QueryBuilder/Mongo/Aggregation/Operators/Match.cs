@@ -17,7 +17,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// <summary>
         /// Expression to execute
         /// </summary>
-        public BaseExpression Expression { get; set; }
+        public BaseLogicalExpression Expression { get; set; }
         /// <summary>
         /// Fields to match against
         /// </summary>
@@ -88,7 +88,7 @@ namespace QueryBuilder.Mongo.Aggregation.Operators
         /// Initialize a new instance of Match
         /// </summary>
         /// <param name="Expression">Expression to be evalueted</param>
-        public MatchOperator( BaseExpression Expression )
+        public MatchOperator( BaseLogicalExpression Expression )
         {
             this.Expression = Expression;
             FieldsToMatch = new Dictionary<string, object>();
