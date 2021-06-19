@@ -1,4 +1,5 @@
-﻿using QueryBuilder.Mongo.Aggregation.Operators;
+﻿using QueryBuilder.Map;
+using QueryBuilder.Mongo.Aggregation.Operators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,8 +34,9 @@ namespace QueryBuilder.Operation
         /// Generate the stage query
         /// </summary>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run()
+        public override AlgebraOperatorResult Run( IModelMap inMap )
         {
+            RuleMap = inMap;
             List<MongoDBOperator> OperatorsToExecute = new List<MongoDBOperator>();
             OperatorsToExecute.Add( new LimitOperator( Count ) );
 

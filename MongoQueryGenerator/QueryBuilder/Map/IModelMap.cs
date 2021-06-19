@@ -20,5 +20,10 @@ namespace QueryBuilder.Map
         /// <param name="IsMain">Use only main mapping (Default: false)</param>
         /// <returns></returns>
         string GetRuleValue( string NameOrAlias, string AttributeName, bool IsMain = false );
+        /// <summary>
+        /// Return true if instance has no rules
+        /// </summary>
+        /// <returns></returns>
+        bool IsEmpty();
     }
 }

@@ -42,7 +42,10 @@ namespace QueryBuilder.Parser
             QueryBuilderQueryGenerator generator = new QueryBuilderQueryGenerator( metadata );
             ParseTreeWalker.Default.Walk( generator, tree );
 
-            return new QueryGenerator( generator.StartArg, generator.PipelineOperators );
+            QueryGenerator queryGen = new QueryGenerator( generator.StartArg, generator.PipelineOperators );
+            queryGen.SetStartMap( metadata.ERMongoMapping );
+
+            return queryGen;
         }
     }
 }

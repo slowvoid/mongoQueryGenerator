@@ -35,7 +35,7 @@ namespace QueryBuilder.Operation
         /// Run operation
         /// </summary>
         /// <returns></returns>
-        public virtual AlgebraOperatorResult Run()
+        public virtual AlgebraOperatorResult Run( IModelMap inMap )
         {
             return new AlgebraOperatorResult( new List<MongoDBOperator>() );
         }
@@ -45,6 +45,18 @@ namespace QueryBuilder.Operation
         /// <returns></returns>
         public virtual VirtualMap ComputeVirtualMap( VirtualMap ExistingVirtualMap = null )
         {
+            if ( !RuleMap.IsEmpty() )
+            {
+                if ( RuleMap is VirtualMap )
+                {
+                    return RuleMap as VirtualMap;
+                }
+                else
+                {
+                    return VirtualMap.FromModelMap( RuleMap as ModelMapping );
+                }
+            }
+
             return new VirtualMap( new List<VirtualRule>() );
         }
         #endregion

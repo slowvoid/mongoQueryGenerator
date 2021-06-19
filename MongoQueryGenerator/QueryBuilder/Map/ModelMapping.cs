@@ -27,6 +27,14 @@ namespace QueryBuilder.Map
 
         #region Methods
         /// <summary>
+        /// Returns true if no rules were set
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEmpty()
+        {
+            return Rules.Count == 0;
+        }
+        /// <summary>
         /// Get rule value for an attribute that belongs to the given entity
         /// </summary>
         /// <param name="NameOrAlias"></param>

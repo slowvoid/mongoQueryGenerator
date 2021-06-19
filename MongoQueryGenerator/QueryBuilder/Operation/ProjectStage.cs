@@ -45,8 +45,13 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="LastResult"></param>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run()
+        public override AlgebraOperatorResult Run( IModelMap inMap )
         {
+            if ( inMap is VirtualMap )
+            {
+                Map = inMap;
+                RuleMap = inMap;
+            }
             // Store operators to run
             List<MongoDBOperator> OperatorsToExecute = new List<MongoDBOperator>();
             // All we need to do is find the correct map for each attribute

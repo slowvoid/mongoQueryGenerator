@@ -40,8 +40,9 @@ namespace QueryBuilder.Operation
         /// Process stage and generates the corresponding commands
         /// </summary>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run()
+        public override AlgebraOperatorResult Run( IModelMap inMap )
         {
+            RuleMap = inMap;
             // Store operators to execute
             List<MongoDBOperator> OperatorsToExecute = new List<MongoDBOperator>();
 

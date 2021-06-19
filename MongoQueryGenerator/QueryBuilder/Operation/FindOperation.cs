@@ -37,8 +37,9 @@ namespace QueryBuilder.Operation
 
             return Ret;
         }
-        public override AlgebraOperatorResult Run()
+        public override AlgebraOperatorResult Run( IModelMap inMap )
         {
+            RuleMap = inMap;
             return new AlgebraOperatorResult( new List<MongoDBOperator>() );
         }
         #endregion

@@ -49,8 +49,9 @@ namespace QueryBuilder.Operation
         /// Generate stage code
         /// </summary>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run()
+        public override AlgebraOperatorResult Run( IModelMap inMap )
         {
+            RuleMap = inMap;
             MatchOperator MatchOp;
 
             if ( UseSimplerMatch )

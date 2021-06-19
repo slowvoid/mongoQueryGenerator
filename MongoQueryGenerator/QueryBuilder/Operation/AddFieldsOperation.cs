@@ -35,8 +35,9 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="LastResult"></param>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run()
+        public override AlgebraOperatorResult Run( IModelMap inMap )
         {
+            RuleMap = inMap;
             AddFieldsOperator AddFieldsOperator = new AddFieldsOperator( Attributes );
             List<MongoDBOperator> OperationsToExecute = new List<MongoDBOperator>();
             

@@ -53,7 +53,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="LastResult"></param>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run()
+        public override AlgebraOperatorResult Run( IModelMap inMap )
         {
             // Store Operations
             List<MongoDBOperator> OperationsToExecute = new List<MongoDBOperator>();
@@ -913,7 +913,7 @@ namespace QueryBuilder.Operation
                 TargetEntity.TargetEntities, ModelMap );
 
             // Run it and return the operations
-            AlgebraOperatorResult CEResult = CEJoinOperator.Run();
+            AlgebraOperatorResult CEResult = CEJoinOperator.Run(ModelMap);
 
             // Find main rule for source entity
             MapRule MainTargetRule = ModelMap.FindMainRule( TargetEntity.SourceEntity.Element );
