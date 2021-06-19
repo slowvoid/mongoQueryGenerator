@@ -200,7 +200,32 @@ namespace QueryBuilder.Mongo.Expressions2
 
         public override BaseLogicalExpression ToExpression()
         {
-            throw new NotImplementedException();
+            List<object> inValues = new List<object>();
+
+            foreach ( string val in Values )
+            {
+                if ( int.TryParse( val, out int intVal ) )
+                {
+                    inValues.Add( intVal );
+                }
+                else
+                {
+                    inValues.Add( val.Replace( "'", "" ) );
+                }
+            }
+
+            if ( RangeOperator == RangeOperator.IN_VALUES )
+            {
+                return new InExpr( SimpleAttribute.value, inValues );
+            }
+            else if ( RangeOperator == RangeOperator.NOT_IN_VALUES )
+            {
+                return new NotInExpr( SimpleAttribute.value, inValues );
+            }
+            else
+            {
+                throw new NotImplementedException("Only IN and NOT IN operations are available at the moment");
+            }
         }
 
         override public string GetJavaScript()
