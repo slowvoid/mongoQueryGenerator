@@ -106,25 +106,39 @@ namespace QueryBuilder.Mongo.Expressions2
         public override BaseLogicalExpression ToExpression()
         {
             BaseLogicalExpression expr = null;
+
+            // Check if we need to change value type
+            object parsedValue = Value;
+
+            if ( int.TryParse( (string)parsedValue, out int intValue ) )
+            {
+                parsedValue = intValue;
+            }
+            else
+            {
+                // Strip single quotes from value
+                parsedValue = Value.Replace( "'", "" );
+            }
+
             switch ( RelationalOperator )
             {
                 case RelationalOperator.EQUAL:
-                    expr = new EqExpr( SimpleAttribute.value, Value );
+                    expr = new EqExpr( SimpleAttribute.value, parsedValue );
                     break;
                 case RelationalOperator.NOT_EQUAL:
-                    expr = new NeqExpr( SimpleAttribute.value, Value );
+                    expr = new NeqExpr( SimpleAttribute.value, parsedValue );
                     break;
                 case RelationalOperator.GREATER_EQUAL:
-                    expr = new GteExpr( SimpleAttribute.value, Value );
+                    expr = new GteExpr( SimpleAttribute.value, parsedValue );
                     break;
                 case RelationalOperator.LESS_EQUAL:
-                    expr = new LteExpr( SimpleAttribute.value, Value );
+                    expr = new LteExpr( SimpleAttribute.value, parsedValue );
                     break;
                 case RelationalOperator.GREATER:
-                    expr = new GtExpr( SimpleAttribute.value, Value );
+                    expr = new GtExpr( SimpleAttribute.value, parsedValue );
                     break;
                 case RelationalOperator.LESS:
-                    expr = new LtExpr( SimpleAttribute.value, Value );
+                    expr = new LtExpr( SimpleAttribute.value, parsedValue );
                     break;
                 case RelationalOperator.LIKE:
                 case RelationalOperator.IS:
