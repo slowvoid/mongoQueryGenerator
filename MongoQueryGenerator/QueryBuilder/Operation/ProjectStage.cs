@@ -102,6 +102,10 @@ namespace QueryBuilder.Operation
             {
                 ExistingVirtualMap = VirtualMap.FromModelMap( (ModelMapping)Map );
             }
+            else if ( ExistingVirtualMap == null && Map is VirtualMap )
+            {
+                ExistingVirtualMap = Map as VirtualMap;
+            }
 
             // Store new rules
             List<VirtualRule> NewRules = new List<VirtualRule>();
