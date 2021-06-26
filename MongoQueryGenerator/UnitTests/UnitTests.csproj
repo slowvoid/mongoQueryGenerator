@@ -193,6 +193,13 @@
     <None Update="HandcraftedQueries\manyToManyEmbedded.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="HandcraftedQueries\oneToManyEmbeddedDuplicatedMain.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Code</SubType>
+    </None>
+    <None Update="HandcraftedQueries\oneToManyEmbeddedDuplicated.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="HandcraftedQueries\Progradweb\AlunoMatriculaEnfase.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -240,6 +247,12 @@
     </None>
     <None Update="Mappings\one-to-many-computed-entity.mapping">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-embedded-duplicated-main.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-embedded-duplicated.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Mappings\one-to-many-embedded.mapping">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

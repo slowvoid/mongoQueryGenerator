@@ -157,6 +157,64 @@ namespace QueryBuilder.Tests
             // Check if both results are equal
             Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
         }
+        [TestMethod]
+        public void OneToManyEmbeddedWithRelatedMainMapping()
+        {
+            // Load mapping
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-many-embedded-duplicated.mapping" ) );
+
+            string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/oneToManyEmbeddedDuplicated.js" );
+
+            Assert.IsNotNull( HandcraftedQuery );
+
+            string QueryString = "from Person rjoin <Drives> (Car) select Person.name, Car.plate";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
+
+            string GeneratedQuery = QueryGen.Run();
+
+            Assert.IsNotNull( GeneratedQuery );
+
+            QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", "oneToManyEmbeddedDuplicated" );
+
+            string HandcraftedResult = Runner.GetJSON( HandcraftedQuery );
+            string GeneratedResult = Runner.GetJSON( GeneratedQuery );
+
+            // Check if either result is null
+            Assert.IsNotNull( HandcraftedResult );
+            Assert.IsNotNull( GeneratedResult );
+
+            // Check if both results are equal
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
+        }
+        [TestMethod]
+        public void OneToManyEmbeddedWithRelatedMainMappingUseLookup()
+        {
+            // Load mapping
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-many-embedded-duplicated-main.mapping" ) );
+
+            string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/oneToManyEmbeddedDuplicatedMain.js" );
+
+            Assert.IsNotNull( HandcraftedQuery );
+
+            string QueryString = "from Person rjoin <Drives> (Car) select Person.name, Car.plate";
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
+
+            string GeneratedQuery = QueryGen.Run();
+
+            Assert.IsNotNull( GeneratedQuery );
+
+            QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", "oneToManyEmbeddedDuplicatedMain" );
+
+            string HandcraftedResult = Runner.GetJSON( HandcraftedQuery );
+            string GeneratedResult = Runner.GetJSON( GeneratedQuery );
+
+            // Check if either result is null
+            Assert.IsNotNull( HandcraftedResult );
+            Assert.IsNotNull( GeneratedResult );
+
+            // Check if both results are equal
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
+        }
         // Removed test
         public void OneToManyLeftSideEmbedded()
         {

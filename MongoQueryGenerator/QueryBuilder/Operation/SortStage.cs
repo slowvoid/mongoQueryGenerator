@@ -40,7 +40,7 @@ namespace QueryBuilder.Operation
         /// Process stage and generates the corresponding commands
         /// </summary>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run( IModelMap inMap )
+        public override AlgebraOperatorResult Run( IModelMap inMap, IEnumerable<ProjectArgument> inAttributesToProject = null )
         {
             RuleMap = inMap;
             // Store operators to execute

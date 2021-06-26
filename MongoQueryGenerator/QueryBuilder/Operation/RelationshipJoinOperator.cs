@@ -53,7 +53,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="LastResult"></param>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run( IModelMap inMap )
+        public override AlgebraOperatorResult Run( IModelMap inMap, IEnumerable<ProjectArgument> inAttributesToProject = null )
         {
             // Store Operations
             List<MongoDBOperator> OperationsToExecute = new List<MongoDBOperator>();
@@ -503,12 +503,41 @@ namespace QueryBuilder.Operation
                         // Check if target has a main mapping
                         MapRule MainTargetRule = ModelMap.FindMainRule( Target.Element );
 
+                        // Check if target is embedded
+                        MapRule TargetRule = ModelMap.FindRule( Target.Element, MainSourceRule.Target );
+
+                        if ( TargetRule != null )
+                        {
+                            // Check if all attributes desired are available and use the embedded version instead of a lookup
+                            if ( inAttributesToProject != null )
+                            {
+                                IEnumerable<ProjectArgument> TargetArguments = inAttributesToProject.Where( A => A.ParentEntity.GetName() == Target.Element.Name );
+
+                                bool HasAllAttributes = true;
+
+                                foreach ( ProjectArgument Arg in TargetArguments )
+                                {
+                                    if ( !TargetRule.HasRuleForAttribute( Arg.Attribute ) )
+                                    {
+                                        HasAllAttributes = false;
+                                        break;
+                                    }
+                                }
+
+                                if ( HasAllAttributes )
+                                {
+                                    // delete main target rule and for code to use embedded data
+                                    MainTargetRule = null;
+                                }
+                            }
+                        }
+
                         if ( MainTargetRule == null )
                         {
                             // Target must be embedded to the source entity
                             // It could be either a 1:1 or 1:N relation, check if the root attribute is multivalued
                             // Fetch target rule
-                            MapRule TargetRule = ModelMap.FindRule( Target.Element, MainSourceRule.Target );
+                            TargetRule = ModelMap.FindRule( Target.Element, MainSourceRule.Target );
 
                             if ( TargetRule == null )
                             {
@@ -635,7 +664,7 @@ namespace QueryBuilder.Operation
 
                             if ( SourceRuleAtTarget == null )
                             {
-                                // Then it should be a 1:1
+                                // Then it should be a 1:1 or a 1:N with target embedded
                                 // Target must have a map pointing at SourceCollection
                                 MapRule TargetRuleAtSource = ModelMap.FindRule( Target.Element, MainSourceRule.Target );
 
@@ -651,65 +680,122 @@ namespace QueryBuilder.Operation
                                 string TargetAs = $"data_{Target.GetName()}_join";
                                 string TargetData = $"data_{Target.GetName()}";
 
-                                // Assuming 1:1
-                                LookupOperator TargetLookupOp = new LookupOperator()
+                                if ( TargetRuleAtSource.BelongsToMultivaluedAttribute() )
                                 {
-                                    From = MainTargetRule.Target.Name,
-                                    LocalField = TargetRuleAtSource.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
-                                    ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
-                                    As = TargetAs
-                                };
-
-                                // Unwind joined data
-                                UnwindOperator UnwindTargetOp = new UnwindOperator( TargetAs );
-
-                                Dictionary<string, JSCode> AddTargetAttributes = new Dictionary<string, JSCode>();
-
-                                // Rename attributes
-                                foreach ( DataAttribute Attribute in Target.Element.Attributes )
-                                {
-                                    string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
-
-                                    if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                    // This is a 1:N with embedded target
+                                    LookupOperator TargetLookupOp = new LookupOperator()
                                     {
-                                        continue;
+                                        From = MainTargetRule.Target.Name,
+                                        LocalField = TargetRuleAtSource.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                        ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                        As = TargetAs
+                                    };
+
+                                    // In this case relationship attributes should me mapped to the target collection
+                                    // otherwise we won't be able to properly match it to related data
+
+                                    // This is a special map to a local $map operation
+                                    Dictionary<string, JSCode> AttributeMap = new Dictionary<string, JSCode>();
+
+                                    string mapInstanceRef = Target.GetName().ToLower();
+
+                                    if ( Relationship.Attributes.Count > 0 )
+                                    {
+                                        // Get relationship rule at target
+                                        MapRule RelationshipRuleAtTarget = ModelMap.FindRule( Relationship, MainTargetRule.Target );
+
+                                        if ( RelationshipRuleAtTarget == null )
+                                        {
+                                            throw new InvalidMapException( $"Relationship {Relationship.Name} has attributes but they are not mapped to a reachable collection" );
+                                        }
+
+                                        foreach ( DataAttribute Attribute in Relationship.Attributes )
+                                        {
+                                            string RuleValue = RelationshipRuleAtTarget.GetRuleValueForAttribute( Attribute );
+                                            AttributeMap.Add( $"{Relationship.Name}_{Attribute.Name}", new JSString( $"\"$${mapInstanceRef}.{RuleValue}\"" ) );
+                                        }
                                     }
 
-                                    AddTargetAttributes.Add( $"\"{TargetData}.{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"${TargetAs}.{RuleValue}\"" ) );
-                                }
-
-                                // Check if relationship attributes are mapped within the target attributes
-                                MapRule RelationshipRuleAtTarget = ModelMap.FindRule( Relationship, MainTargetRule.Target );
-
-                                if ( RelationshipRuleAtTarget != null )
-                                {
-                                    // Iterate attributes and add them to the proper place
-                                    foreach ( DataAttribute Attribute in Relationship.Attributes )
+                                    // Add target fields to map
+                                    foreach ( DataAttribute Attribute in Target.Element.Attributes )
                                     {
-                                        string RuleValue = RelationshipRuleAtTarget.GetRuleValueForAttribute( Attribute );
+                                        string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
+                                        AttributeMap.Add( $"\"{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"$${mapInstanceRef}.{RuleValue}\"" ) );
+                                    }
+
+                                    MapExpr AttributeMapExpr = new MapExpr( TargetAs, mapInstanceRef, AttributeMap );
+                                    Dictionary<string, JSCode> AddFieldsDictionary = new Dictionary<string, JSCode>();
+                                    AddFieldsDictionary.Add( $"data_{Relationship.Name}", AttributeMapExpr.ToJSCode() );
+
+                                    AddFieldsOperator AddRenamedTargetOp = new AddFieldsOperator( AddFieldsDictionary );
+                                    ProjectOperator HideOldTargetOp = ProjectOperator.HideAttributesOperator( new string[] { TargetAs } );
+
+                                    OperationsToExecute.AddRange( new List<MongoDBOperator>() { TargetLookupOp, AddRenamedTargetOp, HideOldTargetOp } );
+
+                                    AreRelationshipAttributesReady = true;
+                                }
+                                else
+                                {                                 
+                                    // Assuming 1:1
+                                    LookupOperator TargetLookupOp = new LookupOperator()
+                                    {
+                                        From = MainTargetRule.Target.Name,
+                                        LocalField = TargetRuleAtSource.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                        ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                        As = TargetAs
+                                    };
+
+                                    // Unwind joined data
+                                    UnwindOperator UnwindTargetOp = new UnwindOperator( TargetAs );
+
+                                    Dictionary<string, JSCode> AddTargetAttributes = new Dictionary<string, JSCode>();
+
+                                    // Rename attributes
+                                    foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                                    {
+                                        string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
+
                                         if ( string.IsNullOrWhiteSpace( RuleValue ) )
                                         {
                                             continue;
                                         }
 
-                                        AddTargetAttributes.Add( $"\"data_{Relationship.Name}.{Relationship.Name}_{Attribute.Name}\"", new JSString( $"\"${TargetAs}.{RuleValue}\"" ) );
+                                        AddTargetAttributes.Add( $"\"{TargetData}.{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"${TargetAs}.{RuleValue}\"" ) );
                                     }
 
-                                    // Add to merge list
-                                    AttributesToMergeWithRelatioshipData.Add( $"data_{Relationship.Name}" );
-                                    AreRelationshipAttributesReady = true;
-                                }
-                                
+                                    // Check if relationship attributes are mapped within the target attributes
+                                    MapRule RelationshipRuleAtTarget = ModelMap.FindRule( Relationship, MainTargetRule.Target );
 
-                                // Add joined data to a proper attribute
-                                AddFieldsOperator AddTargetAtttibutesOp = new AddFieldsOperator( AddTargetAttributes );
+                                    if ( RelationshipRuleAtTarget != null )
+                                    {
+                                        // Iterate attributes and add them to the proper place
+                                        foreach ( DataAttribute Attribute in Relationship.Attributes )
+                                        {
+                                            string RuleValue = RelationshipRuleAtTarget.GetRuleValueForAttribute( Attribute );
+                                            if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                            {
+                                                continue;
+                                            }
 
-                                // As a 1:1 we should merge with it relationship attributes
-                                AttributesToMergeWithRelatioshipData.Add( TargetData );
-                                AttributesToRemove.AddRange( new string[] { TargetData, TargetAs } );
+                                            AddTargetAttributes.Add( $"\"data_{Relationship.Name}.{Relationship.Name}_{Attribute.Name}\"", new JSString( $"\"${TargetAs}.{RuleValue}\"" ) );
+                                        }
 
-                                // Add to execution list
-                                OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, UnwindTargetOp, AddTargetAtttibutesOp } );
+                                        // Add to merge list
+                                        AttributesToMergeWithRelatioshipData.Add( $"data_{Relationship.Name}" );
+                                        AreRelationshipAttributesReady = true;
+                                    }
+
+
+                                    // Add joined data to a proper attribute
+                                    AddFieldsOperator AddTargetAtttibutesOp = new AddFieldsOperator( AddTargetAttributes );
+
+                                    // As a 1:1 we should merge with it relationship attributes
+                                    AttributesToMergeWithRelatioshipData.Add( TargetData );
+                                    AttributesToRemove.AddRange( new string[] { TargetData, TargetAs } );
+
+                                    // Add to execution list
+                                    OperationsToExecute.AddRange( new MongoDBOperator[] { TargetLookupOp, UnwindTargetOp, AddTargetAtttibutesOp } );
+                                }                                
                             }
                             else
                             {

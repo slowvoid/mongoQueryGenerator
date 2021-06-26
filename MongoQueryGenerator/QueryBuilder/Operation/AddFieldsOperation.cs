@@ -1,6 +1,7 @@
 ﻿using QueryBuilder.Javascript;
 using QueryBuilder.Map;
 using QueryBuilder.Mongo.Aggregation.Operators;
+using QueryBuilder.Operation.Arguments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="LastResult"></param>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run( IModelMap inMap )
+        public override AlgebraOperatorResult Run( IModelMap inMap, IEnumerable<ProjectArgument> inAttributesToProject = null )
         {
             RuleMap = inMap;
             AddFieldsOperator AddFieldsOperator = new AddFieldsOperator( Attributes );

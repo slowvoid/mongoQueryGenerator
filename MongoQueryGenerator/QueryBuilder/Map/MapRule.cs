@@ -54,6 +54,15 @@ namespace QueryBuilder.Map
             return Rules.FirstOrDefault( R => R.Key == Attribute.Name ).Value;
         }
         /// <summary>
+        /// Returns whether this instance has a rule for the given attribute
+        /// </summary>
+        /// <param name="Attribute"></param>
+        /// <returns></returns>
+        public bool HasRuleForAttribute( DataAttribute Attribute )
+        {
+            return Rules.ContainsKey( Attribute.Name );
+        }
+        /// <summary>
         /// Returns if the source entity is mapped to a multivalued attribute (aka embedded)
         /// </summary>
         /// <returns></returns>

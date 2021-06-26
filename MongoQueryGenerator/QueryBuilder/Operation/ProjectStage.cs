@@ -45,7 +45,7 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="LastResult"></param>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run( IModelMap inMap )
+        public override AlgebraOperatorResult Run( IModelMap inMap, IEnumerable<ProjectArgument> inAttributesToProject = null )
         {
             if ( inMap is VirtualMap )
             {

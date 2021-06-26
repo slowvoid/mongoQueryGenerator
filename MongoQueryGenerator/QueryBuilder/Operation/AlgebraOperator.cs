@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using QueryBuilder.Map;
 using QueryBuilder.ER;
 using QueryBuilder.Mongo.Aggregation.Operators;
+using QueryBuilder.Operation.Arguments;
 
 namespace QueryBuilder.Operation
 {
@@ -35,7 +36,7 @@ namespace QueryBuilder.Operation
         /// Run operation
         /// </summary>
         /// <returns></returns>
-        public virtual AlgebraOperatorResult Run( IModelMap inMap )
+        public virtual AlgebraOperatorResult Run( IModelMap inMap, IEnumerable<ProjectArgument> inAttributesToProject = null )
         {
             return new AlgebraOperatorResult( new List<MongoDBOperator>() );
         }

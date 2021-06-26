@@ -85,17 +85,25 @@ namespace QueryBuilder.Query
             // Setup results
             AlgebraOperatorResult Result = new AlgebraOperatorResult( new List<MongoDBOperator>() );
 
+            // Get project arguments
+            IEnumerable<ProjectArgument> attributesToProject = null;
+            ProjectStage projStage = (ProjectStage)PipelineOperators.FirstOrDefault( Op => Op is ProjectStage );
+            if ( projStage != null )
+            {
+                attributesToProject = projStage.Arguments;
+            }
+
             for ( int i = 0; i < PipelineOperators.Count; i++ )
             {
                 AlgebraOperator Op = PipelineOperators[ i ];
                 if ( i == 0 )
                 {
-                    Result.Commands.AddRange( Op.Run( StartMap ).Commands );
+                    Result.Commands.AddRange( Op.Run( StartMap, attributesToProject ).Commands );
                 }
                 else
                 {
                     AlgebraOperator previousOp = PipelineOperators[ i - 1 ];
-                    Result.Commands.AddRange( Op.Run( previousOp.ComputeVirtualMap() ).Commands );
+                    Result.Commands.AddRange( Op.Run( previousOp.ComputeVirtualMap(), attributesToProject ).Commands );
                 }
             }
 

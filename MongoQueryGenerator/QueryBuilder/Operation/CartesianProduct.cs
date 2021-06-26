@@ -42,7 +42,7 @@ namespace QueryBuilder.Operation
         /// Run operator
         /// </summary>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run( IModelMap inMap )
+        public override AlgebraOperatorResult Run( IModelMap inMap, IEnumerable<ProjectArgument> inAttributesToProject = null )
         {
             RuleMap = inMap;
             // This operator is quite simple

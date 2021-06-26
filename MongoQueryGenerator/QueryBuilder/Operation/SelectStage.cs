@@ -49,7 +49,7 @@ namespace QueryBuilder.Operation
         /// Generate stage code
         /// </summary>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run( IModelMap inMap )
+        public override AlgebraOperatorResult Run( IModelMap inMap, IEnumerable<ProjectArgument> inAttributesToProject = null )
         {
             RuleMap = inMap;
             MatchOperator MatchOp;
