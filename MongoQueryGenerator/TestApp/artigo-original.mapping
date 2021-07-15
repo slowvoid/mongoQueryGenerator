@@ -27,8 +27,6 @@ DocTypePerson  < Person*, Car, Drives >
 	name: string	< Person.name >
 	cars_multivalued_ : {
 		_id: int       < Car.id >
-		color: string  < Car.color >
-		plate: string	< Car.plate >
 		note: string   < Drives.note >
 	}
 }

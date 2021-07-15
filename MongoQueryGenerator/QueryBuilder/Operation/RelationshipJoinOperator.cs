@@ -2,6 +2,7 @@
 using QueryBuilder.Javascript;
 using QueryBuilder.Map;
 using QueryBuilder.Mongo.Aggregation.Operators;
+using QueryBuilder.Mongo.Aggregation.Operators.GroupExpressions;
 using QueryBuilder.Mongo.Expressions;
 using QueryBuilder.Operation.Arguments;
 using QueryBuilder.Operation.Exceptions;
@@ -682,57 +683,137 @@ namespace QueryBuilder.Operation
 
                                 if ( TargetRuleAtSource.BelongsToMultivaluedAttribute() )
                                 {
-                                    // This is a 1:N with embedded target
-                                    LookupOperator TargetLookupOp = new LookupOperator()
+                                    // Check if Relationship has attributes mapped to the source collection
+                                    MapRule RelationshipRuleAtSource = ModelMap.FindRule( Relationship, MainSourceRule.Target );
+
+                                    if ( RelationshipRuleAtSource != null )
                                     {
-                                        From = MainTargetRule.Target.Name,
-                                        LocalField = TargetRuleAtSource.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
-                                        ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
-                                        As = TargetAs
-                                    };
+                                        // Unwind multivalued attribute
+                                        UnwindOperator unwindMultivaluedAttr = new UnwindOperator( $"{TargetRuleAtSource.GetRootAttribute()}" );
 
-                                    // In this case relationship attributes should me mapped to the target collection
-                                    // otherwise we won't be able to properly match it to related data
-
-                                    // This is a special map to a local $map operation
-                                    Dictionary<string, JSCode> AttributeMap = new Dictionary<string, JSCode>();
-
-                                    string mapInstanceRef = Target.GetName().ToLower();
-
-                                    if ( Relationship.Attributes.Count > 0 )
-                                    {
-                                        // Get relationship rule at target
-                                        MapRule RelationshipRuleAtTarget = ModelMap.FindRule( Relationship, MainTargetRule.Target );
-
-                                        if ( RelationshipRuleAtTarget == null )
+                                        // Lookup
+                                        LookupOperator TargetLookupOp = new LookupOperator()
                                         {
-                                            throw new InvalidMapException( $"Relationship {Relationship.Name} has attributes but they are not mapped to a reachable collection" );
+                                            From = MainTargetRule.Target.Name,
+                                            LocalField = TargetRuleAtSource.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                            ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                            As = TargetAs
+                                        };
+
+                                        // Unwind joined data
+                                        UnwindOperator unwindJoinedData = new UnwindOperator( TargetAs );
+
+                                        // Group data
+                                        Dictionary<string, GroupExpression> GroupAttributes = new Dictionary<string, GroupExpression>();
+
+                                        // Group by source _id
+                                        string _idRuleValue = MainSourceRule.GetRuleValueForAttribute( SourceEntity.GetEntity().GetIdentifierAttribute() );
+                                        GroupAttributes.Add( "_id", new StringGroupExpression( _idRuleValue, true ) );
+
+                                        // Add first ocurrence of other attributes from source
+                                        foreach ( DataAttribute Attribute in SourceEntity.GetEntity().Attributes )
+                                        {
+                                            string RuleValue = MainSourceRule.GetRuleValueForAttribute( Attribute );
+
+                                            GroupAttributes.Add( Attribute.Name, new FirstGroupExpression( RuleValue ) );
                                         }
+
+                                        // Put relationship and target entity attributes together
+                                        string RelationshipAttributeAs = $"data_{Relationship.Name}";
+
+                                        Dictionary<string, GroupExpression> JoinedAttributes = new Dictionary<string, GroupExpression>();
 
                                         foreach ( DataAttribute Attribute in Relationship.Attributes )
                                         {
-                                            string RuleValue = RelationshipRuleAtTarget.GetRuleValueForAttribute( Attribute );
-                                            AttributeMap.Add( $"{Relationship.Name}_{Attribute.Name}", new JSString( $"\"$${mapInstanceRef}.{RuleValue}\"" ) );
+                                            string RuleValue = RelationshipRuleAtSource.GetRuleValueForAttribute( Attribute );
+
+                                            if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                            {
+                                                continue;
+                                            }
+
+                                            JoinedAttributes.Add( $"{Relationship.Name}_{Attribute.Name}", new StringGroupExpression( RuleValue, true ) );
                                         }
-                                    }
 
-                                    // Add target fields to map
-                                    foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                                        foreach ( DataAttribute Attribute in Target.GetEntity().Attributes )
+                                        {
+                                            string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
+
+                                            if ( string.IsNullOrWhiteSpace( RuleValue ) )
+                                            {
+                                                continue;
+                                            }
+
+                                            string RootAttribute = TargetRuleAtSource.GetRootAttribute();
+                                            string UpdatedRuleValue = RuleValue.Replace( RootAttribute, TargetAs );
+
+                                            JoinedAttributes.Add( $"{Target.GetName()}_{Attribute.Name}", new StringGroupExpression( UpdatedRuleValue, true ) );
+                                        }
+
+                                        ObjectGroupExpression PushGroupExpr = new ObjectGroupExpression( "$push", JoinedAttributes );
+
+                                        GroupAttributes.Add( RelationshipAttributeAs, PushGroupExpr );
+
+                                        GroupOperator GroupOp = new GroupOperator( GroupAttributes );
+
+                                        OperationsToExecute.AddRange( new List<MongoDBOperator>() { unwindMultivaluedAttr, TargetLookupOp, unwindJoinedData, GroupOp } );
+
+                                        AreRelationshipAttributesReady = true;
+                                    }
+                                    else
                                     {
-                                        string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
-                                        AttributeMap.Add( $"\"{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"$${mapInstanceRef}.{RuleValue}\"" ) );
+                                        // This is a 1:N with embedded target
+                                        LookupOperator TargetLookupOp = new LookupOperator()
+                                        {
+                                            From = MainTargetRule.Target.Name,
+                                            LocalField = TargetRuleAtSource.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                            ForeignField = MainTargetRule.GetRuleValueForAttribute( Target.Element.GetIdentifierAttribute() ),
+                                            As = TargetAs
+                                        };
+
+                                        // In this case relationship attributes should me mapped to the target collection
+                                        // otherwise we won't be able to properly match it to related data
+
+                                        // This is a special map to a local $map operation
+                                        Dictionary<string, JSCode> AttributeMap = new Dictionary<string, JSCode>();
+
+                                        string mapInstanceRef = Target.GetName().ToLower();
+
+                                        if ( Relationship.Attributes.Count > 0 )
+                                        {
+                                            // Get relationship rule at target
+                                            MapRule RelationshipRuleAtTarget = ModelMap.FindRule( Relationship, MainTargetRule.Target );
+
+                                            if ( RelationshipRuleAtTarget == null )
+                                            {
+                                                throw new InvalidMapException( $"Relationship {Relationship.Name} has attributes but they are not mapped to a reachable collection" );
+                                            }
+
+                                            foreach ( DataAttribute Attribute in Relationship.Attributes )
+                                            {
+                                                string RuleValue = RelationshipRuleAtTarget.GetRuleValueForAttribute( Attribute );
+                                                AttributeMap.Add( $"{Relationship.Name}_{Attribute.Name}", new JSString( $"\"$${mapInstanceRef}.{RuleValue}\"" ) );
+                                            }
+                                        }
+
+                                        // Add target fields to map
+                                        foreach ( DataAttribute Attribute in Target.Element.Attributes )
+                                        {
+                                            string RuleValue = MainTargetRule.GetRuleValueForAttribute( Attribute );
+                                            AttributeMap.Add( $"\"{Target.GetName()}_{Attribute.Name}\"", new JSString( $"\"$${mapInstanceRef}.{RuleValue}\"" ) );
+                                        }
+
+                                        MapExpr AttributeMapExpr = new MapExpr( TargetAs, mapInstanceRef, AttributeMap );
+                                        Dictionary<string, JSCode> AddFieldsDictionary = new Dictionary<string, JSCode>();
+                                        AddFieldsDictionary.Add( $"data_{Relationship.Name}", AttributeMapExpr.ToJSCode() );
+
+                                        AddFieldsOperator AddRenamedTargetOp = new AddFieldsOperator( AddFieldsDictionary );
+                                        ProjectOperator HideOldTargetOp = ProjectOperator.HideAttributesOperator( new string[] { TargetAs } );
+
+                                        OperationsToExecute.AddRange( new List<MongoDBOperator>() { TargetLookupOp, AddRenamedTargetOp, HideOldTargetOp } );
+
+                                        AreRelationshipAttributesReady = true;
                                     }
-
-                                    MapExpr AttributeMapExpr = new MapExpr( TargetAs, mapInstanceRef, AttributeMap );
-                                    Dictionary<string, JSCode> AddFieldsDictionary = new Dictionary<string, JSCode>();
-                                    AddFieldsDictionary.Add( $"data_{Relationship.Name}", AttributeMapExpr.ToJSCode() );
-
-                                    AddFieldsOperator AddRenamedTargetOp = new AddFieldsOperator( AddFieldsDictionary );
-                                    ProjectOperator HideOldTargetOp = ProjectOperator.HideAttributesOperator( new string[] { TargetAs } );
-
-                                    OperationsToExecute.AddRange( new List<MongoDBOperator>() { TargetLookupOp, AddRenamedTargetOp, HideOldTargetOp } );
-
-                                    AreRelationshipAttributesReady = true;
                                 }
                                 else
                                 {                                 

@@ -215,6 +215,36 @@ namespace QueryBuilder.Tests
             // Check if both results are equal
             Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
         }
+        [TestMethod]
+        public void OneToManyRelationshipAttributesEmbeddedAtSource()
+        {
+            // Load mapping
+            var ModelData = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/one-to-many-relationship-attributes-embedded-at-source.mapping" ) );
+
+            string HandcraftedQuery = Utils.ReadQueryFromFile( "HandcraftedQueries/oneToManyEmbeddedRelationshipAttributesAtSource.js" );
+
+            Assert.IsNotNull( HandcraftedQuery );
+
+            string QueryString = "from Person rjoin <Drives> (Car) select *";
+
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
+
+            string GeneratedQuery = QueryGen.Run();
+
+            Assert.IsNotNull( GeneratedQuery );
+
+            QueryRunner Runner = new QueryRunner( "mongodb://localhost:27017", "paper_test_1" );
+
+            string HandcraftedResult = Runner.GetJSON( HandcraftedQuery );
+            string GeneratedResult = Runner.GetJSON( GeneratedQuery );
+
+            // Check if either result is null
+            Assert.IsNotNull( HandcraftedResult );
+            Assert.IsNotNull( GeneratedResult );
+
+            // Check if both results are equal
+            Assert.IsTrue( JToken.DeepEquals( JToken.Parse( HandcraftedResult ), JToken.Parse( GeneratedResult ) ) );
+        }
         // Removed test
         public void OneToManyLeftSideEmbedded()
         {

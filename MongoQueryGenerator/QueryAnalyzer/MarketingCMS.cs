@@ -140,7 +140,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
             QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
-            string queryString = "from Product rjoin <CategoryProducts> (Category) rjoin <StoreProducts> (Store) rjoin <UserProducts> (User) select * where Product.ProductID = '%DB_KEY%'";
+            string queryString = "from Product rjoin <CategoryProducts> (Category) rjoin <StoreProducts> (Store) rjoin <UserProducts> (User) select *";
             QueryGenerator queryGen = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator queryGen2 = QueryBuilderParser.ParseQuery( queryString, DataMap2 );
             QueryGenerator queryGen3 = QueryBuilderParser.ParseQuery( queryString, DataMap3 );
@@ -267,7 +267,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMap3 = Utils.GetMapping( "CMS_3.mapping" );
             QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
-            string queryString = "from Store select * where Store.StoreID = '%DB_KEY%'";
+            string queryString = "from Store select *";
             QueryGenerator queryGen1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator queryGen3 = QueryBuilderParser.ParseQuery( queryString, DataMap3 );
             QueryGenerator queryGen5 = QueryBuilderParser.ParseQuery( queryString, DataMap5 );
@@ -356,7 +356,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMapCategoryDuplicated = Utils.GetMapping( "CMS_3.mapping" );
             QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
 
-            string queryString = "from User select * where User.UserID = '%DB_KEY%'";
+            string queryString = "from User select *";
 
             QueryGenerator QueryGenMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator QueryGenMap3 = QueryBuilderParser.ParseQuery( queryString, DataMapCategoryDuplicated );
@@ -447,7 +447,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
             QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
-            string queryString = "from Category select * where Category.CategoryID = '%DB_KEY%'";
+            string queryString = "from Category select *";
 
             QueryGenerator QueryGenMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator QueryGenMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
@@ -541,7 +541,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMapCategoryDuplicated = Utils.GetMapping( "CMS_3.mapping" );
             QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
-            string queryString = "from Store rjoin <StoreProducts> (Product) select * where Store.StoreID = '%DB_KEY%'";
+            string queryString = "from Store rjoin <StoreProducts> (Product) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator GeneratorMap3 = QueryBuilderParser.ParseQuery( queryString, DataMapCategoryDuplicated );
@@ -632,7 +632,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
             QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
-            string queryString = "from Category rjoin <CategoryProducts> (Product) select * where Category.CategoryID = '%DB_KEY%'";
+            string queryString = "from Category rjoin <CategoryProducts> (Product) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
@@ -824,7 +824,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
             QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
-            string queryString = "from Category rjoin <CategoryProducts> (Product rjoin <StoreProducts> (Store)) select * where Category.CategoryID = '%DB_KEY%'";
+            string queryString = "from Category rjoin <CategoryProducts> (Product rjoin <StoreProducts> (Store)) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
@@ -915,7 +915,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
             QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
-            string queryString = "from Category rjoin <CategoryProducts> (Product rjoin <UserProducts> (User)) select * where Category.CategoryID = '%DB_KEY%'";
+            string queryString = "from Category rjoin <CategoryProducts> (Product rjoin <UserProducts> (User)) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
@@ -1005,7 +1005,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
             QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
-            string queryString = "from Product rjoin <UserProducts> (User) select Product.Title, User.UserName where Product.ProductID = '%DB_KEY%'";
+            string queryString = "from Product rjoin <UserProducts> (User) select Product.Title, User.UserName";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator GeneratorMap2 = QueryBuilderParser.ParseQuery( queryString, DataMapDuplicates );
@@ -1132,7 +1132,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
             QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
-            string queryString = "from Category rjoin <CategoryProducts> (Product rjoin <UserProducts> (User)) select Category.CategoryName, Product.Title, User.UserName, User.UserEmail where Category.CategoryID = '%DB_KEY%'";
+            string queryString = "from Category rjoin <CategoryProducts> (Product rjoin <UserProducts> (User)) select Category.CategoryName, Product.Title, User.UserName, User.UserEmail";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
@@ -1221,7 +1221,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
             QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
 
-            string queryString = "from Category select * where Category.CategoryName = 'Home'";
+            string queryString = "from Category select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
