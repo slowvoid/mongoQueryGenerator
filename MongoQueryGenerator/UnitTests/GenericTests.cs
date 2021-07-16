@@ -18,6 +18,21 @@ namespace QueryBuilder.Tests
     public class GenericTests
     {
         [TestMethod]
+        public void TestPaper()
+        {
+            string mapping = "Mappings/person-drives-car.mapping";
+            string query = "from Person rjoin <Drives> (Car) select Person.name, Car.plate";
+            var ModelData = QueryBuilderParser.ParseMapping(Utils.ReadMappingFile(mapping));
+            QueryGenerator QueryGen = QueryBuilderParser.ParseQuery(query, ModelData);
+            Console.WriteLine("");
+            Console.WriteLine(query);
+            Console.WriteLine(QueryGen.SummarizeToString());
+
+            Console.WriteLine("");
+            Console.WriteLine(QueryGen.Run());
+        }
+
+        [TestMethod]
         public void TestComputedEntities()
         {
 

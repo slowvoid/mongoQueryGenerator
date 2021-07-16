@@ -1,193 +1,193 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
 
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="HandcraftedQueries\cartersianProduct-1.js" />
-    <None Remove="HandcraftedQueries\ceManyToMany-2.js" />
-    <None Remove="HandcraftedQueries\ceManyToMany.js" />
-    <None Remove="HandcraftedQueries\ceOneToMany-2.js" />
-    <None Remove="HandcraftedQueries\ceOneToMany.js" />
-    <None Remove="HandcraftedQueries\ceOneToOne-Multiple.js" />
-    <None Remove="HandcraftedQueries\ceOneToOne-Multiple2.js" />
-    <None Remove="HandcraftedQueries\ceOneToOne.js" />
-    <None Remove="HandcraftedQueries\manyToManyRelationshipAttributes.js" />
-    <None Remove="HandcraftedQueries\manyToManyRelationshipAttributesMultipleEntities.js" />
-    <None Remove="HandcraftedQueries\oneToManyLeftSideEmbedded.js" />
-    <None Remove="HandcraftedQueries\oneToOneLeftSideEmbedded.js" />
-    <None Remove="HandcraftedQueries\personCarInsCompanyManyToMany.js" />
-    <None Remove="HandcraftedQueries\personCarInsuranceOneToOne.js" />
-    <None Remove="HandcraftedQueries\personCarInsuranceOneToOneMultipleMixed.js" />
-    <None Remove="HandcraftedQueries\personCarManyToMany_1.js" />
-    <None Remove="HandcraftedQueries\personCarOneToManyRelationshipAttributeEmbedded.js" />
-    <None Remove="HandcraftedQueries\personCarOneToMany_1.js" />
-    <None Remove="HandcraftedQueries\personCarOneToMany_2.js" />
-    <None Remove="HandcraftedQueries\personCarOneToOneMixedRelationshipAttributes.js" />
-    <None Remove="HandcraftedQueries\personCarOneToOneMultipleRootAttributes.js" />
-    <None Remove="HandcraftedQueries\personCarOneToOneRelationshipAttributes.js" />
-    <None Remove="HandcraftedQueries\personCarOneToOne_1.js" />
-    <None Remove="HandcraftedQueries\personCarOneToOne_2.js" />
-    <None Remove="HandcraftedQueries\personCarOneToOne_3.js" />
-    <None Remove="HandcraftedQueries\personCarOneToOne_4.js" />
-    <None Remove="HandcraftedQueries\personDrivesOneToManyRelationshipAttributes.js" />
-    <None Remove="HandcraftedQueries\projectQuery.js" />
-    <None Remove="HandcraftedQueries\projectQuerySimple.js" />
-    <None Remove="HandcraftedQueries\selectAnd.js" />
-    <None Remove="HandcraftedQueries\selectEqual.js" />
-    <None Remove="HandcraftedQueries\selectGreaterOrEqualThan.js" />
-    <None Remove="HandcraftedQueries\selectGreaterThan.js" />
-    <None Remove="HandcraftedQueries\selectInArray.js" />
-    <None Remove="HandcraftedQueries\selectLessOrEqualThan.js" />
-    <None Remove="HandcraftedQueries\selectLessThan.js" />
-    <None Remove="HandcraftedQueries\selectNot.js" />
-    <None Remove="HandcraftedQueries\selectNotEqual.js" />
-    <None Remove="HandcraftedQueries\selectNotInArray.js" />
-    <None Remove="HandcraftedQueries\selectOr.js" />
-    <None Remove="HandcraftedQueries\selectOrMultiple.js" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="HandcraftedQueries\cartersianProduct-1.js" />
+        <None Remove="HandcraftedQueries\ceManyToMany-2.js" />
+        <None Remove="HandcraftedQueries\ceManyToMany.js" />
+        <None Remove="HandcraftedQueries\ceOneToMany-2.js" />
+        <None Remove="HandcraftedQueries\ceOneToMany.js" />
+        <None Remove="HandcraftedQueries\ceOneToOne-Multiple.js" />
+        <None Remove="HandcraftedQueries\ceOneToOne-Multiple2.js" />
+        <None Remove="HandcraftedQueries\ceOneToOne.js" />
+        <None Remove="HandcraftedQueries\manyToManyRelationshipAttributes.js" />
+        <None Remove="HandcraftedQueries\manyToManyRelationshipAttributesMultipleEntities.js" />
+        <None Remove="HandcraftedQueries\oneToManyLeftSideEmbedded.js" />
+        <None Remove="HandcraftedQueries\oneToOneLeftSideEmbedded.js" />
+        <None Remove="HandcraftedQueries\personCarInsCompanyManyToMany.js" />
+        <None Remove="HandcraftedQueries\personCarInsuranceOneToOne.js" />
+        <None Remove="HandcraftedQueries\personCarInsuranceOneToOneMultipleMixed.js" />
+        <None Remove="HandcraftedQueries\personCarManyToMany_1.js" />
+        <None Remove="HandcraftedQueries\personCarOneToManyRelationshipAttributeEmbedded.js" />
+        <None Remove="HandcraftedQueries\personCarOneToMany_1.js" />
+        <None Remove="HandcraftedQueries\personCarOneToMany_2.js" />
+        <None Remove="HandcraftedQueries\personCarOneToOneMixedRelationshipAttributes.js" />
+        <None Remove="HandcraftedQueries\personCarOneToOneMultipleRootAttributes.js" />
+        <None Remove="HandcraftedQueries\personCarOneToOneRelationshipAttributes.js" />
+        <None Remove="HandcraftedQueries\personCarOneToOne_1.js" />
+        <None Remove="HandcraftedQueries\personCarOneToOne_2.js" />
+        <None Remove="HandcraftedQueries\personCarOneToOne_3.js" />
+        <None Remove="HandcraftedQueries\personCarOneToOne_4.js" />
+        <None Remove="HandcraftedQueries\personDrivesOneToManyRelationshipAttributes.js" />
+        <None Remove="HandcraftedQueries\projectQuery.js" />
+        <None Remove="HandcraftedQueries\projectQuerySimple.js" />
+        <None Remove="HandcraftedQueries\selectAnd.js" />
+        <None Remove="HandcraftedQueries\selectEqual.js" />
+        <None Remove="HandcraftedQueries\selectGreaterOrEqualThan.js" />
+        <None Remove="HandcraftedQueries\selectGreaterThan.js" />
+        <None Remove="HandcraftedQueries\selectInArray.js" />
+        <None Remove="HandcraftedQueries\selectLessOrEqualThan.js" />
+        <None Remove="HandcraftedQueries\selectLessThan.js" />
+        <None Remove="HandcraftedQueries\selectNot.js" />
+        <None Remove="HandcraftedQueries\selectNotEqual.js" />
+        <None Remove="HandcraftedQueries\selectNotInArray.js" />
+        <None Remove="HandcraftedQueries\selectOr.js" />
+        <None Remove="HandcraftedQueries\selectOrMultiple.js" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="HandcraftedQueries\cartersianProduct-1.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\ceManyToMany-2.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\ceManyToMany.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\ceOneToMany-2.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\ceOneToMany.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\ceOneToOne-Multiple.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\ceOneToOne-Multiple2.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\ceOneToOne.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\manyToManyRelationshipAttributes.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\manyToManyRelationshipAttributesMultipleEntities.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\oneToManyLeftSideEmbedded.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\oneToOneLeftSideEmbedded.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarInsCompanyManyToMany.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarInsuranceOneToOne.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarInsuranceOneToOneMultipleMixed.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarManyToMany_1.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarOneToManyRelationshipAttributeEmbedded.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarOneToMany_1.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarOneToMany_2.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarOneToOneMixedRelationshipAttributes.js" />
-    <Content Include="HandcraftedQueries\personCarOneToOneMultipleRootAttributes.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarOneToOneRelationshipAttributes.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarOneToOne_1.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarOneToOne_2.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarOneToOne_3.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personCarOneToOne_4.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\personDrivesOneToManyRelationshipAttributes.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\projectQuery.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\projectQuerySimple.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectAnd.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectEqual.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectGreaterOrEqualThan.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectGreaterThan.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectInArray.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectLessOrEqualThan.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectLessThan.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectNot.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectNotEqual.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectNotInArray.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectOr.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HandcraftedQueries\selectOrMultiple.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="HandcraftedQueries\cartersianProduct-1.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\ceManyToMany-2.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\ceManyToMany.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\ceOneToMany-2.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\ceOneToMany.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\ceOneToOne-Multiple.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\ceOneToOne-Multiple2.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\ceOneToOne.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\manyToManyRelationshipAttributes.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\manyToManyRelationshipAttributesMultipleEntities.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\oneToManyLeftSideEmbedded.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\oneToOneLeftSideEmbedded.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarInsCompanyManyToMany.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarInsuranceOneToOne.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarInsuranceOneToOneMultipleMixed.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarManyToMany_1.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarOneToManyRelationshipAttributeEmbedded.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarOneToMany_1.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarOneToMany_2.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarOneToOneMixedRelationshipAttributes.js" />
+        <Content Include="HandcraftedQueries\personCarOneToOneMultipleRootAttributes.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarOneToOneRelationshipAttributes.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarOneToOne_1.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarOneToOne_2.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarOneToOne_3.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personCarOneToOne_4.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\personDrivesOneToManyRelationshipAttributes.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\projectQuery.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\projectQuerySimple.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectAnd.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectEqual.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectGreaterOrEqualThan.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectGreaterThan.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectInArray.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectLessOrEqualThan.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectLessThan.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectNot.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectNotEqual.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectNotInArray.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectOr.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="HandcraftedQueries\selectOrMultiple.js">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="5.9.0" />
-    <PackageReference Include="FluentAssertions.Json" Version="5.3.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
-    <PackageReference Include="coverlet.collector" Version="1.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FluentAssertions" Version="5.9.0" />
+        <PackageReference Include="FluentAssertions.Json" Version="5.3.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
+        <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
+        <PackageReference Include="coverlet.collector" Version="1.0.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\QueryBuilder-Parser\QueryBuilder-Parser.csproj" />
-    <ProjectReference Include="..\QueryBuilder\QueryBuilder.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\QueryBuilder-Parser\QueryBuilder-Parser.csproj" />
+        <ProjectReference Include="..\QueryBuilder\QueryBuilder.csproj" />
+    </ItemGroup>
 
   <ItemGroup>
     <None Update="HandcraftedQueries\manyToManyEmbedded.js">
