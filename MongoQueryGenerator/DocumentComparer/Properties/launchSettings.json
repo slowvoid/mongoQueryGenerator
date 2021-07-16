@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DocumentComparer": {
+      "commandName": "Project",
+      "commandLineArgs": "--generateProject --skipHandcrafted"
+    }
+  }
+}

@@ -45,8 +45,13 @@ namespace QueryBuilder.Operation
         /// </summary>
         /// <param name="LastResult"></param>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run()
+        public override AlgebraOperatorResult Run( IModelMap inMap, IEnumerable<ProjectArgument> inAttributesToProject = null )
         {
+            if ( inMap is VirtualMap )
+            {
+                Map = inMap;
+                RuleMap = inMap;
+            }
             // Store operators to run
             List<MongoDBOperator> OperatorsToExecute = new List<MongoDBOperator>();
             // All we need to do is find the correct map for each attribute
@@ -55,6 +60,11 @@ namespace QueryBuilder.Operation
             // Iterate all arguments
             foreach ( ProjectArgument Argument in Arguments )
             {
+                // Skip if Argument.Attribute is null
+                if ( Argument.Attribute == null )
+                {
+                    continue;
+                }
                 // Each argument provides all necessary data
                 string AttributeMap = Map.GetRuleValue( Argument.ParentEntity.Alias ?? Argument.ParentEntity.GetName(), Argument.Attribute.Name );
 
@@ -67,11 +77,16 @@ namespace QueryBuilder.Operation
                 // Including quotation marks to prevent trouble with dot notation
                 AttributesAndExpressions.Add( $"\"{AttributeMap}\"", Argument.Expression );
             }
-            // Create project operator
-            ProjectOperator ProjectOp = new ProjectOperator( AttributesAndExpressions );
-            // Add to execution list
-            // TODO: This process can be simplified to a single ProjectOperator
-            OperatorsToExecute.Add( ProjectOp );
+
+            // Only add projection if AttributesAndExpressions have content
+            if ( AttributesAndExpressions.Count > 0 )
+            {
+                // Create project operator
+                ProjectOperator ProjectOp = new ProjectOperator( AttributesAndExpressions );
+                // Add to execution list
+                // TODO: This process can be simplified to a single ProjectOperator
+                OperatorsToExecute.Add( ProjectOp );
+            }
             // Return operators
             return new AlgebraOperatorResult( OperatorsToExecute );
         }
@@ -86,6 +101,10 @@ namespace QueryBuilder.Operation
             if ( ExistingVirtualMap == null && Map is ModelMapping)
             {
                 ExistingVirtualMap = VirtualMap.FromModelMap( (ModelMapping)Map );
+            }
+            else if ( ExistingVirtualMap == null && Map is VirtualMap )
+            {
+                ExistingVirtualMap = Map as VirtualMap;
             }
 
             // Store new rules

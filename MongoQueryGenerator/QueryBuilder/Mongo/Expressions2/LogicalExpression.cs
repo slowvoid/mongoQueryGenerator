@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using QueryBuilder.Javascript;
 using QueryBuilder.ER;
 using QueryBuilder.Shared;
+using QueryBuilder.Mongo.Expressions;
+using QueryBuilder.Map;
 
 namespace QueryBuilder.Mongo.Expressions2
 {
@@ -22,6 +24,46 @@ namespace QueryBuilder.Mongo.Expressions2
         {
             this.LogicalTerms = new List<LogicalTerm>();
             this.LogicalOperators = new List<LogicalOperator>();
+        }
+
+        public Expr ToExpr()
+        {
+            Expr expr = null;
+
+            for ( int i = 0; i < LogicalTerms.Count; i += 2 )
+            {
+                BaseLogicalExpression left = LogicalTerms[ i ].ToExpression();
+
+                if ( i + 1 >= LogicalTerms.Count )
+                {
+                    // return just the first term
+                    expr = new Expr( left );
+                    break;
+                }
+
+                BaseLogicalExpression right = LogicalTerms[ i + 1 ].ToExpression();
+
+                if ( i < LogicalOperators.Count )
+                {
+                    LogicalOperator op = LogicalOperators.ElementAt( i );
+                    switch ( op )
+                    {
+                        case LogicalOperator.AND:
+                            expr = new Expr(new LogicalExpressionGroup( left, Expressions.LogicalOperator.AND, right ));
+                            break;
+                        case LogicalOperator.OR:
+                            expr = new Expr(new LogicalExpressionGroup( left, Expressions.LogicalOperator.OR, right ));
+                            break;
+                    }
+                }
+                else
+                {
+                    // This is probably invalid
+                    throw new InvalidOperationException();
+                }
+            }
+
+            return expr;
         }
 
         public string GetJavaScript()
@@ -53,12 +95,58 @@ namespace QueryBuilder.Mongo.Expressions2
     public abstract class LogicalTerm
     {
         public abstract string GetJavaScript();
+        public abstract BaseLogicalExpression ToExpression();
     }
     public class RelationalLogicalTerm : LogicalTerm
     {
         public SimpleAttribute SimpleAttribute { get; set; }
         public RelationalOperator RelationalOperator { get; set; }
         public string Value { get; set; }
+
+        public override BaseLogicalExpression ToExpression()
+        {
+            BaseLogicalExpression expr = null;
+
+            // Check if we need to change value type
+            object parsedValue = Value;
+
+            if ( int.TryParse( (string)parsedValue, out int intValue ) )
+            {
+                parsedValue = intValue;
+            }
+            else
+            {
+                // Strip single quotes from value
+                parsedValue = Value.Replace( "'", "" );
+            }
+
+            switch ( RelationalOperator )
+            {
+                case RelationalOperator.EQUAL:
+                    expr = new EqExpr( SimpleAttribute.value, parsedValue );
+                    break;
+                case RelationalOperator.NOT_EQUAL:
+                    expr = new NeqExpr( SimpleAttribute.value, parsedValue );
+                    break;
+                case RelationalOperator.GREATER_EQUAL:
+                    expr = new GteExpr( SimpleAttribute.value, parsedValue );
+                    break;
+                case RelationalOperator.LESS_EQUAL:
+                    expr = new LteExpr( SimpleAttribute.value, parsedValue );
+                    break;
+                case RelationalOperator.GREATER:
+                    expr = new GtExpr( SimpleAttribute.value, parsedValue );
+                    break;
+                case RelationalOperator.LESS:
+                    expr = new LtExpr( SimpleAttribute.value, parsedValue );
+                    break;
+                case RelationalOperator.LIKE:
+                case RelationalOperator.IS:
+                    throw new NotSupportedException( "Operation not supported" );
+            }
+
+            return expr;
+        }
 
         override public string GetJavaScript()
         {
@@ -110,6 +198,36 @@ namespace QueryBuilder.Mongo.Expressions2
             Values = new List<string>();
         }
 
+        public override BaseLogicalExpression ToExpression()
+        {
+            List<object> inValues = new List<object>();
+
+            foreach ( string val in Values )
+            {
+                if ( int.TryParse( val, out int intVal ) )
+                {
+                    inValues.Add( intVal );
+                }
+                else
+                {
+                    inValues.Add( val.Replace( "'", "" ) );
+                }
+            }
+
+            if ( RangeOperator == RangeOperator.IN_VALUES )
+            {
+                return new InExpr( SimpleAttribute.value, inValues );
+            }
+            else if ( RangeOperator == RangeOperator.NOT_IN_VALUES )
+            {
+                return new NotInExpr( SimpleAttribute.value, inValues );
+            }
+            else
+            {
+                throw new NotImplementedException("Only IN and NOT IN operations are available at the moment");
+            }
+        }
+
         override public string GetJavaScript()
         {
             string jsCode = "";
@@ -153,6 +271,11 @@ namespace QueryBuilder.Mongo.Expressions2
             return "(" + LogicalExpression.GetJavaScript() + ")";
         }
 
+        public override BaseLogicalExpression ToExpression()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     public class SimpleAttribute
@@ -162,7 +285,7 @@ namespace QueryBuilder.Mongo.Expressions2
         {
             this.value = value;
         }
-        private string value;
+        public string value { get; private set; }
         public string GetJavaScript()
         {
             return value;

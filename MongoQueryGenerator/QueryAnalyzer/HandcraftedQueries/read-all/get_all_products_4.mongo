@@ -1,0 +1,16 @@
+db.Product.aggregate([
+    {"$lookup": {
+        from: 'Category',
+        foreignField: '_id',
+        localField: 'CategoryID',
+        as: 'data_Category'
+    }},
+    {$unwind: '$data_Category'},
+    {"$lookup": {
+        from: 'User',
+        foreignField: '_id',
+        localField: 'UserID',
+        as: 'data_User'
+    }},
+    {$unwind: '$data_User'}
+], {allowDiskUse: true})

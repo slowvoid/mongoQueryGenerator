@@ -135,7 +135,7 @@ namespace QueryBuilder.Tests
             Assert.IsNotNull( HandcraftedQuery );
 
             // Prepare query generator
-            string QueryString = "from Person rjoin <Insurance> (Car, Inscompany) select *";
+            string QueryString = "from Person rjoin <Insurance> (Car, InsCompany) select *";
             QueryGenerator QueryGen = QueryBuilderParser.ParseQuery( QueryString, ModelData );
 
             string GeneratedQuery = QueryGen.Run();

@@ -27,6 +27,14 @@ namespace QueryBuilder.Map
 
         #region Methods
         /// <summary>
+        /// Returns true if no rules were set
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEmpty()
+        {
+            return Rules.Count == 0;
+        }
+        /// <summary>
         /// Get rule value for an attribute that belongs to the given entity
         /// </summary>
         /// <param name="NameOrAlias"></param>
@@ -39,11 +47,11 @@ namespace QueryBuilder.Map
 
             if ( IsMain )
             {
-                Rule = Rules.First( R => R.Source.Name == NameOrAlias && IsMain );
+                Rule = Rules.First( R => R.Source.Name == NameOrAlias && R.Rules.ContainsKey( AttributeName ) && IsMain );
             }
             else
             {
-                Rule = Rules.First( R => R.Source.Name == NameOrAlias );
+                Rule = Rules.First( R => R.Source.Name == NameOrAlias && R.Rules.ContainsKey( AttributeName ) );
             }
             
             if ( Rule != null )
@@ -106,7 +114,7 @@ namespace QueryBuilder.Map
         /// <returns></returns>
         public MapRule FindMainRule( BaseERElement Source )
         {
-            return Rules.FirstOrDefault( R => R.Source == Source && R.IsMain );
+            return Rules.FirstOrDefault( R => R.Source.Name == Source.Name && R.IsMain );
         }
         /// <summary>
         /// Find the main mapping that targets the given collection

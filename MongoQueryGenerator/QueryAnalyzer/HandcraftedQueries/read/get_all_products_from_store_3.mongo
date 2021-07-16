@@ -1,0 +1,11 @@
+db.Store.aggregate([
+    {"$match": {
+        _id: "%DB_KEY%"
+    }},
+    {$lookup: {
+        from: 'Product',
+        foreignField: 'StoreID',
+        localField: '_id',
+        as: 'data_Product'
+    }}
+], {allowDiskUse: true})

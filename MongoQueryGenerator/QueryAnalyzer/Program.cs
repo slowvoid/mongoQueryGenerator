@@ -10,10 +10,14 @@ namespace QueryAnalyzer
             DateTime StartTime = DateTime.Now;
             Console.WriteLine( "Starting Time: {0}", StartTime.ToString() );
 
-            MarketingCMS cms = new MarketingCMS();
-            cms.Iterations = 100;
+            MarketingCMS cms = new MarketingCMS( "research_performance_index" );
+            cms.Iterations = 1000;
             cms.TargetDatabase = "research_performance_stats_nosort";
             cms.ExportQueries = true;
+            cms.UseDefaultQueryInsteadOfExplain = true;
+            cms.UseReadAllQueries = true;
+            cms.BenchmarkWorkloadFolder = @"D:\Projects\mestrado\YCSB\workloads";
+            cms.GenerateKeys();
 
             Console.WriteLine( "Iterations to run: {0} | Target database: {1}", cms.Iterations, cms.TargetDatabase );
 
@@ -49,17 +53,20 @@ namespace QueryAnalyzer
             Console.WriteLine( "Query: get_all_users" );
             cms.GetAllUsers();
 
-            Console.WriteLine( "Query: get_category_named_home" );
-            cms.GetCategoryThatIsNamedHome();
+            //Console.WriteLine( "Query: get_category_named_home" );
+            //cms.GetCategoryThatIsNamedHome();
 
             Console.WriteLine( "Query: get_product_title_username" );
             cms.GetProductTitleAndUserName();
 
-            Console.WriteLine( "Query: get_products_prices_less" );
-            cms.GetAllProductsThatCostsLessThan5();
+            //Console.WriteLine( "Query: get_products_prices_less" );
+            //cms.GetAllProductsThatCostsLessThan5();
 
             //Console.WriteLine( "Query: Running custom test" );
             //cms.RunCustomQueriesTest();
+
+            cms.ExportCommandsToFile();
+            //cms.CopyQueriesToBenchmarkFolder();
 
             DateTime EndTime = DateTime.Now;
             Console.WriteLine( "Finished" );

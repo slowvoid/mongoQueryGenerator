@@ -189,142 +189,158 @@
         <ProjectReference Include="..\QueryBuilder\QueryBuilder.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <None Update="HandcraftedQueries\manyToManyEmbedded.js">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="HandcraftedQueries\Progradweb\AlunoMatriculaEnfase.js">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="HandcraftedQueries\Progradweb\EnfaseMatriculaAluno.js">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\cartesian.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\many-to-many-computed-entity-2.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\many-to-many-computed-entity.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\many-to-many-embedded-target.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\many-to-many-multiple-entities.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\many-to-many-relationship-attribute-multiple-entities.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\many-to-many-relationship-attribute-single-entity.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\many-to-many-single-entity.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\MarketingCMS\entities-to-collections-category-duplicated.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\MarketingCMS\entities-to-collections-duplicates.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\MarketingCMS\entities-to-collections-store-duplicated.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\MarketingCMS\entities-to-collections-user-duplicated.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\MarketingCMS\entities-to-collections.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-many-computed-entity.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-many-embedded.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-many-not-embedded.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-many-relationship-attributes-embedded.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-many-relationship-attributes.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-one-computed-entity-multiple-2.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-one-computed-entity-multiple.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-one-computed-entity.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-one-embedded-mixed.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-one-embedded-no-master-attribute.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-one-embedded.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-one-multiple-entities-mixed.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-one-not-embedded-multiple-entities.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-one-not-embedded.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\one-to-one-relationship-attributes.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\Progradweb\entities-to-collections-3.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\Progradweb\entities-to-collections-aluno-embedded.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\Progradweb\entities-to-collections-curso-disciplina-embedded.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\Progradweb\entities-to-collections-curso-embedded.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\Progradweb\entities-to-collections-disciplina-embedded.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\Progradweb\entities-to-collections-endereco-embedded.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\Progradweb\entities-to-collections-many-endereco-embedded.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\Progradweb\entities-to-collections-many-endereco.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\Progradweb\entities-to-collections.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\person-drives-car.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\project-computed-entity.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\project-simple.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\select.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Mappings\virtual-map.mapping">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
+  <ItemGroup>
+    <None Update="HandcraftedQueries\manyToManyEmbedded.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\oneToManyEmbeddedDuplicatedMain.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Code</SubType>
+    </None>
+    <None Update="HandcraftedQueries\oneToManyEmbeddedDuplicated.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\oneToManyEmbeddedRelationshipAttributesAtSource.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\Progradweb\AlunoMatriculaEnfase.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\Progradweb\EnfaseMatriculaAluno.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-relationship-attributes-embedded-at-source.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\cartesian.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-computed-entity-2.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-computed-entity.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-embedded-target.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-multiple-entities.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-relationship-attribute-multiple-entities.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-relationship-attribute-single-entity.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\many-to-many-single-entity.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\MarketingCMS\entities-to-collections-category-duplicated.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\MarketingCMS\entities-to-collections-duplicates.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\MarketingCMS\entities-to-collections-store-duplicated.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\MarketingCMS\entities-to-collections-user-duplicated.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\MarketingCMS\entities-to-collections.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-computed-entity.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-embedded-duplicated-main.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-embedded-duplicated.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-not-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-relationship-attributes-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-many-relationship-attributes.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-computed-entity-multiple-2.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-computed-entity-multiple.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-computed-entity.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-embedded-mixed.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-embedded-no-master-attribute.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-multiple-entities-mixed.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-not-embedded-multiple-entities.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-not-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\one-to-one-relationship-attributes.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-3.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-aluno-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-curso-disciplina-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-curso-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-disciplina-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-endereco-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-many-endereco-embedded.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections-many-endereco.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\Progradweb\entities-to-collections.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\project-computed-entity.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\project-simple.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\select.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappings\virtual-map.mapping">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>

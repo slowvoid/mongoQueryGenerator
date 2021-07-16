@@ -42,8 +42,9 @@ namespace QueryBuilder.Operation
         /// Run operator
         /// </summary>
         /// <returns></returns>
-        public override AlgebraOperatorResult Run()
+        public override AlgebraOperatorResult Run( IModelMap inMap, IEnumerable<ProjectArgument> inAttributesToProject = null )
         {
+            RuleMap = inMap;
             // This operator is quite simple
             // basically a lookup with an empty pipeline (no join condition)
             // No support for embedded entities

@@ -1,0 +1,18 @@
+db.Category.aggregate([
+    {"$match": {
+        _id: "%DB_KEY%"
+    }},
+    {"$lookup": {
+        from: 'Product',
+        foreignField: 'CategoryID',
+        localField: '_id',
+        as: 'data_Product',
+    }},
+    {"$project": {
+        _id: false,
+        CategoryName: true,
+        "data_Product.Title": true,
+        "data_Product.user.name": true,
+        "data_Product.user.email": true
+    }}
+], {allowDiskUse: true})

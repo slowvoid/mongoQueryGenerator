@@ -27,9 +27,25 @@ namespace QueryBuilder.Query
         /// Data acting as start point
         /// </summary>
         public FromArgument StartArgument { get; set; }
+        /// <summary>
+        /// Whether final query should append pretty()
+        /// </summary>
+        public bool PrettyPrint { get; set; }
+        /// <summary>
+        /// Starting Model Mapping
+        /// </summary>
+        public ModelMapping StartMap { get; set; }
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Assign a value to StartMap
+        /// </summary>
+        /// <param name="inMap"></param>
+        public void SetStartMap( ModelMapping inMap )
+        {
+            StartMap = inMap;
+        }
         public string SummarizeToString()
         {
             string Ret = "S: " + StartArgument.SummarizeToString()+"\n";
@@ -44,6 +60,14 @@ namespace QueryBuilder.Query
             return Ret;
         }
 
+        /// <summary>
+        /// Sets pretty print prop
+        /// </summary>
+        /// <param name="inValue"></param>
+        public void SetPrettyPrint(bool inValue)
+        {
+            PrettyPrint = inValue;
+        }
         /// <summary>
         /// Run the query generator
         /// </summary>
@@ -61,9 +85,26 @@ namespace QueryBuilder.Query
             // Setup results
             AlgebraOperatorResult Result = new AlgebraOperatorResult( new List<MongoDBOperator>() );
 
-            foreach ( AlgebraOperator Op in PipelineOperators )
+            // Get project arguments
+            IEnumerable<ProjectArgument> attributesToProject = null;
+            ProjectStage projStage = (ProjectStage)PipelineOperators.FirstOrDefault( Op => Op is ProjectStage );
+            if ( projStage != null )
             {
-                Result.Commands.AddRange( Op.Run().Commands );
+                attributesToProject = projStage.Arguments;
+            }
+
+            for ( int i = 0; i < PipelineOperators.Count; i++ )
+            {
+                AlgebraOperator Op = PipelineOperators[ i ];
+                if ( i == 0 )
+                {
+                    Result.Commands.AddRange( Op.Run( StartMap, attributesToProject ).Commands );
+                }
+                else
+                {
+                    AlgebraOperator previousOp = PipelineOperators[ i - 1 ];
+                    Result.Commands.AddRange( Op.Run( previousOp.ComputeVirtualMap(), attributesToProject ).Commands );
+                }
             }
 
             // Check if there are any commands to be executed last
@@ -84,9 +125,14 @@ namespace QueryBuilder.Query
                 AggregatePipeline.Add( Command.ToJavaScript() );
             }
 
-            // TODO: Update this section to generate collection and aggregate
-            // according to the query
-            return string.Format( "db.{0}.aggregate([{1}], {{allowDiskUse: true}}).pretty();", CollectionName, string.Join( ",", AggregatePipeline ) );
+            if ( PrettyPrint )
+            {
+                return string.Format( "db.{0}.aggregate([{1}], {{allowDiskUse: true}}).pretty();", CollectionName, string.Join( ",", AggregatePipeline ) );
+            }
+            else
+            {
+                return string.Format( "db.{0}.aggregate([{1}], {{allowDiskUse: true}});", CollectionName, string.Join( ",", AggregatePipeline ) );
+            }
         }
         /// <summary>
         /// Generates the query in explain mode
@@ -105,9 +151,23 @@ namespace QueryBuilder.Query
             // Setup results
             AlgebraOperatorResult Result = new AlgebraOperatorResult( new List<MongoDBOperator>() );
 
+            for ( int i = 0; i < PipelineOperators.Count; i++ )
+            {
+                AlgebraOperator Op = PipelineOperators[ i ];
+                if ( i == 0 )
+                {
+                    Result.Commands.AddRange( Op.Run( StartMap ).Commands );
+                }
+                else
+                {
+                    AlgebraOperator previousOp = PipelineOperators[ i - 1 ];
+                    Result.Commands.AddRange( Op.Run( previousOp.ComputeVirtualMap() ).Commands );
+                }
+            }
+
             foreach ( AlgebraOperator Op in PipelineOperators )
             {
-                Result.Commands.AddRange( Op.Run().Commands );
+                Result.Commands.AddRange( Op.Run(StartMap).Commands );
             }
 
             // Check if there are any commands to be executed last
@@ -143,6 +203,8 @@ namespace QueryBuilder.Query
         {
             this.StartArgument = StartArgument;
             this.PipelineOperators = PipelineOperators;
+
+            PrettyPrint = false;
         }
         #endregion
     }

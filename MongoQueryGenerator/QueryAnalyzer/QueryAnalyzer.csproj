@@ -10,14 +10,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\QueryBuilder-Parser\QueryBuilder-Parser.csproj" />
     <ProjectReference Include="..\QueryBuilder\QueryBuilder.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="HandcraftedQueries\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Update="CMS_1.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="CMS_2.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="CMS_3.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="CMS_4.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="CMS_5.mapping">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="CustomQueries\get_all_products_that_costs_less5_m_1.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -120,10 +132,10 @@
     <None Update="HandcraftedQueries\get_all_users_1.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HandcraftedQueries\get_all_users_2.mongo">
+    <None Update="HandcraftedQueries\get_all_users_3.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HandcraftedQueries\get_all_users_3.mongo">
+    <None Update="HandcraftedQueries\get_all_users_4.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="HandcraftedQueries\get_category_named_home_1.mongo">
@@ -158,6 +170,258 @@
     </None>
     <None Update="HandcraftedQueries\get_product_title_and_username_5.mongo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_categories_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_categories_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_categories_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_category_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_category_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_category_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_category_with_store_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_category_with_store_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_category_with_store_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_category_with_user_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_category_with_user_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_category_with_user_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_store_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_store_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_from_store_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_that_costs_less5_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_that_costs_less5_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_that_costs_less5_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_that_costs_less5_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_products_that_costs_less5_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_stores_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_stores_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_stores_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_users_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_users_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_all_users_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_category_named_home_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_category_named_home_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_category_named_home_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_product_from_category_with_user_project_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_product_from_category_with_user_project_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_product_from_category_with_user_project_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_product_title_and_username_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_product_title_and_username_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_product_title_and_username_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_product_title_and_username_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read-all\get_product_title_and_username_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_categories_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_categories_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_categories_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_category_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_category_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_category_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_category_with_store_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_category_with_store_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_category_with_store_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_category_with_user_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_category_with_user_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_category_with_user_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_store_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_store_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_from_store_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_that_costs_less5_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_that_costs_less5_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_that_costs_less5_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_that_costs_less5_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_products_that_costs_less5_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_stores_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_stores_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_stores_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_users_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_users_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_all_users_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_category_named_home_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_category_named_home_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_category_named_home_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_product_from_category_with_user_project_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_product_from_category_with_user_project_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_product_from_category_with_user_project_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_product_title_and_username_1.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_product_title_and_username_2.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_product_title_and_username_3.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_product_title_and_username_4.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HandcraftedQueries\read\get_product_title_and_username_5.mongo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

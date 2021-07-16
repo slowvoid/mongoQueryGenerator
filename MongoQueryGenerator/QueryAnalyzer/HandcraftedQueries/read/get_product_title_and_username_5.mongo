@@ -1,0 +1,10 @@
+db.Product.aggregate([
+    {"$match": {
+        _id: "%DB_KEY%"
+    }},
+    {"$project": {
+        _id: false,
+        Title: true,
+        UserName: '$user.name'
+    }}
+], {allowDiskUse: true})

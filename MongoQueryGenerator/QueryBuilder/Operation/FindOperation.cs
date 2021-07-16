@@ -1,6 +1,7 @@
 ﻿using QueryBuilder.ER;
 using QueryBuilder.Map;
 using QueryBuilder.Mongo.Aggregation.Operators;
+using QueryBuilder.Operation.Arguments;
 using QueryBuilder.Query;
 using System;
 using System.Collections.Generic;
@@ -37,8 +38,9 @@ namespace QueryBuilder.Operation
 
             return Ret;
         }
-        public override AlgebraOperatorResult Run()
+        public override AlgebraOperatorResult Run( IModelMap inMap, IEnumerable<ProjectArgument> inAttributesToProject = null )
         {
+            RuleMap = inMap;
             return new AlgebraOperatorResult( new List<MongoDBOperator>() );
         }
         #endregion

@@ -1,0 +1,6 @@
+db.runCommand({
+	find: "Store",
+	filter: {
+		_id: "%DB_KEY%"
+	}
+})

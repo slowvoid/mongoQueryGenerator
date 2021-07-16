@@ -10,13 +10,13 @@ namespace QueryBuilder.Mongo.Expressions
     /// <summary>
     /// Represents the $expr expression
     /// </summary>
-    public class Expr : BaseExpression
+    public class Expr : BaseLogicalExpression
     {
         #region Properties
         /// <summary>
         /// Expression to be interpreted
         /// </summary>
-        public BaseExpression Expression { get; set; }
+        public BaseLogicalExpression Expression { get; set; }
         #endregion
 
         #region Override
@@ -48,7 +48,7 @@ namespace QueryBuilder.Mongo.Expressions
         /// Initializes a new Expr instance
         /// </summary>
         /// <param name="Expression">Expressiono to be evalueted</param>
-        public Expr( BaseExpression Expression )
+        public Expr( BaseLogicalExpression Expression )
         {
             this.Expression = Expression;
         }

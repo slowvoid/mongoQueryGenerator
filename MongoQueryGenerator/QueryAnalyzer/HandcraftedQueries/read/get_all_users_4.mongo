@@ -1,0 +1,6 @@
+db.runCommand({
+	find: "User",
+	filter: {
+		_id: "%DB_KEY%"
+	}
+})

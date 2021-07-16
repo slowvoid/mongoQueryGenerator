@@ -1,4 +1,8 @@
+using QueryBuilder.Map;
+using QueryBuilder.Mongo.Aggregation.Operators;
 using QueryBuilder.Mongo.Expressions2;
+using QueryBuilder.Operation.Arguments;
+using System.Collections.Generic;
 
 namespace QueryBuilder.Operation
 {
@@ -18,5 +22,11 @@ namespace QueryBuilder.Operation
             return Ret;
         }
 
+        public override AlgebraOperatorResult Run( IModelMap inMap, IEnumerable<ProjectArgument> inAttributesToProject = null )
+        {
+            RuleMap = inMap;
+            MatchOperator MatchOp = new MatchOperator( LogicalExpression.ToExpr() );
+            return new AlgebraOperatorResult( new List<MongoDBOperator>() { MatchOp } );
+        }
     }
 }

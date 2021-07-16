@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using QueryBuilder.Parser;
+using System.IO;
 
 namespace QueryAnalyzer
 {
@@ -34,7 +35,33 @@ namespace QueryAnalyzer
             using ( StreamWriter sw = new StreamWriter( File ) )
             {
                 sw.Write( Query );
+                sw.Close();
             }
+        }
+        /// <summary>
+        /// Return the full path for the given relative path file
+        /// </summary>
+        /// <param name="inRelativePath"></param>
+        /// <returns></returns>
+        public static string GetFileFulPath( string inRelativePath )
+        {
+            FileInfo info = new FileInfo( inRelativePath );
+
+            return info.FullName;
+        }
+        /// <summary>
+        /// Read mapping file
+        /// </summary>
+        /// <param name="inFile"></param>
+        /// <returns></returns>
+        public static QueryBuilderMappingMetadata GetMapping( string inFile )
+        {
+            if ( !File.Exists( inFile ) )
+            {
+                throw new FileNotFoundException( $"File {inFile} does not exist." );
+            }
+
+            return QueryBuilderParser.ParseMapping( new FileStream( inFile, FileMode.Open ) );
         }
     }
 }

@@ -1,0 +1,40 @@
+﻿__Solution__: ""
+__Description__: ""
+__Version__: "1.0"
+
+########## ERModel ##########
+
+Person {
+	id: int
+	name: string
+}
+
+Car {
+	id: int
+	plate: string
+	color: string
+}
+
+Drives (Person, Car) {
+	note: string
+}
+
+########## MongoDBSchema ##########
+
+DocTypePerson < Person*, Car >
+{
+	_id: int		< Person.id >
+	name: string	< Person.name >
+	cars_multivalued_ : {
+		_id: int		< Car.id >
+		
+	}
+}
+
+DocTypeCar < Car*, Drives >
+{
+	_id: int		< Car.id >
+	plate: string	< Car.plate >
+	color: string	< Car.color >
+	note: string	< Drives.note >
+}

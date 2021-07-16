@@ -1,0 +1,23 @@
+db.Category.aggregate([
+    {"$lookup": {
+        from: 'Product',
+        let: {
+            categoryId: '$_id'
+        },
+        as: 'data_Product',
+        pipeline: [
+            {$match: {
+                $expr: {
+                    $eq: ['$CategoryID', '$$categoryId']
+                }
+            }},
+            {$lookup: {
+                from: 'User',
+                foreignField: '_id',
+                localField: 'UserID',
+                as: 'data_User'
+            }},
+            {$unwind: '$data_User'}
+        ]
+    }}
+], {allowDiskUse: true})

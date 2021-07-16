@@ -23,6 +23,14 @@ namespace QueryBuilder.Map
 
         #region Methods
         /// <summary>
+        /// Returns true if no rules were set
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEmpty()
+        {
+            return Rules.Count == 0;
+        }
+        /// <summary>
         /// Returns a List with all rule strings
         /// </summary>
         /// <returns></returns>

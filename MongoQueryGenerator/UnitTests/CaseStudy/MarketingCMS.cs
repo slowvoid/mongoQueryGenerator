@@ -166,7 +166,7 @@ namespace QueryBuilder.Tests
             var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
             var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
-            string QueryString = "from Users select *";
+            string QueryString = "from User select *";
 
             QueryGenerator QueryGenMap1 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
             QueryGenerator QueryGenMap2 = QueryBuilderParser.ParseQuery( QueryString, DataMapDuplicates );
@@ -612,13 +612,13 @@ namespace QueryBuilder.Tests
             var DataMapStoreDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-store-duplicated.mapping" ) );
             var DataMapUserDuplicated = QueryBuilderParser.ParseMapping( Utils.ReadMappingFile( "Mappings/MarketingCMS/entities-to-collections-user-duplicated.mapping" ) );
 
-            string QueryString = "from Category rjoin <CategoryProducts> (Category rjoin <UserProducts> (User)) select Product.Title, User.UserName, User.UserEmail, Category.CategoryName";
+            string QueryString = "from Category rjoin <CategoryProducts> (Product rjoin <UserProducts> (User)) select Product.Title, User.UserName, User.UserEmail, Category.CategoryName";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
             QueryGenerator GeneratorMap2 = QueryBuilderParser.ParseQuery( QueryString, DataMapDuplicates );
-            QueryGenerator GeneratorMap3 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
-            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
-            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( QueryString, DataMap );
+            QueryGenerator GeneratorMap3 = QueryBuilderParser.ParseQuery( QueryString, DataMapCategoryDuplicated );
+            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( QueryString, DataMapStoreDuplicated );
+            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( QueryString, DataMapUserDuplicated );
 
             string QueryMap1 = GeneratorMap1.Run();
             Assert.ThrowsException<ImpossibleOperationException>( GeneratorMap2.Run );
