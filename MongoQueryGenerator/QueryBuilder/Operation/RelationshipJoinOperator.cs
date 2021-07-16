@@ -713,6 +713,12 @@ namespace QueryBuilder.Operation
                                         // Add first ocurrence of other attributes from source
                                         foreach ( DataAttribute Attribute in SourceEntity.GetEntity().Attributes )
                                         {
+                                            // Skip Identifier (already processed)
+                                            if ( Attribute == SourceEntity.GetEntity().GetIdentifierAttribute() )
+                                            {
+                                                continue;
+                                            }
+
                                             string RuleValue = MainSourceRule.GetRuleValueForAttribute( Attribute );
 
                                             GroupAttributes.Add( Attribute.Name, new FirstGroupExpression( RuleValue ) );
@@ -744,8 +750,7 @@ namespace QueryBuilder.Operation
                                                 continue;
                                             }
 
-                                            string RootAttribute = TargetRuleAtSource.GetRootAttribute();
-                                            string UpdatedRuleValue = RuleValue.Replace( RootAttribute, TargetAs );
+                                            string UpdatedRuleValue = $"{TargetAs}.{RuleValue}";
 
                                             JoinedAttributes.Add( $"{Target.GetName()}_{Attribute.Name}", new StringGroupExpression( UpdatedRuleValue, true ) );
                                         }
