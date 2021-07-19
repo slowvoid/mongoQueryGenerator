@@ -140,7 +140,7 @@ namespace QueryAnalyzer
             QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
             QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
-            string queryString = "from Product rjoin <CategoryProducts> (Category) rjoin <StoreProducts> (Store) rjoin <UserProducts> (User) select *";
+            string queryString = "from Product rjoin <CategoryProducts> (Category) rjoin <StoreProducts> (Store) rjoin <UserProducts> (User) select * where Product.ProductID = '%DB_KEY%'";
             QueryGenerator queryGen = QueryBuilderParser.ParseQuery( queryString, DataMap );
             QueryGenerator queryGen2 = QueryBuilderParser.ParseQuery( queryString, DataMap2 );
             QueryGenerator queryGen3 = QueryBuilderParser.ParseQuery( queryString, DataMap3 );
@@ -172,12 +172,12 @@ namespace QueryAnalyzer
                 workload.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workload.ExportToFile();
                 AddCommandFromWorkloadFile( workload );
-                YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_all_products_2", $"{DatabasePrefix}_3" );
+                YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_all_products_2", $"{DatabasePrefix}_2" );
                 workload2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload2.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workload2.ExportToFile();
                 AddCommandFromWorkloadFile( workload2 );
-                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_3", $"{DatabasePrefix}_2" );
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_3", $"{DatabasePrefix}_3" );
                 workload3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload3.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workload3.ExportToFile();
@@ -205,13 +205,13 @@ namespace QueryAnalyzer
                 workloadHandcrafted1.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workloadHandcrafted1.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted1 );
-                YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_all_products_handcrafted_2", $"{DatabasePrefix}_3" );
+                YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_all_products_handcrafted_2", $"{DatabasePrefix}_2" );
                 workloadHandcrafted2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted2.SetProperty( "alternateparse", true );
                 workloadHandcrafted2.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workloadHandcrafted2.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted2 );
-                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_handcrafted_3", $"{DatabasePrefix}_2" );
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_handcrafted_3", $"{DatabasePrefix}_3" );
                 workloadHandcrafted3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted3.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workloadHandcrafted3.ExportToFile();
@@ -244,14 +244,14 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_all_products_1", Query );
-            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_2", Query2 );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_3", Query3 );
+            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_2", Query2 );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_3", Query3 );
             RunIterationsForQuery( $"{DatabasePrefix}_4", "get_all_products_4", Query4 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_all_products_5", Query5 );
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_all_products_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_handcrafted_2", HandcraftedQuery2, true );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_handcrafted_3", HandcraftedQuery3 );
             RunIterationsForQuery( $"{DatabasePrefix}_4", "get_all_products_handcrafted_4", HandcraftedQuery4 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_all_products_handcrafted_5", HandcraftedQuery5 );
         }
@@ -292,7 +292,7 @@ namespace QueryAnalyzer
                 workload1.SetProperty( "keys", string.Join( ",", StoreKeys ) );
                 workload1.ExportToFile();
                 AddCommandFromWorkloadFile( workload1 );
-                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_stores_3", $"{DatabasePrefix}_2");
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_stores_3", $"{DatabasePrefix}_3");
                 workload3.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workload3.SetProperty( "keys", string.Join( ",", StoreKeys ) );
                 workload3.ExportToFile();
@@ -313,7 +313,7 @@ namespace QueryAnalyzer
                 workloadHandcrafted1.SetProperty( "keys", string.Join( ",", StoreKeys ) );
                 workloadHandcrafted1.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted1 );
-                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_stores_handcrafted_3", $"{DatabasePrefix}_2" );
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_stores_handcrafted_3", $"{DatabasePrefix}_3" );
                 workloadHandcrafted3.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workloadHandcrafted3.SetProperty( "alternateparse", true );
                 workloadHandcrafted3.SetProperty( "keys", string.Join( ",", StoreKeys ) );
@@ -338,11 +338,11 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_all_stores_1", QueryStringMap1 );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_stores_3", QueryStringMap3 );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_stores_3", QueryStringMap3 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_all_stores_5", QueryStringMap5 );
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_all_stores_handcrafted_1", HandcraftedQuery1, true );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_stores_handcrafted_3", HandcraftedQuery2, true );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_stores_handcrafted_3", HandcraftedQuery2, true );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_all_stores_handcrafted_5", HandcraftedQuery3, true );
         }
         /// <summary>
@@ -353,14 +353,14 @@ namespace QueryAnalyzer
         public void GetAllUsers()
         {
             QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
-            QueryBuilderMappingMetadata DataMapCategoryDuplicated = Utils.GetMapping( "CMS_3.mapping" );
-            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMap3 = Utils.GetMapping( "CMS_3.mapping" );
+            QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
 
             string queryString = "from User select *";
 
             QueryGenerator QueryGenMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
-            QueryGenerator QueryGenMap3 = QueryBuilderParser.ParseQuery( queryString, DataMapCategoryDuplicated );
-            QueryGenerator QueryGenMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
+            QueryGenerator QueryGenMap3 = QueryBuilderParser.ParseQuery( queryString, DataMap3 );
+            QueryGenerator QueryGenMap4 = QueryBuilderParser.ParseQuery( queryString, DataMap4 );
 
             string QueryStringMap1;
             string QueryStringMap3;
@@ -381,7 +381,7 @@ namespace QueryAnalyzer
                 workload1.SetProperty( "keys", string.Join( ",", UserKeys ) );
                 workload1.ExportToFile();
                 AddCommandFromWorkloadFile( workload1 );
-                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_users_3", $"{DatabasePrefix}_2" );
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_users_3", $"{DatabasePrefix}_3" );
                 workload3.SetProperty( "recordcount", CollectionDocumentCount[ "User" ] );
                 workload3.SetProperty( "keys", string.Join( ",", UserKeys ) );
                 workload3.ExportToFile();
@@ -403,7 +403,7 @@ namespace QueryAnalyzer
                 workloadHandcrafted1.SetProperty( "keys", string.Join( ",", UserKeys ) );
                 workloadHandcrafted1.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted1 );
-                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_users_handcrafted_3", $"{DatabasePrefix}_2" );
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_users_handcrafted_3", $"{DatabasePrefix}_3" );
                 workloadHandcrafted3.SetProperty( "recordcount", CollectionDocumentCount[ "User" ] );
                 workloadHandcrafted3.SetProperty( "alternateparse", true );
                 workloadHandcrafted3.SetProperty( "keys", string.Join( ",", UserKeys ) );
@@ -429,7 +429,7 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_all_users_1", QueryStringMap1 );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_users_3", QueryStringMap3 );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_users_3", QueryStringMap3 );
             RunIterationsForQuery( $"{DatabasePrefix}_4", "get_all_users_4", QueryStringMap4 );
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_all_users_handcrafted_1", HandcraftedQuery1, true );
@@ -444,14 +444,14 @@ namespace QueryAnalyzer
         public void GetAllCategories()
         {
             QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
-            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
-            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
+            QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
             string queryString = "from Category select *";
 
             QueryGenerator QueryGenMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
-            QueryGenerator QueryGenMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
-            QueryGenerator QueryGenMap5 = QueryBuilderParser.ParseQuery( queryString, DataMapUserDuplicated );
+            QueryGenerator QueryGenMap4 = QueryBuilderParser.ParseQuery( queryString, DataMap4 );
+            QueryGenerator QueryGenMap5 = QueryBuilderParser.ParseQuery( queryString, DataMap5 );
 
             string QueryStringMap1;
             string QueryStringMap4;
@@ -538,14 +538,14 @@ namespace QueryAnalyzer
         public void GetAllProductsFromStore()
         {
             QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
-            QueryBuilderMappingMetadata DataMapCategoryDuplicated = Utils.GetMapping( "CMS_3.mapping" );
-            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
+            QueryBuilderMappingMetadata DataMap3 = Utils.GetMapping( "CMS_3.mapping" );
+            QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
             string queryString = "from Store rjoin <StoreProducts> (Product) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
-            QueryGenerator GeneratorMap3 = QueryBuilderParser.ParseQuery( queryString, DataMapCategoryDuplicated );
-            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMapUserDuplicated );
+            QueryGenerator GeneratorMap3 = QueryBuilderParser.ParseQuery( queryString, DataMap3 );
+            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMap5 );
 
             string QueryMap1;
             string QueryMap3;
@@ -566,7 +566,7 @@ namespace QueryAnalyzer
                 workload1.SetProperty( "keys", string.Join( ",", StoreKeys ) );
                 workload1.ExportToFile();
                 AddCommandFromWorkloadFile( workload1 );
-                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_from_store_3", $"{DatabasePrefix}_2" );
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_from_store_3", $"{DatabasePrefix}_3" );
                 workload3.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workload3.SetProperty( "keys", string.Join( ",", StoreKeys ) );
                 workload3.ExportToFile();
@@ -587,7 +587,7 @@ namespace QueryAnalyzer
                 workloadHandcrafted1.SetProperty( "keys", string.Join( ",", StoreKeys ) );
                 workloadHandcrafted1.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted1 );
-                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_from_store_handcrafted_3", $"{DatabasePrefix}_2" );
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_from_store_handcrafted_3", $"{DatabasePrefix}_3" );
                 workloadHandcrafted3.SetProperty( "recordcount", CollectionDocumentCount[ "Store" ] );
                 workloadHandcrafted3.SetProperty( "keys", string.Join( ",", StoreKeys ) );
                 workloadHandcrafted3.ExportToFile();
@@ -611,11 +611,11 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_all_products_from_store_1", QueryMap1 );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_from_store_3", QueryMap3 );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_from_store_3", QueryMap3 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_all_products_from_store_5", QueryMap5 );
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_all_products_from_store_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_from_store_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_from_store_handcrafted_3", HandcraftedQuery3 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_all_products_from_store_handcrafted_5", HandcraftedQuery5 );
         }
 
@@ -629,14 +629,14 @@ namespace QueryAnalyzer
         public void GetAllProductsFromCategory()
         {
             QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
-            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
-            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
+            QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
             string queryString = "from Category rjoin <CategoryProducts> (Product) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
-            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
-            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMapUserDuplicated );
+            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMap4 );
+            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMap5 );
 
             string QueryMap1;
             string QueryMap4;
@@ -707,110 +707,6 @@ namespace QueryAnalyzer
             RunIterationsForQuery( $"{DatabasePrefix}_4", "get_all_products_from_category_handcrafted_4", HandcraftedQuery4 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_all_products_from_category_handcrafted_5", HandcraftedQuery5 );
         }
-
-        /// <summary>
-        /// Run GetProductsFromUser query
-        /// 
-        /// IMPORTANT: THIS ONE IS NOT REALLY WORKING (THE QUERY IS FINE, THE EXPLAIN MODE IS NOT)
-        /// 
-        /// QUERY: FROM Category 
-        ///        RJOIN (Product, StoreHasProduct)
-        ///        SELECT *
-        /// </summary>
- 
-        //public void GetAllProductsFromUser()
-        //{
-        //    QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
-        //    QueryBuilderMappingMetadata DataMapCategoryDuplicated = Utils.GetMapping( "CMS_3.mapping" );
-        //    QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
-
-        //    QueryableEntity User = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "User" ) );
-        //    QueryableEntity Product = new QueryableEntity( DataMap.EntityRelationshipModel.FindByName( "Product" ) );
-
-        //    RelationshipJoinOperator RJoinOp1 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
-        //        new List<QueryableEntity>() { Product }, DataMap.ERMongoMapping );
-
-        //    RelationshipJoinOperator RJoinOp3 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
-        //        new List<QueryableEntity>() { Product }, DataMapCategoryDuplicated.ERMongoMapping );
-
-        //    RelationshipJoinOperator RJoinOp4 = new RelationshipJoinOperator( User, (Relationship)DataMap.EntityRelationshipModel.FindByName( "UserProducts" ),
-        //        new List<QueryableEntity>() { Product }, DataMapStoreDuplicated.ERMongoMapping );
-
-        //    SortArgument SortArg = new SortArgument( User, User.GetAttribute( "UserID" ), MongoDBSort.Ascending );
-
-        //    SortStage SortOpMap1 = new SortStage( new List<SortArgument>() { SortArg }, DataMap.ERMongoMapping );
-        //    SortStage SortOpMap3 = new SortStage( new List<SortArgument>() { SortArg }, DataMapCategoryDuplicated.ERMongoMapping );
-        //    SortStage SortOpMap4 = new SortStage( new List<SortArgument>() { SortArg }, DataMapStoreDuplicated.ERMongoMapping );
-
-        //    List<AlgebraOperator> OperatorsToExecuteMap1 = new List<AlgebraOperator>() { RJoinOp1, SortOpMap1 };
-        //    List<AlgebraOperator> OperatorsToExecuteMap3 = new List<AlgebraOperator>() { RJoinOp3, SortOpMap3 };
-        //    List<AlgebraOperator> OperatorsToExecuteMap4 = new List<AlgebraOperator>() { RJoinOp4, SortOpMap4 };
-
-        //    FromArgument StartArgMap1 = new FromArgument( User, DataMap.ERMongoMapping );
-        //    FromArgument StartArgMap3 = new FromArgument( User, DataMapCategoryDuplicated.ERMongoMapping );
-        //    FromArgument StartArgMap4 = new FromArgument( User, DataMapStoreDuplicated.ERMongoMapping );
-
-        //    QueryGenerator GeneratorMap1 = new QueryGenerator( StartArgMap1, OperatorsToExecuteMap1 );
-        //    QueryGenerator GeneratorMap3 = new QueryGenerator( StartArgMap3, OperatorsToExecuteMap3 );
-        //    QueryGenerator GeneratorMap4 = new QueryGenerator( StartArgMap4, OperatorsToExecuteMap4 );
-
-        //    string QueryMap1;
-        //    string QueryMap3;
-        //    string QueryMap4;
-
-        //    if ( UseDefaultQueryInsteadOfExplain )
-        //    {
-        //        QueryMap1 = GeneratorMap1.Run();
-        //        QueryMap3 = GeneratorMap3.Run();
-        //        QueryMap4 = GeneratorMap4.Run();
-        //    }
-        //    else
-        //    {
-        //        QueryMap1 = GeneratorMap1.Explain();
-        //        QueryMap3 = GeneratorMap3.Explain();
-        //        QueryMap4 = GeneratorMap4.Explain();
-        //    }
-
-        //    //QueryRunner RunnerMap1 = new QueryRunner( "mongodb://localhost:27017", "{DatabasePrefix}_index_1" );
-        //    //QueryRunner RunnerMap3 = new QueryRunner( "mongodb://localhost:27017", "{DatabasePrefix}_index_2" );
-        //    //QueryRunner RunnerMap4 = new QueryRunner( "mongodb://localhost:27017", "{DatabasePrefix}_index_4" );
-
-        //    //List<QueryStats> Stats1 = new List<QueryStats>();
-        //    //for ( int i = 0; i < 100; i++ )
-        //    //{
-        //    //    QueryStats iterationResult = RunnerMap1.GetExplainResult( QueryMap1 );
-        //    //    Stats1.Add( iterationResult );
-        //    //}
-
-        //    //// Drop before saving new
-        //    //MongoContext.DropCollection( "get_all_products_from_user_query_1" );
-        //    //// Save all
-        //    //MongoContext.InsertManyRecords( "get_all_products_from_user_query_1", Stats1 );
-
-        //    //List<QueryStats> Stats2 = new List<QueryStats>();
-        //    //for ( int i = 0; i < 100; i++ )
-        //    //{
-        //    //    QueryStats iterationResult = RunnerMap3.GetExplainResult( QueryMap3 );
-        //    //    Stats2.Add( iterationResult );
-        //    //}
-
-        //    //// Drop before saving new
-        //    //MongoContext.DropCollection( "get_all_products_from_user_query_2" );
-        //    //// Save all
-        //    //MongoContext.InsertManyRecords( "get_all_products_from_user_query_2", Stats2 );
-
-        //    //List<QueryStats> Stats3 = new List<QueryStats>();
-        //    //for ( int i = 0; i < 100; i++ )
-        //    //{
-        //    //    QueryStats iterationResult = RunnerMap4.GetExplainResult( QueryMap4 );
-        //    //    Stats3.Add( iterationResult );
-        //    //}
-
-        //    //// Drop before saving new
-        //    //MongoContext.DropCollection( "get_all_products_from_user_query_3" );
-        //    //// Save all
-        //    //MongoContext.InsertManyRecords( "get_all_products_from_user_query_3", Stats3 );
-        //}
         /// <summary>
         /// Run GetAllProductsFromCategoryWithStore
         /// 
@@ -821,14 +717,14 @@ namespace QueryAnalyzer
         public void GetAllProductsFromCategoryWithStore()
         {
             QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
-            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
-            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
+            QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
             string queryString = "from Category rjoin <CategoryProducts> (Product rjoin <StoreProducts> (Store)) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
-            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
-            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMapUserDuplicated );
+            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMap4 );
+            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMap5 );
 
             string QueryMap1;
             string QueryMap4;
@@ -912,14 +808,14 @@ namespace QueryAnalyzer
         public void GetAllProductsFromCategoryWithUser()
         {
             QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
-            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
-            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
+            QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
             string queryString = "from Category rjoin <CategoryProducts> (Product rjoin <UserProducts> (User)) select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
-            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
-            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMapUserDuplicated );
+            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMap4 );
+            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMap5 );
 
             string QueryMap1;
             string QueryMap4;
@@ -1000,18 +896,18 @@ namespace QueryAnalyzer
         public void GetProductTitleAndUserName()
         {
             QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
-            QueryBuilderMappingMetadata DataMapDuplicates = Utils.GetMapping( "CMS_2.mapping" );
-            QueryBuilderMappingMetadata DataMapCategoryDuplicated = Utils.GetMapping( "CMS_3.mapping" );
-            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
-            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
+            QueryBuilderMappingMetadata DataMap2 = Utils.GetMapping( "CMS_2.mapping" );
+            QueryBuilderMappingMetadata DataMap3 = Utils.GetMapping( "CMS_3.mapping" );
+            QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
             string queryString = "from Product rjoin <UserProducts> (User) select Product.Title, User.UserName";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
-            QueryGenerator GeneratorMap2 = QueryBuilderParser.ParseQuery( queryString, DataMapDuplicates );
-            QueryGenerator GeneratorMap3 = QueryBuilderParser.ParseQuery( queryString, DataMapCategoryDuplicated );
-            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
-            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMapUserDuplicated );
+            QueryGenerator GeneratorMap2 = QueryBuilderParser.ParseQuery( queryString, DataMap2 );
+            QueryGenerator GeneratorMap3 = QueryBuilderParser.ParseQuery( queryString, DataMap3 );
+            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMap4 );
+            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMap5 );
 
             string QueryMap1;
             string QueryMap2;
@@ -1038,12 +934,12 @@ namespace QueryAnalyzer
                 workload1.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workload1.ExportToFile();
                 AddCommandFromWorkloadFile( workload1 );
-                YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_product_title_and_username_2", $"{DatabasePrefix}_3" );
+                YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_product_title_and_username_2", $"{DatabasePrefix}_2" );
                 workload2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload2.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workload2.ExportToFile();
                 AddCommandFromWorkloadFile( workload2 );
-                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_product_title_and_username_3", $"{DatabasePrefix}_2" );
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_product_title_and_username_3", $"{DatabasePrefix}_3" );
                 workload3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload3.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workload3.ExportToFile();
@@ -1070,12 +966,12 @@ namespace QueryAnalyzer
                 workloadHandcrafted1.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workloadHandcrafted1.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted1 );
-                YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_2", $"{DatabasePrefix}_3" );
+                YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_2", $"{DatabasePrefix}_2" );
                 workloadHandcrafted2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted2.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workloadHandcrafted2.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted2 );
-                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_3", $"{DatabasePrefix}_2" );
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_product_title_and_username_handcrafted_3", $"{DatabasePrefix}_3" );
                 workloadHandcrafted3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted3.SetProperty( "keys", string.Join( ",", ProductKeys ) );
                 workloadHandcrafted3.ExportToFile();
@@ -1107,14 +1003,14 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_product_title_and_username_1", QueryMap1 );
-            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_product_title_and_username_2", QueryMap2 );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_product_title_and_username_3", QueryMap3 );
+            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_product_title_and_username_2", QueryMap2 );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_product_title_and_username_3", QueryMap3 );
             RunIterationsForQuery( $"{DatabasePrefix}_4", "get_product_title_and_username_4", QueryMap4 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_product_title_and_username_5", QueryMap5 );
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_product_title_and_username_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_product_title_and_username_handcrafted_2", HandcraftedQuery2 );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_product_title_and_username_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_product_title_and_username_handcrafted_2", HandcraftedQuery2 );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_product_title_and_username_handcrafted_3", HandcraftedQuery3 );
             RunIterationsForQuery( $"{DatabasePrefix}_4", "get_product_title_and_username_handcrafted_4", HandcraftedQuery4 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_product_title_and_username_handcrafted_5", HandcraftedQuery5 );
         }
@@ -1129,14 +1025,14 @@ namespace QueryAnalyzer
         public void GetAllProductsFromCategoryWithUserAndSelectOnlyTitleNameEmailCategoryName()
         {
             QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
-            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
-            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
+            QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
             string queryString = "from Category rjoin <CategoryProducts> (Product rjoin <UserProducts> (User)) select Category.CategoryName, Product.Title, User.UserName, User.UserEmail";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
-            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
-            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMapUserDuplicated );
+            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMap4 );
+            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMap5 );
 
             string QueryMap1;
             string QueryMap4;
@@ -1203,9 +1099,9 @@ namespace QueryAnalyzer
             RunIterationsForQuery( $"{DatabasePrefix}_4", "get_product_from_category_with_user_project_4", QueryMap4 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_product_from_category_with_user_project_5", QueryMap5 );
 
-            RunIterationsForQuery( $"{DatabasePrefix}_index_1", "get_product_from_category_with_user_project_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( $"{DatabasePrefix}_index_4", "get_product_from_category_with_user_project_handcrafted_4", HandcraftedQuery4 );
-            RunIterationsForQuery( $"{DatabasePrefix}_index_5", "get_product_from_category_with_user_project_handcrafted_5", HandcraftedQuery5 );
+            RunIterationsForQuery( $"{DatabasePrefix}_1", "get_product_from_category_with_user_project_handcrafted_1", HandcraftedQuery1 );
+            RunIterationsForQuery( $"{DatabasePrefix}_4", "get_product_from_category_with_user_project_handcrafted_4", HandcraftedQuery4 );
+            RunIterationsForQuery( $"{DatabasePrefix}_5", "get_product_from_category_with_user_project_handcrafted_5", HandcraftedQuery5 );
         }
 
         /// <summary>
@@ -1218,14 +1114,14 @@ namespace QueryAnalyzer
         public void GetCategoryThatIsNamedHome()
         {
             QueryBuilderMappingMetadata DataMap = Utils.GetMapping( "CMS_1.mapping" );
-            QueryBuilderMappingMetadata DataMapStoreDuplicated = Utils.GetMapping( "CMS_4.mapping" );
-            QueryBuilderMappingMetadata DataMapUserDuplicated = Utils.GetMapping( "CMS_5.mapping" );
+            QueryBuilderMappingMetadata DataMap4 = Utils.GetMapping( "CMS_4.mapping" );
+            QueryBuilderMappingMetadata DataMap5 = Utils.GetMapping( "CMS_5.mapping" );
 
             string queryString = "from Category select *";
 
             QueryGenerator GeneratorMap1 = QueryBuilderParser.ParseQuery( queryString, DataMap );
-            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMapStoreDuplicated );
-            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMapUserDuplicated );
+            QueryGenerator GeneratorMap4 = QueryBuilderParser.ParseQuery( queryString, DataMap4 );
+            QueryGenerator GeneratorMap5 = QueryBuilderParser.ParseQuery( queryString, DataMap5 );
 
             string QueryMap1;
             string QueryMap4;
@@ -1344,11 +1240,11 @@ namespace QueryAnalyzer
                 workload1.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload1.ExportToFile();
                 AddCommandFromWorkloadFile( workload1 );
-                YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_2", $"{DatabasePrefix}_3" );
+                YCSBWorkloadFile workload2 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_2", $"{DatabasePrefix}_2" );
                 workload2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload2.ExportToFile();
                 AddCommandFromWorkloadFile( workload2 );
-                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_3", $"{DatabasePrefix}_2" );
+                YCSBWorkloadFile workload3 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_3", $"{DatabasePrefix}_3" );
                 workload3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workload3.ExportToFile();
                 AddCommandFromWorkloadFile( workload3 );
@@ -1371,11 +1267,11 @@ namespace QueryAnalyzer
                 workloadHandcrafted1.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted1.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted1 );
-                YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_2", $"{DatabasePrefix}_3" );
+                YCSBWorkloadFile workloadHandcrafted2 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_2", $"{DatabasePrefix}_2" );
                 workloadHandcrafted2.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted2.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted2 );
-                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_3", $"{DatabasePrefix}_2" );
+                YCSBWorkloadFile workloadHandcrafted3 = new YCSBWorkloadFile( "get_all_products_that_costs_less5_handcrafted_3", $"{DatabasePrefix}_3" );
                 workloadHandcrafted3.SetProperty( "recordcount", CollectionDocumentCount[ "Product" ] );
                 workloadHandcrafted3.ExportToFile();
                 AddCommandFromWorkloadFile( workloadHandcrafted3 );
@@ -1404,14 +1300,14 @@ namespace QueryAnalyzer
             }
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_all_products_that_costs_less5_1", Query1 );
-            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_that_costs_less5_2", Query2 );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_that_costs_less5_3", Query3 );
+            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_that_costs_less5_2", Query2 );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_that_costs_less5_3", Query3 );
             RunIterationsForQuery( $"{DatabasePrefix}_4", "get_all_products_that_costs_less5_4", Query4 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_all_products_that_costs_less5_5", Query5 );
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_all_products_that_costs_less5_handcrafted_1", HandcraftedQuery1 );
-            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_that_costs_less5_handcrafted_2", HandcraftedQuery2, true );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_that_costs_less5_handcrafted_3", HandcraftedQuery3 );
+            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_that_costs_less5_handcrafted_2", HandcraftedQuery2, true );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_that_costs_less5_handcrafted_3", HandcraftedQuery3 );
             RunIterationsForQuery( $"{DatabasePrefix}_4", "get_all_products_that_costs_less5_handcrafted_4", HandcraftedQuery4 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_all_products_that_costs_less5_handcrafted_5", HandcraftedQuery5 );
         }
@@ -1425,8 +1321,8 @@ namespace QueryAnalyzer
             string CustomQuery5 = Utils.ReadQueryFromFile( "CustomQueries/get_all_products_that_costs_less5_m_5.mongo" );
 
             RunIterationsForQuery( $"{DatabasePrefix}_1", "get_all_products_that_costs_less5_modified_1", CustomQuery1 );
-            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_that_costs_less5_modified_2", CustomQuery2 );
-            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_that_costs_less5_modified_3", CustomQuery3 );
+            RunIterationsForQuery( $"{DatabasePrefix}_2", "get_all_products_that_costs_less5_modified_2", CustomQuery2 );
+            RunIterationsForQuery( $"{DatabasePrefix}_3", "get_all_products_that_costs_less5_modified_3", CustomQuery3 );
             RunIterationsForQuery( $"{DatabasePrefix}_4", "get_all_products_that_costs_less5_modified_4", CustomQuery4 );
             RunIterationsForQuery( $"{DatabasePrefix}_5", "get_all_products_that_costs_less5_modified_5", CustomQuery5 );
         }

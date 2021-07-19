@@ -15,7 +15,7 @@ namespace QueryAnalyzer
             cms.TargetDatabase = "research_performance_stats_nosort";
             cms.ExportQueries = true;
             cms.UseDefaultQueryInsteadOfExplain = true;
-            cms.UseReadAllQueries = true;
+            cms.UseReadAllQueries = false;
             cms.BenchmarkWorkloadFolder = @"D:\Projects\mestrado\YCSB\workloads";
             cms.GenerateKeys();
 
