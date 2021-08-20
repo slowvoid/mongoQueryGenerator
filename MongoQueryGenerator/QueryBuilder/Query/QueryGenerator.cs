@@ -93,6 +93,15 @@ namespace QueryBuilder.Query
                 attributesToProject = projStage.Arguments;
             }
 
+            // Move SelectStage to start of array
+            AlgebraOperator MoveToTop = PipelineOperators.Find( Op => Op is SelectStage2 );
+
+            if ( MoveToTop != null )
+            {
+                PipelineOperators.Remove( MoveToTop );
+                PipelineOperators.Insert( 0, MoveToTop );
+            }
+
             for ( int i = 0; i < PipelineOperators.Count; i++ )
             {
                 AlgebraOperator Op = PipelineOperators[ i ];
