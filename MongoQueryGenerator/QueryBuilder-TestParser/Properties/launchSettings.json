@@ -1,8 +1,7 @@
 {
   "profiles": {
     "QueryBuilder-TestParser": {
-      "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\johny\\source\\repos\\slowvoid\\mongoQueryGenerator\\MongoQueryGenerator\\QueryBuilder-TestParser\\TestCaseNestedJoin.qer"
+      "commandName": "Project"
     }
   }
 }

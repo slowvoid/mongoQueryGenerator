@@ -7,9 +7,9 @@ namespace DocumentComparer
 {
     class Program
     {
-        static string ProjectFilePath = "D:\\Projects\\mestrado\\YCSB\\results\\project.json";
-        static string ProjectFileDir = "D:\\Projects\\mestrado\\YCSB\\results";
-        static string DefaultLogDir = "D:\\Projects\\mestrado\\resultados-benchmark"; 
+        static string ProjectFilePath = "";
+        static string ProjectFileDir = "";
+        static string DefaultLogDir = ""; 
 
         static bool ContainsArg(string inArg, string[] args)
         {

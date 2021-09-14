@@ -10,7 +10,7 @@ namespace QueryAnalyzer
             DateTime StartTime = DateTime.Now;
             Console.WriteLine( "Starting Time: {0}", StartTime.ToString() );
 
-            MarketingCMS cms = new MarketingCMS( "research_performance_index" );
+            MarketingCMS cms = new MarketingCMS( "research_performance" );
             cms.Iterations = 1000;
             cms.TargetDatabase = "research_performance_stats_nosort";
             cms.ExportQueries = true;

@@ -36,7 +36,7 @@ namespace TestApp
                 Console.WriteLine( "Count: {0}", ResultArray.Count );
             }
 
-            using ( StreamWriter sw = new StreamWriter( @"E:\Mestrado\result.json", false ) )
+            using ( StreamWriter sw = new StreamWriter( @"result.json", false ) )
             {
                 sw.Write( result );
                 sw.Close();

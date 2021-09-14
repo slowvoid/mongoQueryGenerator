@@ -70,7 +70,7 @@ namespace QueryAnalyzer
         public YCSBWorkloadFile( string inName, string inDatabaseName )
         {
             Name = inName;
-            FileName = $@"D:\\Projects\\mestrado\\YCSB\\workloads\\{Name}_workload";
+            FileName = $@"path to YCSB workloads\\{Name}_workload";
 
             Props = new Dictionary<string, object>();
             // Default values

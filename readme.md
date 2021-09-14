@@ -1,18 +1,21 @@
-## Lista de projetos  
+## Project list
 
-* **DataFaker**: Utilizado para alimentar as bases de dados relacionais utilizadas como base para testes. (executavel)
+* **DataFaker**: Used at earlier stages to seed relational databases for testing purposes. (executable)
 
-* **QueryAnalyzer**: Utilizado para realizar as consultas no MongoDB e gravar o desempenho. (executavel)
+* **QueryAnalyzer**: The first version aimed to run queries against MongoDB and record the performance. Now used to prepare workloads and queries to be executed on YCSB (executable)
 
-* **QueryBuilder**: É o algoritmo de geração de consultas.(biblioteca)
+* **QueryBuilder**: Query generator algorithm. (class library)
 
-* **QueryBuilder-Parser**: Parser da linguagem de mapeamento - o resultado do parser é um código compatível com o mapeamento utilizado pelo algoritmo. (biblioteca)
+* **QueryBuilder-Parser**: Parser project for both mapping files and query language. The output is used on the guery generator algorithm. (class library)
 
-* **QueryBuilder-TestParser**: Aplicação para testes do Parser. (executavel)
+* **QueryBuilder-TestParser**: Test app for the parser project. (executable)
 
-* **TestApp**: Aplicação para testes do algoritmo. (executavel)
+* **TestApp**: App for algorithm tests. Used to type a query and prints the resulting MongoDB query. (executable)
 
-* **UnitTests**: Testes automáticos do algoritmo e dos sistemas MKCMS e ProgradWeb
+* **UnitTests**: Automated Unit tests for algorithm concepts and for test cases for two systems called MKCMS (custom) and ProgradWeb (from UFSCAR)
 
+All projects use either .NET Core ou .NET Standard and will probably work on other OSs other than Windows.
 
-Os projetos utilizam tanto o .NET Core ou .NET Standard e devem funcionar em outros sistemas operacionais além do Windows.
+## Test data
+
+The folder ``data/`` contains all data obtained from tests and benchmarks.
