@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/165153072.svg)](https://zenodo.org/badge/latestdoi/165153072)
+
 ## Project list
 
 * **DataFaker**: Used at earlier stages to seed relational databases for testing purposes. (executable)
