@@ -9,7 +9,7 @@ namespace TestApp
     {
         static void Main( string[] args )
         {
-            var mapping = QueryBuilderParser.ParseMapping( new FileStream( "artigo.mapping", FileMode.Open ) );
+            var mapping = QueryBuilderParser.ParseMapping( new FileStream( "map1.mapping", FileMode.Open ) );
 
             while ( true )
             {
