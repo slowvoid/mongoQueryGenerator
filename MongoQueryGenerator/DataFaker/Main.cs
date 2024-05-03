@@ -59,7 +59,7 @@ namespace DataFaker
                     Console.WriteLine( "User Created! Name = {0}", u.UserName );
                 } );
 
-            int amountOfUsers = 50;
+            int amountOfUsers = 20000;
 
             List<User> users = testUsers.Generate( amountOfUsers );
             dbCMS.Users.AddRange( users );
@@ -67,7 +67,7 @@ namespace DataFaker
 
             Console.WriteLine( "Done! Current user count: {0}", dbCMS.Users.Count() );
 
-            string[] categoryNames = new Faker( "pt_BR" ).Commerce.Categories( 30 ).Distinct().ToArray();
+            string[] categoryNames = new Faker( "pt_BR" ).Commerce.Categories( 18 ).Distinct().ToArray();
             List<Category> categories = new List<Category>();
             int amountOfCategories = categoryNames.Length;
 
@@ -94,7 +94,7 @@ namespace DataFaker
                     Console.WriteLine( "Store created! Name = {0}", s.StoreName );
                 } );
 
-            List<Store> stores = testStores.Generate( 20 );
+            List<Store> stores = testStores.Generate( 100 );
             dbCMS.Stores.AddRange( stores );
             dbCMS.SaveChanges();
 
@@ -113,7 +113,7 @@ namespace DataFaker
                     Console.WriteLine( "Product created! Title = {0}", p.Title );
                 } );
 
-            List<Product> products = testProducts.Generate( 50 );
+            List<Product> products = testProducts.Generate( 150000 );
             dbCMS.Products.AddRange( products );
             dbCMS.SaveChanges();
 

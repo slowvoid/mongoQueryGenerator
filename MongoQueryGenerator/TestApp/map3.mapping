@@ -1,0 +1,61 @@
+﻿__Solution__: "Map 3"
+__Description__: "Paper map 3"
+__Version__: "1.0"
+
+############### ERModel ###############
+
+Category {
+	> CategoryID: int
+	CategoryName: string
+}
+
+Product {
+	> ProductID: int
+	Title: string
+	Description: string
+	Price: float
+}
+
+Store {
+	> StoreID: int
+	StoreName: string
+}
+
+User {
+	> UserID: int
+	UserName: string
+	UserEmail: string
+}
+
+CategoryProducts (Category, Product) {}
+StoreProducts (Store, Product) {}
+UserProducts (User, Product) {}
+
+############### MongoDBSchema ###############
+
+Product < Product*, Category, Store, User >
+{
+	_id: int			< Product.ProductID >
+	Title: string		< Product.Title >
+	Description: string < Product.Description >
+	Price: float		< Product.Price >
+	UserID:	int			< User.UserID >
+	category: {
+		_id: int		< Category.CategoryID >
+		name: string	< Category.CategoryName >
+	}
+	StoreID: int		< Store.StoreID >
+}
+
+Store < Store* >
+{
+	_id: int			< Store.StoreID >
+	StoreName: string	< Store.StoreName >
+}
+
+User < User* >
+{
+	_id: int			< User.UserID >
+	UserName: string	< User.UserName >
+	UserEmail: string	< User.UserEmail >
+}
